@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Console - People for Animals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --font-d:'Archivo',system-ui,sans-serif;
+    --font-s:'Marcellus',Georgia,serif;
+    --white:#FFFFFF;
+    --porcelain:#F4F6F7;
+    --ink:#0E1116;
+    --ink-2:#171C23;
+    --ink-3:#1F2630;
+    --blue:#00A4FF;
+    --blue-ink:#006DB3;
+    --blue-mid:#0090E0;
+    --hair:#D9DEE3;
+    --hair-soft:#E8ECEF;
+    --mut:#5A646E;
+    --mut-2:#8F98A1;
+    --ok:#1B8A4B;
+    --warn:#B26A00;
+    --err:#C0341D;
+    --ease:cubic-bezier(.2,.6,.2,1);
+    --side:248px;
+    --top:64px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;border-radius:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:var(--font-d);background:var(--porcelain);color:var(--ink);
+    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;border-radius:0;}
+  button{cursor:pointer;background:none;border:none;}
+  table{border-collapse:collapse;width:100%;}
+  [hidden]{display:none!important;}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
+  /* ---------------- shell ---------------- */
+  .shell{display:flex;min-height:100vh;}
+
+  /* ---------------- sidebar ---------------- */
+  .side{
+    width:var(--side);flex:none;background:var(--ink);color:#fff;
+    display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:50;
+  }
+  .side-brand{
+    height:var(--top);display:flex;align-items:center;gap:11px;
+    padding:0 20px;border-bottom:1px solid rgba(255,255,255,.1);flex:none;
+  }
+  .side-brand .mark{width:26px;height:26px;background:var(--blue);flex:none;display:grid;place-items:center;}
+  .side-brand .mark svg{width:16px;height:16px;fill:var(--ink);}
+  .side-brand b{font-family:var(--font-s);font-weight:400;font-size:12px;letter-spacing:.22em;text-transform:uppercase;}
+  .side-nav{flex:1;overflow-y:auto;padding:16px 0 24px;}
+  .nav-g{margin-bottom:20px;}
+  .nav-g h4{
+    font-family:var(--font-s);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;
+    color:#6B7683;padding:0 20px;margin-bottom:8px;
+  }
+  .nav-i{
+    display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+    padding:10px 20px;font-size:13px;font-weight:500;color:#C7CDD4;
+    border-left:2px solid transparent;transition:background .16s var(--ease),color .16s var(--ease);
+  }
+  .nav-i svg{width:15px;height:15px;flex:none;stroke:currentColor;stroke-width:1.7;fill:none;}
+  .nav-i:hover{background:rgba(255,255,255,.05);color:#fff;}
+  .nav-i.on{background:rgba(0,164,255,.12);border-left-color:var(--blue);color:#fff;}
+  .nav-i .pill{
+    margin-left:auto;background:var(--blue);color:var(--ink);font-size:10px;font-weight:800;
+    padding:2px 6px;letter-spacing:.04em;
+  }
+  .nav-i .pill.warn{background:var(--warn);color:#fff;}
+  .side-foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.1);flex:none;}
+  .side-foot p{font-size:10.5px;color:#6B7683;line-height:1.6;}
+
+  /* ---------------- main ---------------- */
+  .main{flex:1;margin-left:var(--side);min-width:0;display:flex;flex-direction:column;}
+  .top{
+    height:var(--top);flex:none;background:var(--white);border-bottom:1px solid var(--hair);
+    display:flex;align-items:center;gap:16px;padding:0 clamp(16px,2.5vw,28px);
+    position:sticky;top:0;z-index:40;
+  }
+  .top h1{font-weight:800;font-stretch:112%;font-size:17px;letter-spacing:-.01em;text-transform:uppercase;}
+  .top .crumb{font-family:var(--font-s);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut-2);display:block;margin-bottom:1px;}
+  .top-r{margin-left:auto;display:flex;align-items:center;gap:10px;}
+  .who{display:flex;align-items:center;gap:9px;padding-left:12px;border-left:1px solid var(--hair);}
+  .who .av{width:28px;height:28px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none;}
+  .who-t{line-height:1.25;}
+  .who-t b{display:block;font-size:12px;font-weight:700;}
+  .who-t span{font-size:10.5px;color:var(--mut-2);}
+  .content{padding:clamp(18px,2.6vw,30px);flex:1;min-width:0;}
+
+  /* ---------------- primitives ---------------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:10px 16px;background:var(--ink);color:#fff;border:1px solid var(--ink);
+    transition:background .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease);white-space:nowrap;
+  }
+  .btn:hover{background:var(--blue);border-color:var(--blue);color:var(--ink);}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--hair);}
+  .btn.ghost:hover{border-color:var(--blue-ink);color:var(--blue-ink);background:transparent;}
+  .btn.danger{background:var(--err);border-color:var(--err);color:#fff;}
+  .btn.danger:hover{background:#9E2916;border-color:#9E2916;color:#fff;}
+  .btn.sm{padding:7px 11px;font-size:10.5px;}
+  .btn:disabled{opacity:.38;pointer-events:none;}
+  .btn svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none;}
+
+  .card{background:var(--white);border:1px solid var(--hair);min-width:0;}
+  .card-h{padding:15px 18px;border-bottom:1px solid var(--hair-soft);display:flex;align-items:center;gap:12px;}
+  .card-h h3{font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;}
+  .card-h .r{margin-left:auto;display:flex;gap:8px;align-items:center;}
+  .card-b{padding:18px;}
+
+  .in{
+    width:100%;padding:10px 12px;border:1px solid var(--hair);background:var(--white);
+    font-size:13px;outline:none;transition:border-color .18s var(--ease);
+  }
+  .in:focus{border-color:var(--ink);}
+  .in:disabled{background:var(--porcelain);color:var(--mut-2);}
+  textarea.in{resize:vertical;min-height:76px;line-height:1.55;}
+  .lab{display:block;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mut-2);margin-bottom:6px;}
+  .fld{margin-bottom:14px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .hint{font-size:11px;color:var(--mut-2);margin-top:5px;line-height:1.5;}
+
+  .tag{
+    display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;
+    letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;
+    background:var(--porcelain);color:var(--mut);border:1px solid var(--hair);white-space:nowrap;
+  }
+  .tag.ok{background:rgba(27,138,75,.1);color:var(--ok);border-color:rgba(27,138,75,.3);}
+  .tag.warn{background:rgba(178,106,0,.1);color:var(--warn);border-color:rgba(178,106,0,.3);}
+  .tag.err{background:rgba(192,52,29,.1);color:var(--err);border-color:rgba(192,52,29,.3);}
+  .tag.blue{background:rgba(0,109,179,.1);color:var(--blue-ink);border-color:rgba(0,109,179,.3);}
+  .tag.ink{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  /* ---------------- table ---------------- */
+  .tbl-wrap{overflow-x:auto;max-width:100%;}
+  .tbl{font-size:13px;}
+  .tbl th{
+    text-align:left;font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--mut-2);padding:11px 14px;border-bottom:1px solid var(--hair);white-space:nowrap;background:var(--white);
+  }
+  .tbl td{padding:12px 14px;border-bottom:1px solid var(--hair-soft);vertical-align:middle;}
+  .tbl tbody tr{transition:background .14s var(--ease);}
+  .tbl tbody tr:hover{background:var(--porcelain);}
+  .tbl tbody tr.clk{cursor:pointer;}
+  .tbl .num{text-align:right;font-variant-numeric:tabular-nums;}
+  .tbl b{font-weight:700;}
+  .tbl .sub{font-size:11.5px;color:var(--mut-2);}
+  .empty{padding:44px 20px;text-align:center;color:var(--mut-2);font-size:13px;}
+
+  /* ---------------- kpi ---------------- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);margin-bottom:22px;}
+  .kpi{background:var(--white);padding:18px;}
+  .kpi .k{font-family:var(--font-s);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut-2);}
+  .kpi .v{font-weight:800;font-stretch:118%;font-size:1.9rem;letter-spacing:-.02em;line-height:1.1;margin-top:8px;}
+  .kpi .d{font-size:11px;color:var(--mut);margin-top:4px;}
+  .kpi .v.blue{color:var(--blue-ink);}
+
+  /* ---------------- toolbar ---------------- */
+  .bar{display:flex;align-items:center;gap:9px;margin-bottom:16px;flex-wrap:wrap;}
+  .chip{
+    font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    padding:8px 13px;border:1px solid var(--hair);background:var(--white);color:var(--mut);
+    transition:all .18s var(--ease);
+  }
+  .chip:hover{border-color:var(--ink);color:var(--ink);}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .bar .sp{margin-left:auto;display:flex;gap:9px;align-items:center;}
+  .srch{position:relative;}
+  .srch input{padding-left:32px;width:210px;}
+  .srch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:13px;height:13px;stroke:var(--mut-2);stroke-width:2;fill:none;pointer-events:none;}
+
+  /* ---------------- drawer ---------------- */
+  .scrim{position:fixed;inset:0;background:rgba(14,17,22,.5);z-index:60;opacity:0;pointer-events:none;transition:opacity .25s var(--ease);}
+  .scrim.on{opacity:1;pointer-events:auto;}
+  .drw{
+    position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--white);z-index:61;
+    transform:translateX(100%);transition:transform .3s var(--ease);display:flex;flex-direction:column;
+  }
+  .drw.on{transform:none;}
+  .drw-h{padding:18px 20px;border-bottom:1px solid var(--hair);display:flex;align-items:flex-start;gap:12px;flex:none;}
+  .drw-h h2{font-weight:800;font-size:16px;letter-spacing:-.005em;line-height:1.25;}
+  .drw-h .k{font-family:var(--font-s);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut-2);margin-bottom:5px;}
+  .drw-x{margin-left:auto;width:32px;height:32px;border:1px solid var(--hair);display:grid;place-items:center;flex:none;}
+  .drw-x:hover{border-color:var(--ink);}
+  .drw-x svg{width:13px;height:13px;stroke:var(--ink);stroke-width:2;fill:none;}
+  .drw-b{padding:20px;overflow-y:auto;flex:1;}
+  .drw-f{padding:14px 20px;border-top:1px solid var(--hair);display:flex;gap:9px;align-items:center;flex:none;background:var(--porcelain);}
+  .drw-f .sp{margin-left:auto;display:flex;gap:9px;}
+
+  /* ---------------- timeline ---------------- */
+  .tl{position:relative;padding-left:20px;}
+  .tl::before{content:"";position:absolute;left:3px;top:5px;bottom:5px;width:1px;background:var(--hair);}
+  .tl-i{position:relative;padding-bottom:16px;}
+  .tl-i::before{content:"";position:absolute;left:-20px;top:4px;width:7px;height:7px;background:var(--hair);}
+  .tl-i.done::before{background:var(--blue);}
+  .tl-i b{display:block;font-size:12.5px;font-weight:700;}
+  .tl-i span{font-size:11px;color:var(--mut-2);}
+
+  /* ---------------- misc ---------------- */
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:80;
+    background:var(--ink);color:#fff;padding:13px 20px;font-size:12.5px;font-weight:600;
+    opacity:0;pointer-events:none;transition:opacity .22s var(--ease),transform .22s var(--ease);
+    display:flex;align-items:center;gap:12px;max-width:min(520px,92vw);
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0);}
+  .toast b{color:var(--blue);}
+  .banner{
+    background:#FFF6E5;border:1px solid rgba(178,106,0,.35);padding:12px 15px;
+    font-size:12px;color:#7A4A00;line-height:1.6;margin-bottom:20px;display:flex;gap:11px;align-items:flex-start;
+  }
+  .banner svg{width:15px;height:15px;stroke:var(--warn);stroke-width:2;fill:none;flex:none;margin-top:1px;}
+  .banner b{font-weight:800;}
+  .split{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:start;}
+  .split > *{min-width:0;}
+  .rows > div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--hair-soft);font-size:13px;}
+  .rows > div:last-child{border-bottom:none;}
+  .rows span{color:var(--mut);}
+  .rows b{font-weight:700;text-align:right;}
+  .perm{font-size:12px;}
+  .perm th,.perm td{padding:9px 12px;border:1px solid var(--hair-soft);text-align:center;}
+  .perm th:first-child,.perm td:first-child{text-align:left;}
+  .perm .y{color:var(--ok);font-weight:800;}
+  .perm .n{color:var(--hair);}
+  .sec-h{font-weight:800;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut-2);margin:22px 0 10px;}
+  .sec-h:first-child{margin-top:0;}
+
+  @media (max-width:1080px){
+    .split{grid-template-columns:1fr;}
+  }
+  @media (max-width:860px){
+    :root{--side:0px;}
+    .side{transform:translateX(-100%);transition:transform .3s var(--ease);width:248px;}
+    .side.on{transform:none;}
+    .main{margin-left:0;}
+    .burger{display:grid!important;}
+  }
+  .burger{display:none;width:34px;height:34px;border:1px solid var(--hair);place-items:center;}
+  .burger svg{width:15px;height:15px;stroke:var(--ink);stroke-width:2;fill:none;}
+
+  /* ---------------- media grid ---------------- */
+  .media{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+  .media .slot{
+    position:relative;aspect-ratio:1/1;background:var(--porcelain);border:1px dashed var(--hair);
+    display:grid;place-items:center;overflow:hidden;cursor:pointer;
+    transition:border-color .18s var(--ease),background .18s var(--ease);
+  }
+  .media .slot:hover{border-color:var(--ink);}
+  .media .slot.filled{border-style:solid;cursor:default;}
+  .media .slot img,.media .slot video{width:100%;height:100%;object-fit:cover;display:block;}
+  .media .slot .add{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--mut-2);font-size:10px;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:6px;}
+  .media .slot .add svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.6;fill:none;}
+  .media .slot .kind{position:absolute;left:6px;top:6px;background:var(--ink);color:#fff;font-size:9px;font-weight:800;letter-spacing:.1em;padding:2px 5px;text-transform:uppercase;}
+  .media .slot .cover{position:absolute;right:6px;top:6px;background:var(--blue);color:var(--ink);font-size:9px;font-weight:800;letter-spacing:.1em;padding:2px 5px;text-transform:uppercase;}
+  .media .slot .del{
+    position:absolute;right:6px;bottom:6px;width:24px;height:24px;background:rgba(14,17,22,.85);
+    color:#fff;display:grid;place-items:center;opacity:0;transition:opacity .16s var(--ease);
+  }
+  .media .slot:hover .del{opacity:1;}
+  .media .slot .del svg{width:11px;height:11px;stroke:currentColor;stroke-width:2.4;fill:none;}
+  .media .slot .setcover{
+    position:absolute;left:6px;bottom:6px;background:rgba(255,255,255,.94);color:var(--ink);
+    font-size:9px;font-weight:800;letter-spacing:.1em;padding:3px 6px;text-transform:uppercase;
+    opacity:0;transition:opacity .16s var(--ease);
+  }
+  .media .slot:hover .setcover{opacity:1;}
+  @media (max-width:520px){ .media{grid-template-columns:repeat(3,1fr);} }
+
+  /* ---------------- variants table ---------------- */
+  .vartbl{width:100%;font-size:12.5px;border:1px solid var(--hair-soft);}
+  .vartbl th,.vartbl td{padding:8px 10px;border-bottom:1px solid var(--hair-soft);text-align:left;}
+  .vartbl th{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mut-2);background:var(--porcelain);}
+  .vartbl input{padding:6px 8px;font-size:12.5px;border:1px solid var(--hair);width:100%;}
+  .vartbl .drag{cursor:grab;color:var(--mut-2);width:22px;text-align:center;}
+  .vartbl td.act{width:38px;text-align:center;}
+  .vartbl .rm{width:26px;height:26px;border:1px solid var(--hair);display:inline-grid;place-items:center;}
+  .vartbl .rm:hover{border-color:var(--err);color:var(--err);}
+  .vartbl .rm svg{width:11px;height:11px;stroke:currentColor;stroke-width:2.2;fill:none;}
+  .vartbl .oos{color:var(--err);font-weight:700;}
+  .vartbl .low{color:var(--warn);font-weight:700;}
+  .rollup{display:flex;justify-content:space-between;padding:10px 12px;background:var(--porcelain);font-size:12px;border:1px solid var(--hair-soft);border-top:none;}
+  .rollup b{font-weight:800;}
+  @media (max-width:620px){
+    .who-t{display:none;}
+    .who{padding-left:8px;}
+    .top{gap:9px;padding:0 14px;}
+    .top h1{font-size:14px;}
+    .top .crumb{font-size:9px;}
+    #roleSel{max-width:112px;}
+    .content{padding:14px;}
+    .bar .sp{margin-left:0;width:100%;}
+    .srch input{width:100%;}
+    .srch{flex:1;}
+  }
+.skip{position:fixed;top:-64px;left:16px;z-index:300;background:var(--ink);color:#fff;padding:13px 18px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:top .2s ease}.skip:focus{top:12px;outline:2px solid var(--blue)}.nojs{max-width:1220px;margin:0 auto;padding:clamp(48px,6vw,88px) clamp(20px,4vw,48px)}.nojs-e{font-family:var(--font-s);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:22px}.nojs-h{font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1.05;letter-spacing:-.015em;max-width:20ch}.nojs-p{color:var(--mut);margin-top:20px;max-width:56ch}.nojs-a{display:inline-block;margin-top:28px;background:var(--ink);color:#fff;padding:14px 22px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.gate{position:fixed;inset:0;z-index:200;background:var(--ink);display:flex;align-items:center;justify-content:center;padding:24px;}
+.gate[hidden]{display:none;}
+body.locked .shell,body.locked .drw,body.locked .scrim{display:none;}
+.gate-in{width:100%;max-width:420px;text-align:left;}
+.gate-mark{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;background:var(--blue);margin-bottom:22px;}
+.gate-mark svg{width:20px;height:20px;fill:var(--ink);}
+.gate-k{font-family:var(--font-d);font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0 0 10px;}
+.gate-h{font-family:var(--font-s);font-size:30px;font-weight:400;line-height:1.15;color:var(--white);margin:0 0 12px;}
+.gate-p{font-family:var(--font-d);font-size:13px;line-height:1.6;color:var(--mut-2);margin:0 0 24px;}
+.gate .btn{width:100%;}
+.gate[data-state="working"] .btn,.gate[data-state="error"] .btn{opacity:.45;pointer-events:none;}
+.gate-spin{margin-top:18px;}
+.gate-spin span{display:block;width:20px;height:20px;border:2px solid var(--ink-3);border-top-color:var(--blue);animation:gspin .7s linear infinite;}
+@keyframes gspin{to{transform:rotate(360deg)}}
+.gate-err{font-family:var(--font-d);font-size:12.5px;line-height:1.6;color:var(--white);background:var(--err);padding:12px 14px;margin:18px 0 0;}
+</style>
+<script src="vendor/firebase-app-compat.js"></script>
+<script src="vendor/firebase-auth-compat.js"></script>
+<script src="pfa-firebase-config.js"></script>
+<script src="pfa-admin-auth.js"></script>
+</head>
+<body class="locked"><a class="skip" href="#view">Skip to content</a>
+<div class="gate" id="gate" data-state="signin" role="dialog" aria-modal="true" aria-labelledby="gateH">
+  <div class="gate-in">
+    <span class="gate-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 18h16v2H4zM6 6h8v10H6zM16 9l4-3v10l-4-3z"/></svg></span>
+    <p class="gate-k">PFA Console</p>
+    <h1 class="gate-h" id="gateH">Sign in to continue</h1>
+    <p class="gate-p">This console holds personal records. Access is limited to pfaindia.org accounts, and what you can see is set by your role, not by this page.</p>
+    <button class="btn" id="gateBtn" type="button">Sign in with Google</button>
+    <div class="gate-spin" id="gateSpin" hidden aria-hidden="true"><span></span></div>
+    <p class="gate-err" id="gateErr" role="alert" hidden></p>
+    <noscript><p class="gate-err" style="display:block">This console needs JavaScript to verify who you are. It will not open without it.</p></noscript>
+  </div>
+</div>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-brand">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 18h16v2H4zM6 6h8v10H6zM16 9l4-3v10l-4-3z"/></svg>
+      </span>
+      <b>PFA Console</b>
+    </div>
+    <nav class="side-nav" id="nav"></nav>
+    <div class="side-foot">
+      <p id="envNote">Local preview<br>Data is in this browser only</p>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <button class="burger" id="burger" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div>
+        <span class="crumb" id="crumb">Console</span>
+        <h1 id="title">Dashboard</h1>
+      </div>
+      <div class="top-r">
+        
+        <div class="who">
+          <span class="av" id="avatar"></span>
+          <span class="who-t"><b id="whoName"></b><span id="whoRole"></span></span>
+        </div>
+        <button class="btn ghost" id="signOut" type="button" style="padding:8px 12px;">Sign out</button>
+      </div>
+    </header>
+    <main class="content" id="view" tabindex="-1"><noscript><div class="nojs"><p class="nojs-h">This console needs JavaScript.</p><p class="nojs-p">The admin console renders entirely in the browser. Turn JavaScript on to sign in.</p></div></noscript></main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drw" id="drw" role="dialog" aria-modal="true" aria-labelledby="drwTitle">
+  <div class="drw-h">
+    <div>
+      <p class="k" id="drwKind">Record</p>
+      <h2 id="drwTitle">Title</h2>
+    </div>
+    <button class="drw-x" id="drwX" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drw-b" id="drwBody"></div>
+  <div class="drw-f" id="drwFoot"></div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ==================================================================
+   PFA CONSOLE
+   ------------------------------------------------------------------
+   THE SWAP POINT. Every read and write in this file goes through
+   DB.* and every one of them is already async. To put this on
+   Firebase, replace the body of these five methods and change
+   nothing else in the ~900 lines of view code below:
+
+     DB.list(coll, filter)   -> getDocs(query(collection(db, coll)))
+     DB.get(coll, id)        -> getDoc(doc(db, coll, id))
+     DB.add(coll, doc)       -> addDoc(collection(db, coll), doc)
+     DB.put(coll, id, patch) -> updateDoc(doc(db, coll, id), patch)
+     DB.remove(coll, id)     -> deleteDoc(doc(db, coll, id))
+
+   Until then it persists to localStorage on this one browser.
+
+   PERMISSIONS below are UI affordances only - they decide which
+   buttons render. They are NOT security. Anyone can open DevTools
+   and call DB directly. Real enforcement has to live in Firestore
+   rules and Cloud Functions. Do not treat this as access control.
+   ================================================================== */
+
+/* ---------------- roles ---------------- */
+var ROLES = {
+  admin:   { name:"Admin",      caps:["*"] },
+  ops:     { name:"Operations", caps:["catalogue.read","catalogue.write","orders.read","orders.write","patrons.read","adoption.read","adoption.write","volunteers.read","volunteers.write","places.read","places.write","events.read","events.write","donations.read","audit.read"] },
+  finance: { name:"Finance",    caps:["catalogue.read","orders.read","refunds.approve","patrons.read","patrons.write","donations.read","donations.write","audit.read"] },
+  editor:  { name:"Editor",     caps:["catalogue.read","content.read","content.write","submissions.read","submissions.write","adoption.read","adoption.write","events.read","quiz.read","quiz.write"] }
+};
+var CAPS = ["catalogue.read","catalogue.write","orders.read","orders.write","refunds.approve","donations.read","donations.write","patrons.read","patrons.write","volunteers.read","volunteers.write","content.read","content.write","content.publish","submissions.read","submissions.write","adoption.read","adoption.write","events.read","events.write","places.read","places.write","quiz.read","quiz.write","heat.write","settings.write","team.manage","audit.read"];
+var actor = { name:"", email:"", role:null, uid:null }; /* filled from the ID token claim by PFAAuth, never by the page */
+function can(cap){ var r = ROLES[actor.role]; if (!r) return false; var c = r.caps; return c.indexOf("*") > -1 || c.indexOf(cap) > -1; }
+
+/* ---------------- seed ---------------- */
+var SEED_PRODUCTS = [
+  {"id":"cap1","cat":"caps","name":"The Standard Cap","price":799,"mprice":699,"spec":"Cotton twill. Embroidered emblem.","tag":"","stock":14,"variants":[{"size":"S/M","sku_suffix":"SM","qty":7,"weight_g":null},{"size":"L/XL","sku_suffix":"LXL","qty":7,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"cap2","cat":"caps","name":"The Field Cap","price":849,"mprice":749,"spec":"Five-panel. Quick-dry for the rains.","tag":"Monsoon","stock":9,"variants":[{"size":"S/M","sku_suffix":"SM","qty":4,"weight_g":null},{"size":"L/XL","sku_suffix":"LXL","qty":5,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"tee1","cat":"apparel","name":"The Emblem Tee","price":899,"mprice":799,"spec":"220 GSM cotton. Emblem at the chest.","tag":"","stock":31,"variants":[{"size":"XS","sku_suffix":"XS","qty":1,"weight_g":null},{"size":"S","sku_suffix":"S","qty":5,"weight_g":null},{"size":"M","sku_suffix":"M","qty":7,"weight_g":null},{"size":"L","sku_suffix":"L","qty":7,"weight_g":null},{"size":"XL","sku_suffix":"XL","qty":5,"weight_g":null},{"size":"XXL","sku_suffix":"XXL","qty":6,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"tee2","cat":"apparel","name":"The Wordmark Tee","price":899,"mprice":799,"spec":"People for Animals, across the back.","tag":"","stock":22,"variants":[{"size":"XS","sku_suffix":"XS","qty":1,"weight_g":null},{"size":"S","sku_suffix":"S","qty":4,"weight_g":null},{"size":"M","sku_suffix":"M","qty":5,"weight_g":null},{"size":"L","sku_suffix":"L","qty":5,"weight_g":null},{"size":"XL","sku_suffix":"XL","qty":4,"weight_g":null},{"size":"XXL","sku_suffix":"XXL","qty":3,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"hood1","cat":"apparel","name":"The Heavyweight Hoodie","price":1999,"mprice":1799,"spec":"400 GSM fleece. Kangaroo pocket.","tag":"","stock":6,"variants":[{"size":"XS","sku_suffix":"XS","qty":0,"weight_g":null},{"size":"S","sku_suffix":"S","qty":1,"weight_g":null},{"size":"M","sku_suffix":"M","qty":1,"weight_g":null},{"size":"L","sku_suffix":"L","qty":1,"weight_g":null},{"size":"XL","sku_suffix":"XL","qty":1,"weight_g":null},{"size":"XXL","sku_suffix":"XXL","qty":2,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"jkt1","cat":"apparel","name":"The Coach Jacket","price":3499,"mprice":2999,"spec":"Water-resistant shell. Emblem in blue, back.","tag":"Drop 01 - Edition of 500","stock":4,"variants":[{"size":"XS","sku_suffix":"XS","qty":0,"weight_g":null},{"size":"S","sku_suffix":"S","qty":0,"weight_g":null},{"size":"M","sku_suffix":"M","qty":1,"weight_g":null},{"size":"L","sku_suffix":"L","qty":1,"weight_g":null},{"size":"XL","sku_suffix":"XL","qty":0,"weight_g":null},{"size":"XXL","sku_suffix":"XXL","qty":2,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"tote1","cat":"bags","name":"The Canvas Tote","price":599,"mprice":499,"spec":"Fits a rescue kit. Or the groceries.","tag":"","stock":48,"variants":[{"size":"One size","sku_suffix":"OS","qty":48,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"pack1","cat":"bags","name":"The Field Backpack","price":2499,"mprice":2199,"spec":"20 litres. Vet-run ready.","tag":"","stock":11,"variants":[{"size":"One size","sku_suffix":"OS","qty":11,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"note1","cat":"paper","name":"Notebooks, Set of 3","price":499,"mprice":449,"spec":"Dot grid. Lies flat.","tag":"","stock":56,"variants":[{"size":"One size","sku_suffix":"OS","qty":56,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"cal1","cat":"paper","name":"Wall Calendar 2027","price":699,"mprice":629,"spec":"Twelve rescues, twelve months.","tag":"","stock":0,"variants":[{"size":"One size","sku_suffix":"OS","qty":0,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"leash1","cat":"pets","name":"The Rope Leash","price":649,"mprice":579,"spec":"Cotton rope. Solid brass clip.","tag":"","stock":18,"variants":[{"size":"S","sku_suffix":"S","qty":4,"weight_g":null},{"size":"M","sku_suffix":"M","qty":9,"weight_g":null},{"size":"L","sku_suffix":"L","qty":5,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"collar1","cat":"pets","name":"The Everyday Collar","price":549,"mprice":489,"spec":"Soft webbing. Emblem tag included.","tag":"","stock":25,"variants":[{"size":"S","sku_suffix":"S","qty":6,"weight_g":null},{"size":"M","sku_suffix":"M","qty":12,"weight_g":null},{"size":"L","sku_suffix":"L","qty":7,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"treat1","cat":"pets","name":"Vegetarian Treats","price":349,"mprice":299,"spec":"Baked, vegetarian, vet-checked.","tag":"","stock":64,"variants":[{"size":"One size","sku_suffix":"OS","qty":64,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"pin1","cat":"pins","name":"The Enamel Pin","price":299,"mprice":259,"spec":"Hard enamel. The emblem, exact.","tag":"","stock":120,"variants":[{"size":"One size","sku_suffix":"OS","qty":120,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"stk1","cat":"pins","name":"The Sticker Sheet","price":149,"mprice":129,"spec":"Weatherproof vinyl. Nine marks.","tag":"","stock":200,"variants":[{"size":"One size","sku_suffix":"OS","qty":200,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"bot1","cat":"home","name":"The Steel Bottle","price":999,"mprice":899,"spec":"750 ml. Twelve-hour cold.","tag":"","stock":27,"variants":[{"size":"One size","sku_suffix":"OS","qty":27,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"mug1","cat":"home","name":"The Ceramic Mug","price":549,"mprice":489,"spec":"350 ml. The emblem in blue.","tag":"","stock":33,"variants":[{"size":"One size","sku_suffix":"OS","qty":33,"weight_g":null}],"status":"live","media":[],"weight_g":null},
+  {"id":"cof1","cat":"home","name":"PFA Coffee, 250g","price":649,"mprice":579,"spec":"Single origin, medium roast.","tag":"","stock":41,"variants":[{"size":"One size","sku_suffix":"OS","qty":41,"weight_g":null}],"status":"live","media":[],"weight_g":null}
+];
+
+function daysAgo(n){ var d = new Date(); d.setDate(d.getDate() - n); return d.toISOString(); }
+var PEOPLE = [
+  ["Ananya Rao","Bengaluru"],["Rohit Menon","Kochi"],["Sneha Kulkarni","Pune"],["Imran Sheikh","Mumbai"],
+  ["Divya Nair","Chennai"],["Karan Bedi","Delhi"],["Meera Joshi","Udupi"],["Arjun Prasad","Hyderabad"],
+  ["Fatima Khan","Lucknow"],["Vikram Shetty","Mangaluru"],["Priya Iyer","Coimbatore"],["Sameer Gupta","Jaipur"]
+];
+var ORD_STATUS = ["placed","packed","shipped","delivered","refund_requested","refunded","cancelled"];
+function seedOrders(){
+  var picks = [["cap1",1],["tee1",2],["jkt1",1],["tote1",1],["cof1",2],["pin1",3],["hood1",1],["bot1",1],["leash1",1],["mug1",2],["pack1",1],["note1",1]];
+  var st = ["delivered","delivered","shipped","packed","placed","delivered","refund_requested","delivered","refunded","placed","shipped","cancelled","refund_requested","delivered"];
+  var out = [];
+  for (var i = 0; i < 14; i++){
+    var per = PEOPLE[i % PEOPLE.length];
+    var items = [];
+    var n = (i % 3) + 1;
+    for (var j = 0; j < n; j++){
+      var pk = picks[(i + j * 4) % picks.length];
+      var pr = SEED_PRODUCTS.filter(function(p){ return p.id === pk[0]; })[0];
+      var patron = i % 4 === 0;
+      items.push({ id: pk[0], name: pr.name, qty: pk[1], unit: patron ? pr.mprice : pr.price });
+    }
+    var total = items.reduce(function(a, c){ return a + c.unit * c.qty; }, 0);
+    var ship = total >= 999 ? 0 : 79;
+    out.push({
+      id: "PFA" + (24801 + i),
+      customer: per[0], city: per[1],
+      email: per[0].toLowerCase().split(" ")[0] + "@example.in",
+      patron: i % 4 === 0,
+      items: items, subtotal: total, shipping: ship, total: total + ship,
+      status: st[i], placedAt: daysAgo(i + 1),
+      refund: (st[i] === "refund_requested" ? { amount: total + ship, reason: "Size does not fit", state: "pending" }
+             : st[i] === "refunded" ? { amount: total + ship, reason: "Arrived damaged", state: "approved" } : null),
+      events: [{ t: daysAgo(i + 1), s: "Order placed" }]
+    });
+  }
+  return out;
+}
+function seedPatrons(){
+  var st = ["active","active","pending","active","expired","active","pending","active","active","active"];
+  return PEOPLE.slice(0, 10).map(function(p, i){
+    return { id: "PC" + (1041 + i), name: p[0], city: p[1],
+      email: p[0].toLowerCase().split(" ")[0] + "@example.in",
+      status: st[i], amount: 365, since: daysAgo(30 + i * 21),
+      renews: daysAgo(-(300 - i * 12)), card: st[i] === "active" ? "issued" : "not issued" };
+  });
+}
+var SEED_CONTENT = [
+  { id:"c1", kind:"film",  title:"Ninety days with Bagheera", status:"published", author:"Meera Joshi", updated:daysAgo(4),  note:"" },
+  { id:"c2", kind:"film",  title:"The night shift at the Udupi unit", status:"review", author:"Rohit Menon", updated:daysAgo(1), note:"Check consent for the family in the last scene." },
+  { id:"c3", kind:"news",  title:"Supreme Court order on ABC compliance", status:"published", author:"Karan Bedi", updated:daysAgo(9), note:"" },
+  { id:"c4", kind:"news",  title:"PFA opens its 27th hospital", status:"scheduled", author:"Divya Nair", updated:daysAgo(2), note:"Goes live with the Mangaluru launch." },
+  { id:"c5", kind:"story", title:"The feeder who would not move", status:"draft", author:"Sneha Kulkarni", updated:daysAgo(0), note:"" },
+  { id:"c6", kind:"story", title:"What the heat map showed us in 2026", status:"review", author:"Arjun Prasad", updated:daysAgo(3), note:"Numbers must be marked indicative." },
+  { id:"c7", kind:"film",  title:"A day in the life of a rescue van", status:"draft", author:"Imran Sheikh", updated:daysAgo(6), note:"" },
+  { id:"c8", kind:"news",  title:"Monsoon drop is live", status:"published", author:"Priya Iyer", updated:daysAgo(12), note:"" },
+  { id:"c9", kind:"story", title:"Twelve rescues, twelve months", status:"review", author:"Meera Joshi", updated:daysAgo(1), note:"" }
+];
+var SEED_TEAM = [
+  { id:"u1", name:"Maneka Gandhi", email:"maneka@pfaindia.org", role:"admin", active:true },
+  { id:"u2", name:"Meera Joshi", email:"meera@pfaindia.org", role:"editor", active:true },
+  { id:"u3", name:"Rohit Menon", email:"rohit@pfaindia.org", role:"ops", active:true },
+  { id:"u4", name:"Divya Nair", email:"divya@pfaindia.org", role:"finance", active:true },
+  { id:"u5", name:"Arjun Prasad", email:"arjun@pfaindia.org", role:"editor", active:false }
+];
+
+/* funds mirror give.html PURPOSES */
+var SEED_FUNDS = [
+  { id:"where", name:"Where it is needed most", blurb:"Let PFA put your gift wherever the need is sharpest today - the fastest way to help.", active:true },
+  { id:"emergency", name:"Emergency rescue and care", blurb:"The 2am calls - road accidents, cruelty rescues, animals in crisis who cannot wait.", active:true },
+  { id:"medical", name:"Medical treatment", blurb:"Surgeries, medicines, and the long recoveries that give badly hurt animals a second chance.", active:true },
+  { id:"feeding", name:"Feeding drives", blurb:"Daily meals for community dogs, especially through the lean and rainy months.", active:true },
+  { id:"abc", name:"Sterilisation (ABC)", blurb:"Humane population control - the one approach that actually reduces suffering over time.", active:true },
+  { id:"vaccination", name:"Vaccination", blurb:"Anti-rabies and core vaccines that protect community animals and the people around them.", active:true }
+];
+function seedDonations(){
+  var funds = ["where","emergency","medical","feeding","abc","vaccination"];
+  var amounts = [500, 1000, 2500, 300, 5000, 600, 1200, 2500, 1000, 500, 2500, 300, 5000, 1000, 600, 2500];
+  var st = ["received","received","received","receipt_sent","received","failed","received","receipt_sent","received","received","refund_requested","received","receipt_sent","received","received","received"];
+  var out = [];
+  for (var i = 0; i < 16; i++){
+    var per = PEOPLE[(i * 3) % PEOPLE.length];
+    var monthly = i % 4 === 1;
+    out.push({ id:"DN" + (7301 + i), donor: per[0], city: per[1],
+      email: per[0].toLowerCase().split(" ")[0] + "@example.in",
+      fund: funds[i % funds.length], amount: amounts[i], kind: monthly ? "monthly" : "once",
+      status: st[i], pan: i % 3 === 0 ? "given" : "not given", g80: i % 3 === 0,
+      at: daysAgo(i === 0 ? 0 : i) });
+  }
+  return out;
+}
+/* dogs mirror adopt.html DOGS richness */
+var SEED_ADOPT = [
+  { id:"kaali", name:"Kaali", sex:"Female", age:"8 months", size:"Medium", place:"Udupi", vax:"Vaccinated", ster:"Not yet - too young", status:"available", updated:daysAgo(3) },
+  { id:"bagheera", name:"Bagheera", sex:"Male", age:"2 years", size:"Large", place:"Udupi", vax:"Vaccinated", ster:"Sterilised", status:"available", updated:daysAgo(5) },
+  { id:"laddu", name:"Laddu", sex:"Male", age:"7 months", size:"Small", place:"Bengaluru", vax:"Vaccinated", ster:"Not yet - too young", status:"reserved", updated:daysAgo(1) },
+  { id:"chotu", name:"Chotu", sex:"Male", age:"4 years", size:"Medium", place:"Mumbai", vax:"Vaccinated", ster:"Sterilised", status:"available", updated:daysAgo(8) },
+  { id:"rani", name:"Rani", sex:"Female", age:"1 year", size:"Medium", place:"Pune", vax:"Vaccinated", ster:"Sterilised", status:"adopted", updated:daysAgo(15) },
+  { id:"moti", name:"Moti", sex:"Male", age:"5 months", size:"Small", place:"Delhi", vax:"First dose", ster:"Not yet - too young", status:"available", updated:daysAgo(2) },
+  { id:"simba", name:"Simba", sex:"Male", age:"2 years", size:"Large", place:"Chennai", vax:"Vaccinated", ster:"Sterilised", status:"reserved", updated:daysAgo(4) },
+  { id:"gauri", name:"Gauri", sex:"Female", age:"6 years", size:"Medium", place:"Kochi", vax:"Vaccinated", ster:"Sterilised", status:"available", updated:daysAgo(11) }
+];
+/* applications mirror the 5-step adopt flow: You / Home / Household / Care */
+function seedAdoptApps(){
+  var rows = [
+    ["Laddu","laddu","Ananya Rao","Bengaluru","Own house with yard","2 adults, 1 child (9)","First dog, works from home","screening"],
+    ["Simba","simba","Imran Sheikh","Mumbai","Rented flat, landlord approves","2 adults","Had labs for 12 years","screening"],
+    ["Kaali","kaali","Meera Joshi","Udupi","Own flat, ground floor","1 adult","Feeds community dogs daily","new"],
+    ["Chotu","chotu","Karan Bedi","Delhi","Own house","3 adults","Has a senior indie already","home_visit"],
+    ["Moti","moti","Sneha Kulkarni","Pune","Rented house with garden","2 adults","First-time adopter","rejected"],
+    ["Bagheera","bagheera","Vikram Shetty","Mangaluru","Farmhouse","4 adults","Experienced with large dogs","approved"]
+  ];
+  return rows.map(function(r, i){
+    return { id:"AP" + (501 + i), dog:r[0], dogId:r[1], applicant:r[2], city:r[3],
+      email:r[2].toLowerCase().split(" ")[0] + "@example.in",
+      home:r[4], household:r[5], care:r[6], status:r[7], at:daysAgo(i + 1) };
+  });
+}
+/* volunteer and caretaker paths from get-involved.html */
+function seedVolunteers(){
+  var paths = ["Volunteer - rescue support","Volunteer - shelter shifts","Volunteer - events and drives","Caretaker card","Trainee - first responder"];
+  var st = ["applied","training","active","applied","active","training","applied","active","lapsed","applied"];
+  return PEOPLE.slice(2, 12).map(function(p, i){
+    return { id:"VL" + (201 + i), name:p[0], city:p[1],
+      email:p[0].toLowerCase().split(" ")[0] + "@example.in",
+      path:paths[i % paths.length], status:st[i], at:daysAgo(2 + i * 3) };
+  });
+}
+/* network units - the 26 hospitals / 165 units the site claims */
+var SEED_UNITS = [
+  { id:"n1", name:"PFA Hospital Udupi", kind:"hospital", city:"Udupi", state:"Karnataka", phone:"0820 252 0000", head:"Dr. S Hegde", status:"active" },
+  { id:"n2", name:"PFA Hospital Bengaluru", kind:"hospital", city:"Bengaluru", state:"Karnataka", phone:"080 2334 0000", head:"Dr. R Iyer", status:"active" },
+  { id:"n3", name:"PFA Unit Mangaluru", kind:"unit", city:"Mangaluru", state:"Karnataka", phone:"0824 244 0000", head:"P Shetty", status:"active" },
+  { id:"n4", name:"PFA Hospital Mumbai", kind:"hospital", city:"Mumbai", state:"Maharashtra", phone:"022 2620 0000", head:"Dr. A Kulkarni", status:"active" },
+  { id:"n5", name:"PFA Unit Pune", kind:"unit", city:"Pune", state:"Maharashtra", phone:"020 2565 0000", head:"S Deshpande", status:"active" },
+  { id:"n6", name:"PFA Hospital Delhi", kind:"hospital", city:"Delhi", state:"Delhi", phone:"011 2654 0000", head:"Dr. N Kaur", status:"active" },
+  { id:"n7", name:"PFA Unit Kochi", kind:"unit", city:"Kochi", state:"Kerala", phone:"0484 235 0000", head:"T Varghese", status:"active" },
+  { id:"n8", name:"PFA Unit Jaipur", kind:"unit", city:"Jaipur", state:"Rajasthan", phone:"0141 256 0000", head:"M Singh", status:"onboarding" },
+  { id:"n9", name:"PFA Hospital Mangaluru", kind:"hospital", city:"Mangaluru", state:"Karnataka", phone:"0824 242 0000", head:"Dr. K Rao", status:"onboarding" },
+  { id:"n10", name:"PFA Unit Lucknow", kind:"unit", city:"Lucknow", state:"Uttar Pradesh", phone:"0522 262 0000", head:"A Khan", status:"paused" }
+];
+/* PFA X certifications - real seed from pfa-x.html PLACES */
+var SEED_XPLACES = [
+  { id:"x1", name:"Vidyodaya Public School", cat:"schools", city:"Udupi", tier:"gold", status:"certified", renews:daysAgo(-220) },
+  { id:"x2", name:"Manipal Junior College", cat:"schools", city:"Manipal", tier:"certified", status:"certified", renews:daysAgo(-160) },
+  { id:"x3", name:"Sapphire Residency", cat:"residences", city:"Bengaluru", tier:"platinum", status:"certified", renews:daysAgo(-300) },
+  { id:"x4", name:"Green Meadows Layout", cat:"residences", city:"Mysuru", tier:"gold", status:"certified", renews:daysAgo(-90) },
+  { id:"x5", name:"The Bean Tree Cafe", cat:"cafes", city:"Manipal", tier:"gold", status:"certified", renews:daysAgo(-45) },
+  { id:"x6", name:"Lakeside Tech Park", cat:"workplaces", city:"Bengaluru", tier:"certified", status:"applied", renews:null },
+  { id:"x7", name:"Coral Heights", cat:"residences", city:"Mumbai", tier:"certified", status:"assessment", renews:null },
+  { id:"x8", name:"Sunrise International School", cat:"schools", city:"Hyderabad", tier:"certified", status:"applied", renews:null },
+  { id:"x9", name:"The Verandah Cafe", cat:"cafes", city:"Udupi", tier:"certified", status:"lapsed", renews:daysAgo(30) }
+];
+/* trusted services + the two intake queues services.html exposes */
+var SEED_SERVICES = [
+  { id:"s1", name:"Karavali Pet Clinic", kind:"vet", city:"Udupi", phone:"0820 429 0000", vetted:daysAgo(120), status:"listed" },
+  { id:"s2", name:"Paws and Claws Grooming", kind:"groomer", city:"Manipal", phone:"98450 00001", vetted:daysAgo(90), status:"listed" },
+  { id:"s3", name:"Safe Walks Dog Walking", kind:"walker", city:"Bengaluru", phone:"98860 00002", vetted:daysAgo(60), status:"listed" },
+  { id:"s4", name:"Healing Paws Physio", kind:"physio", city:"Bengaluru", phone:"99000 00003", vetted:daysAgo(200), status:"listed" },
+  { id:"s5", name:"Coastal Boarding Kennels", kind:"boarding", city:"Mangaluru", phone:"98450 00004", vetted:null, status:"nominated" },
+  { id:"s6", name:"Happy Tails Vet Care", kind:"vet", city:"Mumbai", phone:"98200 00005", vetted:null, status:"nominated" },
+  { id:"s7", name:"Quick Groom Salon", kind:"groomer", city:"Delhi", phone:"98100 00006", vetted:daysAgo(400), status:"concern", note:"Two reports of rough handling, under review" }
+];
+/* events - the monthly meet from watch-listen-do-meet plus drives */
+var SEED_EVENTS = [
+  { id:"e1", title:"An hour with Maneka", kind:"meet", when:daysAgo(-12), where:"Zoom", rsvps:214, status:"scheduled" },
+  { id:"e2", title:"Adoption drive - Cubbon Park", kind:"drive", when:daysAgo(-5), where:"Bengaluru", rsvps:67, status:"scheduled" },
+  { id:"e3", title:"Feeder training - Udupi unit", kind:"training", when:daysAgo(-19), where:"Udupi", rsvps:32, status:"scheduled" },
+  { id:"e4", title:"An hour with Maneka", kind:"meet", when:daysAgo(18), where:"Zoom", rsvps:198, status:"done" },
+  { id:"e5", title:"Vaccination camp - Andheri", kind:"camp", when:daysAgo(9), where:"Mumbai", rsvps:0, status:"done" },
+  { id:"e6", title:"World Animal Day town hall", kind:"meet", when:daysAgo(-80), where:"Zoom", rsvps:12, status:"draft" }
+];
+/* community story submissions mirror stories.html src:"community" entries */
+var SEED_SUBMISSIONS = [
+  { id:"sub1", title:"From the shelter gate to a sofa in Whitefield", by:"Ritu Shenoy", kind:"adoption", status:"approved", at:daysAgo(20) },
+  { id:"sub2", title:"6am on 12th Main, thirty years running", by:"Shakuntala Devi", kind:"caretaker", status:"approved", at:daysAgo(14) },
+  { id:"sub3", title:"The kitten in the scooter boot", by:"Farhan Ali", kind:"rescue", status:"pending", at:daysAgo(2) },
+  { id:"sub4", title:"Our society finally built a feeding corner", by:"Nisha Menon", kind:"caretaker", status:"pending", at:daysAgo(1) },
+  { id:"sub5", title:"Monsoon feeding on Marine Drive", by:"Kunal Doshi", kind:"caretaker", status:"pending", at:daysAgo(0) },
+  { id:"sub6", title:"Puppy mill footage from Alandur", by:"Anonymous", kind:"rescue", status:"rejected", at:daysAgo(6), note:"Cannot verify. Sent to legal for the cruelty angle instead." }
+];
+/* champion question bank - same shape as champion.html rows */
+var SEED_QUIZ = [
+  { id:"q1", q:"Which of these big cats is NOT a member of the genus Panthera?", a:["Lion","Tiger","Cheetah","Leopard"], c:2, status:"live" },
+  { id:"q2", q:"How many hearts does an octopus have?", a:["One","Two","Three","Four"], c:2, status:"live" },
+  { id:"q3", q:"What is India's national aquatic animal?", a:["Gangetic dolphin","Olive ridley turtle","Gharial","Mahseer"], c:0, status:"live" },
+  { id:"q4", q:"Under the ABC Rules 2023, sterilised dogs must be returned to", a:["A shelter","Their original territory","A foster home","The municipal pound"], c:1, status:"live" },
+  { id:"q5", q:"A dog's normal body temperature is closest to", a:["36.5 C","38.5 C","40.5 C","35 C"], c:1, status:"live" },
+  { id:"q6", q:"Which vitamin can dogs synthesise that humans cannot?", a:["Vitamin C","Vitamin D","Vitamin B12","Vitamin K"], c:0, status:"draft" }
+];
+/* heat map - real values from pfa-coex-data.js, marked illustrative on the site */
+var SEED_HEAT = [
+  { id:"Karnataka", index:88, abc:77, cruelty:94, feeders:89, municipal:90, rescue:92 },
+  { id:"Maharashtra", index:74, abc:70, cruelty:76, feeders:72, municipal:75, rescue:77 },
+  { id:"Delhi", index:69, abc:66, cruelty:71, feeders:68, municipal:70, rescue:70 },
+  { id:"Kerala", index:71, abc:68, cruelty:74, feeders:70, municipal:71, rescue:72 },
+  { id:"Tamil Nadu", index:66, abc:62, cruelty:69, feeders:64, municipal:67, rescue:68 },
+  { id:"Uttar Pradesh", index:48, abc:45, cruelty:50, feeders:44, municipal:49, rescue:52 },
+  { id:"Rajasthan", index:55, abc:52, cruelty:57, feeders:53, municipal:55, rescue:58 },
+  { id:"West Bengal", index:58, abc:54, cruelty:61, feeders:56, municipal:58, rescue:61 }
+];
+/* site settings mirror what the pages hardcode */
+var SEED_SETTINGS = [
+  { id:"stats", founded:"1992", hospitals:"26", units:"165", members:"2.5 Lakh" },
+  { id:"storefront", campaignK:"New drop - The 2026 collection", marquee:"The margin goes back | 100% to the animals | Every order ships an impact receipt" },
+  { id:"giving", presetsOnce:"500, 1000, 2500, 5000", presetsMonth:"300, 600, 1200, 2500" }
+];
+
+/* ---------------- adapter ---------------- */
+var DB = (function(){
+  var KEY = "pfa_console_v3", mem = null;
+  function seed(){
+    return { products: SEED_PRODUCTS.slice(), orders: seedOrders(), patrons: seedPatrons(),
+             content: SEED_CONTENT.slice(), adoptions: SEED_ADOPT.slice(), team: SEED_TEAM.slice(),
+             funds: SEED_FUNDS.slice(), donations: seedDonations(), adoptapps: seedAdoptApps(),
+             volunteers: seedVolunteers(), units: SEED_UNITS.slice(), xplaces: SEED_XPLACES.slice(),
+             services: SEED_SERVICES.slice(), events: SEED_EVENTS.slice(), submissions: SEED_SUBMISSIONS.slice(),
+             quiz: SEED_QUIZ.slice(), heat: SEED_HEAT.slice(), settings: SEED_SETTINGS.slice(), audit: [] };
+  }
+  function load(){
+    if (mem) return mem;
+    try { var raw = localStorage.getItem(KEY); mem = raw ? JSON.parse(raw) : seed(); }
+    catch (e) { mem = seed(); }
+    return mem;
+  }
+  function flush(){ try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) {} }
+  function log(action, coll, id, detail){
+    load().audit.unshift({ id: "a" + Date.now() + Math.random().toString(36).slice(2, 6),
+      at: new Date().toISOString(), actor: actor.name, role: actor.role,
+      action: action, coll: coll, ref: id, detail: detail || "" });
+    if (mem.audit.length > 400) mem.audit.length = 400;
+  }
+  return {
+    list: function(coll, filter){
+      return Promise.resolve(load()[coll].filter(filter || function(){ return true; }).slice());
+    },
+    get: function(coll, id){
+      return Promise.resolve(load()[coll].filter(function(d){ return d.id === id; })[0] || null);
+    },
+    add: function(coll, doc){
+      load()[coll].unshift(doc); log("create", coll, doc.id, doc.name || doc.title || ""); flush();
+      return Promise.resolve(doc);
+    },
+    put: function(coll, id, patch, note){
+      var d = load()[coll].filter(function(x){ return x.id === id; })[0];
+      if (!d) return Promise.reject(new Error("not found: " + coll + "/" + id));
+      Object.keys(patch).forEach(function(k){ d[k] = patch[k]; });
+      log("update", coll, id, note || Object.keys(patch).join(", ")); flush();
+      return Promise.resolve(d);
+    },
+    remove: function(coll, id){
+      var a = load()[coll], i = a.findIndex(function(x){ return x.id === id; });
+      if (i > -1) a.splice(i, 1);
+      log("delete", coll, id, ""); flush();
+      return Promise.resolve(true);
+    },
+    reset: function(){ mem = seed(); flush(); return Promise.resolve(true); },
+    _log: log, _flush: flush
+  };
+})();
+
+/* ---------------- helpers ---------------- */
+function $(s, r){ return (r || document).querySelector(s); }
+function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]; }); }
+function inr(n){ return "\u20B9" + Number(n || 0).toLocaleString("en-IN"); }
+function when(iso){
+  var d = new Date(iso), now = new Date(), ms = now - d, day = 864e5;
+  if (ms < 0) return "in " + Math.ceil(-ms / day) + "d";
+  if (ms < 36e5) return Math.max(1, Math.round(ms / 6e4)) + "m ago";
+  if (ms < day) return Math.round(ms / 36e5) + "h ago";
+  if (ms < 30 * day) return Math.round(ms / day) + "d ago";
+  return d.toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" });
+}
+function initials(n){ return n.split(" ").map(function(x){ return x[0]; }).join("").slice(0, 2).toUpperCase(); }
+var toastT;
+function toast(msg){
+  var t = $("#toast"); t.innerHTML = msg; t.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove("on"); }, 3200);
+}
+function openDrw(kind, title, body, foot){
+  $("#drwKind").textContent = kind; $("#drwTitle").textContent = title;
+  $("#drwBody").innerHTML = body; $("#drwFoot").innerHTML = foot || "";
+  $("#drw").classList.add("on"); $("#scrim").classList.add("on");
+}
+function closeDrw(){ $("#drw").classList.remove("on"); $("#scrim").classList.remove("on"); }
+$("#drwX").addEventListener("click", closeDrw);
+$("#scrim").addEventListener("click", closeDrw);
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeDrw(); });
+
+var ST = {
+  placed:["blue","Placed"], packed:["blue","Packed"], shipped:["blue","Shipped"],
+  delivered:["ok","Delivered"], cancelled:["","Cancelled"],
+  refund_requested:["warn","Refund asked"], refunded:["err","Refunded"],
+  live:["ok","Live"], hidden:["","Hidden"],
+  draft:["","Draft"], review:["warn","In review"], scheduled:["blue","Scheduled"], published:["ok","Published"],
+  active:["ok","Active"], pending:["warn","Pending"], expired:["err","Expired"],
+  available:["ok","Available"], reserved:["warn","Reserved"], adopted:["blue","Adopted"],
+  received:["ok","Received"], receipt_sent:["blue","Receipt sent"], failed:["err","Failed"],
+  new:["blue","New"], screening:["warn","Screening"], home_visit:["warn","Home visit"], approved:["ok","Approved"], rejected:["err","Rejected"],
+  applied:["blue","Applied"], training:["warn","In training"], lapsed:["err","Lapsed"],
+  onboarding:["warn","Onboarding"], paused:["err","Paused"],
+  certified:["ok","Certified"], assessment:["warn","Assessment"],
+  listed:["ok","Listed"], nominated:["blue","Nominated"], concern:["err","Concern"],
+  done:["","Done"]
+};
+function badge(s){ var m = ST[s] || ["", s]; return '<span class="tag ' + m[0] + '">' + esc(m[1]) + "</span>"; }
+
+/* ---------------- nav + router ---------------- */
+var ICON = {
+  dash:'<path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 8h6V4h-6z"/>',
+  cat:'<path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/>',
+  ord:'<path d="M6 2h12l2 6H4zM4 8h16v14H4z"/><path d="M9 12h6"/>',
+  ref:'<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>',
+  pat:'<path d="M4 6h16v12H4z"/><circle cx="9" cy="12" r="2.4"/><path d="M14 10h4M14 14h4"/>',
+  team:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0M16 5.3a3.2 3.2 0 0 1 0 5.4M18 20a6 6 0 0 0-3-5.2"/>',
+  cont:'<path d="M5 3h14v18H5z"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  adopt:'<path d="M12 20s-7-4.4-7-9.3A4 4 0 0 1 12 8a4 4 0 0 1 7 2.7c0 4.9-7 9.3-7 9.3z"/>',
+  audit:'<path d="M9 3h10v18H5V7z"/><path d="M9 3v4H5"/><path d="M9 13h6M9 17h4"/>',
+  give:'<path d="M12 21s-8-5-8-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 3.5C20 16 12 21 12 21z"/><path d="M12 7v14"/>',
+  fund:'<path d="M4 10h16v10H4z"/><path d="M8 10V6h8v4M12 13v4"/>',
+  vol:'<path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/>',
+  sub:'<path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/>',
+  evt:'<path d="M4 5h16v16H4z"/><path d="M4 9h16M9 3v4M15 3v4"/><path d="M8 14h3v3H8z"/>',
+  quiz:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 17h.01"/>',
+  unit:'<path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M12 11v4M10 13h4"/>',
+  pfax:'<path d="M6 6l12 12M18 6L6 18"/><circle cx="12" cy="12" r="10"/>',
+  svc:'<path d="M20 7l-9 9-4-4"/><circle cx="12" cy="12" r="10"/>',
+  heat:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',
+  set:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>'
+};
+var NAV = [
+  { g:"Overview", items:[ { r:"dashboard", t:"Dashboard", i:"dash", cap:null } ] },
+  { g:"Commerce", items:[
+    { r:"catalogue", t:"Catalogue", i:"cat", cap:"catalogue.read" },
+    { r:"orders", t:"Orders", i:"ord", cap:"orders.read" },
+    { r:"refunds", t:"Refunds", i:"ref", cap:"orders.read" } ] },
+  { g:"Giving", items:[
+    { r:"donations", t:"Donations", i:"give", cap:"donations.read" },
+    { r:"funds", t:"Funds", i:"fund", cap:"donations.read" } ] },
+  { g:"People", items:[
+    { r:"patrons", t:"Patrons", i:"pat", cap:"patrons.read" },
+    { r:"volunteers", t:"Volunteers", i:"vol", cap:"volunteers.read" },
+    { r:"team", t:"Team and roles", i:"team", cap:"team.manage" } ] },
+  { g:"Content", items:[
+    { r:"content", t:"Content", i:"cont", cap:"content.read" },
+    { r:"submissions", t:"Community stories", i:"sub", cap:"submissions.read" },
+    { r:"adoption", t:"Adoption", i:"adopt", cap:"adoption.read" },
+    { r:"events", t:"Events and meets", i:"evt", cap:"events.read" },
+    { r:"quiz", t:"Champion quiz", i:"quiz", cap:"quiz.read" } ] },
+  { g:"Places", items:[
+    { r:"units", t:"Network units", i:"unit", cap:"places.read" },
+    { r:"pfax", t:"PFA X", i:"pfax", cap:"places.read" },
+    { r:"services", t:"Trusted services", i:"svc", cap:"places.read" } ] },
+  { g:"Data", items:[ { r:"heat", t:"Heat map", i:"heat", cap:"audit.read" } ] },
+  { g:"System", items:[
+    { r:"settings", t:"Site settings", i:"set", cap:"settings.write" },
+    { r:"audit", t:"Audit log", i:"audit", cap:"audit.read" } ] }
+];
+var TITLES = { dashboard:["Console","Dashboard"], catalogue:["Commerce","Catalogue"], orders:["Commerce","Orders"],
+  refunds:["Commerce","Refunds"], donations:["Giving","Donations"], funds:["Giving","Funds"],
+  patrons:["People","Patrons"], volunteers:["People","Volunteers"], team:["People","Team and roles"],
+  content:["Content","Content"], submissions:["Content","Community stories"], adoption:["Content","Adoption"],
+  events:["Content","Events and meets"], quiz:["Content","Champion quiz"],
+  units:["Places","Network units"], pfax:["Places","PFA X"], services:["Places","Trusted services"],
+  heat:["Data","Heat map"], settings:["System","Site settings"], audit:["System","Audit log"] };
+
+function renderNav(){
+  Promise.all([
+    DB.list("orders", function(o){ return o.status === "refund_requested"; }),
+    DB.list("content", function(c){ return c.status === "review"; }),
+    DB.list("submissions", function(x){ return x.status === "pending"; }),
+    DB.list("adoptapps", function(a){ return ["new","screening","home_visit"].indexOf(a.status) > -1; }),
+    DB.list("services", function(x){ return x.status !== "listed"; })
+  ]).then(function(r){
+    var counts = { refunds: r[0].length, content: r[1].length, submissions: r[2].length, adoption: r[3].length, services: r[4].length };
+    var cur = (location.hash.replace("#/", "") || "dashboard");
+    $("#nav").innerHTML = NAV.map(function(g){
+      var items = g.items.filter(function(it){ return !it.cap || can(it.cap); });
+      if (!items.length) return "";
+      return '<div class="nav-g"><h4>' + esc(g.g) + "</h4>" + items.map(function(it){
+        var n = counts[it.r];
+        return '<a class="nav-i' + (cur === it.r ? " on" : "") + '" href="#/' + it.r + '">' +
+          '<svg viewBox="0 0 24 24">' + ICON[it.i] + "</svg>" + esc(it.t) +
+          (n ? '<span class="pill' + (it.r === "refunds" ? " warn" : "") + '">' + n + "</span>" : "") + "</a>";
+      }).join("") + "</div>";
+    }).join("");
+  });
+}
+function route(){
+  var r = location.hash.replace("#/", "") || "dashboard";
+  var def = NAV.reduce(function(a, g){ return a.concat(g.items); }, []).filter(function(i){ return i.r === r; })[0];
+  if (!def || (def.cap && !can(def.cap))) { location.hash = "#/dashboard"; return; }
+  var t = TITLES[r] || ["Console", r];
+  $("#crumb").textContent = t[0]; $("#title").textContent = t[1];
+  document.title = t[1] + " - PFA Console";
+  $("#view").innerHTML = '<div class="empty">Loading</div>';
+  VIEWS[r]().then(function(html){ $("#view").innerHTML = html; if (WIRE[r]) WIRE[r](); renderNav(); });
+  $("#side").classList.remove("on");
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+$("#burger").addEventListener("click", function(){ $("#side").classList.toggle("on"); });
+
+var VIEWS = {}, WIRE = {};
+var NOTICE = '<div class="banner"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>Local preview.</b> Data lives in this browser only and permissions are UI-level, not enforced. Wire the DB adapter to Firestore and move enforcement into security rules before anyone relies on this.</span></div>';
+
+/* ---------------- dashboard ---------------- */
+VIEWS.dashboard = function(){
+  return Promise.all([DB.list("orders"), DB.list("patrons"), DB.list("content"), DB.list("products"),
+                      DB.list("donations"), DB.list("adoptapps"), DB.list("submissions"), DB.list("services"), DB.list("volunteers")])
+  .then(function(r){
+    var orders = r[0], patrons = r[1], content = r[2], prods = r[3], dons = r[4], aapps = r[5], subs = r[6], svcs = r[7], vols = r[8];
+    var live = orders.filter(function(o){ return ["refunded","cancelled"].indexOf(o.status) === -1; });
+    var revenue = live.reduce(function(a, o){ return a + o.total; }, 0);
+    var raised = dons.filter(function(d){ return d.status !== "failed"; }).reduce(function(a, d){ return a + d.amount; }, 0);
+    var refunds = orders.filter(function(o){ return o.status === "refund_requested"; });
+    var queues = [
+      { n: refunds.length, t: "refund" + (refunds.length === 1 ? "" : "s") + " awaiting finance", h: "#/refunds" },
+      { n: aapps.filter(function(a){ return ["new","screening","home_visit"].indexOf(a.status) > -1; }).length, t: "adoption applications open", h: "#/adoption" },
+      { n: subs.filter(function(x){ return x.status === "pending"; }).length, t: "community stories to moderate", h: "#/submissions" },
+      { n: content.filter(function(c){ return c.status === "review"; }).length, t: "content items in review", h: "#/content" },
+      { n: dons.filter(function(d){ return d.status === "received" && d.g80; }).length, t: "80G receipts to send", h: "#/donations" },
+      { n: svcs.filter(function(x){ return x.status === "concern"; }).length, t: "service concerns open", h: "#/services" },
+      { n: svcs.filter(function(x){ return x.status === "nominated"; }).length, t: "service nominations to vet", h: "#/services" },
+      { n: vols.filter(function(v){ return v.status === "applied"; }).length, t: "volunteer applications", h: "#/volunteers" },
+      { n: patrons.filter(function(p){ return p.status === "pending"; }).length, t: "patrons to verify", h: "#/patrons" }
+    ].filter(function(q){ return q.n > 0; });
+    var low = prods.filter(function(p){
+      var st = p.variants && p.variants.length ? p.variants.reduce(function(a, v){ return a + (+v.qty || 0); }, 0) : (+p.stock || 0);
+      p._st = st; return st <= 6;
+    });
+    return NOTICE +
+    '<div class="kpis">' +
+      kpi("Store revenue", inr(revenue), live.length + " orders, refunds excluded", true) +
+      kpi("Donations raised", inr(raised), dons.filter(function(d){ return d.kind === "monthly" && d.status !== "failed"; }).length + " monthly donors in the mix", true) +
+      kpi("Active patrons", patrons.filter(function(p){ return p.status === "active"; }).length, inr(patrons.filter(function(p){ return p.status === "active"; }).length * 365) + " a year recurring") +
+      kpi("Open orders", orders.filter(function(o){ return ["placed","packed","shipped"].indexOf(o.status) > -1; }).length, "awaiting packing or in transit") +
+      kpi("Things needing a human", queues.reduce(function(a, q){ return a + q.n; }, 0), "across " + queues.length + " queues") +
+    "</div>" +
+    '<div class="split">' +
+      '<div class="card"><div class="card-h"><h3>Recent orders</h3><div class="r"><a class="btn ghost sm" href="#/orders">Open</a></div></div>' +
+      '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Order</th><th>Customer</th><th>Status</th><th class="num">Total</th><th class="num">Placed</th></tr></thead><tbody>' +
+      orders.slice(0, 7).map(function(o){
+        return '<tr class="clk" data-o="' + o.id + '"><td><b>' + o.id + "</b></td><td>" + esc(o.customer) +
+          '<div class="sub">' + esc(o.city) + "</div></td><td>" + badge(o.status) + '</td><td class="num">' + inr(o.total) +
+          '</td><td class="num sub">' + when(o.placedAt) + "</td></tr>";
+      }).join("") + "</tbody></table></div></div>" +
+      '<div>' +
+        '<div class="card" style="margin-bottom:20px;"><div class="card-h"><h3>Work queues</h3></div>' +
+        (queues.length ? '<div class="tbl-wrap"><table class="tbl"><tbody>' + queues.map(function(q){
+          return '<tr class="clk" data-q="' + q.h + '"><td><b>' + q.n + "</b> " + esc(q.t) + "</td></tr>";
+        }).join("") + "</tbody></table></div>" : '<div class="empty">Every queue is clear</div>') + "</div>" +
+        '<div class="card"><div class="card-h"><h3>Low stock</h3></div>' +
+        (low.length ? '<div class="tbl-wrap"><table class="tbl"><tbody>' + low.map(function(p){
+          return "<tr><td>" + esc(p.name) + '</td><td class="num">' +
+            (p._st === 0 ? '<span class="tag err">Out</span>' : '<span class="tag warn">' + p._st + " left</span>") + "</td></tr>";
+        }).join("") + "</tbody></table></div>" : '<div class="empty">Everything is stocked</div>') + "</div>" +
+      "</div>" +
+    "</div>";
+  });
+};
+function kpi(k, v, d, blue){
+  return '<div class="kpi"><div class="k">' + esc(k) + '</div><div class="v' + (blue ? " blue" : "") + '">' + v + '</div><div class="d">' + esc(d) + "</div></div>";
+}
+WIRE.dashboard = function(){
+  $$("[data-o]").forEach(function(tr){ tr.addEventListener("click", function(){ location.hash = "#/orders"; setTimeout(function(){ orderDrawer(tr.dataset.o); }, 90); }); });
+  $$("[data-q]").forEach(function(tr){ tr.addEventListener("click", function(){ location.hash = tr.dataset.q; }); });
+};
+
+/* ---------------- catalogue ---------------- */
+var catFilter = "all", catQ = "";
+VIEWS.catalogue = function(){
+  return DB.list("products").then(function(ps){
+    var cats = ["all"].concat(ps.map(function(p){ return p.cat; }).filter(function(v, i, a){ return a.indexOf(v) === i; }));
+    var list = ps.filter(function(p){
+      return (catFilter === "all" || p.cat === catFilter) &&
+        (!catQ || (p.name + " " + p.spec + " " + p.id).toLowerCase().indexOf(catQ) > -1);
+    });
+    function totalStock(p){
+      if (p.variants && p.variants.length) return p.variants.reduce(function(a, v){ return a + (+v.qty || 0); }, 0);
+      return +p.stock || 0;
+    }
+    function cover(p){
+      if (!p.media || !p.media.length) return "";
+      var c = p.media.find(function(m){ return m.kind === "photo" && m.cover; }) || p.media.find(function(m){ return m.kind === "photo"; });
+      return c ? c.src : "";
+    }
+    function thumb(p){
+      var src = cover(p);
+      if (src) return '<div style="width:44px;height:44px;background:var(--porcelain);overflow:hidden;flex:none;"><img src="' + esc(src) + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"></div>';
+      return '<div style="width:44px;height:44px;background:var(--porcelain);border:1px dashed var(--hair);display:grid;place-items:center;flex:none;color:var(--mut-2);"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;stroke-width:1.6;fill:none;"><path d="M4 5h16v14H4zM4 15l4-4 5 5 3-3 4 4"/></svg></div>';
+    }
+    return '<div class="bar">' + cats.map(function(c){
+      return '<button class="chip' + (catFilter === c ? " on" : "") + '" data-f="' + c + '">' + esc(c) + "</button>";
+    }).join("") + '<div class="sp"><div class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg>' +
+      '<input class="in" id="q" placeholder="Search catalogue" value="' + esc(catQ) + '"></div>' +
+      (can("catalogue.write") ? '<button class="btn" id="newP"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New product</button>' : "") + "</div></div>" +
+      '<div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th></th><th>Product</th><th>Category</th><th class="num">Price</th><th class="num">Patron</th><th class="num">Variants</th><th class="num">Stock</th><th>Status</th><th></th></tr></thead><tbody>' +
+      (list.length ? list.map(function(p){
+        var st = totalStock(p);
+        var vCount = (p.variants && p.variants.length) || 1;
+        var vLabel = vCount === 1 && p.variants && p.variants[0] && p.variants[0].size === "One size" ? "One size" : (vCount + (vCount === 1 ? " variant" : " variants"));
+        var mCount = (p.media && p.media.length) || 0;
+        return '<tr class="clk" data-p="' + p.id + '">' +
+          '<td style="width:60px;">' + thumb(p) + "</td>" +
+          '<td><b>' + esc(p.name) + "</b>" +
+          '<div class="sub">' + esc(p.id) + (p.tag ? " - " + esc(p.tag) : "") + (mCount ? " - " + mCount + " media" : "") + "</div></td>" +
+          "<td>" + esc(p.cat) + '</td><td class="num">' + inr(p.price) + '</td><td class="num">' + inr(p.mprice) +
+          '</td><td class="num sub">' + esc(vLabel) + '</td>' +
+          '<td class="num">' + (st === 0 ? '<span class="tag err">Out</span>' : st <= 6 ? '<span class="tag warn">' + st + "</span>" : st) +
+          "</td><td>" + badge(p.status) + '</td><td class="num"><button class="btn ghost sm" data-edit="' + p.id + '">' + (can("catalogue.write") ? "Edit" : "View") + "</button></td></tr>";
+      }).join("") : '<tr><td colspan="9"><div class="empty">Nothing matches</div></td></tr>') + "</tbody></table></div></div>";
+  });
+};
+WIRE.catalogue = function(){
+  $$("[data-f]").forEach(function(b){ b.addEventListener("click", function(){ catFilter = b.dataset.f; route(); }); });
+  var q = $("#q");
+  if (q) q.addEventListener("input", function(e){ catQ = e.target.value.toLowerCase().trim(); var v = e.target.value; route(); setTimeout(function(){ var n = $("#q"); if (n) { n.focus(); n.setSelectionRange(v.length, v.length); } }, 0); });
+  $$("[data-edit]").forEach(function(b){ b.addEventListener("click", function(e){ e.stopPropagation(); productDrawer(b.dataset.edit); }); });
+  $$("[data-p]").forEach(function(tr){ tr.addEventListener("click", function(){ productDrawer(tr.dataset.p); }); });
+  var np = $("#newP"); if (np) np.addEventListener("click", function(){ productDrawer(null); });
+};
+function productDrawer(id){
+  var blank = { id:"", cat:"apparel", name:"", price:0, mprice:0, spec:"", tag:"", status:"live",
+                variants:[{ size:"One size", sku_suffix:"OS", qty:0, weight_g:null }], media:[] };
+  (id ? DB.get("products", id) : Promise.resolve(blank)).then(function(d){
+    // draft state - all edits mutate this, save() persists it
+    var draft = JSON.parse(JSON.stringify(d));
+    if (!draft.variants || !draft.variants.length) draft.variants = [{ size:"One size", sku_suffix:"OS", qty:0, weight_g:null }];
+    if (!draft.media) draft.media = [];
+    var rw = can("catalogue.write");
+
+    function totalStock(){ return draft.variants.reduce(function(a, v){ return a + (+v.qty || 0); }, 0); }
+    function mediaCount(kind){ return draft.media.filter(function(m){ return m.kind === kind; }).length; }
+    function coverIdx(){ var i = draft.media.findIndex(function(m){ return m.cover; }); return i > -1 ? i : (draft.media.length ? 0 : -1); }
+
+    function mediaSlots(){
+      // 4 photo slots + 1 video slot, always rendered
+      var html = "";
+      for (var i = 0; i < 4; i++){
+        var photos = draft.media.filter(function(m){ return m.kind === "photo"; });
+        var m = photos[i];
+        html += slotHTML(m, "photo", i);
+      }
+      var vids = draft.media.filter(function(m){ return m.kind === "video"; });
+      html += slotHTML(vids[0], "video", 0);
+      return html;
+    }
+    function slotHTML(m, kind, i){
+      if (!m) {
+        return '<label class="slot" data-add="' + kind + '">' +
+          '<div class="add"><svg viewBox="0 0 24 24">' +
+            (kind === "photo" ? '<path d="M4 5h16v14H4zM4 15l4-4 5 5 3-3 4 4M9 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>' : '<path d="M3 6h13v12H3zM16 10l5-3v10l-5-3z"/>') +
+          "</svg>" + (kind === "photo" ? "Photo " + (i + 1) : "Video") + "</div>" +
+          '<input type="file" accept="' + (kind === "photo" ? "image/*" : "video/*") + '" hidden data-fin="' + kind + '"></label>';
+      }
+      var iSrc = m.kind === "photo"
+        ? '<img src="' + esc(m.src) + '" alt="">'
+        : '<video src="' + esc(m.src) + '" muted></video>';
+      var isCover = m.cover;
+      return '<div class="slot filled">' + iSrc +
+        '<span class="kind">' + m.kind + "</span>" +
+        (isCover ? '<span class="cover">Cover</span>' : '<button class="setcover" data-cov="' + m.id + '">Set cover</button>') +
+        (rw ? '<button class="del" data-del="' + m.id + '" aria-label="Remove"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' : "") +
+        "</div>";
+    }
+
+    function variantsHTML(){
+      var singleVariantCats = ["paper","pins","home"];
+      var sizeLabel = draft.cat === "caps" ? "Fit" : "Size";
+      return '<table class="vartbl"><thead><tr><th style="width:34px;">#</th><th>' + sizeLabel + '</th><th style="width:120px;">SKU suffix</th><th style="width:100px;">Qty</th><th style="width:90px;">Weight (g)</th><th class="act"></th></tr></thead><tbody id="varRows">' +
+        draft.variants.map(function(v, i){
+          var oos = (+v.qty || 0) === 0, low = (+v.qty || 0) > 0 && (+v.qty || 0) <= 3;
+          return '<tr data-vr="' + i + '">' +
+            '<td class="drag">' + (i + 1) + "</td>" +
+            '<td><input data-vf="size:' + i + '" value="' + esc(v.size) + '"' + (rw ? "" : " disabled") + "></td>" +
+            '<td><input data-vf="sku_suffix:' + i + '" value="' + esc(v.sku_suffix) + '" placeholder="M"' + (rw ? "" : " disabled") + "></td>" +
+            '<td><input data-vf="qty:' + i + '" type="number" min="0" value="' + (+v.qty || 0) + '" class="' + (oos ? "oos" : low ? "low" : "") + '"' + (rw ? "" : " disabled") + "></td>" +
+            '<td><input data-vf="weight_g:' + i + '" type="number" min="0" value="' + (v.weight_g || "") + '" placeholder="-"' + (rw ? "" : " disabled") + "></td>" +
+            '<td class="act">' + (rw && draft.variants.length > 1 ? '<button class="rm" data-vrm="' + i + '" aria-label="Remove"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' : "") + "</td>" +
+            "</tr>";
+        }).join("") + "</tbody></table>" +
+        '<div class="rollup"><span>Total stock across variants</span><b id="rollup">' + totalStock() + " units</b></div>" +
+        (rw ? '<button class="btn ghost sm" id="addVar" style="margin-top:10px;"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add ' + sizeLabel.toLowerCase() + "</button>" : "") +
+        (singleVariantCats.indexOf(draft.cat) > -1 && draft.variants.length === 1
+          ? '<p class="hint">Single-variant category. Add variants only if you introduce sizes or editions.</p>' : "");
+    }
+
+    function drawer(){
+      var body =
+        '<p class="sec-h">Media <span class="tag" style="margin-left:8px;">Up to 4 photos, 1 video</span></p>' +
+        '<div class="media" id="media">' + mediaSlots() + "</div>" +
+        '<p class="hint" style="margin-top:8px;">First photo is the cover by default. Hover a filled slot to change it, or remove media. In production these upload to storage - here they save as data URLs.</p>' +
+
+        '<p class="sec-h">Details</p>' +
+        '<div class="fld"><label class="lab" for="f_name">Name</label><input class="in" id="f_name" value="' + esc(draft.name) + '"' + (rw ? "" : " disabled") + "></div>" +
+        '<div class="grid2"><div class="fld"><label class="lab" for="f_id">SKU</label><input class="in" id="f_id" value="' + esc(draft.id) + '"' + (id || !rw ? " disabled" : "") + ">" +
+          (id ? '<p class="hint">The SKU is the key the storefront reads. It cannot change.</p>' : "") + "</div>" +
+        '<div class="fld"><label class="lab" for="f_cat">Category</label><select class="in" id="f_cat"' + (rw ? "" : " disabled") + ">" +
+          ["caps","apparel","bags","paper","pets","pins","home"].map(function(c){ return '<option value="' + c + '"' + (draft.cat === c ? " selected" : "") + ">" + c + "</option>"; }).join("") + "</select></div></div>" +
+
+        '<div class="grid2"><div class="fld"><label class="lab" for="f_price">Price</label><input class="in" id="f_price" type="number" min="0" value="' + draft.price + '"' + (rw ? "" : " disabled") + "></div>" +
+        '<div class="fld"><label class="lab" for="f_mprice">Patron price</label><input class="in" id="f_mprice" type="number" min="0" value="' + draft.mprice + '"' + (rw ? "" : " disabled") + '><p class="hint" id="marginHint"></p></div></div>' +
+
+        '<div class="fld"><label class="lab" for="f_spec">Spec</label><textarea class="in" id="f_spec"' + (rw ? "" : " disabled") + ">" + esc(draft.spec) + "</textarea></div>" +
+
+        '<div class="grid2"><div class="fld"><label class="lab" for="f_status">Status</label><select class="in" id="f_status"' + (rw ? "" : " disabled") + '><option value="live"' + (draft.status === "live" ? " selected" : "") + '>Live</option><option value="hidden"' + (draft.status === "hidden" ? " selected" : "") + ">Hidden</option></select></div>" +
+        '<div class="fld"><label class="lab" for="f_tag">Tag</label><input class="in" id="f_tag" value="' + esc(draft.tag) + '" placeholder="Monsoon, Drop 01 and so on"' + (rw ? "" : " disabled") + "></div></div>" +
+
+        '<p class="sec-h">Variants and stock</p>' +
+        '<div id="varWrap">' + variantsHTML() + "</div>";
+
+      var foot = rw
+        ? '<button class="btn ghost" id="pCancel">Cancel</button><div class="sp">' +
+          (id ? '<button class="btn danger" id="pDel">Delete</button>' : "") +
+          '<button class="btn" id="pSave">' + (id ? "Save" : "Create") + "</button></div>"
+        : '<button class="btn ghost" id="pCancel">Close</button><div class="sp"><span class="tag">Read only for ' + esc(ROLES[actor.role].name) + "</span></div>";
+      openDrw(id ? "Product " + draft.id : "New product", draft.name || "Untitled", body, foot);
+      wire();
+    }
+
+    function refreshMedia(){ $("#media").innerHTML = mediaSlots(); wireMedia(); }
+    function refreshVariants(){ $("#varWrap").innerHTML = variantsHTML(); wireVariants(); }
+    function refreshRollup(){ var el = $("#rollup"); if (el) el.textContent = totalStock() + " units"; }
+
+    function wireMedia(){
+      $$("[data-add]", $("#media")).forEach(function(lbl){
+        var kind = lbl.dataset.add;
+        var input = lbl.querySelector('[data-fin]');
+        if (!input || !rw) return;
+        input.addEventListener("change", function(e){
+          var f = e.target.files && e.target.files[0]; if (!f) return;
+          var limit = kind === "photo" ? 4 : 1;
+          if (mediaCount(kind) >= limit) { toast(kind === "photo" ? "Up to 4 photos" : "Up to 1 video"); return; }
+          // basic guards
+          if (kind === "photo" && !/^image\//.test(f.type)) return toast("Please pick an image file");
+          if (kind === "video" && !/^video\//.test(f.type)) return toast("Please pick a video file");
+          var maxMB = kind === "photo" ? 5 : 25;
+          if (f.size > maxMB * 1024 * 1024) return toast(kind + " must be under " + maxMB + " MB");
+          var r = new FileReader();
+          r.onload = function(){
+            var m = { id:"m" + Date.now().toString(36) + Math.random().toString(36).slice(2,5),
+                      kind:kind, src:r.result, name:f.name, size:f.size, type:f.type,
+                      cover: kind === "photo" && draft.media.filter(function(x){ return x.kind === "photo"; }).length === 0 };
+            draft.media.push(m); refreshMedia(); toast(kind[0].toUpperCase() + kind.slice(1) + " added");
+          };
+          r.readAsDataURL(f);
+        });
+      });
+      $$("[data-del]", $("#media")).forEach(function(b){ b.addEventListener("click", function(e){
+        e.preventDefault(); e.stopPropagation();
+        var mid = b.dataset.del, m = draft.media.find(function(x){ return x.id === mid; });
+        var wasCover = m && m.cover;
+        draft.media = draft.media.filter(function(x){ return x.id !== mid; });
+        // if the cover was removed, promote the first remaining photo
+        if (wasCover) {
+          var first = draft.media.find(function(x){ return x.kind === "photo"; });
+          if (first) first.cover = true;
+        }
+        refreshMedia(); toast("Removed");
+      }); });
+      $$("[data-cov]", $("#media")).forEach(function(b){ b.addEventListener("click", function(e){
+        e.preventDefault(); e.stopPropagation();
+        var mid = b.dataset.cov;
+        draft.media.forEach(function(x){ if (x.kind === "photo") x.cover = (x.id === mid); });
+        refreshMedia(); toast("Cover set");
+      }); });
+    }
+
+    function wireVariants(){
+      $$("[data-vf]", $("#varWrap")).forEach(function(inp){ inp.addEventListener("input", function(){
+        var p = inp.dataset.vf.split(":"), field = p[0], i = +p[1];
+        var val = inp.value;
+        if (field === "qty" || field === "weight_g") val = val === "" ? null : Math.max(0, +val || 0);
+        draft.variants[i][field] = val;
+        if (field === "qty") { refreshRollup();
+          inp.classList.remove("oos","low");
+          var q = +val || 0; if (q === 0) inp.classList.add("oos"); else if (q <= 3) inp.classList.add("low");
+        }
+      }); });
+      $$("[data-vrm]", $("#varWrap")).forEach(function(b){ b.addEventListener("click", function(){
+        if (draft.variants.length <= 1) return toast("Keep at least one variant");
+        draft.variants.splice(+b.dataset.vrm, 1); refreshVariants();
+      }); });
+      var av = $("#addVar");
+      if (av) av.addEventListener("click", function(){
+        draft.variants.push({ size:"", sku_suffix:"", qty:0, weight_g:null }); refreshVariants();
+        // focus the new row's size
+        var rows = $$("[data-vr]", $("#varWrap")); var last = rows[rows.length - 1]; if (last) last.querySelector("input").focus();
+      });
+    }
+
+    function margin(){
+      var pr = +$("#f_price").value, mp = +$("#f_mprice").value, h = $("#marginHint");
+      if (!h) return;
+      h.textContent = mp > pr ? "Patron price is above list price" : pr ? "Patrons save " + inr(pr - mp) + " (" + Math.round((pr - mp) / pr * 100) + "%)" : "";
+      h.style.color = mp > pr ? "var(--err)" : "";
+    }
+
+    function wire(){
+      wireMedia(); wireVariants();
+      if (rw) { ["f_price","f_mprice"].forEach(function(i){ $("#" + i).addEventListener("input", margin); }); margin(); }
+      $("#pCancel").addEventListener("click", closeDrw);
+      var del = $("#pDel");
+      if (del) del.addEventListener("click", function(){
+        if (!confirm("Delete " + draft.name + "? The storefront will stop listing it.")) return;
+        DB.remove("products", draft.id).then(function(){ closeDrw(); toast("Deleted <b>" + esc(draft.name) + "</b>"); route(); });
+      });
+      var save = $("#pSave");
+      if (save) save.addEventListener("click", function(){
+        // validate top level
+        var name = $("#f_name").value.trim();
+        if (!name) return toast("Name is required");
+        var price = +$("#f_price").value, mprice = +$("#f_mprice").value;
+        if (mprice > price) return toast("Patron price cannot exceed list price");
+        // validate variants
+        var seen = {}, empties = 0, dupes = 0;
+        for (var i = 0; i < draft.variants.length; i++){
+          var v = draft.variants[i];
+          if (!String(v.size || "").trim() || !String(v.sku_suffix || "").trim()) empties++;
+          else if (seen[v.sku_suffix]) dupes++;
+          seen[v.sku_suffix] = true;
+        }
+        if (empties) return toast(empties + " variant" + (empties > 1 ? "s are" : " is") + " missing size or SKU suffix");
+        if (dupes) return toast("Two variants share a SKU suffix");
+        // ensure cover exists if any photos
+        var hasPhotos = draft.media.some(function(m){ return m.kind === "photo"; });
+        if (hasPhotos && !draft.media.some(function(m){ return m.cover; })) {
+          var first = draft.media.find(function(m){ return m.kind === "photo"; });
+          if (first) first.cover = true;
+        }
+        var patch = {
+          name:name, cat:$("#f_cat").value, price:price, mprice:mprice,
+          spec:$("#f_spec").value.trim(), status:$("#f_status").value, tag:$("#f_tag").value.trim(),
+          variants: draft.variants.map(function(v){ return { size:String(v.size).trim(), sku_suffix:String(v.sku_suffix).trim(), qty: +v.qty || 0, weight_g: v.weight_g == null || v.weight_g === "" ? null : +v.weight_g }; }),
+          stock: totalStock(),
+          media: draft.media
+        };
+        if (id) DB.put("products", id, patch, "edited " + patch.name + " - " + patch.variants.length + " variants - " + patch.media.length + " media").then(done);
+        else {
+          var sku = $("#f_id").value.trim();
+          if (!sku) return toast("SKU is required");
+          if (!/^[a-z0-9]+$/i.test(sku)) return toast("SKU must be alphanumeric");
+          DB.get("products", sku).then(function(x){
+            if (x) return toast("SKU <b>" + esc(sku) + "</b> already exists");
+            patch.id = sku; DB.add("products", patch).then(done);
+          });
+        }
+        function done(){ closeDrw(); toast("Saved <b>" + esc(patch.name) + "</b>"); route(); }
+      });
+    }
+
+    drawer();
+  });
+}
+
+/* ---------------- orders ---------------- */
+var ordFilter = "all";
+VIEWS.orders = function(){
+  return DB.list("orders").then(function(os){
+    var list = ordFilter === "all" ? os : os.filter(function(o){ return o.status === ordFilter; });
+    var fs = ["all"].concat(ORD_STATUS);
+    return '<div class="bar">' + fs.map(function(f){
+      var n = f === "all" ? os.length : os.filter(function(o){ return o.status === f; }).length;
+      return '<button class="chip' + (ordFilter === f ? " on" : "") + '" data-of="' + f + '">' + esc(f === "all" ? "All" : (ST[f] ? ST[f][1] : f)) + " " + n + "</button>";
+    }).join("") + "</div>" +
+    '<div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Status</th><th class="num">Total</th><th class="num">Placed</th></tr></thead><tbody>' +
+    (list.length ? list.map(function(o){
+      return '<tr class="clk" data-o="' + o.id + '"><td><b>' + o.id + "</b>" + (o.patron ? '<div class="sub">Patron</div>' : "") + "</td>" +
+        "<td>" + esc(o.customer) + '<div class="sub">' + esc(o.city) + "</div></td>" +
+        "<td>" + o.items.reduce(function(a, i){ return a + i.qty; }, 0) + '<div class="sub">' + esc(o.items[0].name) + (o.items.length > 1 ? " +" + (o.items.length - 1) : "") + "</div></td>" +
+        "<td>" + badge(o.status) + '</td><td class="num">' + inr(o.total) + '</td><td class="num sub">' + when(o.placedAt) + "</td></tr>";
+    }).join("") : '<tr><td colspan="6"><div class="empty">No orders here</div></td></tr>') + "</tbody></table></div></div>";
+  });
+};
+WIRE.orders = function(){
+  $$("[data-of]").forEach(function(b){ b.addEventListener("click", function(){ ordFilter = b.dataset.of; route(); }); });
+  $$("[data-o]").forEach(function(tr){ tr.addEventListener("click", function(){ orderDrawer(tr.dataset.o); }); });
+};
+var NEXT = { placed:"packed", packed:"shipped", shipped:"delivered" };
+function orderDrawer(id){
+  DB.get("orders", id).then(function(o){
+    var rw = can("orders.write");
+    var body =
+      '<div class="rows" style="margin-bottom:18px;">' +
+        "<div><span>Status</span><b>" + badge(o.status) + "</b></div>" +
+        "<div><span>Customer</span><b>" + esc(o.customer) + "</b></div>" +
+        "<div><span>Email</span><b>" + esc(o.email) + "</b></div>" +
+        "<div><span>City</span><b>" + esc(o.city) + "</b></div>" +
+        "<div><span>Placed</span><b>" + new Date(o.placedAt).toLocaleString("en-IN", { dateStyle:"medium", timeStyle:"short" }) + "</b></div>" +
+        "<div><span>Pricing</span><b>" + (o.patron ? "Patron" : "Standard") + "</b></div>" +
+      "</div>" +
+      '<p class="sec-h">Items</p><table class="tbl" style="border:1px solid var(--hair-soft);"><tbody>' +
+      o.items.map(function(i){
+        return "<tr><td>" + esc(i.name) + '<div class="sub">' + esc(i.id) + " x " + i.qty + '</div></td><td class="num">' + inr(i.unit * i.qty) + "</td></tr>";
+      }).join("") + "</tbody></table>" +
+      '<div class="rows" style="margin-top:14px;">' +
+        "<div><span>Subtotal</span><b>" + inr(o.subtotal) + "</b></div>" +
+        "<div><span>Shipping</span><b>" + (o.shipping ? inr(o.shipping) : "Free") + "</b></div>" +
+        "<div><span>Total</span><b>" + inr(o.total) + "</b></div>" +
+      "</div>" +
+      (o.refund ? '<p class="sec-h">Refund</p><div class="rows">' +
+        "<div><span>Amount</span><b>" + inr(o.refund.amount) + "</b></div>" +
+        "<div><span>Reason</span><b>" + esc(o.refund.reason) + "</b></div>" +
+        "<div><span>State</span><b>" + esc(o.refund.state) + "</b></div></div>" : "") +
+      '<p class="sec-h">Timeline</p><div class="tl">' + o.events.map(function(e){
+        return '<div class="tl-i done"><b>' + esc(e.s) + "</b><span>" + new Date(e.t).toLocaleString("en-IN", { dateStyle:"medium", timeStyle:"short" }) + "</span></div>";
+      }).join("") + "</div>";
+    var acts = "";
+    if (rw && NEXT[o.status]) acts += '<button class="btn" id="oNext">Mark ' + ST[NEXT[o.status]][1] + "</button>";
+    if (rw && ["placed","packed"].indexOf(o.status) > -1) acts += '<button class="btn ghost" id="oCancel">Cancel order</button>';
+    if (rw && o.status === "delivered") acts += '<button class="btn ghost" id="oRef">Start refund</button>';
+    var foot = '<button class="btn ghost" id="oClose">Close</button><div class="sp">' + (acts || '<span class="tag">No actions for ' + esc(ROLES[actor.role].name) + "</span>") + "</div>";
+    openDrw("Order " + o.id, o.customer, body, foot);
+    $("#oClose").addEventListener("click", closeDrw);
+    var nx = $("#oNext");
+    if (nx) nx.addEventListener("click", function(){
+      var s = NEXT[o.status], ev = o.events.concat([{ t:new Date().toISOString(), s:ST[s][1] }]);
+      DB.put("orders", o.id, { status:s, events:ev }, o.id + " -> " + s).then(function(){
+        toast("<b>" + o.id + "</b> marked " + ST[s][1].toLowerCase()); orderDrawer(o.id); route();
+      });
+    });
+    var cx = $("#oCancel");
+    if (cx) cx.addEventListener("click", function(){
+      if (!confirm("Cancel " + o.id + "?")) return;
+      var ev = o.events.concat([{ t:new Date().toISOString(), s:"Cancelled by " + actor.name }]);
+      DB.put("orders", o.id, { status:"cancelled", events:ev }, o.id + " cancelled").then(function(){
+        toast("<b>" + o.id + "</b> cancelled"); closeDrw(); route();
+      });
+    });
+    var rf = $("#oRef");
+    if (rf) rf.addEventListener("click", function(){ refundForm(o); });
+  });
+}
+function refundForm(o){
+  var body = '<div class="banner"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>' +
+    "<span>This records the intent to refund. <b>No money moves.</b> A real refund needs the payment gateway API, which is not connected.</span></div>" +
+    '<div class="fld"><label class="lab" for="r_amt">Amount</label><input class="in" id="r_amt" type="number" min="1" max="' + o.total + '" value="' + o.total + '"><p class="hint">Up to ' + inr(o.total) + ". Partial refunds are allowed.</p></div>" +
+    '<div class="fld"><label class="lab" for="r_why">Reason</label><select class="in" id="r_why"><option>Arrived damaged</option><option>Size does not fit</option><option>Wrong item sent</option><option>Never arrived</option><option>Changed mind</option></select></div>' +
+    '<div class="fld"><label class="lab" for="r_note">Note</label><textarea class="in" id="r_note" placeholder="Anything the finance team should know"></textarea></div>';
+  openDrw("Refund " + o.id, o.customer, body, '<button class="btn ghost" id="rCancel">Back</button><div class="sp"><button class="btn danger" id="rGo">Request refund</button></div>');
+  $("#rCancel").addEventListener("click", function(){ orderDrawer(o.id); });
+  $("#rGo").addEventListener("click", function(){
+    var amt = +$("#r_amt").value;
+    if (!amt || amt > o.total) return toast("Enter an amount up to " + inr(o.total));
+    var ev = o.events.concat([{ t:new Date().toISOString(), s:"Refund requested by " + actor.name }]);
+    DB.put("orders", o.id, { status:"refund_requested", events:ev,
+      refund:{ amount:amt, reason:$("#r_why").value, state:"pending", note:$("#r_note").value.trim(), by:actor.name } },
+      "refund " + inr(amt) + " requested").then(function(){
+      closeDrw(); toast("Refund requested on <b>" + o.id + "</b>. Finance can approve it."); route();
+    });
+  });
+}
+
+/* ---------------- refunds ---------------- */
+VIEWS.refunds = function(){
+  return DB.list("orders", function(o){ return !!o.refund; }).then(function(os){
+    var pend = os.filter(function(o){ return o.refund.state === "pending"; });
+    var done = os.filter(function(o){ return o.refund.state !== "pending"; });
+    function tbl(list, showAct){
+      return '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Order</th><th>Customer</th><th>Reason</th><th class="num">Amount</th><th class="num">Asked</th>' + (showAct ? "<th></th>" : "<th>State</th>") + "</tr></thead><tbody>" +
+        (list.length ? list.map(function(o){
+          return '<tr><td><b>' + o.id + '</b></td><td>' + esc(o.customer) + '<div class="sub">' + esc(o.city) + "</div></td>" +
+            "<td>" + esc(o.refund.reason) + (o.refund.note ? '<div class="sub">' + esc(o.refund.note) + "</div>" : "") + "</td>" +
+            '<td class="num"><b>' + inr(o.refund.amount) + '</b></td><td class="num sub">' + when(o.placedAt) + "</td>" +
+            (showAct
+              ? '<td class="num">' + (can("refunds.approve")
+                  ? '<button class="btn sm" data-appr="' + o.id + '">Approve</button> <button class="btn ghost sm" data-rej="' + o.id + '">Reject</button>'
+                  : '<span class="tag">Finance only</span>') + "</td>"
+              : "<td>" + badge(o.refund.state === "approved" ? "refunded" : "cancelled") + "</td>") + "</tr>";
+        }).join("") : '<tr><td colspan="6"><div class="empty">Nothing here</div></td></tr>') + "</tbody></table></div>";
+    }
+    return (can("refunds.approve") ? "" : '<div class="banner"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>You are acting as <b>' + esc(ROLES[actor.role].name) + "</b>. Only Finance and Admin can approve refunds.</span></div>") +
+      '<div class="kpis">' +
+        kpi("Pending", pend.length, "waiting on finance") +
+        kpi("Value pending", inr(pend.reduce(function(a, o){ return a + o.refund.amount; }, 0)), "if all are approved", true) +
+        kpi("Settled", done.length, "approved or rejected") +
+      "</div>" +
+      '<div class="card" style="margin-bottom:20px;"><div class="card-h"><h3>Awaiting a decision</h3></div>' + tbl(pend, true) + "</div>" +
+      '<div class="card"><div class="card-h"><h3>Settled</h3></div>' + tbl(done, false) + "</div>";
+  });
+};
+WIRE.refunds = function(){
+  $$("[data-appr]").forEach(function(b){ b.addEventListener("click", function(){ decide(b.dataset.appr, true); }); });
+  $$("[data-rej]").forEach(function(b){ b.addEventListener("click", function(){ decide(b.dataset.rej, false); }); });
+  function decide(id, ok){
+    DB.get("orders", id).then(function(o){
+      if (!confirm((ok ? "Approve" : "Reject") + " the " + inr(o.refund.amount) + " refund on " + id + "?")) return;
+      var r = Object.assign({}, o.refund, { state: ok ? "approved" : "rejected", by: actor.name, at: new Date().toISOString() });
+      var ev = o.events.concat([{ t:new Date().toISOString(), s:(ok ? "Refund approved by " : "Refund rejected by ") + actor.name }]);
+      DB.put("orders", id, { refund:r, status: ok ? "refunded" : "delivered", events:ev },
+        "refund " + (ok ? "approved" : "rejected")).then(function(){
+        toast("Refund on <b>" + id + "</b> " + (ok ? "approved. Money still has to move through the gateway." : "rejected.")); route();
+      });
+    });
+  }
+};
+
+/* ---------------- patrons ---------------- */
+VIEWS.patrons = function(){
+  return DB.list("patrons").then(function(ps){
+    var act = ps.filter(function(p){ return p.status === "active"; });
+    return '<div class="kpis">' +
+      kpi("Active", act.length, "verified and paying") +
+      kpi("Annual recurring", inr(act.length * 365), "at " + inr(365) + " each", true) +
+      kpi("Pending", ps.filter(function(p){ return p.status === "pending"; }).length, "awaiting verification") +
+      kpi("Expired", ps.filter(function(p){ return p.status === "expired"; }).length, "lapsed, worth a nudge") +
+    "</div>" +
+    '<div class="card"><div class="card-h"><h3>Patrons</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Card</th><th>Name</th><th>Status</th><th>Card issued</th><th class="num">Since</th><th></th></tr></thead><tbody>' +
+    ps.map(function(p){
+      return '<tr><td><b>' + p.id + '</b></td><td>' + esc(p.name) + '<div class="sub">' + esc(p.city) + " - " + esc(p.email) + "</div></td>" +
+        "<td>" + badge(p.status) + "</td><td>" + (p.card === "issued" ? '<span class="tag ok">Issued</span>' : '<span class="tag">Not issued</span>') + "</td>" +
+        '<td class="num sub">' + when(p.since) + '</td><td class="num">' +
+        (can("patrons.write")
+          ? (p.status === "pending" ? '<button class="btn sm" data-ver="' + p.id + '">Verify</button>' : "") +
+            (p.status === "active" ? '<button class="btn ghost sm" data-rev="' + p.id + '">Revoke</button>' : "")
+          : '<span class="tag">Read only</span>') + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>" +
+    '<div class="banner" style="margin-top:20px;"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>The storefront does not check any of this.</b> Patron pricing in store.html reads a localStorage boolean, so anyone can switch it on from DevTools. Until a Cloud Function verifies patron status server side, this list and the discount are unrelated.</span></div>';
+  });
+};
+WIRE.patrons = function(){
+  $$("[data-ver]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.put("patrons", b.dataset.ver, { status:"active", card:"issued" }, "verified").then(function(){ toast("<b>" + b.dataset.ver + "</b> verified and card issued"); route(); });
+  }); });
+  $$("[data-rev]").forEach(function(b){ b.addEventListener("click", function(){
+    if (!confirm("Revoke " + b.dataset.rev + "?")) return;
+    DB.put("patrons", b.dataset.rev, { status:"expired", card:"not issued" }, "revoked").then(function(){ toast("<b>" + b.dataset.rev + "</b> revoked"); route(); });
+  }); });
+};
+
+/* ---------------- content ---------------- */
+var conFilter = "all";
+VIEWS.content = function(){
+  return DB.list("content").then(function(cs){
+    var list = conFilter === "all" ? cs : cs.filter(function(c){ return c.status === conFilter; });
+    var fs = ["all","draft","review","scheduled","published"];
+    return '<div class="bar">' + fs.map(function(f){
+      var n = f === "all" ? cs.length : cs.filter(function(c){ return c.status === f; }).length;
+      return '<button class="chip' + (conFilter === f ? " on" : "") + '" data-cf="' + f + '">' + esc(f === "all" ? "All" : ST[f][1]) + " " + n + "</button>";
+    }).join("") + '<div class="sp">' + (can("content.write") ? '<button class="btn" id="newC"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New</button>' : "") + "</div></div>" +
+    '<div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Title</th><th>Kind</th><th>Author</th><th>Status</th><th class="num">Updated</th></tr></thead><tbody>' +
+    (list.length ? list.map(function(c){
+      return '<tr class="clk" data-ci="' + c.id + '"><td><b>' + esc(c.title) + "</b>" + (c.note ? '<div class="sub">' + esc(c.note) + "</div>" : "") + "</td>" +
+        '<td><span class="tag">' + esc(c.kind) + "</span></td><td>" + esc(c.author) + "</td><td>" + badge(c.status) + '</td><td class="num sub">' + when(c.updated) + "</td></tr>";
+    }).join("") : '<tr><td colspan="5"><div class="empty">Nothing here</div></td></tr>') + "</tbody></table></div></div>";
+  });
+};
+WIRE.content = function(){
+  $$("[data-cf]").forEach(function(b){ b.addEventListener("click", function(){ conFilter = b.dataset.cf; route(); }); });
+  $$("[data-ci]").forEach(function(tr){ tr.addEventListener("click", function(){ contentDrawer(tr.dataset.ci); }); });
+  var nc = $("#newC"); if (nc) nc.addEventListener("click", function(){ contentDrawer(null); });
+};
+function contentDrawer(id){
+  (id ? DB.get("content", id) : Promise.resolve({ id:"", kind:"story", title:"", status:"draft", author:actor.name, updated:new Date().toISOString(), note:"" }))
+  .then(function(c){
+    var rw = can("content.write");
+    var body =
+      '<div class="fld"><label class="lab" for="c_title">Title</label><input class="in" id="c_title" value="' + esc(c.title) + '"' + (rw ? "" : " disabled") + "></div>" +
+      '<div class="grid2"><div class="fld"><label class="lab" for="c_kind">Kind</label><select class="in" id="c_kind"' + (rw ? "" : " disabled") + ">" +
+      ["story","film","news"].map(function(k){ return '<option value="' + k + '"' + (c.kind === k ? " selected" : "") + ">" + k + "</option>"; }).join("") + "</select></div>" +
+      '<div class="fld"><label class="lab">Status</label><div style="padding-top:8px;">' + badge(c.status) + "</div></div></div>" +
+      '<div class="fld"><label class="lab" for="c_note">Reviewer note</label><textarea class="in" id="c_note"' + (rw ? "" : " disabled") + ">" + esc(c.note) + "</textarea>" +
+      '<p class="hint">Visible to the team only. Never published.</p></div>' +
+      '<p class="sec-h">Workflow</p><div class="tl">' +
+      ["draft","review","scheduled","published"].map(function(s){
+        var order = ["draft","review","scheduled","published"], done = order.indexOf(s) <= order.indexOf(c.status);
+        return '<div class="tl-i' + (done ? " done" : "") + '"><b>' + ST[s][1] + "</b><span>" + (s === c.status ? "current - " + when(c.updated) : done ? "cleared" : "not yet") + "</span></div>";
+      }).join("") + "</div>";
+    var acts = "";
+    if (rw && c.status === "draft") acts += '<button class="btn" id="cRev">Send to review</button>';
+    if (c.status === "review") acts += can("content.publish")
+      ? '<button class="btn" id="cPub">Publish</button><button class="btn ghost" id="cBack">Back to draft</button>'
+      : '<span class="tag">Only Admin can publish</span>';
+    if (can("content.publish") && c.status === "published") acts += '<button class="btn ghost" id="cUnpub">Unpublish</button>';
+    var foot = '<button class="btn ghost" id="cClose">Close</button><div class="sp">' + (rw ? '<button class="btn ghost" id="cSave">Save</button>' : "") + acts + "</div>";
+    openDrw(id ? "Content " + c.id : "New content", c.title || "Untitled", body, foot);
+    $("#cClose").addEventListener("click", closeDrw);
+    function fields(){ return { title:$("#c_title").value.trim(), kind:$("#c_kind").value, note:$("#c_note").value.trim(), updated:new Date().toISOString() }; }
+    function persist(patch, msg){
+      var f = Object.assign(fields(), patch);
+      if (!f.title) return toast("Title is required");
+      if (id) DB.put("content", id, f, msg || "edited").then(function(){ closeDrw(); toast(msg || "Saved"); route(); });
+      else { f.id = "c" + Date.now().toString(36); f.status = patch.status || "draft"; f.author = actor.name;
+             DB.add("content", f).then(function(){ closeDrw(); toast("Created <b>" + esc(f.title) + "</b>"); route(); }); }
+    }
+    var s = $("#cSave"); if (s) s.addEventListener("click", function(){ persist({}, "Saved"); });
+    var r = $("#cRev"); if (r) r.addEventListener("click", function(){ persist({ status:"review" }, "Sent to review"); });
+    var p = $("#cPub"); if (p) p.addEventListener("click", function(){ persist({ status:"published" }, "Published"); });
+    var b = $("#cBack"); if (b) b.addEventListener("click", function(){ persist({ status:"draft" }, "Sent back to draft"); });
+    var u = $("#cUnpub"); if (u) u.addEventListener("click", function(){ persist({ status:"draft" }, "Unpublished"); });
+  });
+}
+
+/* ---------------- adoption ---------------- */
+VIEWS.adoption = function(){
+  return Promise.all([DB.list("adoptions"), DB.list("adoptapps")]).then(function(r){
+    var ds = r[0], apps = r[1];
+    var open = apps.filter(function(a){ return ["new","screening","home_visit"].indexOf(a.status) > -1; });
+    return '<div class="kpis">' +
+      kpi("Looking for a home", ds.filter(function(d){ return d.status === "available"; }).length, "live on the adopt page") +
+      kpi("Open applications", open.length, "in screening or home visit") +
+      kpi("Reserved", ds.filter(function(d){ return d.status === "reserved"; }).length, "application in progress") +
+      kpi("Adopted", ds.filter(function(d){ return d.status === "adopted"; }).length, "home found", true) +
+    "</div>" +
+    '<div class="card" style="margin-bottom:20px;"><div class="card-h"><h3>Applications</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>App</th><th>Applicant</th><th>For</th><th>Home</th><th>Status</th><th class="num">Sent</th><th></th></tr></thead><tbody>' +
+    (apps.length ? apps.map(function(a){
+      var act = "";
+      if (can("adoption.write")) {
+        if (a.status === "new") act = '<button class="btn sm" data-ast="' + a.id + ':screening">Start screening</button>';
+        else if (a.status === "screening") act = '<button class="btn sm" data-ast="' + a.id + ':home_visit">Book home visit</button>';
+        else if (a.status === "home_visit") act = '<button class="btn sm" data-aok="' + a.id + '">Approve</button>';
+        if (["new","screening","home_visit"].indexOf(a.status) > -1) act += ' <button class="btn ghost sm" data-ano="' + a.id + '">Reject</button>';
+      }
+      return "<tr><td><b>" + a.id + "</b></td><td>" + esc(a.applicant) + '<div class="sub">' + esc(a.city) + " - " + esc(a.household) + "</div></td>" +
+        "<td><b>" + esc(a.dog) + '</b></td><td class="sub" style="max-width:220px;">' + esc(a.home) + '<div class="sub">' + esc(a.care) + "</div></td>" +
+        "<td>" + badge(a.status) + '</td><td class="num sub">' + when(a.at) + '</td><td class="num" style="white-space:nowrap;">' + act + "</td></tr>";
+    }).join("") : '<tr><td colspan="7"><div class="empty">No applications</div></td></tr>') + "</tbody></table></div></div>" +
+    '<div class="card"><div class="card-h"><h3>Dogs</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Sex / age / size</th><th>Place</th><th>Health</th><th>Status</th><th class="num">Updated</th><th></th></tr></thead><tbody>' +
+    ds.map(function(d){
+      return "<tr><td><b>" + esc(d.name) + "</b></td><td>" + esc(d.sex) + " - " + esc(d.age) + " - " + esc(d.size) + "</td><td>" + esc(d.place) + "</td>" +
+        '<td class="sub">' + esc(d.vax) + "<br>" + esc(d.ster) + "</td><td>" + badge(d.status) + '</td><td class="num sub">' + when(d.updated) + '</td><td class="num">' +
+        (can("adoption.write") ? '<select class="in" data-ad="' + d.id + '" style="width:auto;padding:6px 8px;font-size:12px;">' +
+          ["available","reserved","adopted"].map(function(x){ return '<option value="' + x + '"' + (d.status === x ? " selected" : "") + ">" + ST[x][1] + "</option>"; }).join("") + "</select>"
+        : '<span class="tag">Read only</span>') + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.adoption = function(){
+  $$("[data-ad]").forEach(function(sel){ sel.addEventListener("change", function(){
+    DB.put("adoptions", sel.dataset.ad, { status:sel.value, updated:new Date().toISOString() }, "status -> " + sel.value)
+      .then(function(){ toast("Updated"); route(); });
+  }); });
+  $$("[data-ast]").forEach(function(b){ b.addEventListener("click", function(){
+    var p = b.dataset.ast.split(":");
+    DB.put("adoptapps", p[0], { status:p[1] }, "app -> " + p[1]).then(function(){ toast("Updated"); route(); });
+  }); });
+  $$("[data-aok]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.get("adoptapps", b.dataset.aok).then(function(a){
+      if (!confirm("Approve " + a.applicant + " for " + a.dog + "? The dog will be marked adopted.")) return;
+      Promise.all([
+        DB.put("adoptapps", a.id, { status:"approved" }, "approved for " + a.dog),
+        DB.put("adoptions", a.dogId, { status:"adopted", updated:new Date().toISOString() }, "adopted via " + a.id)
+      ]).then(function(){ toast("<b>" + esc(a.dog) + "</b> is going home with " + esc(a.applicant)); route(); });
+    });
+  }); });
+  $$("[data-ano]").forEach(function(b){ b.addEventListener("click", function(){
+    if (!confirm("Reject this application?")) return;
+    DB.put("adoptapps", b.dataset.ano, { status:"rejected" }, "rejected").then(function(){ toast("Rejected"); route(); });
+  }); });
+};
+
+/* ---------------- team ---------------- */
+VIEWS.team = function(){
+  return DB.list("team").then(function(us){
+    return '<div class="card" style="margin-bottom:20px;"><div class="card-h"><h3>Team</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Active</th></tr></thead><tbody>' +
+    us.map(function(u){
+      return "<tr><td><b>" + esc(u.name) + "</b></td><td class=\"sub\">" + esc(u.email) + '</td><td><select class="in" data-role="' + u.id + '" style="width:auto;padding:6px 8px;font-size:12px;">' +
+        Object.keys(ROLES).map(function(r){ return '<option value="' + r + '"' + (u.role === r ? " selected" : "") + ">" + ROLES[r].name + "</option>"; }).join("") + "</select></td>" +
+        "<td>" + (u.active ? '<span class="tag ok">Active</span>' : '<span class="tag">Disabled</span>') + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>" +
+    '<div class="card"><div class="card-h"><h3>What each role can do</h3></div><div class="card-b"><div class="tbl-wrap"><table class="perm"><thead><tr><th>Capability</th>' +
+    Object.keys(ROLES).map(function(r){ return "<th>" + ROLES[r].name + "</th>"; }).join("") + "</tr></thead><tbody>" +
+    CAPS.map(function(c){
+      return "<tr><td>" + c + "</td>" + Object.keys(ROLES).map(function(r){
+        var y = ROLES[r].caps.indexOf("*") > -1 || ROLES[r].caps.indexOf(c) > -1;
+        return '<td class="' + (y ? "y" : "n") + '">' + (y ? "yes" : "-") + "</td>";
+      }).join("") + "</tr>";
+    }).join("") + "</tbody></table></div>" +
+    '<div class="banner" style="margin:18px 0 0;"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>This matrix decides which buttons render. It is <b>not</b> access control. Every row here has to be reimplemented as a Firestore rule and a custom auth claim, or it means nothing.</span></div></div></div>';
+  });
+};
+WIRE.team = function(){
+  $$("[data-role]").forEach(function(sel){ sel.addEventListener("change", function(){
+    DB.put("team", sel.dataset.role, { role:sel.value }, "role -> " + sel.value).then(function(){
+      toast("Role updated"); DB.get("team", sel.dataset.role).then(function(u){
+        if (u.name === actor.name) { actor.role = u.value || sel.value; syncActor(); }
+        route();
+      });
+    });
+  }); });
+};
+
+/* ---------------- audit ---------------- */
+VIEWS.audit = function(){
+  return DB.list("audit").then(function(as){
+    return '<div class="banner"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>Every write in this session is logged here. In production this collection must be append only, writable by Cloud Functions alone, so an admin cannot erase their own trail.</span></div>' +
+    '<div class="card"><div class="card-h"><h3>Audit log</h3><div class="r"><button class="btn ghost sm" id="resetAll">Reset all data</button></div></div>' +
+    (as.length ? '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>When</th><th>Who</th><th>Action</th><th>Record</th><th>Detail</th></tr></thead><tbody>' +
+      as.map(function(a){
+        return '<tr><td class="sub">' + new Date(a.at).toLocaleString("en-IN", { dateStyle:"medium", timeStyle:"short" }) + "</td>" +
+          "<td><b>" + esc(a.actor) + '</b><div class="sub">' + esc(ROLES[a.role] ? ROLES[a.role].name : a.role) + "</div></td>" +
+          '<td><span class="tag ' + (a.action === "delete" ? "err" : a.action === "create" ? "ok" : "blue") + '">' + esc(a.action) + "</span></td>" +
+          "<td>" + esc(a.coll) + "/" + esc(a.ref) + '</td><td class="sub">' + esc(a.detail) + "</td></tr>";
+      }).join("") + "</tbody></table></div>"
+    : '<div class="empty">Nothing logged yet. Change something and it will show up here.</div>') + "</div>";
+  });
+};
+WIRE.audit = function(){
+  $("#resetAll").addEventListener("click", function(){
+    if (!confirm("Reset every record back to the seeded demo data? This cannot be undone.")) return;
+    DB.reset().then(function(){ toast("Reset to seed data"); route(); });
+  });
+};
+
+
+/* ---------------- donations ---------------- */
+var donFilter = "all";
+VIEWS.donations = function(){
+  return Promise.all([DB.list("donations"), DB.list("funds")]).then(function(r){
+    var ds = r[0], funds = {};
+    r[1].forEach(function(f){ funds[f.id] = f.name; });
+    var ok = ds.filter(function(d){ return d.status !== "failed"; });
+    var total = ok.reduce(function(a, d){ return a + d.amount; }, 0);
+    var monthly = ok.filter(function(d){ return d.kind === "monthly"; });
+    var receipts = ds.filter(function(d){ return d.status === "received" && d.g80; });
+    var list = donFilter === "all" ? ds : ds.filter(function(d){ return d.status === donFilter; });
+    var fs = ["all","received","receipt_sent","failed"];
+    return '<div class="kpis">' +
+      kpi("Raised, all time", inr(total), ok.length + " gifts, failed excluded", true) +
+      kpi("Monthly donors", monthly.length, inr(monthly.reduce(function(a,d){ return a + d.amount; }, 0)) + " a month recurring") +
+      kpi("80G receipts due", receipts.length, "received with PAN, receipt not yet sent") +
+      kpi("Failed", ds.filter(function(d){ return d.status === "failed"; }).length, "gateway declines to follow up") +
+    "</div>" +
+    '<div class="bar">' + fs.map(function(f){
+      var n = f === "all" ? ds.length : ds.filter(function(d){ return d.status === f; }).length;
+      return '<button class="chip' + (donFilter === f ? " on" : "") + '" data-df="' + f + '">' + esc(f === "all" ? "All" : ST[f][1]) + " " + n + "</button>";
+    }).join("") + "</div>" +
+    '<div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Gift</th><th>Donor</th><th>Fund</th><th>Kind</th><th class="num">Amount</th><th>80G</th><th>Status</th><th class="num">When</th><th></th></tr></thead><tbody>' +
+    (list.length ? list.map(function(d){
+      return "<tr><td><b>" + d.id + "</b></td><td>" + esc(d.donor) + '<div class="sub">' + esc(d.city) + " - " + esc(d.email) + "</div></td>" +
+        "<td>" + esc(funds[d.fund] || d.fund) + '</td><td><span class="tag' + (d.kind === "monthly" ? " blue" : "") + '">' + d.kind + "</span></td>" +
+        '<td class="num"><b>' + inr(d.amount) + "</b></td><td>" + (d.g80 ? '<span class="tag ok">PAN given</span>' : '<span class="tag">No</span>') + "</td>" +
+        "<td>" + badge(d.status) + '</td><td class="num sub">' + when(d.at) + '</td><td class="num">' +
+        (can("donations.write") && d.status === "received" ? '<button class="btn sm" data-rcpt="' + d.id + '">Send receipt</button>' : "") + "</td></tr>";
+    }).join("") : '<tr><td colspan="9"><div class="empty">No gifts here</div></td></tr>') + "</tbody></table></div></div>" +
+    '<div class="banner" style="margin-top:20px;"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>The give page collects nothing yet.</b> give.html has no payment gateway, so these are seeded records showing the workflow. Receipts here mark intent - a real 80G receipt needs the finance PDF flow.</span></div>';
+  });
+};
+WIRE.donations = function(){
+  $$("[data-df]").forEach(function(b){ b.addEventListener("click", function(){ donFilter = b.dataset.df; route(); }); });
+  $$("[data-rcpt]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.put("donations", b.dataset.rcpt, { status:"receipt_sent" }, "receipt sent").then(function(){ toast("Receipt marked sent on <b>" + b.dataset.rcpt + "</b>"); route(); });
+  }); });
+};
+
+/* ---------------- funds ---------------- */
+VIEWS.funds = function(){
+  return Promise.all([DB.list("funds"), DB.list("donations")]).then(function(r){
+    var totals = {};
+    r[1].forEach(function(d){ if (d.status !== "failed") totals[d.fund] = (totals[d.fund] || 0) + d.amount; });
+    return '<div class="card"><div class="card-h"><h3>Funds on the give page</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Fund</th><th>Blurb</th><th class="num">Raised</th><th>Live</th><th></th></tr></thead><tbody>' +
+    r[0].map(function(f){
+      return "<tr><td><b>" + esc(f.name) + '</b><div class="sub">' + f.id + "</div></td><td class=\"sub\" style=\"max-width:380px;\">" + esc(f.blurb) + "</td>" +
+        '<td class="num"><b>' + inr(totals[f.id] || 0) + "</b></td><td>" + (f.active ? '<span class="tag ok">Live</span>' : '<span class="tag">Off</span>') + "</td>" +
+        '<td class="num">' + (can("donations.write") ? '<button class="btn ghost sm" data-fedit="' + f.id + '">Edit</button>' : "") + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.funds = function(){
+  $$("[data-fedit]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.get("funds", b.dataset.fedit).then(function(f){
+      openDrw("Fund " + f.id, f.name,
+        '<div class="fld"><label class="lab" for="fu_name">Name</label><input class="in" id="fu_name" value="' + esc(f.name) + '"></div>' +
+        '<div class="fld"><label class="lab" for="fu_blurb">Blurb</label><textarea class="in" id="fu_blurb">' + esc(f.blurb) + "</textarea></div>" +
+        '<div class="fld"><label class="lab" for="fu_active">Visible on the give page</label><select class="in" id="fu_active"><option value="1"' + (f.active ? " selected" : "") + '>Yes</option><option value="0"' + (!f.active ? " selected" : "") + ">No</option></select></div>",
+        '<button class="btn ghost" id="fuC">Cancel</button><div class="sp"><button class="btn" id="fuS">Save</button></div>');
+      $("#fuC").addEventListener("click", closeDrw);
+      $("#fuS").addEventListener("click", function(){
+        var name = $("#fu_name").value.trim();
+        if (!name) return toast("Name is required");
+        DB.put("funds", f.id, { name:name, blurb:$("#fu_blurb").value.trim(), active:$("#fu_active").value === "1" }, "fund edited")
+          .then(function(){ closeDrw(); toast("Saved <b>" + esc(name) + "</b>"); route(); });
+      });
+    });
+  }); });
+};
+
+/* ---------------- volunteers ---------------- */
+VIEWS.volunteers = function(){
+  return DB.list("volunteers").then(function(vs){
+    return '<div class="kpis">' +
+      kpi("Active", vs.filter(function(v){ return v.status === "active"; }).length, "on the ground") +
+      kpi("In training", vs.filter(function(v){ return v.status === "training"; }).length, "working through a path") +
+      kpi("Applied", vs.filter(function(v){ return v.status === "applied"; }).length, "waiting on a decision") +
+    "</div>" +
+    '<div class="card"><div class="card-h"><h3>Volunteers and caretakers</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Person</th><th>Path</th><th>Status</th><th class="num">Since</th><th></th></tr></thead><tbody>' +
+    vs.map(function(v){
+      var act = "";
+      if (can("volunteers.write")) {
+        if (v.status === "applied") act = '<button class="btn sm" data-vst="' + v.id + ':training">Start training</button>';
+        else if (v.status === "training") act = '<button class="btn sm" data-vst="' + v.id + ':active">Make active</button>';
+        else if (v.status === "active") act = '<button class="btn ghost sm" data-vst="' + v.id + ':lapsed">Mark lapsed</button>';
+        else if (v.status === "lapsed") act = '<button class="btn ghost sm" data-vst="' + v.id + ':applied">Re-open</button>';
+      }
+      return "<tr><td><b>" + esc(v.name) + '</b><div class="sub">' + esc(v.city) + " - " + esc(v.email) + "</div></td>" +
+        "<td>" + esc(v.path) + "</td><td>" + badge(v.status) + '</td><td class="num sub">' + when(v.at) + '</td><td class="num">' + act + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.volunteers = function(){
+  $$("[data-vst]").forEach(function(b){ b.addEventListener("click", function(){
+    var p = b.dataset.vst.split(":");
+    DB.put("volunteers", p[0], { status:p[1] }, "status -> " + p[1]).then(function(){ toast("Updated"); route(); });
+  }); });
+};
+
+/* ---------------- community submissions ---------------- */
+VIEWS.submissions = function(){
+  return DB.list("submissions").then(function(ss){
+    var pend = ss.filter(function(x){ return x.status === "pending"; });
+    return '<div class="kpis">' +
+      kpi("Awaiting moderation", pend.length, "community stories in the queue") +
+      kpi("Approved", ss.filter(function(x){ return x.status === "approved"; }).length, "live on the stories page") +
+      kpi("Rejected", ss.filter(function(x){ return x.status === "rejected"; }).length, "with reasons on file") +
+    "</div>" +
+    '<div class="card"><div class="card-h"><h3>Community story submissions</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Story</th><th>Kind</th><th>Status</th><th class="num">Sent</th><th></th></tr></thead><tbody>' +
+    ss.map(function(x){
+      return "<tr><td><b>" + esc(x.title) + '</b><div class="sub">by ' + esc(x.by) + (x.note ? " - " + esc(x.note) : "") + "</div></td>" +
+        '<td><span class="tag">' + esc(x.kind) + "</span></td><td>" + badge(x.status) + '</td><td class="num sub">' + when(x.at) + '</td><td class="num">' +
+        (can("submissions.write") && x.status === "pending"
+          ? '<button class="btn sm" data-sap="' + x.id + '">Approve</button> <button class="btn ghost sm" data-srj="' + x.id + '">Reject</button>'
+          : "") + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.submissions = function(){
+  $$("[data-sap]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.put("submissions", b.dataset.sap, { status:"approved" }, "approved").then(function(){ toast("Approved - it can go live on stories"); route(); });
+  }); });
+  $$("[data-srj]").forEach(function(b){ b.addEventListener("click", function(){
+    var why = prompt("Reason for rejecting (kept on file):");
+    if (why === null) return;
+    DB.put("submissions", b.dataset.srj, { status:"rejected", note:why.trim() }, "rejected").then(function(){ toast("Rejected"); route(); });
+  }); });
+};
+
+/* ---------------- events ---------------- */
+VIEWS.events = function(){
+  return DB.list("events").then(function(es){
+    es.sort(function(a, b){ return new Date(a.when) - new Date(b.when); });
+    return '<div class="bar"><div class="sp">' + (can("events.write") ? '<button class="btn" id="newE"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New event</button>' : "") + "</div></div>" +
+    '<div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Event</th><th>Kind</th><th>Where</th><th class="num">When</th><th class="num">RSVPs</th><th>Status</th><th></th></tr></thead><tbody>' +
+    es.map(function(e){
+      var act = "";
+      if (can("events.write")) {
+        if (e.status === "draft") act = '<button class="btn sm" data-epub="' + e.id + '">Schedule</button>';
+        else if (e.status === "scheduled") act = '<button class="btn ghost sm" data-edone="' + e.id + '">Mark done</button>';
+      }
+      return "<tr><td><b>" + esc(e.title) + '</b></td><td><span class="tag">' + esc(e.kind) + "</span></td><td>" + esc(e.where) + "</td>" +
+        '<td class="num sub">' + new Date(e.when).toLocaleDateString("en-IN", { day:"numeric", month:"short" }) + " (" + when(e.when) + ')</td>' +
+        '<td class="num">' + e.rsvps + "</td><td>" + badge(e.status) + '</td><td class="num">' + act + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.events = function(){
+  $$("[data-epub]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.put("events", b.dataset.epub, { status:"scheduled" }, "scheduled").then(function(){ toast("Scheduled"); route(); });
+  }); });
+  $$("[data-edone]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.put("events", b.dataset.edone, { status:"done" }, "done").then(function(){ toast("Marked done"); route(); });
+  }); });
+  var ne = $("#newE");
+  if (ne) ne.addEventListener("click", function(){
+    openDrw("New event", "Untitled",
+      '<div class="fld"><label class="lab" for="e_t">Title</label><input class="in" id="e_t"></div>' +
+      '<div class="grid2"><div class="fld"><label class="lab" for="e_k">Kind</label><select class="in" id="e_k"><option>meet</option><option>drive</option><option>camp</option><option>training</option></select></div>' +
+      '<div class="fld"><label class="lab" for="e_w">Where</label><input class="in" id="e_w" placeholder="Zoom or a city"></div></div>' +
+      '<div class="fld"><label class="lab" for="e_d">Date</label><input class="in" id="e_d" type="date"></div>',
+      '<button class="btn ghost" id="eC">Cancel</button><div class="sp"><button class="btn" id="eS">Create draft</button></div>');
+    $("#eC").addEventListener("click", closeDrw);
+    $("#eS").addEventListener("click", function(){
+      var t = $("#e_t").value.trim(), d = $("#e_d").value;
+      if (!t || !d) return toast("Title and date are required");
+      DB.add("events", { id:"e" + Date.now().toString(36), title:t, kind:$("#e_k").value, where:$("#e_w").value.trim() || "TBC", when:new Date(d).toISOString(), rsvps:0, status:"draft" })
+        .then(function(){ closeDrw(); toast("Draft created"); route(); });
+    });
+  });
+};
+
+/* ---------------- champion quiz ---------------- */
+VIEWS.quiz = function(){
+  return DB.list("quiz").then(function(qs){
+    return '<div class="bar"><div class="sp">' + (can("quiz.write") ? '<button class="btn" id="newQ"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New question</button>' : "") + "</div></div>" +
+    '<div class="card"><div class="card-h"><h3>Question bank</h3><div class="r"><span class="tag">' + qs.filter(function(q){ return q.status === "live"; }).length + ' live</span></div></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Question</th><th>Answer</th><th>Status</th><th></th></tr></thead><tbody>' +
+    qs.map(function(q){
+      return "<tr><td style=\"max-width:420px;\"><b>" + esc(q.q) + '</b><div class="sub">' + q.a.map(function(a, i){ return (i === q.c ? "[" + esc(a) + "]" : esc(a)); }).join(" - ") + "</div></td>" +
+        "<td>" + esc(q.a[q.c]) + "</td><td>" + badge(q.status) + '</td><td class="num">' +
+        (can("quiz.write") ? '<button class="btn ghost sm" data-qtog="' + q.id + '">' + (q.status === "live" ? "Retire" : "Go live") + "</button>" : "") + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>" +
+    '<div class="banner" style="margin-top:20px;"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>champion.html ships its own hardcoded bank of 57 questions. This bank becomes the source once the game reads from the backend.</span></div>';
+  });
+};
+WIRE.quiz = function(){
+  $$("[data-qtog]").forEach(function(b){ b.addEventListener("click", function(){
+    DB.get("quiz", b.dataset.qtog).then(function(q){
+      DB.put("quiz", q.id, { status: q.status === "live" ? "draft" : "live" }, "toggled").then(function(){ toast("Updated"); route(); });
+    });
+  }); });
+  var nq = $("#newQ");
+  if (nq) nq.addEventListener("click", function(){
+    openDrw("New question", "Champion quiz",
+      '<div class="fld"><label class="lab" for="q_q">Question</label><textarea class="in" id="q_q"></textarea></div>' +
+      [0,1,2,3].map(function(i){ return '<div class="fld"><label class="lab" for="q_a' + i + '">Option ' + (i + 1) + '</label><input class="in" id="q_a' + i + '"></div>'; }).join("") +
+      '<div class="fld"><label class="lab" for="q_c">Correct option</label><select class="in" id="q_c"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option></select></div>',
+      '<button class="btn ghost" id="qC">Cancel</button><div class="sp"><button class="btn" id="qS">Add as draft</button></div>');
+    $("#qC").addEventListener("click", closeDrw);
+    $("#qS").addEventListener("click", function(){
+      var q = $("#q_q").value.trim(), a = [0,1,2,3].map(function(i){ return $("#q_a" + i).value.trim(); });
+      if (!q || a.some(function(x){ return !x; })) return toast("Question and all four options are required");
+      DB.add("quiz", { id:"q" + Date.now().toString(36), q:q, a:a, c:+$("#q_c").value, status:"draft" })
+        .then(function(){ closeDrw(); toast("Added to the bank"); route(); });
+    });
+  });
+};
+
+/* ---------------- network units ---------------- */
+VIEWS.units = function(){
+  return DB.list("units").then(function(us){
+    return '<div class="kpis">' +
+      kpi("Hospitals", us.filter(function(u){ return u.kind === "hospital" && u.status === "active"; }).length, "the site claims 26 - seed shows a sample") +
+      kpi("Units", us.filter(function(u){ return u.kind === "unit" && u.status === "active"; }).length, "the site claims 165 - seed shows a sample") +
+      kpi("Onboarding", us.filter(function(u){ return u.status === "onboarding"; }).length, "opening soon") +
+    "</div>" +
+    '<div class="bar"><div class="sp">' + (can("places.write") ? '<button class="btn" id="newU"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New unit</button>' : "") + "</div></div>" +
+    '<div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Unit</th><th>Kind</th><th>City</th><th>Head</th><th>Phone</th><th>Status</th><th></th></tr></thead><tbody>' +
+    us.map(function(u){
+      return "<tr><td><b>" + esc(u.name) + "</b></td><td><span class=\"tag\">" + esc(u.kind) + "</span></td><td>" + esc(u.city) + '<div class="sub">' + esc(u.state) + "</div></td>" +
+        "<td>" + esc(u.head) + "</td><td class=\"sub\">" + esc(u.phone) + "</td><td>" + badge(u.status) + '</td><td class="num">' +
+        (can("places.write") ? '<select class="in" data-ust="' + u.id + '" style="width:auto;padding:6px 8px;font-size:12px;">' +
+          ["active","onboarding","paused"].map(function(x){ return '<option value="' + x + '"' + (u.status === x ? " selected" : "") + ">" + ST[x][1] + "</option>"; }).join("") + "</select>" : "") + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.units = function(){
+  $$("[data-ust]").forEach(function(sel){ sel.addEventListener("change", function(){
+    DB.put("units", sel.dataset.ust, { status:sel.value }, "status -> " + sel.value).then(function(){ toast("Updated"); route(); });
+  }); });
+  var nu = $("#newU");
+  if (nu) nu.addEventListener("click", function(){
+    openDrw("New unit", "Network",
+      '<div class="fld"><label class="lab" for="u_n">Name</label><input class="in" id="u_n" placeholder="PFA Unit Nagpur"></div>' +
+      '<div class="grid2"><div class="fld"><label class="lab" for="u_k">Kind</label><select class="in" id="u_k"><option>unit</option><option>hospital</option></select></div>' +
+      '<div class="fld"><label class="lab" for="u_c">City</label><input class="in" id="u_c"></div></div>' +
+      '<div class="grid2"><div class="fld"><label class="lab" for="u_s">State</label><input class="in" id="u_s"></div>' +
+      '<div class="fld"><label class="lab" for="u_h">Head</label><input class="in" id="u_h"></div></div>' +
+      '<div class="fld"><label class="lab" for="u_p">Phone</label><input class="in" id="u_p"></div>',
+      '<button class="btn ghost" id="uC">Cancel</button><div class="sp"><button class="btn" id="uS">Create as onboarding</button></div>');
+    $("#uC").addEventListener("click", closeDrw);
+    $("#uS").addEventListener("click", function(){
+      var n = $("#u_n").value.trim();
+      if (!n || !$("#u_c").value.trim()) return toast("Name and city are required");
+      DB.add("units", { id:"n" + Date.now().toString(36), name:n, kind:$("#u_k").value, city:$("#u_c").value.trim(), state:$("#u_s").value.trim(), head:$("#u_h").value.trim(), phone:$("#u_p").value.trim(), status:"onboarding" })
+        .then(function(){ closeDrw(); toast("Created <b>" + esc(n) + "</b>"); route(); });
+    });
+  });
+};
+
+/* ---------------- pfa x ---------------- */
+VIEWS.pfax = function(){
+  return DB.list("xplaces").then(function(xs){
+    return '<div class="kpis">' +
+      kpi("Certified", xs.filter(function(x){ return x.status === "certified"; }).length, "live on the PFA X page") +
+      kpi("In the pipeline", xs.filter(function(x){ return ["applied","assessment"].indexOf(x.status) > -1; }).length, "applied or under assessment") +
+      kpi("Lapsed", xs.filter(function(x){ return x.status === "lapsed"; }).length, "renewal overdue") +
+    "</div>" +
+    '<div class="card"><div class="card-h"><h3>Certifications</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Place</th><th>Category</th><th>Tier</th><th>Status</th><th class="num">Renews</th><th></th></tr></thead><tbody>' +
+    xs.map(function(x){
+      var act = "";
+      if (can("places.write")) {
+        if (x.status === "applied") act = '<button class="btn sm" data-xas="' + x.id + '">Start assessment</button>';
+        else if (x.status === "assessment") act = '<button class="btn sm" data-xcf="' + x.id + '">Certify</button>';
+        else if (x.status === "lapsed") act = '<button class="btn ghost sm" data-xrn="' + x.id + '">Renew</button>';
+        else if (x.status === "certified") act = '<select class="in" data-xtier="' + x.id + '" style="width:auto;padding:6px 8px;font-size:12px;">' +
+          ["certified","gold","platinum"].map(function(t){ return '<option value="' + t + '"' + (x.tier === t ? " selected" : "") + ">" + t + "</option>"; }).join("") + "</select>";
+      }
+      return "<tr><td><b>" + esc(x.name) + "</b></td><td>" + esc(x.cat) + "</td><td>" + esc(x.tier) + "</td><td>" + badge(x.status) + "</td>" +
+        '<td class="num sub">' + (x.renews ? when(x.renews) : "-") + '</td><td class="num">' + act + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.pfax = function(){
+  function set(id, patch, msg){ DB.put("xplaces", id, patch, msg).then(function(){ toast(msg); route(); }); }
+  $$("[data-xas]").forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.xas, { status:"assessment" }, "Assessment started"); }); });
+  $$("[data-xcf]").forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.xcf, { status:"certified", renews:daysAgo(-365) }, "Certified for a year"); }); });
+  $$("[data-xrn]").forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.xrn, { status:"certified", renews:daysAgo(-365) }, "Renewed"); }); });
+  $$("[data-xtier]").forEach(function(s){ s.addEventListener("change", function(){ set(s.dataset.xtier, { tier:s.value }, "Tier -> " + s.value); }); });
+};
+
+/* ---------------- trusted services ---------------- */
+VIEWS.services = function(){
+  return DB.list("services").then(function(ss){
+    var conc = ss.filter(function(x){ return x.status === "concern"; });
+    return (conc.length ? '<div class="banner"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>' + conc.length + " listing" + (conc.length > 1 ? "s have" : " has") + " an open concern.</b> Reported through the services page. Resolve or delist below.</span></div>" : "") +
+    '<div class="card"><div class="card-h"><h3>Directory, nominations and concerns</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Service</th><th>Kind</th><th>City</th><th>Status</th><th class="num">Vetted</th><th></th></tr></thead><tbody>' +
+    ss.map(function(x){
+      var act = "";
+      if (can("places.write")) {
+        if (x.status === "nominated") act = '<button class="btn sm" data-svet="' + x.id + '">Vet and list</button> <button class="btn ghost sm" data-sdrop="' + x.id + '">Decline</button>';
+        else if (x.status === "concern") act = '<button class="btn sm" data-sok="' + x.id + '">Resolve, keep listed</button> <button class="btn danger sm" data-sdrop="' + x.id + '">Delist</button>';
+        else if (x.status === "listed") act = '<button class="btn ghost sm" data-sflag="' + x.id + '">Flag concern</button>';
+      }
+      return "<tr><td><b>" + esc(x.name) + "</b>" + (x.note ? '<div class="sub">' + esc(x.note) + "</div>" : "") + "</td>" +
+        '<td><span class="tag">' + esc(x.kind) + "</span></td><td>" + esc(x.city) + "</td><td>" + badge(x.status) + "</td>" +
+        '<td class="num sub">' + (x.vetted ? when(x.vetted) : "-") + '</td><td class="num">' + act + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.services = function(){
+  function set(id, patch, msg){ DB.put("services", id, patch, msg).then(function(){ toast(msg); route(); }); }
+  $$("[data-svet]").forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.svet, { status:"listed", vetted:new Date().toISOString() }, "Vetted and listed"); }); });
+  $$("[data-sok]").forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.sok, { status:"listed", note:"" }, "Concern resolved"); }); });
+  $$("[data-sflag]").forEach(function(b){ b.addEventListener("click", function(){
+    var why = prompt("What is the concern?"); if (why === null) return;
+    set(b.dataset.sflag, { status:"concern", note:why.trim() }, "Concern flagged");
+  }); });
+  $$("[data-sdrop]").forEach(function(b){ b.addEventListener("click", function(){
+    if (!confirm("Remove this service from the directory?")) return;
+    DB.remove("services", b.dataset.sdrop).then(function(){ toast("Removed"); route(); });
+  }); });
+};
+
+/* ---------------- heat map ---------------- */
+VIEWS.heat = function(){
+  return DB.list("heat").then(function(hs){
+    var rw = can("heat.write") || actor.role === "admin";
+    return '<div class="banner"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>These values feed the public heat map and are <b>marked illustrative on the site</b> pending the integrity engine. The overall index recomputes as the average of the five signals when you save.</span></div>' +
+    '<div class="card"><div class="card-h"><h3>State signals</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>State</th><th class="num">Index</th><th class="num">ABC</th><th class="num">Cruelty</th><th class="num">Feeders</th><th class="num">Municipal</th><th class="num">Rescue</th><th></th></tr></thead><tbody>' +
+    hs.map(function(h){
+      return "<tr><td><b>" + esc(h.id) + '</b></td><td class="num"><b>' + h.index + "</b></td>" +
+        ["abc","cruelty","feeders","municipal","rescue"].map(function(k){
+          return '<td class="num">' + (rw ? '<input class="in" data-hs="' + h.id + ':' + k + '" type="number" min="0" max="100" value="' + h[k] + '" style="width:64px;padding:6px 8px;text-align:right;">' : h[k]) + "</td>";
+        }).join("") +
+        '<td class="num">' + (rw ? '<button class="btn sm" data-hsave="' + h.id + '">Save</button>' : "") + "</td></tr>";
+    }).join("") + "</tbody></table></div></div>";
+  });
+};
+WIRE.heat = function(){
+  $$("[data-hsave]").forEach(function(b){ b.addEventListener("click", function(){
+    var id = b.dataset.hsave, patch = {}, keys = ["abc","cruelty","feeders","municipal","rescue"];
+    var bad = false;
+    keys.forEach(function(k){
+      var v = +$('[data-hs="' + id + ':' + k + '"]').value;
+      if (isNaN(v) || v < 0 || v > 100) bad = true;
+      patch[k] = Math.round(v);
+    });
+    if (bad) return toast("Signals must be 0 to 100");
+    patch.index = Math.round(keys.reduce(function(a, k){ return a + patch[k]; }, 0) / keys.length);
+    DB.put("heat", id, patch, "signals updated, index -> " + patch.index).then(function(){ toast("<b>" + esc(id) + "</b> saved, index " + patch.index); route(); });
+  }); });
+};
+
+/* ---------------- settings ---------------- */
+VIEWS.settings = function(){
+  return DB.list("settings").then(function(st){
+    var m = {}; st.forEach(function(x){ m[x.id] = x; });
+    return NOTICE +
+    '<div class="card" style="margin-bottom:20px;"><div class="card-h"><h3>Landing page stats</h3></div><div class="card-b"><div class="grid2">' +
+      '<div class="fld"><label class="lab" for="st_founded">Founded</label><input class="in" id="st_founded" value="' + esc(m.stats.founded) + '"></div>' +
+      '<div class="fld"><label class="lab" for="st_hosp">Hospitals</label><input class="in" id="st_hosp" value="' + esc(m.stats.hospitals) + '"></div>' +
+      '<div class="fld"><label class="lab" for="st_units">Units across India</label><input class="in" id="st_units" value="' + esc(m.stats.units) + '"></div>' +
+      '<div class="fld"><label class="lab" for="st_mem">Members</label><input class="in" id="st_mem" value="' + esc(m.stats.members) + '"></div>' +
+    '</div><button class="btn" id="stSave1">Save stats</button></div></div>' +
+    '<div class="card" style="margin-bottom:20px;"><div class="card-h"><h3>Storefront</h3></div><div class="card-b">' +
+      '<div class="fld"><label class="lab" for="st_ck">Campaign kicker</label><input class="in" id="st_ck" value="' + esc(m.storefront.campaignK) + '"></div>' +
+      '<div class="fld"><label class="lab" for="st_mq">Marquee lines (separate with |)</label><textarea class="in" id="st_mq">' + esc(m.storefront.marquee) + '</textarea></div>' +
+    '<button class="btn" id="stSave2">Save storefront</button></div></div>' +
+    '<div class="card"><div class="card-h"><h3>Give page presets</h3></div><div class="card-b"><div class="grid2">' +
+      '<div class="fld"><label class="lab" for="st_po">One-time amounts</label><input class="in" id="st_po" value="' + esc(m.giving.presetsOnce) + '"></div>' +
+      '<div class="fld"><label class="lab" for="st_pm">Monthly amounts</label><input class="in" id="st_pm" value="' + esc(m.giving.presetsMonth) + '"></div>' +
+    '</div><button class="btn" id="stSave3">Save presets</button></div></div>';
+  });
+};
+WIRE.settings = function(){
+  $("#stSave1").addEventListener("click", function(){
+    DB.put("settings", "stats", { founded:$("#st_founded").value.trim(), hospitals:$("#st_hosp").value.trim(), units:$("#st_units").value.trim(), members:$("#st_mem").value.trim() }, "stats edited")
+      .then(function(){ toast("Stats saved"); });
+  });
+  $("#stSave2").addEventListener("click", function(){
+    DB.put("settings", "storefront", { campaignK:$("#st_ck").value.trim(), marquee:$("#st_mq").value.trim() }, "storefront edited")
+      .then(function(){ toast("Storefront saved"); });
+  });
+  $("#stSave3").addEventListener("click", function(){
+    DB.put("settings", "giving", { presetsOnce:$("#st_po").value.trim(), presetsMonth:$("#st_pm").value.trim() }, "presets edited")
+      .then(function(){ toast("Presets saved"); });
+  });
+};
+
+/* ---------------- boot ---------------- */
+function syncActor(){
+  $("#whoName").textContent = actor.name;
+  $("#whoRole").textContent = ROLES[actor.role] ? ROLES[actor.role].name : "No role";
+  $("#avatar").textContent = initials(actor.name);
+}
+/* The console renders for a verified session or it does not render.
+   actor comes from the ID token claim. Nothing here is user editable, and
+   nothing here is a permission: firestore.rules decides what the server accepts. */
+PFAAuth.ready(function(who){
+  actor.name = who.name;
+  actor.email = who.email;
+  actor.role = who.role;
+  actor.uid = who.uid;
+  syncActor();
+  renderNav();
+  route();
+});
+</script>
+<script>!function(){if(window.__pfaBack)return;window.__pfaBack=1;var HOME="index.html",KEY="pfaIdx",idx=1,ss=null;try{ss=window.sessionStorage;ss.setItem("__pfaT","1");ss.removeItem("__pfaT")}catch(e){ss=null}function hi(){if(!ss)return 0;var v=parseInt(ss.getItem(KEY)||"0",10);return v>0?v:0}function stamp(){var s=null;try{s=history.state}catch(e){}if(s&&typeof s.pfaIdx==="number"&&s.pfaIdx>0){idx=s.pfaIdx}else{idx=hi()+1;try{history.replaceState({pfaIdx:idx},"")}catch(e){}}if(ss){try{ss.setItem(KEY,String(idx>hi()?idx:hi()))}catch(e){}}}var here=(location.pathname.split("/").pop()||"index.html").toLowerCase();var NOBTN=here===""||here==="index.html"||here==="admin.html";stamp();if(NOBTN){window.addEventListener("hashchange",stamp);window.addEventListener("popstate",stamp);window.addEventListener("pageshow",function(ev){if(ev.persisted)stamp()});return;}var b=document.createElement("a");b.id="pfaBack";b.href=HOME;b.style.cssText="position:fixed;left:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:none;align-items:center;gap:10px;font-family:'Archivo',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#FFFFFF;color:#0E1116;border:1px solid #0E1116;padding:14px 20px;line-height:1;cursor:pointer;text-decoration:none;box-shadow:0 12px 32px -12px rgba(14,17,22,.35);border-radius:0";b.addEventListener("mouseenter",function(){b.style.background="#00A4FF";b.style.borderColor="#00A4FF"});b.addEventListener("mouseleave",function(){b.style.background="#FFFFFF";b.style.borderColor="#0E1116"});b.addEventListener("click",function(e){e.preventDefault();if(idx>1&&history.length>1){history.back()}else{location.href=HOME}});function sync(){var back=idx>1;b.setAttribute("data-mode",back?"back":"home");b.innerHTML='<span aria-hidden="true">&#8592;</span><span>'+(back?"Back":"Home")+"</span>";b.setAttribute("aria-label",back?"Go back one step":"Go to the home page");b.style.display="inline-flex";}function mount(){sync();(document.body||document.documentElement).appendChild(b)}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",mount)}else{mount()}window.addEventListener("hashchange",function(){stamp();sync()});window.addEventListener("popstate",function(){stamp();sync()});window.addEventListener("pageshow",function(ev){if(ev.persisted){stamp();sync()}});}();</script></body>
+</html>

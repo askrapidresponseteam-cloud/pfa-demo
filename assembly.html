@@ -1,0 +1,535 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Assembly - People for Animals</title><link rel="icon" href="media/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="media/pfa-icon-32.png"><link rel="apple-touch-icon" href="media/pfa-icon-180.png"><meta name="theme-color" content="#0E1116"><meta name="description" content="Propose an event, camp, rally, or livestream. PFA vets it, publishes it, helps you host it. All 100 percent for the animals."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Marcellus&display=swap" rel="stylesheet"><script src="pfa-forms.js" defer="defer"></script><script src="pfa-search.js" defer="defer"></script><script src="pfa-profile.js" defer="defer"></script><style>:root{--white:#FFFFFF;--porcelain:#F4F6F7;--card:#0C0F14;--ink:#0E1116;--ink-soft:#1A1F26;--mut:#55606A;--mut-2:#7A848D;--blue:#00A4FF;--blue-mid:#0090E0;--blue-ink:#006DB3;--err:#B3261E;--warn:#B8860B;--hair:rgba(14,17,22,0.14);--hair-soft:rgba(14,17,22,0.08);--font-d:'Archivo',system-ui,sans-serif;--font-s:'Marcellus',Georgia,serif}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0!important}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--white);color:var(--ink);font-family:var(--font-d);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--blue);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--blue-ink);outline-offset:3px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.pfa-nav,.pfa-nav *{box-sizing:border-box;border-radius:0!important;margin:0}.pfa-nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:76px;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid rgba(14,17,22,.1);transition:background .4s cubic-bezier(.2,.6,.2,1),border-color .4s cubic-bezier(.2,.6,.2,1),box-shadow .4s cubic-bezier(.2,.6,.2,1)}.pfa-nav.scrolled{background:rgba(255,255,255,.96);border-bottom-color:rgba(14,17,22,.14);box-shadow:0 8px 24px -16px rgba(14,17,22,.18)}.pfa-nav-in{max-width:1220px;height:76px;margin:0 auto;padding:0 clamp(20px,4vw,48px);display:flex;align-items:center;gap:24px}.pfa-brand{display:flex;align-items:center;gap:13px;flex:none;text-decoration:none;color:#0e1116}.pfa-emblem{display:inline-block;width:32px;height:29px;flex:none;background-image:url("media/pfa-emblem.png");background-image:image-set(url("media/pfa-emblem.webp") type("image/webp"),url("media/pfa-emblem.png") type("image/png"));background-size:contain;background-repeat:no-repeat;background-position:center;transition:transform .4s cubic-bezier(.2,.6,.2,1)}.pfa-brand:hover .pfa-emblem{transform:translateY(-1px)}.pfa-brand-name{font-family:var(--font-s);font-weight:700;font-size:13px;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;color:#0e1116;line-height:1;-webkit-text-stroke:.4px #0e1116}.pfa-links{display:flex;align-items:center;gap:clamp(22px,2.1vw,33px);flex:none;margin-left:auto}.pfa-links a.pfa-btn{margin-left:clamp(8px,1.4vw,20px)}.pfa-links a{position:relative;font-family:var(--font-d);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#55606a;text-decoration:none;white-space:nowrap;line-height:1;padding:6px 0;transition:color .25s cubic-bezier(.2,.6,.2,1)}.pfa-links a:not(.pfa-btn)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.2,.6,.2,1)}.pfa-links a:hover{color:#0e1116}.pfa-links a:hover:not(.pfa-btn)::after{transform:scaleX(1)}.pfa-links a[aria-current=page]{color:#006db3}.pfa-links a[aria-current=page]:not(.pfa-btn)::after{transform:scaleX(1)}.pfa-links a.pfa-btn,.pfa-mobile a.pfa-btn{position:relative;overflow:hidden;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;background:#0e1116;color:#fff;border:1px solid #0e1116;line-height:1;cursor:pointer;text-decoration:none;transition:color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1)}.pfa-links a.pfa-btn::before,.pfa-mobile a.pfa-btn::before{content:"";position:absolute;inset:0;background:#00a4ff;transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.6,.2,1)}.pfa-links a.pfa-btn:hover::before,.pfa-mobile a.pfa-btn:hover::before{transform:scaleX(1)}.pfa-links a.pfa-btn:hover,.pfa-mobile a.pfa-btn:hover{color:#0e1116;border-color:#00a4ff}.pfa-links a.pfa-btn span,.pfa-mobile a.pfa-btn span{position:relative;z-index:1}.pfa-burger{display:block;flex:none;margin-left:clamp(10px,1.2vw,18px);background:0 0;border:1px solid rgba(14,17,22,.14);width:44px;height:44px;cursor:pointer;position:relative;padding:0;transition:border-color .3s cubic-bezier(.2,.6,.2,1)}.pfa-burger:hover{border-color:#0e1116}.pfa-burger span{position:absolute;left:11px;right:11px;height:2px;background:#0e1116;transition:transform .3s cubic-bezier(.2,.6,.2,1),opacity .3s cubic-bezier(.2,.6,.2,1)}.pfa-burger span:first-child{top:15px}.pfa-burger span:nth-child(2){top:21px}.pfa-burger span:nth-child(3){top:27px}.pfa-burger.open span:first-child{transform:translateY(6px) rotate(45deg)}.pfa-burger.open span:nth-child(2){opacity:0}.pfa-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}.pfa-cart{position:fixed;right:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#0e1116;color:#fff;border:1px solid #fff;padding:14px 20px;line-height:1;cursor:pointer;box-shadow:0 12px 32px -12px rgba(14,17,22,.45);transition:background .3s cubic-bezier(.2,.6,.2,1),color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1),transform .3s cubic-bezier(.2,.6,.2,1)}.pfa-cart:hover{background:#00a4ff;border-color:#00a4ff;color:#0e1116;transform:translateY(-2px)}.pfa-cart .cart-count{background:#00a4ff;color:#0e1116;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;padding:0 5px;transition:background .3s cubic-bezier(.2,.6,.2,1),color .3s cubic-bezier(.2,.6,.2,1)}.pfa-cart:hover .cart-count{background:#0e1116;color:#fff}.pfa-mobile{position:fixed;inset:76px 0 0 0;background:#fff;z-index:999;padding:40px clamp(20px,6vw,48px);display:flex;flex-direction:column;gap:8px;overflow-y:auto;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.2,.6,.2,1),visibility 0s linear .35s;counter-reset:pfa-menu}.pfa-mobile.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}.pfa-mobile a{display:flex;align-items:baseline;gap:16px;font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.6rem,7vw,2.4rem);text-transform:uppercase;color:#0e1116;text-decoration:none;line-height:1.25;padding:14px 0;border-bottom:1px solid rgba(14,17,22,.14);opacity:0;transform:translateY(14px);transition:opacity .4s cubic-bezier(.2,.6,.2,1),transform .4s cubic-bezier(.2,.6,.2,1),color .2s cubic-bezier(.2,.6,.2,1)}.pfa-mobile a:not(.pfa-btn)::before{counter-increment:pfa-menu;content:counter(pfa-menu,decimal-leading-zero);font-size:12px;font-weight:600;font-stretch:100%;letter-spacing:.14em;color:#7a848d;flex:none}.pfa-mobile.open a{opacity:1;transform:translateY(0)}.pfa-mobile.open a:first-child{transition-delay:.05s}.pfa-mobile.open a:nth-child(2){transition-delay:.09s}.pfa-mobile.open a:nth-child(3){transition-delay:.13s}.pfa-mobile.open a:nth-child(4){transition-delay:.17s}.pfa-mobile.open a:nth-child(5){transition-delay:.21s}.pfa-mobile.open a:nth-child(6){transition-delay:.25s}.pfa-mobile.open a:nth-child(7){transition-delay:.29s}.pfa-mobile.open a:nth-child(8){transition-delay:.33s}.pfa-mobile.open a:nth-child(9){transition-delay:.37s}.pfa-mobile a:hover,.pfa-mobile a[aria-current=page]{color:#006db3}.pfa-mobile a.pfa-btn{border-bottom:none;margin-top:24px;align-self:flex-start;padding:16px 30px;font-size:13px;font-stretch:100%}.pfa-cart:focus-visible,.pfa-mobile a:focus-visible,.pfa-nav a:focus-visible,.pfa-nav button:focus-visible{outline:2px solid #006DB3;outline-offset:3px}@media (max-width:1240px){.pfa-links{display:none}.pfa-burger{margin-left:auto}}@media (max-width:400px){.pfa-brand{gap:10px}.pfa-brand-name{font-size:11.5px;letter-spacing:.18em}}@media (prefers-reduced-motion:reduce){.pfa-cart,.pfa-mobile,.pfa-mobile a,.pfa-nav,.pfa-nav *{transition:none!important}.pfa-mobile a{opacity:1;transform:none}}.pfa-start{padding-top:calc(76px + clamp(44px,7vw,84px))!important;align-items:flex-start!important;align-content:flex-start!important;justify-content:flex-start!important}.pfa-start>:first-child{margin-top:0!important}
+/* ============ THE ASSEMBLY - page CSS ============ */
+h1,h2,h3,h4{font-family:var(--font-d);letter-spacing:-.02em;line-height:1;text-wrap:balance}
+h1{font-weight:900;font-stretch:118%}
+h2{font-weight:800;font-stretch:114%}
+.blue{color:var(--blue-mid)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--ink);color:var(--white);border:1px solid var(--ink);font-family:var(--font-d);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:17px 30px;min-height:44px;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease}
+.btn:hover{background:var(--blue);color:var(--ink);border-color:var(--blue)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{border-color:var(--blue-ink);color:var(--blue-ink);background:transparent}
+.btn.dark{background:transparent;color:#EAEEF1;border-color:rgba(255,255,255,.28)}
+.btn.dark:hover{background:var(--blue);border-color:var(--blue);color:var(--ink)}
+.btn.small{padding:12px 18px;font-size:11px;letter-spacing:.12em}
+
+/* Hero */
+.asm-hero{padding:clamp(60px,10vw,120px) 0 clamp(46px,7vw,72px)}
+.asm-hero .eyebrow{display:block;font-family:var(--font-s);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:22px}
+.asm-hero 
+.asm-hero h1{font-size:clamp(2.8rem,8vw,5.2rem);letter-spacing:-.018em;text-transform:uppercase}
+.asm-hero h1 .blue{color:var(--blue-mid)}
+.asm-hero .lede{font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--mut);max-width:60ch;margin-top:26px;line-height:1.55}
+.asm-hero .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
+.asm-hero .quiet{margin-top:22px;font-family:var(--font-s);font-size:14px;color:var(--mut-2)}
+.asm-hero .quiet a{color:var(--blue-ink);border-bottom:1px solid currentColor;padding-bottom:1px}
+.asm-hero .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:clamp(48px,7vw,72px);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.asm-hero .stat{padding:22px 20px;border-right:1px solid var(--hair-soft)}
+.asm-hero .stat:last-child{border-right:none}
+.asm-hero .stat b{display:block;font-family:var(--font-d);font-weight:900;font-stretch:112%;font-size:clamp(1.6rem,3vw,2rem);letter-spacing:-.01em}
+.asm-hero .stat span{font-family:var(--font-s);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--mut-2);margin-top:4px;display:block}
+@media (max-width:720px){.asm-hero .stats{grid-template-columns:repeat(2,1fr)}.asm-hero .stat:nth-child(2){border-right:none}.asm-hero .stat:nth-child(-n+2){border-bottom:1px solid var(--hair-soft)}}
+
+/* Ticker */
+.ticker{background:var(--ink);color:#EAEEF1;overflow:hidden;position:relative;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.ticker-track{display:flex;gap:60px;padding:22px 0;white-space:nowrap;animation:tickerScroll 60s linear infinite;font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1rem,1.6vw,1.15rem);letter-spacing:.16em;text-transform:uppercase}
+.ticker-track span{display:inline-flex;align-items:center;gap:60px}
+.ticker-track span i{width:8px;height:8px;background:var(--blue);flex:none;display:inline-block;font-style:normal}
+.ticker-track em{font-style:normal;color:#8f98a1}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+
+/* Section shell */
+.sec{padding:clamp(60px,8vw,100px) 0}
+.sec.dark{background:var(--ink);color:#EAEEF1}
+.sec.porcelain{background:var(--porcelain)}
+.sec.dark .eye,.sec.dark .h2,.sec.dark h2{color:#fff}
+.sec .k{font-family:var(--font-s);font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:14px;display:inline-block}
+.sec.dark .k{color:var(--blue)}
+.sec h2{font-size:clamp(2rem,4.6vw,3rem);letter-spacing:-.02em;text-transform:uppercase;line-height:1}
+.sec .sub{font-size:clamp(1.02rem,1.8vw,1.15rem);color:var(--mut);margin-top:20px;max-width:64ch;line-height:1.55}
+.sec.dark .sub{color:#b7bfc7}
+.sec .sec-head{margin-bottom:clamp(38px,5vw,54px)}
+
+/* FEATURED billboard */
+.marquee{background:var(--ink);color:#EAEEF1;padding:clamp(46px,7vw,72px) 0;position:relative;overflow:hidden}
+.marquee::before{content:"";position:absolute;inset:auto -12% -30% -12%;height:60%;background:radial-gradient(ellipse at center,rgba(0,164,255,.14) 0%,rgba(0,164,255,0) 60%);pointer-events:none}
+.mq-in{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,60px);align-items:center}
+@media (max-width:940px){.mq-in{grid-template-columns:1fr}}
+.mq-tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-s);font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue);margin-bottom:22px}
+.mq-tag i{width:9px;height:9px;background:var(--blue);flex:none;font-style:normal}
+.mq-tag em{font-style:normal;color:#8f98a1;letter-spacing:.28em}
+.mq-title{font-family:var(--font-d);font-weight:900;font-stretch:118%;font-size:clamp(2.4rem,6.4vw,4.6rem);letter-spacing:-.016em;text-transform:uppercase;line-height:.98;color:#fff}
+.mq-title .blue{color:var(--blue)}
+.mq-sub{color:#b7bfc7;font-size:clamp(1rem,1.7vw,1.15rem);margin-top:22px;max-width:52ch;line-height:1.55}
+.mq-meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:30px}
+.mq-meta .mm{border-left:1px solid rgba(255,255,255,.16);padding-left:16px}
+.mq-meta .mm span{display:block;font-family:var(--font-s);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8f98a1}
+.mq-meta .mm b{display:block;font-family:var(--font-d);font-weight:800;font-size:1rem;margin-top:5px;letter-spacing:.02em;color:#EAEEF1}
+.mq-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.mq-cta .btn{padding:16px 26px}
+.mq-cta .btn.primary{background:var(--blue);color:var(--ink);border-color:var(--blue)}
+.mq-cta .btn.primary:hover{background:#fff;color:var(--ink);border-color:#fff}
+
+/* Countdown */
+.count{margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:520px}
+.count .u{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);padding:14px 12px;text-align:center}
+.count .u b{display:block;font-family:var(--font-d);font-weight:900;font-stretch:118%;font-size:clamp(1.4rem,2.6vw,1.9rem);color:#fff;letter-spacing:.02em;line-height:1}
+.count .u span{display:block;font-family:var(--font-s);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:#8f98a1;margin-top:8px}
+
+/* Poster panel */
+.mq-poster{position:relative;aspect-ratio:4/5;background:linear-gradient(155deg,#1a1f26 0%,#0e1116 45%,#0090E0 200%);border:1px solid rgba(255,255,255,.1);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:26px}
+.mq-poster::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(0,164,255,.18),transparent 55%);pointer-events:none}
+.mq-poster::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--blue)}
+.mp-top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start}
+.mp-top .mp-badge{background:var(--blue);color:var(--ink);font-family:var(--font-d);font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:6px 10px;display:inline-flex;align-items:center;gap:7px}
+.mp-top .mp-badge i{width:8px;height:8px;background:var(--ink);animation:pulseDot 1.8s ease-in-out infinite;flex:none;font-style:normal}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
+.mp-top .mp-num{font-family:var(--font-s);font-size:11px;letter-spacing:.22em;color:#8f98a1;text-transform:uppercase}
+.mp-bot{position:relative;z-index:1}
+.mp-when{display:block;font-family:var(--font-d);font-weight:900;font-stretch:118%;font-size:clamp(2.4rem,4vw,3rem);color:#fff;line-height:.95;letter-spacing:-.02em;text-transform:uppercase}
+.mp-where{display:block;font-family:var(--font-s);font-size:12.5px;letter-spacing:.28em;text-transform:uppercase;color:#EAEEF1;margin-top:12px}
+.mp-line{height:1px;background:rgba(255,255,255,.16);margin:20px 0}
+.mp-host{font-family:var(--font-s);font-size:13px;color:#b7bfc7;letter-spacing:.02em}
+.mp-host b{color:#fff;font-family:var(--font-d);font-weight:800}
+
+/* LIVE NOW */
+.live-strip{background:var(--card);color:#EAEEF1;padding:clamp(38px,5vw,58px) 0;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.ls-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,50px);align-items:center}
+@media (max-width:940px){.ls-grid{grid-template-columns:1fr}}
+.ls-video{aspect-ratio:16/9;background:linear-gradient(160deg,#0b0d11 0%,#181e26 60%,#0e1116 100%);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.ls-video::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(0,164,255,.16),transparent 55%),radial-gradient(circle at 70% 70%,rgba(0,164,255,.08),transparent 60%)}
+.ls-video::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--blue),transparent)}
+.ls-live{position:absolute;top:16px;left:16px;display:inline-flex;align-items:center;gap:8px;background:#B3261E;color:#fff;font-family:var(--font-d);font-weight:900;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:6px 10px;z-index:1}
+.ls-live i{width:8px;height:8px;background:#fff;border-radius:50%!important;animation:pulseDot 1.6s ease-in-out infinite;flex:none;font-style:normal}
+.ls-watchers{position:absolute;top:16px;right:16px;font-family:var(--font-s);font-size:12px;color:#EAEEF1;letter-spacing:.14em;background:rgba(14,17,22,.7);padding:6px 10px;z-index:1}
+.ls-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:78px;height:78px;background:var(--blue);color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:900;font-size:24px;cursor:pointer;transition:transform .3s ease}
+.ls-play:hover{transform:translate(-50%,-50%) scale(1.05)}
+.ls-title{font-family:var(--font-d);font-weight:900;font-stretch:114%;font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.014em;text-transform:uppercase;line-height:1;color:#fff}
+.ls-sub{color:#b7bfc7;margin-top:16px;line-height:1.55;max-width:48ch}
+.ls-chat{margin-top:24px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:16px;max-height:230px;overflow:hidden}
+.ls-chat .msg{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;line-height:1.45}
+.ls-chat .msg:last-child{border-bottom:none}
+.ls-chat .msg b{color:var(--blue);font-family:var(--font-d);font-weight:800;font-size:12px;letter-spacing:.06em;margin-right:8px}
+.ls-chat .msg span{color:#EAEEF1}
+
+/* Upcoming */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;margin-bottom:24px}
+.chip{font-family:var(--font-d);font-size:13px;letter-spacing:.02em;border:1px solid var(--hair);background:var(--white);color:var(--mut);padding:11px 18px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:border-color .2s ease,color .2s ease,background .2s ease}
+.chip:hover{border-color:var(--blue-ink);color:var(--ink)}
+.chip.on{border-color:var(--ink);color:var(--ink);background:var(--porcelain);font-weight:700}
+.chip .n{font-family:var(--font-s);font-size:11px;color:var(--mut-2);letter-spacing:.16em;padding-left:8px;margin-left:8px;border-left:1px solid var(--hair)}
+.chip.on .n{color:var(--ink)}
+.city-row{display:flex;gap:12px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.city-row label{font-family:var(--font-s);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut-2)}
+.city-row select{background:var(--white);border:1px solid var(--hair);padding:11px 34px 11px 14px;font-family:var(--font-d);font-size:14px;color:var(--ink);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2355606A' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;min-width:220px;cursor:pointer}
+.city-row select:focus{outline:none;border-color:var(--blue-ink)}
+.grid-count{font-family:var(--font-s);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut-2);margin-left:auto}
+
+.evgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--hair);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+@media (max-width:940px){.evgrid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.evgrid{grid-template-columns:1fr}}
+.ev{background:var(--white);padding:26px 24px;display:flex;flex-direction:column;gap:14px;text-align:left;font-family:inherit;border:none;cursor:pointer;transition:background .2s ease;position:relative}
+.ev:hover{background:var(--porcelain)}
+.ev.hidden{display:none}
+.ev-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.ev-date{display:flex;flex-direction:column;flex:none;padding:8px 14px;border:1px solid var(--ink);min-width:74px;text-align:center}
+.ev-date .d{font-family:var(--font-d);font-weight:900;font-size:1.6rem;line-height:1;color:var(--ink);letter-spacing:-.02em}
+.ev-date .m{font-family:var(--font-s);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue-ink);margin-top:5px}
+.ev-badges{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.ev-fmt{font-family:var(--font-s);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--mut);padding:4px 8px;border:1px solid var(--hair)}
+.ev-fmt.live{color:#fff;background:#B3261E;border-color:#B3261E;display:inline-flex;align-items:center;gap:6px}
+.ev-fmt.live::before{content:"";width:6px;height:6px;background:#fff;border-radius:50%!important;animation:pulseDot 1.6s ease-in-out infinite}
+.ev-title{font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:1.15rem;line-height:1.18;letter-spacing:-.005em;text-transform:uppercase;color:var(--ink);margin-top:2px}
+.ev-city{font-family:var(--font-s);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-ink)}
+.ev-desc{font-family:var(--font-s);font-size:14px;color:var(--mut);line-height:1.5}
+.ev-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--hair-soft);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ev-host{font-family:var(--font-s);font-size:12px;color:var(--mut-2)}
+.ev-host b{color:var(--ink);font-family:var(--font-d);font-weight:700}
+.ev-going{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-ink);border:1px solid var(--blue-ink);padding:7px 11px}
+.grid-empty{grid-column:1/-1;background:var(--white);padding:60px 20px;text-align:center;color:var(--mut);font-family:var(--font-s);font-size:14px}
+
+/* Campaigns */
+.camps{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (max-width:820px){.camps{grid-template-columns:1fr}}
+.camp{padding:clamp(28px,3.4vw,42px);border:1px solid var(--hair);position:relative;overflow:hidden;transition:border-color .25s ease,transform .3s ease;display:flex;flex-direction:column;gap:16px;background:var(--white);cursor:pointer;font-family:inherit;text-align:left;color:inherit}
+.camp:hover{border-color:var(--ink);transform:translateY(-2px)}
+.camp::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.85,.25,1)}
+.camp:hover::before{transform:scaleX(1)}
+.camp .cs-k{font-family:var(--font-s);font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--mut-2)}
+.camp h3{font-family:var(--font-d);font-weight:900;font-stretch:114%;font-size:clamp(1.4rem,2.3vw,1.8rem);letter-spacing:-.008em;text-transform:uppercase;line-height:1}
+.camp h3 .blue{color:var(--blue-mid)}
+.camp .cs-body{font-family:var(--font-s);color:var(--mut);line-height:1.55;font-size:1rem}
+.camp .cs-prog{display:flex;gap:24px;margin-top:6px;flex-wrap:wrap}
+.camp .cs-prog b{display:block;font-family:var(--font-d);font-weight:900;font-size:1.25rem;color:var(--ink);letter-spacing:-.01em}
+.camp .cs-prog span{display:block;font-family:var(--font-s);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut-2);margin-top:4px}
+.camp .cs-go{margin-top:6px;display:inline-flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-ink)}
+.camp .cs-go::after{content:"\2192";transition:transform .25s ease}
+.camp:hover .cs-go::after{transform:translateX(5px)}
+
+/* Meet each other block */
+.meetblk{padding:clamp(70px,10vw,120px) 0;background:var(--porcelain);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.meetblk .wrap{max-width:900px}
+.meetblk .meet-k{font-family:var(--font-s);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:24px}
+.meetblk h2{font-family:var(--font-d);font-weight:900;font-stretch:118%;font-size:clamp(2.2rem,5vw,3.5rem);letter-spacing:-.02em;text-transform:uppercase;line-height:1}
+.meetblk h2 .blue{color:var(--blue-mid)}
+.meetblk p.big{font-family:var(--font-s);font-size:clamp(1.15rem,2vw,1.4rem);color:var(--ink-soft);line-height:1.55;margin-top:28px;max-width:60ch}
+
+/* Youth voices */
+.voices{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--hair);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+@media (max-width:940px){.voices{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.voices{grid-template-columns:1fr}}
+.voice{background:var(--white);padding:26px 24px;display:flex;flex-direction:column;gap:14px}
+.voice .vh{display:flex;align-items:center;gap:14px}
+.voice .vava{width:52px;height:52px;background:var(--ink);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:900;font-size:1rem;letter-spacing:.02em;flex:none}
+.voice .vava.blue{background:var(--blue);color:var(--ink)}
+.voice .vava.porcelain{background:var(--porcelain);color:var(--ink);border:1px solid var(--hair)}
+.voice .vinfo b{display:block;font-family:var(--font-d);font-weight:800;font-size:.98rem;letter-spacing:.005em}
+.voice .vinfo span{display:block;font-family:var(--font-s);font-size:12px;color:var(--mut-2);letter-spacing:.16em;text-transform:uppercase;margin-top:3px}
+.voice .vwhat{font-family:var(--font-s);color:var(--mut);font-size:14.5px;line-height:1.55;margin-top:4px}
+.voice .vev{margin-top:auto;padding-top:14px;border-top:1px solid var(--hair-soft);font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-ink)}
+
+/* Guardrails */
+.rails{background:var(--ink);color:#EAEEF1}
+.rails .sec-head h2{color:#fff}
+.rails .sub{color:#b7bfc7;max-width:52ch}
+.rl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+@media (max-width:820px){.rl-grid{grid-template-columns:1fr}}
+.rl{padding:clamp(24px,3vw,32px) clamp(24px,3vw,36px);border-top:1px solid rgba(255,255,255,.14);border-right:1px solid rgba(255,255,255,.14);position:relative}
+.rl:nth-child(2n),.rl:last-child{border-right:none}
+@media (max-width:820px){.rl{border-right:none}}
+.rl-n{font-family:var(--font-s);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.rl-n::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.12)}
+.rl h3{font-family:var(--font-d);font-weight:900;font-stretch:116%;font-size:clamp(1.15rem,2vw,1.5rem);letter-spacing:-.005em;text-transform:uppercase;line-height:1.1;color:#fff}
+.rl h3 .blue{color:var(--blue)}
+.rl p{color:#b7bfc7;font-family:var(--font-s);font-size:14.5px;line-height:1.55;margin-top:14px}
+.rails .rl-foot{border-top:1px solid rgba(255,255,255,.14);padding:clamp(24px,3vw,32px) 0 0;margin-top:0}
+.rails .rl-foot p{font-family:var(--font-s);color:#8f98a1;font-size:13px;line-height:1.6;text-align:center;max-width:60ch;margin:14px auto 0}
+
+/* Propose form */
+.propose{padding:clamp(60px,8vw,100px) 0}
+.propose h2{font-size:clamp(2rem,4.6vw,3rem);letter-spacing:-.02em;text-transform:uppercase;line-height:1}
+.propose .lead{font-size:1rem;color:var(--mut);margin-top:14px;max-width:60ch;line-height:1.55}
+.prog{display:grid;list-style:none;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);margin:clamp(30px,5vw,44px) 0 clamp(20px,3vw,28px);grid-template-columns:repeat(4,1fr)}
+.prog li{display:flex;flex-direction:column;gap:10px;padding:16px 14px 16px 20px;border-right:1px solid var(--hair-soft);transition:opacity .3s ease;opacity:.5}
+.prog li:first-child{padding-left:0}
+.prog li:last-child{border-right:none}
+.prog li.done,.prog li.now{opacity:1}
+.prog .pm{display:flex;align-items:center;gap:10px}
+.prog i{width:11px;height:11px;border:1px solid var(--hair);background:transparent;display:block;flex:none;font-style:normal}
+.prog li.done i{background:var(--blue);border-color:var(--blue)}
+.prog li.now i{background:var(--ink);border-color:var(--ink)}
+.prog .pn{font-family:var(--font-s);font-size:10px;letter-spacing:.2em;color:var(--mut-2)}
+.prog span.pl{font-family:var(--font-s);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut-2)}
+.prog li.now span.pl{color:var(--ink)}
+.prog li.done span.pl{color:var(--blue-ink)}
+@media (max-width:680px){.prog li{padding:14px 6px 14px 12px}.prog li:first-child{padding-left:0}.prog span.pl{display:none}}
+
+.step{display:none}
+.step.on{display:block;animation:fadeUp .45s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.step .s-k{font-family:var(--font-s);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:12px}
+.step h3{font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.5rem,3.4vw,2.1rem);letter-spacing:-.015em;line-height:1.05}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;margin-top:clamp(28px,4vw,38px)}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+.fgroup{display:flex;flex-direction:column}
+.fgroup.full{grid-column:1/-1}
+.fgroup label{font-family:var(--font-s);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:9px}
+.fgroup label em{font-style:normal;color:var(--mut-2);letter-spacing:.1em}
+input[type=date],input[type=email],input[type=number],input[type=tel],input[type=text],input[type=time],input:not([type]),select,textarea{width:100%;background:var(--white);border:1px solid var(--hair);padding:16px 18px;font-family:var(--font-d);font-size:16px;color:var(--ink);transition:border-color .2s ease}
+textarea{resize:vertical;min-height:110px;line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--blue-ink);border-width:1.5px}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2355606A' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:44px}
+.ferr{display:none;font-size:12px;color:var(--err);margin-top:8px}
+.fgroup.invalid input,.fgroup.invalid select,.fgroup.invalid textarea{border-color:var(--err)}
+.fgroup.invalid .ferr{display:block}
+.formerr{display:none;align-items:center;gap:12px;border:1px solid var(--err);padding:14px 18px;margin-bottom:24px;font-size:.92rem;color:var(--err)}
+.formerr.show{display:flex;animation:nudge .4s ease}
+@keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.formerr::before{content:"";width:9px;height:9px;background:var(--err);flex:none;font-style:normal}
+.chips2{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.chip2{font-family:var(--font-d);font-size:13px;letter-spacing:.02em;border:1px solid var(--hair);background:var(--white);color:var(--mut);padding:12px 18px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:border-color .2s ease,color .2s ease,background .2s ease}
+.chip2::before{content:"";width:8px;height:8px;background:transparent;border:1px solid var(--hair);flex:none;transition:background .2s ease,border-color .2s ease}
+.chip2:hover{border-color:var(--blue-ink);color:var(--ink)}
+.chip2.sel{border-color:var(--ink);color:var(--ink);background:var(--porcelain)}
+.chip2.sel::before{background:var(--blue);border-color:var(--blue)}
+
+.rails-review{background:var(--porcelain);border:1px solid var(--hair);padding:24px 26px;margin-top:24px}
+.rails-review h4{font-family:var(--font-s);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin-bottom:14px}
+.rails-review ol{list-style:none;counter-reset:rr;display:grid;grid-template-columns:1fr 1fr;gap:10px 22px}
+@media (max-width:720px){.rails-review ol{grid-template-columns:1fr}}
+.rails-review li{counter-increment:rr;font-family:var(--font-s);font-size:13.5px;color:var(--mut);line-height:1.5;padding-left:38px;position:relative}
+.rails-review li::before{content:counter(rr,decimal-leading-zero);position:absolute;left:0;top:1px;font-family:var(--font-d);font-weight:800;font-size:12px;color:var(--blue-ink);letter-spacing:.06em}
+.rails-review li b{color:var(--ink);font-family:var(--font-d);font-weight:700}
+.ack{display:flex;align-items:flex-start;gap:13px;margin-top:22px;cursor:pointer;font-size:.94rem;color:var(--ink-soft);line-height:1.5}
+.ack input{margin-top:4px;flex:none;width:18px;height:18px;accent-color:var(--blue-ink);cursor:pointer}
+
+.review{border:1px solid var(--hair);margin-top:clamp(26px,4vw,36px)}
+.rrow{display:flex;align-items:baseline;justify-content:space-between;gap:18px;padding:15px 20px;border-bottom:1px solid var(--hair-soft)}
+.rrow:last-child{border-bottom:none}
+.rk{font-family:var(--font-s);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut-2);flex:none}
+.btn-row{display:flex;align-items:center;gap:14px;margin-top:clamp(30px,4vw,40px)}
+.btn-row .spacer{flex:1}
+@media (max-width:680px){.btn-row{flex-direction:column-reverse;align-items:stretch}.btn-row .btn{width:100%}.btn-row .spacer{display:none}}
+.back-link{background:0 0;border:none;font-family:var(--font-s);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:12px 0;min-height:44px}
+.back-link::before{content:"\2190"}
+.back-link:hover{color:var(--ink)}
+
+.done{display:none;text-align:center;padding:clamp(40px,7vw,80px) 0}
+.done.on{display:block;animation:fadeUp .5s ease both}
+.done .seal{width:64px;height:64px;margin:0 auto 28px;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.done .seal span{width:26px;height:26px;background:var(--blue)}
+.done .d-k{font-family:var(--font-s);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:16px}
+.done h3{font-family:var(--font-d);font-weight:900;font-stretch:116%;font-size:clamp(2rem,5vw,3rem);letter-spacing:-.018em;text-transform:uppercase;line-height:1}
+.done p{font-size:1.05rem;color:var(--mut);max-width:52ch;margin:20px auto 0;line-height:1.55}
+.done .ref{font-family:var(--font-s);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin-top:28px;border:1px solid var(--hair);display:inline-block;padding:14px 22px}
+
+/* Skip link */
+.skip{position:fixed;top:-64px;left:16px;z-index:300;background:var(--ink);color:#fff;padding:13px 18px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:top .2s ease}
+.skip:focus{top:12px;outline:2px solid var(--blue)}
+
+/* Reveal on scroll */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:.08s}
+.rv-d2{transition-delay:.16s}
+.rv-d3{transition-delay:.24s}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+/* footer + emblem (shared) */
+.brand{display:flex;align-items:center;gap:13px}
+.emblem{display:inline-block;background-image:url("media/pfa-emblem.png");background-image:image-set(url("media/pfa-emblem.webp") type("image/webp"),url("media/pfa-emblem.png") type("image/png"));background-size:contain;background-repeat:no-repeat;background-position:center}
+@media (max-width:820px){.foot-top{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.foot-top{grid-template-columns:1fr}}
+@media (max-width:1020px){.cards{grid-template-columns:repeat(2,1fr)}.cert-grid{grid-template-columns:1fr;align-items:start}.stamp{max-width:360px}.mgrid{grid-template-columns:1fr;align-items:start}.apply-grid{grid-template-columns:1fr}.apanel .btn{align-self:stretch}}
+@media (max-width:600px){.cards{grid-template-columns:1fr}.tiles{grid-template-columns:1fr}.audience{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+@media (max-width:380px){.brand-name{font-size:11px;letter-spacing:.12em}}
+/* ===== PFA FOOTER - canonical block, identical on every page ===== */
+.brand{display:flex;align-items:center;gap:13px}
+@media (max-width:820px){.foot-top{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.brand-name{font-size:12px;letter-spacing:.16em}}
+@media (max-width:560px){.foot-top{grid-template-columns:1fr}}
+@media (max-width:380px){.brand-name{font-size:11px;letter-spacing:.12em}}
+/* ===== PFA FOOTER - canonical block, identical on every page ===== */
+/* self-contained: inheritable properties are pinned so page-level element
+   selectors (h4{}, p{}, a{}) cannot leak in and shift the footer */
+.brand{display:flex;align-items:center;gap:13px;line-height:1.6}
+.brand .emblem{width:32px;height:29px;flex:none}
+.brand-name{font-family:var(--font-s);font-weight:700;font-size:13px;line-height:1.6;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;-webkit-text-stroke:.4px currentColor}
+footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line-height:1.6}
+.foot-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:clamp(30px,5vw,60px)}
+.foot-brand .brand{margin-bottom:22px}
+.foot-brand .emblem{width:32px;height:29px;flex:none}
+.foot-brand p{font-family:var(--font-s);font-size:.98rem;line-height:1.6;color:var(--mut);max-width:30ch;margin:0}
+.foot-col h3{font-family:var(--font-s);font-size:11px;font-weight:400;line-height:1.6;letter-spacing:.3em;text-transform:uppercase;color:var(--mut-2);margin:0 0 20px}
+.foot-col a{display:block;font-family:var(--font-d);font-size:.92rem;font-weight:400;line-height:1.6;letter-spacing:normal;text-transform:none;color:var(--mut);padding:7px 0;transition:color .25s ease}
+.foot-col a:hover{color:var(--blue-ink)}
+.foot-bottom{margin-top:clamp(50px,7vw,70px);padding-top:28px;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.foot-bottom p{font-family:var(--font-d);font-size:12.5px;font-weight:400;line-height:1.6;color:var(--mut-2);margin:0}
+.foot-mark{display:flex;align-items:center;gap:12px;font-family:var(--font-s);font-size:11px;font-weight:400;line-height:1.6;letter-spacing:.28em;text-transform:uppercase;color:var(--mut)}
+.foot-mark .emblem{width:26px;height:24px;flex:none}
+@media (max-width:820px){.foot-top{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.brand-name{font-size:12px;letter-spacing:.16em}}
+@media (max-width:560px){.foot-top{grid-template-columns:1fr}}
+@media (max-width:380px){.brand-name{font-size:11px;letter-spacing:.12em}}
+</style></head><body><a class="skip" href="#main">Skip to content</a><header class="pfa-nav" id="nav"><div class="pfa-nav-in"><a class="pfa-brand" href="index.html" aria-label="People for Animals - home"><span class="pfa-emblem" role="img" aria-label="People for Animals emblem"></span> <span class="pfa-brand-name">People for Animals</span></a><nav class="pfa-links" aria-label="Primary"><a href="store.html">Store</a> <a href="network.html">Network</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></nav><button class="pfa-burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button></div></header><div class="pfa-mobile" id="mobileMenu"><a href="index.html">Home</a> <a href="store.html">Store</a> <a href="membership.html">Membership</a> <a href="get-involved.html">Get Involved</a> <a href="stories.html">Stories</a> <a href="founder.html">The Founder</a> <a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a> <a href="champion.html">The Wildlife Gauntlet</a> <a href="pfa-x.html">PFA X</a> <a href="network.html">Network</a> <a href="services.html">Services</a> <a href="heatmap.html">Heat Map</a> <a href="assembly.html">The Assembly</a> <a href="hall-of-fame.html">Hall of Fame</a> <a href="adopt.html">Adopt and Give</a> <a href="csr.html">Partner with PFA</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></div><main id="main"><section class="asm-hero"><div class="wrap"><p class="eyebrow rv">The Assembly &middot; Your Stage, Their Cause</p><h1 class="rv rv-d1">The stage is <span class="blue">yours.</span></h1><p class="lede rv rv-d2">You have an idea. A rally, a camp, a talk, a livestream. PFA is where you propose it, we vet it, publish it, and help you host it. Others join. Everyone meets each other. All 100 percent for the animals.</p><div class="cta rv rv-d3"><a class="btn" href="#propose">Propose your action</a> <a class="btn ghost" href="#upcoming">Browse the upcoming</a></div><p class="quiet rv rv-d3">Never hosted before? <a href="#rails">Start with the ten guardrails.</a></p><div class="stats"><div class="stat"><b id="stCount">147</b><span>Assemblies this year</span></div><div class="stat"><b>34</b><span>Cities on the map</span></div><div class="stat"><b>28,412</b><span>People, meeting</span></div><div class="stat"><b>0</b><span>Rupees taken here</span></div></div></div></section><div class="ticker" aria-hidden="true"><div class="ticker-track"><span><i></i>MUMBAI 22 AUG&emsp;<i></i>BENGALURU 24 AUG&emsp;<i></i>MANIPAL 28 AUG&emsp;<i></i>DELHI 30 AUG&emsp;<i></i>LIVESTREAM 5 SEP&emsp;<i></i>MUMBAI 3 SEP&emsp;<i></i>KOLKATA 15 SEP&emsp;<i></i>JAIPUR 20 SEP&emsp;<i></i>PUNE 12 SEP&emsp;<i></i>CHENNAI 18 SEP&emsp;<i></i>LUCKNOW 25 SEP&emsp;<i></i>HYDERABAD 28 SEP&emsp;</span><span><i></i>MUMBAI 22 AUG&emsp;<i></i>BENGALURU 24 AUG&emsp;<i></i>MANIPAL 28 AUG&emsp;<i></i>DELHI 30 AUG&emsp;<i></i>LIVESTREAM 5 SEP&emsp;<i></i>MUMBAI 3 SEP&emsp;<i></i>KOLKATA 15 SEP&emsp;<i></i>JAIPUR 20 SEP&emsp;<i></i>PUNE 12 SEP&emsp;<i></i>CHENNAI 18 SEP&emsp;<i></i>LUCKNOW 25 SEP&emsp;<i></i>HYDERABAD 28 SEP&emsp;</span></div></div><section class="marquee" id="featured"><div class="wrap mq-in"><div><p class="mq-tag"><i></i>THIS MONTH<em>&middot; Mumbai &middot; Assembly #147</em></p><h2 class="mq-title">"Street Dogs at <span class="blue">Night."</span></h2><p class="mq-sub">A live walk-through of a Bombay street feeding round. Six volunteers, a hundred dogs, one hour, one camera. Bring your questions, we will answer on the walk.</p><div class="mq-meta"><div class="mm"><span>When</span><b>Sat 22 Aug &middot; 8:00 PM IST</b></div><div class="mm"><span>Where</span><b>Livestream &middot; Mahim, Mumbai</b></div><div class="mm"><span>Host</span><b>Ananya Iyer, 24</b></div><div class="mm"><span>Format</span><b>Livestream + Live Q&amp;A</b></div></div><div class="count" id="countdown"><div class="u"><b id="cdD">--</b><span>Days</span></div><div class="u"><b id="cdH">--</b><span>Hours</span></div><div class="u"><b id="cdM">--</b><span>Minutes</span></div><div class="u"><b id="cdS">--</b><span>Seconds</span></div></div><div class="mq-cta"><button class="btn primary" type="button" onclick="rsvpToast('the Mahim livestream')">Watch live</button> <button class="btn dark" type="button" onclick="calToast()">Add to calendar</button></div></div><div class="mq-poster" role="img" aria-label="Assembly #147 poster"><div class="mp-top"><span class="mp-badge"><i></i>Live 22 Aug</span> <span class="mp-num">ASM-2026-0147</span></div><div class="mp-bot"><span class="mp-when">22 &middot; 08 &middot; 26</span> <span class="mp-where">Mahim &middot; Bombay &middot; 8 PM IST</span><div class="mp-line"></div><p class="mp-host">Hosted by <b>Ananya Iyer</b> &middot; PFA Bombay</p></div></div></div></section><section class="live-strip" id="livenow" aria-label="Live now"><div class="wrap ls-grid"><div class="ls-video"><span class="ls-live"><i></i>Live</span> <span class="ls-watchers"><b id="watchers">2,147</b> watching</span><button class="ls-play" type="button" aria-label="Watch stream" onclick="rsvpToast('this stream')">&#9654;</button></div><div><p class="k">Live now &middot; Ride-along</p><h2 class="ls-title">Bengaluru RRT &middot; <span class="blue">Sunday round.</span></h2><p class="ls-sub">Adit is riding with the Bengaluru Rapid Response Team through Koramangala. One camera on the bike, one on the pillion. If you are watching, drop your question in the chat and he will answer between calls.</p><div class="ls-chat" id="chat" aria-label="Chat preview"><div class="msg"><b>Priya M</b><span>How do you decide which call to take first?</span></div><div class="msg"><b>Rahul K</b><span>That poor pup in the corner. Is she okay now?</span></div><div class="msg"><b>Sneha B</b><span>Adit, muted for a sec, could you repeat the intersection?</span></div><div class="msg"><b>PFA Bengaluru</b><span>All - Koramangala 3rd block. Team is on the way.</span></div><div class="msg"><b>Ishaan D</b><span>Thank you for showing us what this looks like on a normal Sunday.</span></div></div></div></div></section><section class="sec" id="upcoming"><div class="wrap"><div class="sec-head"><p class="k rv">Upcoming</p><h2 class="rv">Pick the one you are <span class="blue">going to.</span></h2><p class="sub rv rv-d1">Every assembly here has been proposed by someone your age, reviewed by the nearest PFA unit, and cleared to run. Turn up. RSVP. Or watch from where you are.</p></div><div class="filters rv" id="filters" role="tablist" aria-label="Filter by format"><button type="button" class="chip on" data-f="all">All <span class="n">12</span></button> <button type="button" class="chip" data-f="talks">Talks</button> <button type="button" class="chip" data-f="camps">Camps</button> <button type="button" class="chip" data-f="rallies">Rallies</button> <button type="button" class="chip" data-f="live">Livestreams</button> <button type="button" class="chip" data-f="clean">Clean-ups</button> <button type="button" class="chip" data-f="fund">Fundraisers</button></div><div class="city-row rv"><label for="cityFilter">City</label><select id="cityFilter"><option value="all">All cities</option><option>Bengaluru</option><option>Mumbai</option><option>Delhi</option><option>Jaipur</option><option>Kolkata</option><option>Pune</option><option>Chennai</option><option>Manipal</option><option>Lucknow</option><option>Hyderabad</option><option>Livestream</option></select><span class="grid-count" id="gridCount">12 assemblies</span></div><div class="evgrid" id="evgrid"></div></div></section><section class="sec porcelain" id="campaigns"><div class="wrap"><div class="sec-head"><p class="k rv">Join a campaign</p><h2 class="rv">Bigger than a <span class="blue">weekend.</span></h2><p class="sub rv rv-d1">Some assemblies come together into a season. A city-wide push. A whole month. Pick a movement, add your assembly to it, and you are part of something running across the country.</p></div><div class="camps"><button class="camp rv" type="button" onclick="joinCampaign('ADOPT-2026')"><span class="cs-k">Campaign 01 &middot; India-wide</span><h3>Adopt Don't Shop <span class="blue">2026.</span></h3><p class="cs-body">Every assembly under this banner ends with an adoption drive. Real dogs, real cats, real homes found in the room. No booking fees. No breeders.</p><div class="cs-prog"><div><b>47</b><span>Assemblies planned</span></div><div><b>18</b><span>Cities in</span></div><div><b>1,203</b><span>Adoptions targeted</span></div></div><span class="cs-go">Add my assembly</span></button> <button class="camp rv rv-d1" type="button" onclick="joinCampaign('WINTER-FEEDING')"><span class="cs-k">Campaign 02 &middot; North India</span><h3>Feeding <span class="blue">Winter.</span></h3><p class="cs-body">December and January are the hardest months for street animals in the north. We are running eighty feeding rounds across twelve cities. Add yours.</p><div class="cs-prog"><div><b>80</b><span>Rounds planned</span></div><div><b>12</b><span>Cities</span></div><div><b>Dec-Jan</b><span>2026-27</span></div></div><span class="cs-go">Add my round</span></button> <button class="camp rv rv-d1" type="button" onclick="joinCampaign('ABC-MONTH')"><span class="cs-k">Campaign 03 &middot; Karnataka</span><h3>ABC <span class="blue">Month.</span></h3><p class="cs-body">One state. One month. Sixty sterilisations. Twelve wards. Hosted with the municipal vet. Assemblies to explain, assist, and follow up on every dog.</p><div class="cs-prog"><div><b>60</b><span>Surgeries</span></div><div><b>12</b><span>Wards</span></div><div><b>Sep</b><span>2026</span></div></div><span class="cs-go">Assist an assembly</span></button> <button class="camp rv rv-d2" type="button" onclick="joinCampaign('RESCUE-RADIO')"><span class="cs-k">Campaign 04 &middot; Livestream series</span><h3>Rescue <span class="blue">Radio.</span></h3><p class="cs-body">Every Sunday, one rescue told live from the field. Twenty-four episodes across the year, one host each. Host your Sunday, and thousands watch with you.</p><div class="cs-prog"><div><b>24</b><span>Episodes</span></div><div><b>24</b><span>Hosts needed</span></div><div><b>Every</b><span>Sunday</span></div></div><span class="cs-go">Host a Sunday</span></button></div></div></section><section class="meetblk" id="meet"><div class="wrap"><p class="meet-k rv">The reason for all of this</p><h2 class="rv rv-d1">The animals are the work. <br>The people are the <span class="blue">reason.</span></h2><p class="big rv rv-d2">A PFA Assembly is not an event. It is where a person who has been feeding fifteen dogs alone on a street finally meets seven others who have been doing the same, three streets away. It is where a twenty-two-year-old who wants to talk about the ABC Rules discovers she has one hundred and forty listeners. It is where a person who cares about animals stops being alone.</p><p class="big rv rv-d3">Come to one. Bring the next.</p></div></section><section class="sec" id="voices"><div class="wrap"><div class="sec-head"><p class="k rv">Youth voices</p><h2 class="rv">The people who <span class="blue">show up.</span></h2><p class="sub rv rv-d1">These are the hosts. All under thirty. All have run at least one Assembly. All are ready to help you run yours.</p></div><div class="voices"><div class="voice rv"><div class="vh"><div class="vava">AI</div><div class="vinfo"><b>Ananya Iyer</b><span>24 &middot; Mumbai</span></div></div><p class="vwhat">"I was terrified my first livestream would be five people. It was three hundred. That is when I understood why this matters."</p><div class="vev">Hosted 3 livestreams &middot; 4,812 watchers</div></div><div class="voice rv rv-d1"><div class="vh"><div class="vava blue">RK</div><div class="vinfo"><b>Rohan Krishnamurthy</b><span>22 &middot; Bengaluru</span></div></div><p class="vwhat">"A monthly talk on the law, at a coffee shop that lets us take it over for two hours. People bring their questions and we go through them together."</p><div class="vev">Hosted 8 talks &middot; 340 attendees</div></div><div class="voice rv rv-d2"><div class="vh"><div class="vava porcelain">KM</div><div class="vinfo"><b>Kavita Menon</b><span>27 &middot; Delhi</span></div></div><p class="vwhat">"I wrote the Bengal Kitten Programme because I could not find one that worked in a Delhi apartment complex. Now nine complexes use it."</p><div class="vev">Wrote a programme &middot; Used by 9 complexes</div></div><div class="voice rv"><div class="vh"><div class="vava">YC</div><div class="vinfo"><b>Yash Chaudhary</b><span>26 &middot; Jaipur</span></div></div><p class="vwhat">"The March for Community Dogs. Two thousand people, one route, one message. We were not asking. We were reminding a city these dogs live here too."</p><div class="vev">Organised a march &middot; 2,100 walked</div></div><div class="voice rv rv-d1"><div class="vh"><div class="vava blue">RB</div><div class="vinfo"><b>Riya Bhatt</b><span>23 &middot; Mumbai</span></div></div><p class="vwhat">"A weekly ABC camp is not glamorous. But six months in, our locality has almost no puppies born on the road. That is the whole point."</p><div class="vev">Hosts weekly camps &middot; 218 sterilisations</div></div><div class="voice rv rv-d2"><div class="vh"><div class="vava porcelain">AR</div><div class="vinfo"><b>Aditya Rao</b><span>29 &middot; Chennai</span></div></div><p class="vwhat">"Every Sunday, one rescue. I ride with the team, camera on, and we tell the story. Twelve episodes so far. Two hundred thousand ears listening."</p><div class="vev">Rescue Radio &middot; 12 episodes live</div></div></div></div></section><section class="sec rails" id="rails"><div class="wrap"><div class="sec-head"><p class="k rv">The Guardrails</p><h2 class="rv">Ten rules. No <span class="blue">exceptions.</span></h2><p class="sub rv rv-d1">The Assembly works because every assembly obeys these. Read them once. If any of them is a problem for what you want to do, this is not the place for it.</p></div><div class="rl-grid"><div class="rl rv"><p class="rl-n">Guardrail 01</p><h3>It must be for the <span class="blue">animals.</span></h3><p>Not for you. Not for your business. Not for your politics. Not for your religion. Not for a fundraiser that routes to someone else. Nothing served, sold or handed out is animal-based - no meat, fish, eggs, dairy, leather, silk or wool. An assembly for the animals does not consume them. If the animals are not the reason, this is not the place.</p></div><div class="rl rv rv-d1"><p class="rl-n">Guardrail 02</p><h3>No <span class="blue">cruelty.</span> No illegality.</h3><p>No performances using animals. No baiting, dyeing, dressing or handling for spectacle. No content or actions that break the law. Any Assembly that crosses this line ends immediately, and the organiser is banned.</p></div><div class="rl rv"><p class="rl-n">Guardrail 03</p><h3>Safety <span class="blue">first.</span> For the animals. For you.</h3><p>First aid on site. A vet on call. Insurance for rallies over one hundred people. Adult supervision if minors are present. If your assembly involves handling an animal, a trained volunteer is present.</p></div><div class="rl rv rv-d1"><p class="rl-n">Guardrail 04</p><h3><span class="blue">Consent</span> for every face.</h3><p>If minors are on camera, their guardians sign off in writing. If an animal is in distress, no camera in its face. Anyone in the room can ask to not be photographed and the answer is yes.</p></div><div class="rl rv"><p class="rl-n">Guardrail 05</p><h3>No <span class="blue">doxxing.</span> No public PIN codes.</h3><p>If you name a feeder, get their permission first. If you name a cruelty offender, work with the police, not the crowd. No home addresses, no exact locations of vulnerable animals or people.</p></div><div class="rl rv rv-d1"><p class="rl-n">Guardrail 06</p><h3>No <span class="blue">solicitation</span> through this channel.</h3><p>You cannot use The Assembly to route donations to yourself or a third party. All monetary asks go through PFA India, and only PFA. No QR codes, no personal UPI IDs, no third-party payment links on stage.</p></div><div class="rl rv"><p class="rl-n">Guardrail 07</p><h3>One <span class="blue">organiser</span> is the organiser.</h3><p>That person is eighteen or older. If younger, a named adult guardian co-signs. That person is on the ground on the day. That person is responsible for what happens. No anonymous assemblies.</p></div><div class="rl rv rv-d1"><p class="rl-n">Guardrail 08</p><h3><span class="blue">Reviewed</span> by your nearest unit.</h3><p>Every Assembly is reviewed by the PFA unit in your city before it is published. They know the ground. They can help you plan it. They can also say no. Their word is final.</p></div><div class="rl rv"><p class="rl-n">Guardrail 09</p><h3>No <span class="blue">political</span> campaigning.</h3><p>No election candidates on stage. No party branding. No caste or religious appeals. This is a place for animal welfare, and only animal welfare. The animals are the only party here.</p></div><div class="rl rv rv-d1"><p class="rl-n">Guardrail 10</p><h3>Be <span class="blue">kind.</span> No harassment, no hate.</h3><p>Every language is welcome. Every faith is welcome. Every person who cares is welcome, whatever their politics outside this room. Anyone who breaks this rule is banned from the Assembly for life.</p></div></div><div class="rl-foot"><p>The Guardrails are non-negotiable. Assemblies that break them are taken down within the hour. Organisers who break them are barred from the Assembly, permanently. This is how we keep it a place worth coming to.</p></div></div></section><section class="propose" id="propose"><div class="wrap"><p class="k rv">Propose your assembly</p><h2 class="rv">Tell us what you <span class="blue">want to run.</span></h2><p class="lead rv rv-d1">Four short steps. Your nearest PFA unit reviews it within three days. If it clears, we publish it, help you host it, and route people to it. If it does not clear, we will tell you why.</p><ol class="prog" id="pProg" aria-label="Proposal progress"><li data-p="1"><span class="pm"><i></i><span class="pn">01</span></span><span class="pl">You</span></li><li data-p="2"><span class="pm"><i></i><span class="pn">02</span></span><span class="pl">The action</span></li><li data-p="3"><span class="pm"><i></i><span class="pn">03</span></span><span class="pl">When &amp; Where</span></li><li data-p="4"><span class="pm"><i></i><span class="pn">04</span></span><span class="pl">Guardrails</span></li></ol><div class="step" id="p1"><p class="s-k">Step One</p><h3>Who is behind this?</h3><div id="pform1"><p class="formerr" id="perr1" role="alert"></p><div class="grid2"><div class="fgroup"><label for="pName">Full name</label><input id="pName" autocomplete="name" placeholder="Ananya Iyer"><p class="ferr">Enter your name.</p></div><div class="fgroup"><label for="pAge">Age</label><input type="number" id="pAge" min="10" max="85" placeholder="24"><p class="ferr">You must be between 10 and 85. Under 18 needs a guardian signature at review.</p></div><div class="fgroup"><label for="pCity">City</label><input id="pCity" placeholder="Mumbai"><p class="ferr">Which city are you in?</p></div><div class="fgroup"><label for="pConn">Your PFA connection</label><select id="pConn"><option value="">Select</option><option>Patron</option><option>Volunteer</option><option>Caretaker Card holder</option><option>Not yet connected</option></select><p class="ferr">Pick one.</p></div><div class="fgroup"><label for="pEmail">Email</label><input type="email" id="pEmail" autocomplete="email" placeholder="you@example.com"><p class="ferr">Enter a valid email.</p></div><div class="fgroup"><label for="pPhone">Mobile</label><input type="tel" id="pPhone" data-phone autocomplete="tel" placeholder="10-digit mobile" maxlength="18"><p class="ferr">Enter a 10-digit mobile.</p></div></div><div class="btn-row"><span class="spacer"></span><button class="btn" id="pgo1" type="button">Continue</button></div></div></div><div class="step" id="p2"><p class="s-k">Step Two</p><h3>What are you going to run?</h3><div id="pform2"><p class="formerr" id="perr2" role="alert"></p><div class="fgroup full" style="margin-top:20px"><label>Format <em>&middot; pick one</em></label><div class="chips2" id="pFormats" role="radiogroup" aria-label="Format"><button type="button" class="chip2" data-v="Talk">Talk</button> <button type="button" class="chip2" data-v="Camp">Camp</button> <button type="button" class="chip2" data-v="Rally / March">Rally / March</button> <button type="button" class="chip2" data-v="Livestream">Livestream</button> <button type="button" class="chip2" data-v="Clean-up / Feeding round">Clean-up / Feeding round</button> <button type="button" class="chip2" data-v="Fundraiser">Fundraiser</button></div><p class="ferr" id="pFormatErr">Pick one format.</p></div><div class="grid2" style="margin-top:24px"><div class="fgroup full"><label for="pTitle">Title of your assembly</label><input id="pTitle" placeholder="e.g. Street Dogs at Night - the Mahim livestream" maxlength="80"><p class="ferr">Give it a real title.</p></div><div class="fgroup full"><label for="pDesc">One paragraph: what is it, who is it for?</label><textarea id="pDesc" placeholder="What you plan to do, why it matters, and who you want in the room."></textarea><p class="ferr">Tell us what this is.</p></div><div class="fgroup"><label for="pTurnout">Expected turnout</label><select id="pTurnout"><option value="">Select</option><option>Under 25</option><option>25 to 100</option><option>100 to 500</option><option>500 to 2,000</option><option>Over 2,000</option><option>Online only</option></select><p class="ferr">Select a range.</p></div><div class="fgroup"><label for="pCampaign">Part of a campaign? <em>&middot; optional</em></label><select id="pCampaign"><option value="">Not tied to one</option><option>Adopt Don't Shop 2026</option><option>Feeding Winter</option><option>ABC Month</option><option>Rescue Radio</option></select></div></div><div class="btn-row"><button class="btn ghost" data-pback="1" type="button">Back</button><span class="spacer"></span><button class="btn" id="pgo2" type="button">Continue</button></div></div></div><div class="step" id="p3"><p class="s-k">Step Three</p><h3>When and where?</h3><div id="pform3"><p class="formerr" id="perr3" role="alert"></p><div class="grid2" style="margin-top:20px"><div class="fgroup"><label for="pDate">Date</label><input type="date" id="pDate"><p class="ferr">Pick a date.</p></div><div class="fgroup"><label for="pTime">Start time</label><input type="time" id="pTime"><p class="ferr">Pick a time.</p></div><div class="fgroup full"><label for="pVenue">Venue <em>&middot; enter "Online" for livestreams</em></label><input id="pVenue" placeholder="e.g. Bandra Bandstand, or Online"><p class="ferr">Where is it happening?</p></div><div class="fgroup"><label for="pSafety">Safety plan on the day</label><select id="pSafety"><option value="">Select</option><option>First aid on site</option><option>First aid + vet on call</option><option>First aid + vet + insurance</option><option>Online only, no on-ground risk</option></select><p class="ferr">Pick a safety plan.</p></div><div class="fgroup"><label for="pMinors">Will minors be present?</label><select id="pMinors"><option value="">Select</option><option>No</option><option>Yes, with adult supervision</option><option>Yes, with guardian consent forms</option></select><p class="ferr">Answer this.</p></div></div><div class="btn-row"><button class="btn ghost" data-pback="2" type="button">Back</button><span class="spacer"></span><button class="btn" id="pgo3" type="button">Continue</button></div></div></div><div class="step" id="p4"><p class="s-k">Step Four</p><h3>The Guardrails.</h3><p class="lead">Read them again, in the shape you would need to remember them on the day. Then sign one line at the bottom.</p><div class="review" id="pReview"><div class="rrow"><span class="rk">Organiser</span><span class="rv" id="rvName"></span></div><div class="rrow"><span class="rk">Format</span><span class="rv" id="rvFormat"></span></div><div class="rrow"><span class="rk">Title</span><span class="rv" id="rvTitle"></span></div><div class="rrow"><span class="rk">When</span><span class="rv" id="rvWhen"></span></div><div class="rrow"><span class="rk">Where</span><span class="rv" id="rvWhere"></span></div><div class="rrow"><span class="rk">City for review</span><span class="rv" id="rvCity"></span></div></div><div class="rails-review"><h4>The ten guardrails, in one screen</h4><ol><li><b>For the animals.</b> Not you, your business, your politics, your religion, or a fundraiser that routes elsewhere.</li><li><b>No cruelty. No illegality.</b> No performances using animals. Nothing that breaks the law.</li><li><b>Safety first.</b> First aid on site. Vet on call. Insurance for large rallies. Trained volunteer if animals are handled.</li><li><b>Consent for every face.</b> Guardian sign-off for minors on camera. No camera in an animal's face when it is in distress.</li><li><b>No doxxing.</b> No home addresses. Feeder names only with their permission.</li><li><b>No solicitation.</b> No personal UPI IDs, QR codes, or third-party payment links.</li><li><b>One organiser.</b> Eighteen plus, or with a named adult guardian. Present on the day. Responsible.</li><li><b>Reviewed by your nearest unit.</b> Their word is final.</li><li><b>No political campaigning.</b> No candidates, no parties, no caste or religious appeals.</li><li><b>Be kind.</b> No harassment, no hate. Anyone who breaks this is banned for life.</li></ol></div><div id="pform4"><p class="formerr" id="perr4" role="alert"></p><label class="ack"><input type="checkbox" id="pAck1"> <span>I have read all ten guardrails and I accept every one of them for this assembly.</span></label> <label class="ack"><input type="checkbox" id="pAck2"> <span>I confirm the information I have given is true, and PFA may verify it with the nearest unit before publishing.</span></label> <label class="ack"><input type="checkbox" id="pAck3" data-guardian> <span>I am eighteen or older, or I will provide a signed guardian consent when my nearest unit asks.</span></label><p class="ferr" id="pAckErr" style="margin-top:10px">Please confirm all three to submit.</p><div class="btn-row"><button class="btn ghost" data-pback="3" type="button">Back</button><span class="spacer"></span><button class="btn" id="pSubmit" type="button">Submit for review</button></div></div></div><div class="done" id="pDone"><div class="seal"><span></span></div><p class="d-k">Assembly submitted</p><h3>Well done, <em id="pDoneName">friend</em>.</h3><p>Your proposal is with the PFA unit in <span id="pDoneCity">your city</span>. Someone will reach out within three days on the contact you gave. Once cleared, we publish it here and route people to it.</p><div class="ref" id="pRef">ASM-2026-00000</div><div class="btn-row" style="justify-content:center;max-width:300px;margin-left:auto;margin-right:auto"><a class="btn ghost" href="index.html">Back to home</a></div></div></div></section></main>
+<footer><div class="wrap"><div class="foot-top"><div class="foot-brand"><a class="brand" href="index.html"><span class="emblem"></span> <span class="brand-name">People for Animals</span></a><p>A society where humans and animals coexist with compassion, dignity, and responsibility.</p></div><div class="foot-col"><h3>Explore</h3><a href="store.html">The Store</a> <a href="stories.html">Stories</a> <a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a> <a href="founder.html">The Founder</a> <a href="hall-of-fame.html">Hall of Fame</a> <a href="pfa-x.html">PFA X</a></div><div class="foot-col"><h3>Belong</h3><a href="assembly.html">The Assembly</a> <a href="membership.html">The Patron Card</a> <a href="get-involved.html?path=volunteer">Get to Learn</a> <a href="get-involved.html?path=catc">Caretaker Card</a> <a href="champion.html">The Wildlife Gauntlet</a></div><div class="foot-col"><h3>Act</h3><a href="network.html">Reach PFA</a> <a href="services.html">Trusted Services</a> <a href="heatmap.html">Heat Map</a> <a href="adopt.html">Adopt</a> <a href="give.html">Give</a> <a href="csr.html">Partner with PFA</a></div></div><div class="foot-bottom"><p>&copy; People for Animals &middot; Founded in 1992 by Maneka Sanjay Gandhi</p><div class="foot-mark"><span class="emblem"></span> Powered by PFA</div></div></div></footer><script>var reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;!function(){var els=document.querySelectorAll(".rv");if(!reduce&&"IntersectionObserver"in window){var io=new IntersectionObserver(function(entries){entries.forEach(function(e){e.isIntersecting&&(e.target.classList.add("in"),io.unobserve(e.target))})},{threshold:.14,rootMargin:"0px 0px -60px 0px"});els.forEach(function(el){io.observe(el)}),setTimeout(function(){els.forEach(function(el){el.classList.add("in")})},3e3)}else els.forEach(function(el){el.classList.add("in")})}();</script><script>!function(){var nav=document.getElementById("nav"),burger=document.getElementById("burger"),menu=document.getElementById("mobileMenu");if(nav){var onS=function(){nav.classList.toggle("scrolled",(window.scrollY||window.pageYOffset)>4)};window.addEventListener("scroll",onS,{passive:!0}),onS()}if(burger&&menu&&!burger.dataset.pfaBound){burger.dataset.pfaBound="1";var _y=0;function unlock(){var b=document.body.style;b.position="",b.top="",b.left="",b.right="",b.width="",b.overflow="",document.body.offsetHeight;var r=document.documentElement,p=r.style.scrollBehavior;r.style.scrollBehavior="auto",window.scrollTo(0,_y),r.style.scrollBehavior=p}burger.addEventListener("click",function(){var open=menu.classList.toggle("open");burger.classList.toggle("open",open),burger.setAttribute("aria-expanded",open?"true":"false"),open?function(){_y=window.scrollY||window.pageYOffset;var b=document.body.style;b.position="fixed",b.top=-_y+"px",b.left="0",b.right="0",b.width="100%",b.overflow="hidden"}():unlock()}),menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock()})}),document.addEventListener("keydown",function(e){"Escape"===e.key&&menu.classList.contains("open")&&(menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock(),burger.focus())})}var here=location.pathname.split("/").pop()||"index.html";document.querySelectorAll(".pfa-links a, .pfa-mobile a").forEach(function(a){var target=(a.getAttribute("href")||"").split("#")[0];target&&target===here&&!a.classList.contains("pfa-btn")&&a.setAttribute("aria-current","page")})}();</script><script>!function(){var b=function(e){return e.preventDefault(),!1};document.addEventListener("contextmenu",b),document.addEventListener("dragstart",b),document.addEventListener("selectstart",function(e){var t=e.target,tag=t&&t.tagName;if("INPUT"===tag||"TEXTAREA"===tag||t.isContentEditable)return!0}),document.addEventListener("keydown",function(e){var k=e.key,c=e.ctrlKey||e.metaKey,s=e.shiftKey;("F12"===k||c&&s&&("I"===k||"J"===k||"C"===k)||c&&("u"===k||"U"===k||"s"===k||"S"===k))&&b(e)})}();</script><script>/* THE ASSEMBLY - page JS */
+(function(){
+'use strict';
+var EVENTS=[
+ {id:'ASM-2026-0142',date:'2026-08-22',time:'20:00',mo:'Aug',d:22,city:'Livestream',fmt:'live',fmtLabel:'Livestream',title:'"Street Dogs at Night" - The Mahim Livestream',host:'Ananya Iyer',hostRole:'PFA Bombay',desc:'A live walk-through of a Bombay street feeding round. Six volunteers, a hundred dogs, one hour, one camera.',going:412,live:true,featured:true},
+ {id:'ASM-2026-0143',date:'2026-08-24',time:'11:00',mo:'Aug',d:24,city:'Bengaluru',fmt:'live',fmtLabel:'Livestream',title:'Ride-along with Bengaluru RRT',host:'Aditya Rao',hostRole:'Rescue Radio',desc:'One camera on the bike, one on the pillion. A Sunday morning with the Bengaluru Rapid Response Team.',going:2147,live:true},
+ {id:'ASM-2026-0144',date:'2026-08-25',time:'19:00',mo:'Aug',d:25,city:'Bengaluru',fmt:'talks',fmtLabel:'Talk',title:'The Law and the Street Dog',host:'Rohan Krishnamurthy',hostRole:'PFA Bengaluru',desc:'An open room at Third Wave Coffee, Koramangala. Bring your questions on the ABC Rules and the PCA Act. We go through them together.',going:87},
+ {id:'ASM-2026-0145',date:'2026-08-28',time:'09:00',mo:'Aug',d:28,city:'Manipal',fmt:'camps',fmtLabel:'Camp',title:'ABC Camp - Manipal Ward 4',host:'Dr. Suresh Kamath',hostRole:'PFA Udupi',desc:'A sterilisation camp for the Ward 4 community dogs. Volunteers needed for post-op minding, transport, and feeding.',going:34},
+ {id:'ASM-2026-0146',date:'2026-08-30',time:'18:30',mo:'Aug',d:30,city:'Delhi',fmt:'talks',fmtLabel:'Talk',title:'Why I Left the Corporate Life to Rescue',host:'Kavita Menon',hostRole:'The Bengal Kitten Programme',desc:'A talk at The Attic, Connaught Place. What it takes to run a rescue as your work, and why more of us should.',going:156},
+ {id:'ASM-2026-0148',date:'2026-09-03',time:'08:00',mo:'Sep',d:3,city:'Mumbai',fmt:'rallies',fmtLabel:'Rally',title:'March for Community Dogs',host:'Riya Bhatt',hostRole:'PFA Bombay',desc:'From Bandra Reclamation to Bandstand. A quiet, disciplined march against the removal of community dogs from Mumbai neighbourhoods.',going:487},
+ {id:'ASM-2026-0149',date:'2026-09-05',time:'21:00',mo:'Sep',d:5,city:'Livestream',fmt:'live',fmtLabel:'Livestream',title:'AMA with the Chairperson',host:'Maneka Sanjay Gandhi',hostRole:'Founder, PFA',desc:'A one-hour live conversation with Maneka Gandhi. Send your questions ahead of time, or ask on the night.',going:3812},
+ {id:'ASM-2026-0150',date:'2026-09-07',time:'07:00',mo:'Sep',d:7,city:'Delhi',fmt:'clean',fmtLabel:'Clean-up',title:'Yamuna Bank Feeding & Clean',host:'Sameera Ansari',hostRole:'PFA Delhi',desc:'A morning feeding round for the Yamuna bank community, followed by a two-hour clean-up along the promenade.',going:63},
+ {id:'ASM-2026-0151',date:'2026-09-12',time:'10:00',mo:'Sep',d:12,city:'Pune',fmt:'camps',fmtLabel:'Camp',title:'First-Aid Weekend for Volunteers',host:'Dr. Meera Iyer',hostRole:'PFA Pune',desc:'A two-day training for new volunteers. First aid for street dogs, cats, and small wildlife. Certified by the state vet council.',going:41},
+ {id:'ASM-2026-0152',date:'2026-09-15',time:'16:00',mo:'Sep',d:15,city:'Kolkata',fmt:'talks',fmtLabel:'Talk',title:'Feeder Training - Kolkata South',host:'Debasish Ghosh',hostRole:'PFA Kolkata',desc:'A ninety-minute training for people who feed the community dogs in Kolkata south. What the law says. What good practice looks like.',going:52},
+ {id:'ASM-2026-0153',date:'2026-09-18',time:'19:30',mo:'Sep',d:18,city:'Bengaluru',fmt:'fund',fmtLabel:'Fundraiser',title:'Screening: A Dog Called Money',host:'Anushka Roy',hostRole:'PFA Bengaluru',desc:'A quiet screening at Bangalore International Centre. All ticket margin flows to PFA. Discussion after with the director on video call.',going:118},
+ {id:'ASM-2026-0154',date:'2026-09-20',time:'08:00',mo:'Sep',d:20,city:'Jaipur',fmt:'rallies',fmtLabel:'Rally',title:'Voice for the Voiceless',host:'Yash Chaudhary',hostRole:'PFA Jaipur',desc:'A silent march from Albert Hall to Central Park. Black armbands. One banner. One message: cruelty is a crime.',going:214}
+];
+
+// Countdown to featured event
+var featured=EVENTS[0];
+function tickCountdown(){
+  var target=new Date(featured.date+'T'+featured.time+':00+05:30');
+  var now=new Date();
+  var diff=target-now;
+  if(diff<0){diff=0}
+  var d=Math.floor(diff/86400000);
+  var h=Math.floor((diff%86400000)/3600000);
+  var m=Math.floor((diff%3600000)/60000);
+  var s=Math.floor((diff%60000)/1000);
+  var el=function(id){return document.getElementById(id)};
+  el('cdD').textContent=String(d).padStart(2,'0');
+  el('cdH').textContent=String(h).padStart(2,'0');
+  el('cdM').textContent=String(m).padStart(2,'0');
+  el('cdS').textContent=String(s).padStart(2,'0');
+}
+tickCountdown();setInterval(tickCountdown,1000);
+
+// Fake live watchers - gently drift
+(function(){var el=document.getElementById('watchers');if(!el)return;var n=2147;setInterval(function(){n+=Math.floor(Math.random()*7)-3;if(n<1900)n=1900;if(n>2400)n=2400;el.textContent=n.toLocaleString('en-IN')},4200)})();
+
+// Render event grid
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var filterFmt='all',filterCity='all';
+function renderGrid(){
+  var g=document.getElementById('evgrid');
+  var list=EVENTS.filter(function(e){
+    if(filterFmt!=='all'&&e.fmt!==filterFmt)return false;
+    if(filterCity!=='all'&&e.city!==filterCity)return false;
+    return true;
+  });
+  var cnt=document.getElementById('gridCount');
+  if(cnt)cnt.textContent=list.length+(list.length===1?' assembly':' assemblies');
+  if(!list.length){g.innerHTML='<p class="grid-empty">No assembly matches that filter yet. Loosen it, or propose one.</p>';return}
+  g.innerHTML=list.map(function(e){
+    return '<button type="button" class="ev" data-id="'+e.id+'">'
+      +'<div class="ev-top">'
+        +'<div class="ev-date"><span class="d">'+e.d+'</span><span class="m">'+e.mo+'</span></div>'
+        +'<div class="ev-badges">'
+          +'<span class="ev-fmt'+(e.fmt==='live'?' live':'')+'">'+esc(e.fmtLabel)+'</span>'
+          +'<span class="ev-fmt">'+esc(e.city)+'</span>'
+        +'</div>'
+      +'</div>'
+      +'<h3 class="ev-title">'+esc(e.title)+'</h3>'
+      +'<p class="ev-desc">'+esc(e.desc)+'</p>'
+      +'<div class="ev-foot">'
+        +'<span class="ev-host"><b>'+esc(e.host)+'</b> &middot; '+esc(e.hostRole)+'</span>'
+        +'<span class="ev-going">'+e.going.toLocaleString('en-IN')+(e.live?' watching':' going')+'</span>'
+      +'</div></button>';
+  }).join('');
+  Array.prototype.forEach.call(g.querySelectorAll('.ev'),function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-id');
+      var ev=EVENTS.filter(function(x){return x.id===id})[0];
+      if(!ev)return;
+      window.toast('"'+ev.title+'" - RSVP flow connects to PFA records on deploy.');
+    });
+  });
+}
+
+// Filters
+Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(b){
+  b.addEventListener('click',function(){
+    Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    filterFmt=b.getAttribute('data-f');
+    renderGrid();
+  });
+});
+document.getElementById('cityFilter').addEventListener('change',function(){filterCity=this.value;renderGrid()});
+renderGrid();
+
+// Toast
+window.toast=function(msg){
+  var t=document.getElementById('asmToast');
+  if(!t){t=document.createElement('div');t.id='asmToast';t.setAttribute('role','status');t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#0E1116;color:#fff;padding:14px 22px;font-family:Archivo,system-ui,sans-serif;font-size:13px;letter-spacing:.08em;z-index:1000;opacity:0;transition:opacity .3s ease,transform .3s ease;max-width:calc(100vw - 40px);text-align:center;border-radius:0';document.body.appendChild(t)}
+  t.textContent=msg;
+  requestAnimationFrame(function(){t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)'});
+  clearTimeout(window.__toastT);
+  window.__toastT=setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)'},3200);
+};
+window.rsvpToast=function(what){window.toast('RSVP for '+what+' connects to PFA records on deploy.')};
+window.calToast=function(){window.toast('"Add to calendar" connects to the Assembly calendar feed on deploy.')};
+window.joinCampaign=function(id){window.toast('Adding your assembly to the '+id+' campaign - flow opens on deploy.')};
+
+// Propose flow
+function $(id){return document.getElementById(id)}
+function val(id){var e=$(id);return e?e.value.trim():''}
+function mark(id,ok){var n=$(id);return n&&n.closest('.fgroup').classList.toggle('invalid',!ok),ok}
+function validEmail(s){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)}
+function validPhone(s){return PFAForm.validPhone(s)}
+function fail(id,msg,firstBad){var b=$(id);b.textContent=msg;b.classList.remove('show');b.offsetWidth;b.classList.add('show');var bad=$(firstBad);if(bad){bad.scrollIntoView({block:'center',behavior:'smooth'});setTimeout(function(){try{bad.focus()}catch(e){}},280)}}
+function clearErr(id){$(id).classList.remove('show')}
+
+var pBooted=false,pCur=0,pSteps=[0,1,2,3,4].map(function(n){return $('p'+n)}),pProg=document.querySelectorAll('#pProg li'),PNAMES=['','You','The action','When and where','Guardrails'];
+function pGo(n){
+  pCur=n;
+  pSteps.forEach(function(s){s&&s.classList.remove('on')});
+  $('pDone').classList.remove('on');
+  if(n<=4)$('p'+n).classList.add('on');
+  pProg.forEach(function(li){var p=parseInt(li.getAttribute('data-p'),10);li.classList.toggle('done',p<n);li.classList.toggle('now',p===n&&n<=4)});
+  /* pGo(1) also runs at init to open step one. Scrolling there would throw the
+     visitor past the whole page into the form, so only scroll on a real step change. */
+  if(!pBooted){pBooted=true;return}
+  window.scrollTo({top:$('propose').offsetTop-40,behavior:'smooth'});
+}
+$('pgo1').addEventListener('click',function(){
+  clearErr('perr1');
+  var nOk=mark('pName',val('pName').length>=2);
+  var age=parseInt(val('pAge'),10);
+  var aOk=mark('pAge',!isNaN(age)&&age>=10&&age<=85);
+  var cOk=mark('pCity',val('pCity').length>=2);
+  var kOk=mark('pConn',val('pConn')!=='');
+  var eOk=mark('pEmail',validEmail(val('pEmail')));
+  var phOk=mark('pPhone',validPhone(val('pPhone')));
+  if(phOk){$('pPhone').value=val('pPhone').replace(/\D/g,'').slice(-10)}
+  if(nOk&&aOk&&cOk&&kOk&&eOk&&phOk){pGo(2)}
+  else fail('perr1','Fill in your details so PFA can reach you.',nOk?aOk?cOk?kOk?eOk?'pPhone':'pEmail':'pConn':'pCity':'pAge':'pName');
+});
+document.querySelectorAll('[data-pback]').forEach(function(b){b.addEventListener('click',function(){pGo(parseInt(b.getAttribute('data-pback'),10))})});pGo(1);
+
+// format chips
+document.querySelectorAll('#pFormats .chip2').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#pFormats .chip2').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');document.getElementById('pFormats').classList.remove('invalid');document.getElementById('pFormatErr').style.display='none'})});
+function pickedFormat(){var s=document.querySelector('#pFormats .chip2.sel');return s?s.getAttribute('data-v'):''}
+$('pgo2').addEventListener('click',function(){
+  clearErr('perr2');
+  var fOk=!!pickedFormat();
+  document.getElementById('pFormats').classList.toggle('invalid',!fOk);
+  document.getElementById('pFormatErr').style.display=fOk?'none':'block';
+  var tOk=mark('pTitle',val('pTitle').length>=4);
+  var dOk=mark('pDesc',val('pDesc').length>=15);
+  var trOk=mark('pTurnout',val('pTurnout')!=='');
+  if(fOk&&tOk&&dOk&&trOk){pGo(3)}
+  else fail('perr2','Tell us what you are running and roughly how big.',fOk?tOk?dOk?'pTurnout':'pDesc':'pTitle':'pFormats');
+});
+$('pgo3').addEventListener('click',function(){
+  clearErr('perr3');
+  var dOk=mark('pDate',val('pDate')!=='');
+  var tOk=mark('pTime',val('pTime')!=='');
+  var vOk=mark('pVenue',val('pVenue').length>=2);
+  var sOk=mark('pSafety',val('pSafety')!=='');
+  var mOk=mark('pMinors',val('pMinors')!=='');
+  // populate review
+  $('rvName').textContent=val('pName')+' ('+val('pAge')+', '+val('pCity')+')';
+  $('rvFormat').textContent=pickedFormat();
+  $('rvTitle').textContent=val('pTitle');
+  var when=val('pDate')&&val('pTime')?new Date(val('pDate')+'T'+val('pTime')).toLocaleString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+  $('rvWhen').textContent=when;
+  $('rvWhere').textContent=val('pVenue');
+  $('rvCity').textContent='PFA '+val('pCity');
+  if(dOk&&tOk&&vOk&&sOk&&mOk){pGo(4)}
+  else fail('perr3','Fill in the when, where, and safety plan.',dOk?tOk?vOk?sOk?'pMinors':'pSafety':'pVenue':'pTime':'pDate');
+});
+$('pSubmit').addEventListener('click',function(){
+  clearErr('perr4');
+  var ok=$('pAck1').checked&&$('pAck2').checked&&$('pAck3').checked;
+  $('pAckErr').style.display=ok?'none':'block';
+  var age=parseInt(val('pAge'),10);
+  if(!ok){fail('perr4','Confirm all three lines to submit.','pAck1');return}
+  var first=val('pName').split(' ')[0]||'friend';
+  $('pDoneName').textContent=first;
+  $('pDoneCity').textContent=val('pCity');
+  $('pRef').textContent='ASM-2026-'+String(Math.floor(10000+Math.random()*89999));
+  pSteps.forEach(function(s){s&&s.classList.remove('on')});
+  pProg.forEach(function(li){li.classList.add('done');li.classList.remove('now')});
+  $('pDone').classList.add('on');
+  window.scrollTo({top:$('propose').offsetTop-40,behavior:'smooth'});
+  if(age<18)window.toast('Your guardian consent will be requested by the nearest PFA unit before publishing.');
+});
+
+// Prefill from PFA profile if available
+try{
+  if(window.PFAProfile){window.PFAProfile.prefill({pName:'name',pEmail:'email',pPhone:'phone',pCity:'city'})}
+}catch(e){}
+})();</script><script>!function(){if(window.__pfaBack)return;window.__pfaBack=1;var HOME="index.html",KEY="pfaIdx",idx=1,ss=null;try{ss=window.sessionStorage;ss.setItem("__pfaT","1");ss.removeItem("__pfaT")}catch(e){ss=null}function hi(){if(!ss)return 0;var v=parseInt(ss.getItem(KEY)||"0",10);return v>0?v:0}function stamp(){var s=null;try{s=history.state}catch(e){}if(s&&typeof s.pfaIdx==="number"&&s.pfaIdx>0){idx=s.pfaIdx}else{idx=hi()+1;try{history.replaceState({pfaIdx:idx},"")}catch(e){}}if(ss){try{ss.setItem(KEY,String(idx>hi()?idx:hi()))}catch(e){}}}var here=(location.pathname.split("/").pop()||"index.html").toLowerCase();var NOBTN=here===""||here==="index.html"||here==="admin.html";stamp();if(NOBTN){window.addEventListener("hashchange",stamp);window.addEventListener("popstate",stamp);window.addEventListener("pageshow",function(ev){if(ev.persisted)stamp()});return;}var b=document.createElement("a");b.id="pfaBack";b.href=HOME;b.style.cssText="position:fixed;left:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:none;align-items:center;gap:10px;font-family:'Archivo',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#FFFFFF;color:#0E1116;border:1px solid #0E1116;padding:14px 20px;line-height:1;cursor:pointer;text-decoration:none;box-shadow:0 12px 32px -12px rgba(14,17,22,.35);border-radius:0";b.addEventListener("mouseenter",function(){b.style.background="#00A4FF";b.style.borderColor="#00A4FF"});b.addEventListener("mouseleave",function(){b.style.background="#FFFFFF";b.style.borderColor="#0E1116"});b.addEventListener("click",function(e){e.preventDefault();if(idx>1&&history.length>1){history.back()}else{location.href=HOME}});function sync(){var back=idx>1;b.setAttribute("data-mode",back?"back":"home");b.innerHTML='<span aria-hidden="true">&#8592;</span><span>'+(back?"Back":"Home")+"</span>";b.setAttribute("aria-label",back?"Go back one step":"Go to the home page");b.style.display="inline-flex";}function mount(){sync();(document.body||document.documentElement).appendChild(b)}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",mount)}else{mount()}window.addEventListener("hashchange",function(){stamp();sync()});window.addEventListener("popstate",function(){stamp();sync()});window.addEventListener("pageshow",function(ev){if(ev.persisted){stamp();sync()}});}();</script></body></html>

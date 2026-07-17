@@ -1,0 +1,159 @@
+rules_version = '2';
+
+/* firestore.rules - PFA console.
+
+   This file is the only thing that actually stops anyone. admin.html decides
+   what renders; this decides what the server accepts. The two share a role
+   vocabulary on purpose, and the caps map below must stay in step with ROLES
+   in admin.html. If they drift, the console will show a button that the server
+   refuses, which is the safe direction to drift in.
+
+   Nothing here trusts the client. Role comes from the ID token claim, which is
+   minted server side by functions/index.js and cannot be set from a browser. */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null && request.auth.token != null;
+    }
+
+    /* Google verifies the address; we still check the domain here rather than
+       relying on the sign-in UI, which an attacker does not have to use. */
+    function verified() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower().matches('.*@pfaindia[.]org');
+    }
+
+    function role() {
+      return signedIn() && 'role' in request.auth.token ? request.auth.token.role : '';
+    }
+
+    function capsByRole() {
+      return {
+        'admin': ['*'],
+        'ops': ['catalogue.read','catalogue.write','orders.read','orders.write',
+                'patrons.read','adoption.read','adoption.write','volunteers.read',
+                'volunteers.write','places.read','places.write','events.read',
+                'events.write','donations.read','audit.read'],
+        'finance': ['catalogue.read','orders.read','refunds.approve','patrons.read',
+                    'patrons.write','donations.read','donations.write','audit.read'],
+        'editor': ['catalogue.read','content.read','content.write','submissions.read',
+                   'submissions.write','adoption.read','adoption.write','events.read',
+                   'quiz.read','quiz.write']
+      };
+    }
+
+    function can(cap) {
+      return verified()
+        && capsByRole().keys().hasAny([role()])
+        && (capsByRole()[role()].hasAny(['*']) || capsByRole()[role()].hasAny([cap]));
+    }
+
+    /* ---- catalogue ---- */
+    match /products/{id} {
+      allow read: if can('catalogue.read');
+      allow write: if can('catalogue.write');
+    }
+
+    /* ---- commerce ---- */
+    match /orders/{id} {
+      allow read: if can('orders.read');
+      allow write: if can('orders.write');
+    }
+    match /refunds/{id} {
+      allow read: if can('orders.read') || can('refunds.approve');
+      allow write: if can('refunds.approve');
+    }
+    match /patrons/{id} {
+      allow read: if can('patrons.read');
+      allow write: if can('patrons.write');
+    }
+    match /donations/{id} {
+      allow read: if can('donations.read');
+      allow write: if can('donations.write');
+    }
+    match /funds/{id} {
+      allow read: if can('donations.read');
+      allow write: if can('donations.write');
+    }
+
+    /* ---- content ---- */
+    match /content/{id} {
+      allow read: if can('content.read');
+      /* content.publish is a separate capability. An editor may write a draft and
+         send it to review; moving a document to published needs the extra cap,
+         which today only admin holds. The UI already calls can('content.publish'),
+         so without this the check was decoration. */
+      allow create, update: if can('content.write')
+        && (request.resource.data.status != 'published' || can('content.publish'));
+      allow delete: if can('content.write');
+    }
+    match /submissions/{id} {
+      allow read: if can('submissions.read');
+      allow write: if can('submissions.write');
+    }
+    match /quiz/{id} {
+      allow read: if can('quiz.read');
+      allow write: if can('quiz.write');
+    }
+
+    /* ---- field ---- */
+    match /adoptions/{id} {
+      allow read: if can('adoption.read');
+      allow write: if can('adoption.write');
+    }
+    match /adoptapps/{id} {
+      allow read: if can('adoption.read');
+      allow write: if can('adoption.write');
+    }
+    match /volunteers/{id} {
+      allow read: if can('volunteers.read');
+      allow write: if can('volunteers.write');
+    }
+    match /units/{id} {
+      allow read: if can('places.read');
+      allow write: if can('places.write');
+    }
+    match /xplaces/{id} {
+      allow read: if can('places.read');
+      allow write: if can('places.write');
+    }
+    match /services/{id} {
+      allow read: if can('places.read');
+      allow write: if can('places.write');
+    }
+    match /events/{id} {
+      allow read: if can('events.read');
+      allow write: if can('events.write');
+    }
+    match /heat/{id} {
+      allow read: if verified() && role() != '';
+      allow write: if can('heat.write');
+    }
+
+    /* ---- console administration ---- */
+    match /team/{uid} {
+      allow read: if can('team.manage') || (verified() && request.auth.uid == uid);
+      /* Role never changes through the client. setRole in functions/index.js
+         writes this document with the Admin SDK, which bypasses these rules. */
+      allow write: if false;
+    }
+    match /settings/{id} {
+      allow read: if verified() && role() != '';
+      allow write: if can('settings.write');
+    }
+
+    /* ---- audit ---- */
+    match /audit/{id} {
+      allow read: if can('audit.read');
+      /* Append-only, server side. A client that can rewrite the audit log does
+         not have an audit log. */
+      allow write: if false;
+    }
+
+    /* Anything not matched above is denied. Firestore denies by default and
+       there is no rule here that grants a wildcard path. Keep it that way. */
+  }
+}

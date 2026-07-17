@@ -1,0 +1,280 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Hall of Fame - People for Animals</title><link rel="icon" href="media/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="media/pfa-icon-32.png"><link rel="apple-touch-icon" href="media/pfa-icon-180.png"><meta name="theme-color" content="#0E1116"><meta name="description" content="The PFA Hall of Fame honours India's finest veterinary doctors - a lifetime of skill given to animals who could never pay."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Marcellus&display=swap" rel="stylesheet"><style>:root{--white:#FFFFFF;--porcelain:#F4F6F7;--card:#0C0F14;--ink:#0E1116;--ink-soft:#1A1F26;--mut:#55606A;--mut-2:#7A848D;--blue:#00A4FF;--blue-mid:#0090E0;--blue-ink:#006DB3;--err:#B3261E;--warn:#B8860B;--hair:rgba(14,17,22,0.14);--hair-soft:rgba(14,17,22,0.08);--font-d:'Archivo',system-ui,sans-serif;--font-s:'Marcellus',Georgia,serif}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0!important}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--white);color:var(--ink);font-family:var(--font-d);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--blue);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--blue-ink);outline-offset:3px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+
+.pfa-nav,.pfa-nav *{box-sizing:border-box;border-radius:0!important;margin:0}.pfa-nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:76px;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid rgba(14,17,22,.1);transition:background .4s cubic-bezier(.2,.6,.2,1),border-color .4s cubic-bezier(.2,.6,.2,1),box-shadow .4s cubic-bezier(.2,.6,.2,1)}.pfa-nav.scrolled{background:rgba(255,255,255,.96);border-bottom-color:rgba(14,17,22,.14);box-shadow:0 8px 24px -16px rgba(14,17,22,.18)}.pfa-nav-in{max-width:1220px;height:76px;margin:0 auto;padding:0 clamp(20px,4vw,48px);display:flex;align-items:center;gap:24px}.pfa-brand{display:flex;align-items:center;gap:13px;flex:none;text-decoration:none;color:#0e1116}.pfa-emblem{display:inline-block;width:32px;height:29px;flex:none;background-image:url("media/pfa-emblem.png");background-image:image-set(url("media/pfa-emblem.webp") type("image/webp"),url("media/pfa-emblem.png") type("image/png"));background-size:contain;background-repeat:no-repeat;background-position:center;transition:transform .4s cubic-bezier(.2,.6,.2,1)}.pfa-brand:hover .pfa-emblem{transform:translateY(-1px)}.pfa-brand-name{font-family:var(--font-s);font-weight:700;font-size:13px;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;color:#0e1116;line-height:1;-webkit-text-stroke:.4px #0e1116}.pfa-links{display:flex;align-items:center;gap:clamp(22px,2.1vw,33px);flex:none;margin-left:auto}.pfa-links a.pfa-btn{margin-left:clamp(8px,1.4vw,20px)}.pfa-links a{position:relative;font-family:var(--font-d);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#55606a;text-decoration:none;white-space:nowrap;line-height:1;padding:6px 0;transition:color .25s cubic-bezier(.2,.6,.2,1)}.pfa-links a:not(.pfa-btn)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.2,.6,.2,1)}.pfa-links a:hover{color:#0e1116}.pfa-links a:hover:not(.pfa-btn)::after{transform:scaleX(1)}.pfa-links a[aria-current=page]{color:#006db3}.pfa-links a[aria-current=page]:not(.pfa-btn)::after{transform:scaleX(1)}.pfa-links a.pfa-btn,.pfa-mobile a.pfa-btn{position:relative;overflow:hidden;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;background:#0e1116;color:#fff;border:1px solid #0e1116;line-height:1;cursor:pointer;text-decoration:none;transition:color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1)}.pfa-links a.pfa-btn::before,.pfa-mobile a.pfa-btn::before{content:"";position:absolute;inset:0;background:#00a4ff;transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.6,.2,1)}.pfa-links a.pfa-btn:hover::before,.pfa-mobile a.pfa-btn:hover::before{transform:scaleX(1)}.pfa-links a.pfa-btn:hover,.pfa-mobile a.pfa-btn:hover{color:#0e1116;border-color:#00a4ff}.pfa-links a.pfa-btn span,.pfa-mobile a.pfa-btn span{position:relative;z-index:1}.pfa-burger{display:block;flex:none;margin-left:clamp(10px,1.2vw,18px);background:0 0;border:1px solid rgba(14,17,22,.14);width:44px;height:44px;cursor:pointer;position:relative;padding:0;transition:border-color .3s cubic-bezier(.2,.6,.2,1)}.pfa-burger:hover{border-color:#0e1116}.pfa-burger span{position:absolute;left:11px;right:11px;height:2px;background:#0e1116;transition:transform .3s cubic-bezier(.2,.6,.2,1),opacity .3s cubic-bezier(.2,.6,.2,1)}.pfa-burger span:first-child{top:15px}.pfa-burger span:nth-child(2){top:21px}.pfa-burger span:nth-child(3){top:27px}.pfa-burger.open span:first-child{transform:translateY(6px) rotate(45deg)}.pfa-burger.open span:nth-child(2){opacity:0}.pfa-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}.pfa-cart{position:fixed;right:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#0e1116;color:#fff;border:1px solid #fff;padding:14px 20px;line-height:1;cursor:pointer;box-shadow:0 12px 32px -12px rgba(14,17,22,.45);transition:background .3s cubic-bezier(.2,.6,.2,1),color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1),transform .3s cubic-bezier(.2,.6,.2,1)}.pfa-cart:hover{background:#00a4ff;border-color:#00a4ff;color:#0e1116;transform:translateY(-2px)}.pfa-cart .cart-count{background:#00a4ff;color:#0e1116;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;padding:0 5px;transition:background .3s cubic-bezier(.2,.6,.2,1),color .3s cubic-bezier(.2,.6,.2,1)}.pfa-cart:hover .cart-count{background:#0e1116;color:#fff}.pfa-mobile{position:fixed;inset:76px 0 0 0;background:#fff;z-index:999;padding:40px clamp(20px,6vw,48px);display:flex;flex-direction:column;gap:8px;overflow-y:auto;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.2,.6,.2,1),visibility 0s linear .35s;counter-reset:pfa-menu}.pfa-mobile.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}.pfa-mobile a{display:flex;align-items:baseline;gap:16px;font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.6rem,7vw,2.4rem);text-transform:uppercase;color:#0e1116;text-decoration:none;line-height:1.25;padding:14px 0;border-bottom:1px solid rgba(14,17,22,.14);opacity:0;transform:translateY(14px);transition:opacity .4s cubic-bezier(.2,.6,.2,1),transform .4s cubic-bezier(.2,.6,.2,1),color .2s cubic-bezier(.2,.6,.2,1)}.pfa-mobile a:not(.pfa-btn)::before{counter-increment:pfa-menu;content:counter(pfa-menu,decimal-leading-zero);font-size:12px;font-weight:600;font-stretch:100%;letter-spacing:.14em;color:#7a848d;flex:none}.pfa-mobile.open a{opacity:1;transform:translateY(0)}.pfa-mobile.open a:first-child{transition-delay:.05s}.pfa-mobile.open a:nth-child(2){transition-delay:.09s}.pfa-mobile.open a:nth-child(3){transition-delay:.13s}.pfa-mobile.open a:nth-child(4){transition-delay:.17s}.pfa-mobile.open a:nth-child(5){transition-delay:.21s}.pfa-mobile.open a:nth-child(6){transition-delay:.25s}.pfa-mobile.open a:nth-child(7){transition-delay:.29s}.pfa-mobile.open a:nth-child(8){transition-delay:.33s}.pfa-mobile.open a:nth-child(9){transition-delay:.37s}.pfa-mobile a:hover,.pfa-mobile a[aria-current=page]{color:#006db3}.pfa-mobile a.pfa-btn{border-bottom:none;margin-top:24px;align-self:flex-start;padding:16px 30px;font-size:13px;font-stretch:100%}.pfa-cart:focus-visible,.pfa-mobile a:focus-visible,.pfa-nav a:focus-visible,.pfa-nav button:focus-visible{outline:2px solid #006DB3;outline-offset:3px}@media (max-width:1240px){.pfa-links{display:none}.pfa-burger{margin-left:auto}}@media (max-width:400px){.pfa-brand{gap:10px}.pfa-brand-name{font-size:11.5px;letter-spacing:.18em}}@media (prefers-reduced-motion:reduce){.pfa-cart,.pfa-mobile,.pfa-mobile a,.pfa-nav,.pfa-nav *{transition:none!important}.pfa-mobile a{opacity:1;transform:none}}.pfa-start{padding-top:calc(76px + clamp(44px,7vw,84px))!important;align-items:flex-start!important;align-content:flex-start!important;justify-content:flex-start!important}.pfa-start>:first-child{margin-top:0!important}
+.emblem{display:inline-block;background-image:url("media/pfa-emblem.png");background-image:image-set(url("media/pfa-emblem.webp") type("image/webp"),url("media/pfa-emblem.png") type("image/png"));background-size:contain;background-repeat:no-repeat;background-position:center}
+/* Hall of Fame - bespoke */
+.sec{padding:clamp(56px,7vw,104px) 0}
+.porcelain{background:var(--porcelain)}
+.eyebrow{font-family:var(--font-s);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-ink);display:flex;align-items:center;gap:14px;margin-bottom:28px}
+
+.h2{font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.9rem,4.2vw,3.3rem);line-height:1.05;letter-spacing:-.015em;max-width:22ch}
+.sub{color:var(--mut);font-size:clamp(1rem,1.4vw,1.125rem);max-width:62ch;margin-top:22px}
+.sub b{color:var(--ink);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--font-d);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:16px 30px;background:var(--ink);color:#fff;border:1px solid var(--ink);cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease;text-decoration:none}
+.btn:hover{background:var(--blue);border-color:var(--blue);color:var(--ink)}
+.btn.ghost{background:0 0;color:var(--ink);border-color:var(--hair)}
+.btn.ghost:hover{border-color:var(--blue-ink);color:var(--blue-ink)}
+.btn.onink{border-color:rgba(255,255,255,.4);background:0 0;color:#fff}
+.btn.onink:hover{background:var(--blue);border-color:var(--blue);color:var(--ink)}
+
+/* HERO */
+.hof-hero{background:var(--ink);color:#fff;padding:calc(76px + clamp(64px,9vw,120px)) 0 0;position:relative;overflow:hidden}
+.hof-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(1000px 600px at 85% 0,rgba(0,164,255,.13),transparent 62%)}
+.hof-hero .wrap{position:relative;z-index:1}
+.hof-eyebrow{font-family:var(--font-s);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:14px;margin-bottom:36px}
+.hof-eyebrow::before{content:"";width:10px;height:10px;background:var(--blue);flex:none}
+.hof-hero h1{font-family:var(--font-d);font-weight:900;font-stretch:118%;font-size:clamp(2.7rem,8vw,6.4rem);line-height:.96;letter-spacing:-.02em;text-transform:uppercase;max-width:13ch}
+.hof-hero h1 .blue{color:var(--blue)}
+.hof-lede{font-family:var(--font-s);font-size:clamp(1.05rem,1.8vw,1.35rem);line-height:1.65;color:rgba(255,255,255,.72);max-width:52ch;margin-top:60px}
+.hof-note{margin-top:52px;display:inline-flex;align-items:center;gap:10px;font-family:var(--font-s);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.16);padding:9px 14px}
+.hof-note::before{content:"";width:7px;height:7px;background:var(--blue)}
+.hof-stats{margin-top:clamp(48px,6vw,72px);border-top:1px solid rgba(255,255,255,.14);display:grid;grid-template-columns:repeat(4,1fr)}
+.hof-stat{padding:clamp(26px,3vw,38px) clamp(20px,2.2vw,30px);border-right:1px solid rgba(255,255,255,.08)}.hof-stat:first-child{padding-left:0}
+.hof-stat:last-child{border-right:none}
+.hof-stat .n{font-family:var(--font-d);font-weight:800;font-stretch:118%;font-size:clamp(1.6rem,2.8vw,2.6rem);letter-spacing:-.02em;line-height:1;color:#fff;white-space:nowrap}
+.hof-stat .l{font-family:var(--font-s);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:12px;white-space:nowrap}
+
+/* LAUREATE OF THE YEAR */
+.lau-grid{display:grid;grid-template-columns:minmax(300px,460px) 1fr;gap:clamp(40px,6vw,90px);align-items:center;margin-top:56px}
+.plaque{aspect-ratio:4/5;width:100%;max-width:440px;background:var(--ink);color:#fff;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 40px 90px -30px rgba(14,17,22,.55)}
+.plaque::before{content:"";position:absolute;inset:14px;border:1px solid rgba(255,255,255,.28);pointer-events:none}
+.plaque::after{content:"";position:absolute;inset:22px;border:1px solid rgba(255,255,255,.1);pointer-events:none}
+.plaque .corner{position:absolute;width:9px;height:9px;background:var(--blue)}
+.plaque .corner.tl{top:14px;left:14px}.plaque .corner.tr{top:14px;right:14px}.plaque .corner.bl{bottom:14px;left:14px}.plaque .corner.br{bottom:14px;right:14px}
+.plaque .p-top{position:absolute;top:11%;left:0;right:0;text-align:center;font-family:var(--font-s);font-size:11px;letter-spacing:.4em;text-indent:.4em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.plaque .p-init{font-family:var(--font-s);font-size:clamp(4.4rem,10vw,7rem);line-height:1;color:#fff;letter-spacing:.04em}
+.plaque .p-rule{width:56px;height:1px;background:var(--blue);margin:22px 0}
+.plaque .p-name{font-family:var(--font-d);font-weight:700;font-stretch:110%;font-size:clamp(.95rem,1.6vw,1.15rem);letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:0 10%}
+.plaque .p-disc{margin-top:10px;font-family:var(--font-s);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--blue)}
+.plaque .p-bottom{position:absolute;bottom:10%;left:0;right:0;text-align:center;font-family:var(--font-s);font-size:10px;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.lau-copy .k{font-family:var(--font-s);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mut-2)}
+.lau-copy h2{font-family:var(--font-d);font-weight:800;font-stretch:114%;font-size:clamp(1.7rem,3.4vw,2.6rem);letter-spacing:-.015em;line-height:1.05;margin-top:14px}
+.lau-copy .disc{margin-top:10px;font-family:var(--font-s);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--blue-ink)}
+.lau-cite{margin-top:26px;font-family:var(--font-s);font-size:clamp(1.02rem,1.5vw,1.18rem);line-height:1.75;color:var(--ink-soft);max-width:56ch}
+.lau-cite::first-letter{font-size:3.2em;float:left;line-height:.82;padding-right:12px;padding-top:4px;color:var(--ink)}
+.lau-spec{list-style:none;margin-top:30px;border-top:1px solid var(--hair)}
+.lau-spec li{display:flex;justify-content:space-between;gap:20px;padding:13px 0;border-bottom:1px solid var(--hair-soft);font-size:.94rem}
+.lau-spec li i{font-style:normal;font-family:var(--font-s);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--mut-2);padding-top:2px}
+.lau-spec li b{font-weight:600;color:var(--ink);text-align:right}
+
+/* THE CLASS */
+.class-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);margin-top:56px}
+.hcard{background:var(--white);padding:34px 30px 38px;position:relative;transition:background .3s ease}
+.hcard::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
+.hcard:hover{background:var(--porcelain)}
+.hcard:hover::before{transform:scaleX(1)}
+.hcard .idx{font-family:var(--font-s);font-size:12px;letter-spacing:.3em;color:var(--mut-2);text-transform:uppercase}
+.hcard .med{width:72px;height:72px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-s);font-size:1.55rem;letter-spacing:.06em;position:relative;margin:26px 0 22px}
+.hcard .med::after{content:"";position:absolute;inset:5px;border:1px solid rgba(255,255,255,.3)}
+.hcard .med i{position:absolute;top:5px;left:5px;width:6px;height:6px;background:var(--blue);font-style:normal}
+.hcard h3{font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:1.28rem;letter-spacing:-.01em;line-height:1.12}
+.hcard .disc{margin-top:8px;font-family:var(--font-s);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--blue-ink)}
+.hcard .where{margin-top:6px;font-family:var(--font-s);font-size:12.5px;color:var(--mut-2)}
+.hcard p{margin-top:16px;font-family:var(--font-s);font-size:.97rem;line-height:1.65;color:var(--mut)}
+
+/* CANON */
+.canon{background:var(--ink);color:#fff}
+.canon .eyebrow{color:rgba(255,255,255,.55)}
+.canon .h2{color:#fff}
+.canon-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);margin-top:56px}
+.rule-card{background:var(--ink);padding:38px 34px 42px}
+.rule-card .no{font-family:var(--font-s);font-size:13px;letter-spacing:.3em;color:var(--blue);text-transform:uppercase}
+.rule-card h3{margin-top:18px;font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:1.35rem;letter-spacing:-.01em}
+.rule-card p{margin-top:12px;font-family:var(--font-s);font-size:.98rem;line-height:1.7;color:rgba(255,255,255,.6);max-width:44ch}
+.canon-foot{margin-top:44px;font-family:var(--font-d);font-weight:800;font-stretch:114%;text-transform:uppercase;font-size:clamp(1.2rem,2.6vw,1.9rem);letter-spacing:-.01em}
+.canon-foot span{color:var(--blue)}
+
+/* DISCIPLINES */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px;list-style:none}
+.chip{font-family:var(--font-s);font-size:12px;letter-spacing:.2em;text-transform:uppercase;border:1px solid var(--hair);padding:12px 18px;color:var(--mut);background:var(--white);display:inline-flex;align-items:center;transition:color .25s ease,border-color .25s ease;cursor:default}
+.chip:hover{color:var(--blue-ink);border-color:var(--blue-ink)}
+
+/* NOMINATE */
+.nom-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,5vw,72px);align-items:start;margin-top:24px}
+.nom-copy p{color:var(--mut);margin-top:20px;max-width:46ch}
+.nom-copy p b{color:var(--ink);font-weight:600}
+.nom-form{border:1px solid var(--hair);padding:clamp(26px,3.5vw,40px);background:var(--white)}
+.fgroup{margin-bottom:20px}
+.fgroup label{display:block;font-family:var(--font-s);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--mut-2);margin-bottom:9px}
+.nom-form input,.nom-form textarea,.nom-form select{width:100%;background:var(--white);border:1px solid var(--hair);padding:16px 18px;font-family:var(--font-d);font-size:16px;color:var(--ink);transition:border-color .2s ease}
+.nom-form input:focus,.nom-form textarea:focus,.nom-form select:focus{outline:0;border-color:var(--blue-ink);border-width:1.5px}
+.nom-form textarea{min-height:110px;resize:vertical}
+.nom-note{margin-top:16px;font-family:var(--font-s);font-size:12.5px;color:var(--mut-2)}
+.hof-toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:var(--ink);color:#fff;font-family:var(--font-d);font-weight:600;font-size:13.5px;letter-spacing:.04em;padding:16px 24px;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease;z-index:1200;max-width:min(520px,92vw);text-align:center}
+.hof-toast.show{opacity:1;transform:translate(-50%,0)}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
+
+@media (max-width:1020px){.class-grid{grid-template-columns:repeat(2,1fr)}.lau-grid{grid-template-columns:1fr;align-items:start}.plaque{max-width:380px}}
+@media (max-width:820px){.hof-stats{grid-template-columns:1fr 1fr}.hof-stat{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}.hof-stat:nth-child(odd){padding-left:0}.hof-stat:nth-child(even){padding-right:0}.canon-grid{grid-template-columns:1fr}.nom-grid{grid-template-columns:1fr}}
+@media (max-width:640px){.class-grid{grid-template-columns:1fr}.btn{width:100%}}
+@media (prefers-reduced-motion:reduce){*,::after,::before{transition:none!important;animation:none!important}.rv{opacity:1!important;transform:none!important}html{scroll-behavior:auto}}
+.skip{position:fixed;top:-64px;left:16px;z-index:1300;background:var(--ink);color:#fff;padding:13px 18px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:top .2s ease}
+.skip:focus{top:12px;outline:2px solid var(--blue)}
+/* ===== PFA FOOTER - canonical block, identical on every page ===== */
+.brand{display:flex;align-items:center;gap:13px}
+@media (max-width:820px){.foot-top{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.brand-name{font-size:12px;letter-spacing:.16em}}
+@media (max-width:560px){.foot-top{grid-template-columns:1fr}}
+@media (max-width:380px){.brand-name{font-size:11px;letter-spacing:.12em}}
+/* ===== PFA FOOTER - canonical block, identical on every page ===== */
+/* self-contained: inheritable properties are pinned so page-level element
+   selectors (h4{}, p{}, a{}) cannot leak in and shift the footer */
+.brand{display:flex;align-items:center;gap:13px;line-height:1.6}
+.brand .emblem{width:32px;height:29px;flex:none}
+.brand-name{font-family:var(--font-s);font-weight:700;font-size:13px;line-height:1.6;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;-webkit-text-stroke:.4px currentColor}
+footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line-height:1.6}
+.foot-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:clamp(30px,5vw,60px)}
+.foot-brand .brand{margin-bottom:22px}
+.foot-brand .emblem{width:32px;height:29px;flex:none}
+.foot-brand p{font-family:var(--font-s);font-size:.98rem;line-height:1.6;color:var(--mut);max-width:30ch;margin:0}
+.foot-col h3{font-family:var(--font-s);font-size:11px;font-weight:400;line-height:1.6;letter-spacing:.3em;text-transform:uppercase;color:var(--mut-2);margin:0 0 20px}
+.foot-col a{display:block;font-family:var(--font-d);font-size:.92rem;font-weight:400;line-height:1.6;letter-spacing:normal;text-transform:none;color:var(--mut);padding:7px 0;transition:color .25s ease}
+.foot-col a:hover{color:var(--blue-ink)}
+.foot-bottom{margin-top:clamp(50px,7vw,70px);padding-top:28px;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.foot-bottom p{font-family:var(--font-d);font-size:12.5px;font-weight:400;line-height:1.6;color:var(--mut-2);margin:0}
+.foot-mark{display:flex;align-items:center;gap:12px;font-family:var(--font-s);font-size:11px;font-weight:400;line-height:1.6;letter-spacing:.28em;text-transform:uppercase;color:var(--mut)}
+.foot-mark .emblem{width:26px;height:24px;flex:none}
+@media (max-width:820px){.foot-top{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.brand-name{font-size:12px;letter-spacing:.16em}}
+@media (max-width:560px){.foot-top{grid-template-columns:1fr}}
+@media (max-width:380px){.brand-name{font-size:11px;letter-spacing:.12em}}
+</style></head><body><a class="skip" href="#top">Skip to content</a><header class="pfa-nav" id="nav"><div class="pfa-nav-in"><a class="pfa-brand" href="index.html" aria-label="People for Animals - home"><span class="pfa-emblem" role="img" aria-label="People for Animals emblem"></span> <span class="pfa-brand-name">People for Animals</span></a><nav class="pfa-links" aria-label="Primary"><a href="store.html">Store</a> <a href="network.html">Network</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></nav><button class="pfa-burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button></div></header><div class="pfa-mobile" id="mobileMenu"><a href="index.html">Home</a> <a href="store.html">Store</a> <a href="membership.html">Membership</a> <a href="get-involved.html">Get Involved</a> <a href="stories.html">Stories</a> <a href="founder.html">The Founder</a> <a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a> <a href="champion.html">The Wildlife Gauntlet</a> <a href="pfa-x.html">PFA X</a> <a href="network.html">Network</a> <a href="services.html">Services</a> <a href="heatmap.html">Heat Map</a> <a href="assembly.html">The Assembly</a> <a href="hall-of-fame.html">Hall of Fame</a> <a href="adopt.html">Adopt and Give</a> <a href="csr.html">Partner with PFA</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></div><main id="top">
+<section class="hof-hero"><div class="wrap">
+<p class="hof-eyebrow">The PFA Hall of Fame &middot; Veterinary Medicine</p>
+<h1>Healers of <span class="blue">record.</span></h1>
+<p class="hof-lede">India's finest veterinary doctors, honoured by People for Animals for a lifetime of skill given to animals who could never pay, and to the people who love them.</p>
+<span class="hof-note">Inaugural class of MMXXVI &middot; profiles illustrative until the formal announcement</span>
+<div class="hof-stats">
+<div class="hof-stat"><div class="n">12</div><div class="l">Laureates</div></div>
+<div class="hof-stat"><div class="n">9</div><div class="l">States</div></div>
+<div class="hof-stat"><div class="n">3.1 Lakh</div><div class="l">Animals Treated</div></div>
+<div class="hof-stat"><div class="n">MMXXVI</div><div class="l">First Class</div></div>
+</div>
+</div></section>
+
+<section class="sec" id="laureate"><div class="wrap">
+<p class="eyebrow rv">Laureate of the Year &middot; MMXXVI</p>
+<div class="lau-grid">
+<div class="rv"><div class="plaque" role="img" aria-label="Engraved plaque for Dr. Subramaniam Iyer, Laureate of the Year">
+<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+<div class="p-top">People for Animals</div>
+<div class="p-init">SI</div>
+<div class="p-rule"></div>
+<div class="p-name">Dr. Subramaniam Iyer</div>
+<div class="p-disc">Community Medicine &middot; ABC</div>
+<div class="p-bottom">Laureate &middot; MMXXVI</div>
+</div></div>
+<div class="lau-copy rv rv-d1">
+<p class="k">The Citation</p>
+<h2>Dr. Subramaniam Iyer</h2>
+<p class="disc">Community Medicine and Animal Birth Control &middot; Chennai</p>
+<p class="lau-cite">For thirty-one years, Dr. Iyer has treated the animals no one sends a bill for. He performed his first street-dog sterilisation in 1995 on a kitchen table in Mylapore; he has since led more than sixty thousand, trained four hundred surgeons in the humane catching and handling standard that now carries his name, and never once charged a community animal's caretaker. When the courts asked what a lawful, kind ABC programme looks like, they were shown his operating theatre. The Hall exists for careers like this one.</p>
+<ul class="lau-spec">
+<li><i>Years in practice</i><b>31</b></li>
+<li><i>Sterilisations led</i><b>60,000+</b></li>
+<li><i>Surgeons trained</i><b>400+</b></li>
+<li><i>Fee charged to caretakers</i><b>Zero, ever</b></li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<section class="sec porcelain" id="class"><div class="wrap">
+<p class="eyebrow rv">The Class of MMXXVI</p>
+<h2 class="h2 rv">Eleven more names, engraved for good.</h2>
+<p class="sub rv rv-d1">Chosen from over <b>two hundred nominations</b> sent in by rescuers, shelters and fellow doctors across the country.</p>
+<div class="class-grid">
+<article class="hcard rv"><span class="idx">II.</span><div class="med"><i></i>MK</div><h3>Dr. Meera Kulkarni</h3><p class="disc">Wildlife Surgery</p><p class="where">Pune &middot; 24 years</p><p>Rebuilt the shattered wing of a black kite in 2009 - and then wrote the fracture protocol every rescue centre in the country now follows.</p></article>
+<article class="hcard rv rv-d1"><span class="idx">III.</span><div class="med"><i></i>FQ</div><h3>Dr. Farah Qureshi</h3><p class="disc">Emergency and Critical Care</p><p class="where">Delhi &middot; 19 years</p><p>Four thousand night emergencies and counting. Kept the capital's only round-the-clock street-animal trauma line answered for nineteen winters.</p></article>
+<article class="hcard rv rv-d2"><span class="idx">IV.</span><div class="med"><i></i>AN</div><h3>Dr. Arjun Nair</h3><p class="disc">Shelter Medicine</p><p class="where">Kochi &middot; 17 years</p><p>Designed the low-cost parvo isolation ward that cut puppy mortality in Kerala shelters by more than half. Gave the blueprint away for free.</p></article>
+<article class="hcard rv"><span class="idx">V.</span><div class="med"><i></i>TD</div><h3>Dr. Tenzin Dolma</h3><p class="disc">High-Altitude Practice</p><p class="where">Leh &middot; 21 years</p><p>Kept a clinic open at 11,500 feet through twenty-one winters, treating working animals, strays and snow-bitten dogs when the passes were shut.</p></article>
+<article class="hcard rv rv-d1"><span class="idx">VI.</span><div class="med"><i></i>VR</div><h3>Dr. Vikram Reddy</h3><p class="disc">Orthopaedic Surgery</p><p class="where">Hyderabad &middot; 22 years</p><p>His external fixator technique for street-dog fractures - built from off-the-shelf hardware - has put over nine thousand animals back on four legs.</p></article>
+<article class="hcard rv rv-d2"><span class="idx">VII.</span><div class="med"><i></i>HG</div><h3>Dr. Harpreet Gill</h3><p class="disc">Large Animal Medicine</p><p class="where">Ludhiana &middot; 28 years</p><p>Punjab's quiet authority on gaushala medicine. Modernised the care of eleven thousand rescued cattle without ever raising his voice.</p></article>
+<article class="hcard rv"><span class="idx">VIII.</span><div class="med"><i></i>LM</div><h3>Dr. Lakshmi Menon</h3><p class="disc">Preventive Medicine</p><p class="where">Bengaluru &middot; 16 years</p><p>Architect of the vaccination corridors that made three Bengaluru wards functionally rabies-free - a first for any Indian metro.</p></article>
+<article class="hcard rv rv-d1"><span class="idx">IX.</span><div class="med"><i></i>RC</div><h3>Dr. Rohan Chatterjee</h3><p class="disc">Avian Medicine</p><p class="where">Kolkata &middot; 14 years</p><p>Every January, kite-string season fills Kolkata's skies with injured birds. His triage protocol is the reason most of them fly again.</p></article>
+<article class="hcard rv rv-d2"><span class="idx">X.</span><div class="med"><i></i>JV</div><h3>Dr. Joseph Varghese</h3><p class="disc">Reptile and Exotic Practice</p><p class="where">Thiruvananthapuram &middot; 20 years</p><p>The doctor forest departments call at midnight. Two decades of treating confiscated wildlife that officially did not exist.</p></article>
+<article class="hcard rv"><span class="idx">XI.</span><div class="med"><i></i>AD</div><h3>Dr. Anjali Deshpande</h3><p class="disc">Feline Medicine</p><p class="where">Mumbai &middot; 15 years</p><p>Built Mumbai's first dedicated community-cat practice and trained a generation of vets to take the city's smallest patients seriously.</p></article>
+<article class="hcard rv rv-d1"><span class="idx">XII.</span><div class="med"><i></i>KB</div><h3>Dr. Kavita Bhat</h3><p class="disc">Disaster Response</p><p class="where">Udupi &middot; 18 years</p><p>When the coast floods, she is already there. Led animal evacuation and field medicine through six monsoon disasters on the Karnataka coast.</p></article>
+</div>
+</div></section>
+
+<section class="sec canon" id="canon"><div class="wrap">
+<p class="eyebrow rv">The Canon</p>
+<h2 class="h2 rv">How a name enters the Hall.</h2>
+<div class="canon-grid">
+<div class="rule-card rv"><span class="no">Article I</span><h3>Nominated by the field</h3><p>Only rescuers, shelters and fellow doctors may nominate. No self-nominations, no institutional lobbying, no campaigns.</p></div>
+<div class="rule-card rv rv-d1"><span class="no">Article II</span><h3>A decade of service, minimum</h3><p>Ten years of verifiable practice before a name is even read aloud. The Hall honours careers, not moments.</p></div>
+<div class="rule-card rv rv-d2"><span class="no">Article III</span><h3>A pro bono record, verified</h3><p>PFA independently verifies the unbilled work - the street animals, the wildlife, the shelters. This is the heart of the honour.</p></div>
+<div class="rule-card rv rv-d3"><span class="no">Article IV</span><h3>Elected unanimously</h3><p>The council of past laureates and PFA trustees must be unanimous. One reservation, and the name waits another year.</p></div>
+</div>
+<p class="canon-foot rv">No fees. No sponsorships. <span>No exceptions.</span></p>
+</div></section>
+
+<section class="sec" id="disciplines"><div class="wrap">
+<p class="eyebrow rv">The Disciplines</p>
+<h2 class="h2 rv">Every kind of healing counts.</h2>
+<ul class="chips rv rv-d1">
+<li class="chip">Small Animal Medicine</li>
+<li class="chip">Wildlife and Exotics</li>
+<li class="chip">Shelter Medicine</li>
+<li class="chip">Surgery</li>
+<li class="chip">Emergency and Critical Care</li>
+<li class="chip">Community ABC</li>
+<li class="chip">Large Animal Medicine</li>
+<li class="chip">Avian Medicine</li>
+<li class="chip">Preventive Medicine</li>
+<li class="chip">Disaster Response</li>
+</ul>
+</div></section>
+
+<section class="sec porcelain" id="nominate"><div class="wrap">
+<p class="eyebrow rv">Nominations &middot; Class of MMXXVII</p>
+<div class="nom-grid">
+<div class="nom-copy rv">
+<h2 class="h2">Know a healer?</h2>
+<p>Somewhere in your city is a doctor who answers the 2am call, waives the bill, and never mentions it. <b>Tell us their name.</b> Nominations for the Class of MMXXVII close on 31 December.</p>
+<p style="font-family:var(--font-s);font-size:13px;color:var(--mut-2)">Nominations are confidential. The doctor is only contacted if shortlisted.</p>
+</div>
+<form class="nom-form rv rv-d1" id="nomForm" novalidate>
+<div class="fgroup"><label for="nDoc">The doctor's name</label><input id="nDoc" autocomplete="off" placeholder="Dr. Full Name"></div>
+<div class="fgroup"><label for="nCity">City or district</label><input id="nCity" autocomplete="off" placeholder="Where they practise"></div>
+<div class="fgroup"><label for="nWhy">Why they belong in the Hall</label><textarea id="nWhy" placeholder="Two or three lines. What have they done for animals who could not pay?"></textarea></div>
+<div class="fgroup"><label for="nYou">Your name and phone or email</label><input id="nYou" autocomplete="off" placeholder="So the council can verify the nomination"></div>
+<button type="submit" class="btn" style="width:100%">Submit the nomination</button>
+<p class="nom-note">Reviewed by the council in January. Reference number issued on submission.</p>
+</form>
+</div>
+</div></section>
+</main>
+<div class="hof-toast" id="hofToast" role="status" aria-live="polite"></div>
+<footer><div class="wrap"><div class="foot-top"><div class="foot-brand"><a class="brand" href="index.html"><span class="emblem"></span> <span class="brand-name">People for Animals</span></a><p>A society where humans and animals coexist with compassion, dignity, and responsibility.</p></div><div class="foot-col"><h3>Explore</h3><a href="store.html">The Store</a> <a href="stories.html">Stories</a> <a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a> <a href="founder.html">The Founder</a> <a href="hall-of-fame.html">Hall of Fame</a> <a href="pfa-x.html">PFA X</a></div><div class="foot-col"><h3>Belong</h3><a href="assembly.html">The Assembly</a> <a href="membership.html">The Patron Card</a> <a href="get-involved.html?path=volunteer">Get to Learn</a> <a href="get-involved.html?path=catc">Caretaker Card</a> <a href="champion.html">The Wildlife Gauntlet</a></div><div class="foot-col"><h3>Act</h3><a href="network.html">Reach PFA</a> <a href="services.html">Trusted Services</a> <a href="heatmap.html">Heat Map</a> <a href="adopt.html">Adopt</a> <a href="give.html">Give</a> <a href="csr.html">Partner with PFA</a></div></div><div class="foot-bottom"><p>&copy; People for Animals &middot; Founded in 1992 by Maneka Sanjay Gandhi</p><div class="foot-mark"><span class="emblem"></span> Powered by PFA</div></div></div></footer><script>!function(){var nav=document.getElementById("nav"),burger=document.getElementById("burger"),menu=document.getElementById("mobileMenu");if(nav){var onS=function(){nav.classList.toggle("scrolled",(window.scrollY||window.pageYOffset)>4)};window.addEventListener("scroll",onS,{passive:!0}),onS()}if(burger&&menu&&!burger.dataset.pfaBound){burger.dataset.pfaBound="1";var _y=0;function unlock(){var b=document.body.style;b.position="",b.top="",b.left="",b.right="",b.width="",b.overflow="",document.body.offsetHeight;var r=document.documentElement,p=r.style.scrollBehavior;r.style.scrollBehavior="auto",window.scrollTo(0,_y),r.style.scrollBehavior=p}burger.addEventListener("click",function(){var open=menu.classList.toggle("open");burger.classList.toggle("open",open),burger.setAttribute("aria-expanded",open?"true":"false"),open?function(){_y=window.scrollY||window.pageYOffset;var b=document.body.style;b.position="fixed",b.top=-_y+"px",b.left="0",b.right="0",b.width="100%",b.overflow="hidden"}():unlock()}),menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock()})}),document.addEventListener("keydown",function(e){"Escape"===e.key&&menu.classList.contains("open")&&(menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock(),burger.focus())})}var here=location.pathname.split("/").pop()||"index.html";document.querySelectorAll(".pfa-links a, .pfa-mobile a").forEach(function(a){var target=(a.getAttribute("href")||"").split("#")[0];target&&target===here&&!a.classList.contains("pfa-btn")&&a.setAttribute("aria-current","page")})}();</script><script>!function(){var b=function(e){return e.preventDefault(),!1};document.addEventListener("contextmenu",b),document.addEventListener("dragstart",b),document.addEventListener("selectstart",function(e){var t=e.target,tag=t&&t.tagName;if("INPUT"===tag||"TEXTAREA"===tag||t.isContentEditable)return!0}),document.addEventListener("keydown",function(e){var k=e.key,c=e.ctrlKey||e.metaKey,s=e.shiftKey;("F12"===k||c&&s&&("I"===k||"J"===k||"C"===k)||c&&("u"===k||"U"===k||"s"===k||"S"===k))&&b(e)})}();</script><script>!function(){
+var io=new IntersectionObserver(function(entries){entries.forEach(function(e){e.isIntersecting&&(e.target.classList.add("in"),io.unobserve(e.target))})},{threshold:.12,rootMargin:"0px 0px -40px 0px"});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});
+var toastEl=document.getElementById("hofToast"),tt=null;
+function toast(msg){toastEl&&(toastEl.textContent=msg,toastEl.classList.add("show"),clearTimeout(tt),tt=setTimeout(function(){toastEl.classList.remove("show")},4600))}
+var form=document.getElementById("nomForm");
+form&&form.addEventListener("submit",function(e){
+e.preventDefault();
+var doc=document.getElementById("nDoc"),city=document.getElementById("nCity"),why=document.getElementById("nWhy"),you=document.getElementById("nYou");
+var bad=null;
+if(!doc.value.trim()||doc.value.trim().length<3)bad=doc;
+else if(!city.value.trim())bad=city;
+else if(!why.value.trim()||why.value.trim().length<20)bad=why;
+else if(!you.value.trim())bad=you;
+if(bad){bad.style.borderColor="#B3261E";bad.focus();toast(bad===why?"Tell the council a little more - at least a couple of lines.":"Please fill in every field so the council can verify the nomination.");bad.addEventListener("input",function h(){bad.style.borderColor="";bad.removeEventListener("input",h)});return}
+var ref="HOF-2027-"+String(Math.floor(1e4+9e4*Math.random()));
+form.reset();
+toast("Nomination received - reference "+ref+". The council reads every one in January.");
+});
+}();
+</script><script>!function(){if(window.__pfaBack)return;window.__pfaBack=1;var HOME="index.html",KEY="pfaIdx",idx=1,ss=null;try{ss=window.sessionStorage;ss.setItem("__pfaT","1");ss.removeItem("__pfaT")}catch(e){ss=null}function hi(){if(!ss)return 0;var v=parseInt(ss.getItem(KEY)||"0",10);return v>0?v:0}function stamp(){var s=null;try{s=history.state}catch(e){}if(s&&typeof s.pfaIdx==="number"&&s.pfaIdx>0){idx=s.pfaIdx}else{idx=hi()+1;try{history.replaceState({pfaIdx:idx},"")}catch(e){}}if(ss){try{ss.setItem(KEY,String(idx>hi()?idx:hi()))}catch(e){}}}var here=(location.pathname.split("/").pop()||"index.html").toLowerCase();var NOBTN=here===""||here==="index.html"||here==="admin.html";stamp();if(NOBTN){window.addEventListener("hashchange",stamp);window.addEventListener("popstate",stamp);window.addEventListener("pageshow",function(ev){if(ev.persisted)stamp()});return;}var b=document.createElement("a");b.id="pfaBack";b.href=HOME;b.style.cssText="position:fixed;left:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:none;align-items:center;gap:10px;font-family:'Archivo',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#FFFFFF;color:#0E1116;border:1px solid #0E1116;padding:14px 20px;line-height:1;cursor:pointer;text-decoration:none;box-shadow:0 12px 32px -12px rgba(14,17,22,.35);border-radius:0";b.addEventListener("mouseenter",function(){b.style.background="#00A4FF";b.style.borderColor="#00A4FF"});b.addEventListener("mouseleave",function(){b.style.background="#FFFFFF";b.style.borderColor="#0E1116"});b.addEventListener("click",function(e){e.preventDefault();if(idx>1&&history.length>1){history.back()}else{location.href=HOME}});function sync(){var back=idx>1;b.setAttribute("data-mode",back?"back":"home");b.innerHTML='<span aria-hidden="true">&#8592;</span><span>'+(back?"Back":"Home")+"</span>";b.setAttribute("aria-label",back?"Go back one step":"Go to the home page");b.style.display="inline-flex";}function mount(){sync();(document.body||document.documentElement).appendChild(b)}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",mount)}else{mount()}window.addEventListener("hashchange",function(){stamp();sync()});window.addEventListener("popstate",function(){stamp();sync()});window.addEventListener("pageshow",function(ev){if(ev.persisted){stamp();sync()}});}();</script><script src="pfa-search.js"></script></body></html>
