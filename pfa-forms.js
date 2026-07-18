@@ -45,11 +45,14 @@
     el.__pfaPhone = 1;
     el.setAttribute("inputmode", "tel");
     el.setAttribute("autocomplete", "tel");
-    /* The +91 chip beside the field carries the country code, so the input
-       itself never needs to hold more than ten digits plus the 5-5 space.
-       An 18-char allowance let 14-digit numbers sit in the field looking
-       accepted until submit rejected them. */
-    el.setAttribute("maxlength", "11");
+    /* The input handler below reformats every keystroke and paste down to
+       ten digits, so the field can never persistently hold more than the
+       5-5 display form. The allowance must still cover a full pasted
+       international form ("+91 81052 50299", "0091 81052 50299") BEFORE the
+       handler runs: a tighter cap makes the browser truncate the paste
+       first, the 91 prefix survives as subscriber digits, and the field
+       silently holds the wrong number. */
+    el.setAttribute("maxlength", "20");
     if (/10-digit/.test(el.getAttribute("placeholder") || "")) {
       el.setAttribute("placeholder", "81052 50299");
     }
