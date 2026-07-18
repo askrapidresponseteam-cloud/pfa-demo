@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Learning Center | People for Animals</title>
 <meta name="description" content="Not an article you skim. A place you practise. Learn to read an animal in pain, one species at a time, then prove you can. Written by veterinarians.">
-<link rel="icon" href="media/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="media/pfa-icon-32.png">
-<link rel="apple-touch-icon" href="media/pfa-icon-180.png">
-<meta name="theme-color" content="#0E1116">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Marcellus&display=swap" rel="stylesheet">
@@ -33,8 +29,6 @@ body{
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--blue);color:var(--white)}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.skip{position:fixed;top:-64px;left:16px;z-index:1300;background:var(--ink);color:#fff;padding:13px 18px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:top .2s ease}
-.skip:focus{top:12px;outline:2px solid var(--blue)}
 
 /* ---- canonical shared chrome (from site) ---- */
 .pfa-cart,.pfa-cart *,.pfa-mobile,.pfa-mobile *,.pfa-nav,.pfa-nav *{box-sizing:border-box;border-radius:0!important;margin:0}
@@ -271,15 +265,13 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 .foot-mark{display:flex;align-items:center;gap:12px;font-family:var(--font-s);font-size:11px;font-weight:400;line-height:1.6;letter-spacing:.28em;text-transform:uppercase;color:var(--mut)}
 .foot-mark .emblem{width:26px;height:24px;flex:none}
 </style>
-</head>
+<style id="pfa-nav-v2">.pfa-menu,.pfa-menu *{box-sizing:border-box;border-radius:0!important;margin:0}.pfa-menu{position:fixed;inset:76px 0 0 0;background:#fff;z-index:999;overflow-y:auto;overscroll-behavior:contain;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.2,.6,.2,1),visibility 0s linear .35s}.pfa-menu.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}.pm-in{max-width:1220px;margin:0 auto;padding:clamp(34px,5.5vh,60px) clamp(20px,4vw,48px) clamp(48px,7vh,72px)}.pm-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(30px,4vw,52px) clamp(24px,3vw,44px)}.pm-col{min-width:0}.pm-g+.pm-g{margin-top:clamp(28px,4vh,40px)}.pm-k{font-family:var(--font-s);font-size:11px;font-weight:400;letter-spacing:.24em;text-transform:uppercase;color:var(--mut-2);margin:0 0 10px;line-height:1.2}.pm-g a{display:block;font-family:var(--font-d);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink);text-decoration:none;line-height:1.35;padding:11px 0;border-bottom:1px solid var(--hair-soft);transition:color .25s cubic-bezier(.2,.6,.2,1)}.pm-g a:hover{color:var(--blue-ink)}.pm-g a[aria-current=page]{color:var(--blue-ink)}.pm-foot{margin-top:clamp(36px,6vh,56px);display:flex;align-items:center;justify-content:space-between;gap:20px 28px;flex-wrap:wrap}.pfa-menu a.pfa-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:16px 30px;background:var(--ink);color:#fff;border:1px solid var(--ink);line-height:1;text-decoration:none;cursor:pointer;transition:color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1)}.pfa-menu a.pfa-btn::before{content:"";position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.6,.2,1)}.pfa-menu a.pfa-btn:hover::before{transform:scaleX(1)}.pfa-menu a.pfa-btn:hover{color:var(--ink);border-color:var(--blue)}.pfa-menu a.pfa-btn span{position:relative;z-index:1}.pm-meta{font-family:var(--font-s);font-size:12px;letter-spacing:.08em;color:var(--mut)}.pfa-menu .pm-col,.pfa-menu .pm-foot{opacity:0;transform:translateY(12px);transition:opacity .4s cubic-bezier(.2,.6,.2,1),transform .4s cubic-bezier(.2,.6,.2,1)}.pfa-menu.open .pm-col,.pfa-menu.open .pm-foot{opacity:1;transform:translateY(0)}.pfa-menu.open .pm-col:nth-child(1){transition-delay:.05s}.pfa-menu.open .pm-col:nth-child(2){transition-delay:.11s}.pfa-menu.open .pm-col:nth-child(3){transition-delay:.17s}.pfa-menu.open .pm-col:nth-child(4){transition-delay:.23s}.pfa-menu.open .pm-foot{transition-delay:.3s}.pfa-menu a:focus-visible{outline:2px solid var(--blue-ink);outline-offset:3px}@media (max-width:1023px){.pm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pm-g a{font-size:16px;padding:13px 0}}@media (max-width:639px){.pm-grid{grid-template-columns:minmax(0,1fr)}.pm-g a{font-size:17px}.pm-foot{margin-top:32px}.pfa-menu a.pfa-btn{width:100%}}@media (prefers-reduced-motion:reduce){.pfa-menu,.pfa-menu .pm-col,.pfa-menu .pm-foot{transition:none!important}.pfa-menu .pm-col,.pfa-menu .pm-foot{opacity:1;transform:none}}</style></head>
 <body>
 
-<a class="skip" href="#main">Skip to content</a>
-
-<header class="pfa-nav" id="nav"><div class="pfa-nav-in"><a class="pfa-brand" href="index.html" aria-label="People for Animals - home"><span class="pfa-emblem" role="img" aria-label="People for Animals emblem"></span> <span class="pfa-brand-name">People for Animals</span></a><nav class="pfa-links" aria-label="Primary"><a href="store.html">Store</a> <a href="network.html">Network</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></nav><button class="pfa-burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button></div></header><div class="pfa-mobile" id="mobileMenu"><a href="index.html">Home</a> <a href="store.html">Store</a> <a href="learning-center.html" aria-current="page">Learning</a> <a href="membership.html">Membership</a> <a href="get-involved.html">Get Involved</a> <a href="stories.html">Stories</a> <a href="founder.html">The Founder</a> <a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a> <a href="champion.html">The Wildlife Gauntlet</a> <a href="pfa-x.html">PFA X</a> <a href="network.html">Network</a> <a href="services.html">Services</a> <a href="heatmap.html">Heat Map</a> <a href="assembly.html">The Assembly</a> <a href="hall-of-fame.html">Hall of Fame</a> <a href="adopt.html">Adopt and Give</a> <a href="csr.html">Partner with PFA</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></div>
+<header class="pfa-nav" id="nav"><div class="pfa-nav-in"><a class="pfa-brand" href="index.html" aria-label="People for Animals - home"><span class="pfa-emblem" role="img" aria-label="People for Animals emblem"></span> <span class="pfa-brand-name">People for Animals</span></a><nav class="pfa-links" aria-label="Primary"><a href="store.html">Store</a> <a href="network.html">Network</a> <a href="csr.html">Partner</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></nav><button class="pfa-burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button></div></header><nav class="pfa-menu" id="mobileMenu" aria-label="Site menu"><div class="pm-in"><div class="pm-grid"><div class="pm-col"><div class="pm-g"><p class="pm-k">Act</p><a href="network.html">Reach PFA</a><a href="adopt.html">Adopt</a><a href="give.html">Give</a><a href="services.html">Trusted Services</a><a href="heatmap.html">Heat Map</a></div></div><div class="pm-col"><div class="pm-g"><p class="pm-k">Belong</p><a href="membership.html">Become a Patron</a><a href="get-involved.html">Get Involved</a><a href="assembly.html">The Assembly</a><a href="champion.html">The Wildlife Gauntlet</a></div></div><div class="pm-col"><div class="pm-g"><p class="pm-k">Learn</p><a href="learning-center.html">The Learning Center</a><a href="stories.html">Stories</a><a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a><a href="founder.html">The Founder</a><a href="hall-of-fame.html">Hall of Fame</a></div></div><div class="pm-col"><div class="pm-g"><p class="pm-k">Partner</p><a href="csr.html">Corporate Partnership</a><a href="pfa-x.html">PFA X Certification</a></div><div class="pm-g"><p class="pm-k">Shop</p><a href="store.html">The Store</a><a href="store.html#/pharmacy">The Pharmacy</a></div></div></div><div class="pm-foot"><a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a><p class="pm-meta">India's largest animal welfare organisation - since 1992</p></div></div></nav>
 
 <!-- HERO -->
-<header class="hero pfa-start" id="main" tabindex="-1">
+<header class="hero pfa-start">
   <div class="wrap">
     <div class="eyebrow">People for Animals &middot; The Learning Center</div>
     <h1>Don't read about pain. <em>Learn to see it.</em></h1>
@@ -365,6 +357,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 
     <div class="species">
       <div class="sp soon">
+        
         <div class="sp-art">
           <svg viewBox="0 0 150 120" role="img" aria-label="Cat"><g fill="none" stroke="#0E1116" stroke-width="2.5"><ellipse cx="75" cy="66" rx="42" ry="38"/><path d="M42 34 L24 6 L60 22 Z"/><path d="M108 34 L126 6 L90 22 Z"/><ellipse cx="60" cy="60" rx="7" ry="7"/><ellipse cx="90" cy="60" rx="7" ry="7"/><path d="M71 78 L79 78 L75 84 Z" fill="#0E1116" stroke="none"/><path d="M58 82 L30 76 M58 88 L30 92 M92 82 L120 76 M92 88 L120 92" stroke-width="1.4"/></g></svg>
         </div>
@@ -372,11 +365,12 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
           <div class="sp-tag">Cat</div>
           <div class="sp-name">Reading a cat</div>
           <div class="sp-desc">The hardest animal in the house to read. Ten parts on the face, the killers in your cabinet, and the slow pain nobody sees.</div>
-          <div class="sp-meta"><span class="sp-count">10 parts &middot; in development</span><span class="sp-go">Soon</span></div>
+          <div class="sp-meta"><span class="sp-count">In development</span><span class="sp-go">Soon</span></div>
         </div>
       </div>
 
       <div class="sp soon">
+        
         <div class="sp-art">
           <svg viewBox="0 0 150 120" role="img" aria-label="Dog"><g fill="none" stroke="#0E1116" stroke-width="2.5"><ellipse cx="75" cy="70" rx="40" ry="34"/><path d="M40 50 C24 44 22 74 40 78 Z"/><path d="M110 50 C126 44 128 74 110 78 Z"/><circle cx="62" cy="64" r="6"/><circle cx="88" cy="64" r="6"/><ellipse cx="75" cy="84" rx="9" ry="6" fill="#0E1116" stroke="none"/><path d="M75 90 L75 98" /></g></svg>
         </div>
@@ -491,8 +485,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
         <div class="lab">Open call</div>
         <div class="big">Write for the Center</div>
         <div class="sub">Registered veterinary professionals only. Roundworm to road accidents, cattle to companion birds. If you treat it, you can teach it here.</div>
-        <a href="mailto:learn@peopleforanimals.example?subject=Publishing%20with%20the%20PFA%20Learning%20Center" class="btn">Propose an article &#8594;</a>
-        <a href="#how" class="btn ghost">See the standard we hold &#8594;</a>
+        <a href="mailto:learn@peopleforanimalsindia.org?subject=Publishing%20with%20the%20PFA%20Learning%20Center" class="btn">Propose an article &#8594;</a>
       </div>
     </div>
   </div>
@@ -502,12 +495,12 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 <section class="close">
   <div class="wrap">
     <h2>An animal in pain will not tell you. Learn to see it anyway.</h2>
-    <p>Start with the cat above. The full species guides are being written to the same standard, and they will publish here first.</p>
-    <a href="#trainer" class="btn">Try the pain trainer &#8594;</a>
+    <p>Start with the cat above. The full guide it comes from is in development, built to the same standard as everything here.</p>
+    <a href="#trainer" class="btn">Try the trainer &#8594;</a>
   </div>
 </section>
 
-<footer><div class="wrap"><div class="foot-top"><div class="foot-brand"><a class="brand" href="index.html"><span class="emblem"></span> <span class="brand-name">People for Animals</span></a><p>A society where humans and animals coexist with compassion, dignity, and responsibility.</p></div><div class="foot-col"><h3>Explore</h3><a href="store.html">The Store</a> <a href="learning-center.html">The Learning Center</a> <a href="stories.html">Stories</a> <a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a> <a href="founder.html">The Founder</a> <a href="hall-of-fame.html">Hall of Fame</a> <a href="pfa-x.html">PFA X</a></div><div class="foot-col"><h3>Belong</h3><a href="assembly.html">The Assembly</a> <a href="membership.html">The Patron Card</a> <a href="get-involved.html?path=volunteer">Get to Learn</a> <a href="get-involved.html?path=catc">Caretaker Card</a> <a href="champion.html">The Wildlife Gauntlet</a></div><div class="foot-col"><h3>Act</h3><a href="network.html">Reach PFA</a> <a href="services.html">Trusted Services</a> <a href="heatmap.html">Heat Map</a> <a href="adopt.html">Adopt</a> <a href="give.html">Give</a> <a href="csr.html">Partner with PFA</a></div></div><div class="foot-bottom"><p>&copy; People for Animals &middot; Founded in 1992 by Maneka Sanjay Gandhi</p><div class="foot-mark"><span class="emblem"></span> Powered by PFA</div></div></div></footer>
+<footer><div class="wrap"><div class="foot-top"><div class="foot-brand"><a class="brand" href="index.html"><span class="emblem"></span> <span class="brand-name">People for Animals</span></a><p>A society where humans and animals coexist with compassion, dignity, and responsibility.</p></div><div class="foot-col"><h3>Explore</h3><a href="store.html">The Store</a> <a href="learning-center.html">The Learning Center</a> <a href="stories.html">Stories</a> <a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a> <a href="founder.html">The Founder</a> <a href="hall-of-fame.html">Hall of Fame</a> <a href="pfa-x.html">PFA X</a></div><div class="foot-col"><h3>Belong</h3><a href="assembly.html">The Assembly</a> <a href="membership.html">The Patron Card</a> <a href="get-involved.html?path=volunteer">Get to Learn</a> <a href="get-involved.html?path=catc">Caretaker Card</a> <a href="champion.html">The Wildlife Gauntlet</a></div><div class="foot-col"><h3>Act</h3><a href="network.html">Reach PFA</a> <a href="services.html">Trusted Services</a> <a href="heatmap.html">Heat Map</a> <a href="adopt.html">Adopt</a> <a href="give.html">Give</a> <a href="csr.html">Corporate Partnership</a></div></div><div class="foot-bottom"><p>&copy; People for Animals &middot; Founded in 1992 by Maneka Sanjay Gandhi</p><div class="foot-mark"><span class="emblem"></span> Powered by PFA</div></div></div></footer>
 
 <script>
 (function(){
@@ -629,7 +622,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
   update();
 })();
 </script>
-<script>!function(){var nav=document.getElementById("nav"),burger=document.getElementById("burger"),menu=document.getElementById("mobileMenu");if(nav){var onS=function(){nav.classList.toggle("scrolled",(window.scrollY||window.pageYOffset)>4)};window.addEventListener("scroll",onS,{passive:!0}),onS()}if(burger&&menu&&!burger.dataset.pfaBound){burger.dataset.pfaBound="1";var _y=0;function unlock(){var b=document.body.style;b.position="",b.top="",b.left="",b.right="",b.width="",b.overflow="",document.body.offsetHeight;var r=document.documentElement,p=r.style.scrollBehavior;r.style.scrollBehavior="auto",window.scrollTo(0,_y),r.style.scrollBehavior=p}burger.addEventListener("click",function(){var open=menu.classList.toggle("open");burger.classList.toggle("open",open),burger.setAttribute("aria-expanded",open?"true":"false"),open?function(){_y=window.scrollY||window.pageYOffset;var b=document.body.style;b.position="fixed",b.top=-_y+"px",b.left="0",b.right="0",b.width="100%",b.overflow="hidden"}():unlock()}),menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock()})}),document.addEventListener("keydown",function(e){"Escape"===e.key&&menu.classList.contains("open")&&(menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock(),burger.focus())})}var here=location.pathname.split("/").pop()||"index.html";document.querySelectorAll(".pfa-links a, .pfa-mobile a").forEach(function(a){var target=(a.getAttribute("href")||"").split("#")[0];target&&target===here&&!a.classList.contains("pfa-btn")&&a.setAttribute("aria-current","page")})}();</script>
+<script>!function(){var nav=document.getElementById("nav"),burger=document.getElementById("burger"),menu=document.getElementById("mobileMenu");if(nav){var onS=function(){nav.classList.toggle("scrolled",(window.scrollY||window.pageYOffset)>4)};window.addEventListener("scroll",onS,{passive:!0}),onS()}if(burger&&menu&&!burger.dataset.pfaBound){burger.dataset.pfaBound="1";var _y=0;function unlock(){var b=document.body.style;b.position="",b.top="",b.left="",b.right="",b.width="",b.overflow="",document.body.offsetHeight;var r=document.documentElement,p=r.style.scrollBehavior;r.style.scrollBehavior="auto",window.scrollTo(0,_y),r.style.scrollBehavior=p}burger.addEventListener("click",function(){var open=menu.classList.toggle("open");burger.classList.toggle("open",open),burger.setAttribute("aria-expanded",open?"true":"false"),open?function(){_y=window.scrollY||window.pageYOffset;var b=document.body.style;b.position="fixed",b.top=-_y+"px",b.left="0",b.right="0",b.width="100%",b.overflow="hidden"}():unlock()}),menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock()})}),document.addEventListener("keydown",function(e){"Escape"===e.key&&menu.classList.contains("open")&&(menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock(),burger.focus())})}var here=location.pathname.split("/").pop()||"index.html";document.querySelectorAll(".pfa-links a, .pfa-menu a").forEach(function(a){var target=(a.getAttribute("href")||"").split("#")[0];target&&target===here&&!a.classList.contains("pfa-btn")&&a.setAttribute("aria-current","page")})}();</script>
 <script src="pfa-search.js" defer="defer"></script>
 </body>
 </html>
