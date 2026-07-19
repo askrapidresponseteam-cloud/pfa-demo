@@ -25,7 +25,7 @@ const crypto = require("crypto");
 
 const DRY = process.argv.includes("--dry");
 const OUT = path.join("media", "store");
-const MODULES = ["pfa-apparel-data.js", "pfa-pets-data.js", "pfa-worm-data.js"];
+const MODULES = ["pfa-apparel-data.js", "pfa-pets-data.js", "pfa-pharmacy-data.js"];
 
 /* Load the modules the way the browser does, then ask them for their
    URLs. Regex would miss the ones built as CDN + filename. */
