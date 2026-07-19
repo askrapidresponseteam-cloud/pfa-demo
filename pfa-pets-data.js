@@ -20,7 +20,7 @@
 (function () {
   "use strict";
   function art(u) {
-    return '<div class="ph-img"><img src="' + u + '" alt="" loading="lazy" decoding="async"></div>';
+    return '<div class="ph-img"><img referrerpolicy="no-referrer" src="' + u + '" alt="" loading="lazy" decoding="async"></div>';
   }
   var A = {
 

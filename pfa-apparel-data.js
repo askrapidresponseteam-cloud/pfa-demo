@@ -29,7 +29,7 @@
     return Array.prototype.map.call(arguments, function (f) { return CDN + f; });
   }
   function art(u) {
-    return '<div class="ph-img"><img src="' + u + '" alt="" loading="lazy" decoding="async"></div>';
+    return '<div class="ph-img"><img referrerpolicy="no-referrer" src="' + u + '" alt="" loading="lazy" decoding="async"></div>';
   }
 
   var TEE = ["S", "M", "L", "XL", "XXL"];
