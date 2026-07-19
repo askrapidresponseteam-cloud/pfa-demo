@@ -265,7 +265,68 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 .foot-mark{display:flex;align-items:center;gap:12px;font-family:var(--font-s);font-size:11px;font-weight:400;line-height:1.6;letter-spacing:.28em;text-transform:uppercase;color:var(--mut)}
 .foot-mark .emblem{width:26px;height:24px;flex:none}
 </style>
-<style id="pfa-nav-v2">.pfa-menu,.pfa-menu *{box-sizing:border-box;border-radius:0!important;margin:0}.pfa-menu{position:fixed;inset:76px 0 0 0;background:#fff;z-index:999;overflow-y:auto;overscroll-behavior:contain;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.2,.6,.2,1),visibility 0s linear .35s}.pfa-menu.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}.pm-in{max-width:1220px;margin:0 auto;padding:clamp(34px,5.5vh,60px) clamp(20px,4vw,48px) clamp(48px,7vh,72px)}.pm-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(30px,4vw,52px) clamp(24px,3vw,44px)}.pm-col{min-width:0}.pm-g+.pm-g{margin-top:clamp(28px,4vh,40px)}.pm-k{font-family:var(--font-s);font-size:11px;font-weight:400;letter-spacing:.24em;text-transform:uppercase;color:var(--mut-2);margin:0 0 10px;line-height:1.2}.pm-g a{display:block;font-family:var(--font-d);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink);text-decoration:none;line-height:1.35;padding:11px 0;border-bottom:1px solid var(--hair-soft);transition:color .25s cubic-bezier(.2,.6,.2,1)}.pm-g a:hover{color:var(--blue-ink)}.pm-g a[aria-current=page]{color:var(--blue-ink)}.pm-foot{margin-top:clamp(36px,6vh,56px);display:flex;align-items:center;justify-content:space-between;gap:20px 28px;flex-wrap:wrap}.pfa-menu a.pfa-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:16px 30px;background:var(--ink);color:#fff;border:1px solid var(--ink);line-height:1;text-decoration:none;cursor:pointer;transition:color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1)}.pfa-menu a.pfa-btn::before{content:"";position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.6,.2,1)}.pfa-menu a.pfa-btn:hover::before{transform:scaleX(1)}.pfa-menu a.pfa-btn:hover{color:var(--ink);border-color:var(--blue)}.pfa-menu a.pfa-btn span{position:relative;z-index:1}.pm-meta{font-family:var(--font-s);font-size:12px;letter-spacing:.08em;color:var(--mut)}.pfa-menu .pm-col,.pfa-menu .pm-foot{opacity:0;transform:translateY(12px);transition:opacity .4s cubic-bezier(.2,.6,.2,1),transform .4s cubic-bezier(.2,.6,.2,1)}.pfa-menu.open .pm-col,.pfa-menu.open .pm-foot{opacity:1;transform:translateY(0)}.pfa-menu.open .pm-col:nth-child(1){transition-delay:.05s}.pfa-menu.open .pm-col:nth-child(2){transition-delay:.11s}.pfa-menu.open .pm-col:nth-child(3){transition-delay:.17s}.pfa-menu.open .pm-col:nth-child(4){transition-delay:.23s}.pfa-menu.open .pm-foot{transition-delay:.3s}.pfa-menu a:focus-visible{outline:2px solid var(--blue-ink);outline-offset:3px}@media (max-width:1023px){.pm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pm-g a{font-size:16px;padding:13px 0}}@media (max-width:639px){.pm-grid{grid-template-columns:minmax(0,1fr)}.pm-g a{font-size:17px}.pm-foot{margin-top:32px}.pfa-menu a.pfa-btn{width:100%}}@media (prefers-reduced-motion:reduce){.pfa-menu,.pfa-menu .pm-col,.pfa-menu .pm-foot{transition:none!important}.pfa-menu .pm-col,.pfa-menu .pm-foot{opacity:1;transform:none}}</style></head>
+<style id="pfa-nav-v2">.pfa-menu,.pfa-menu *{box-sizing:border-box;border-radius:0!important;margin:0}.pfa-menu{position:fixed;inset:76px 0 0 0;background:#fff;z-index:999;overflow-y:auto;overscroll-behavior:contain;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.2,.6,.2,1),visibility 0s linear .35s}.pfa-menu.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}.pm-in{max-width:1220px;margin:0 auto;padding:clamp(34px,5.5vh,60px) clamp(20px,4vw,48px) clamp(48px,7vh,72px)}.pm-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(30px,4vw,52px) clamp(24px,3vw,44px)}.pm-col{min-width:0}.pm-g+.pm-g{margin-top:clamp(28px,4vh,40px)}.pm-k{font-family:var(--font-s);font-size:11px;font-weight:400;letter-spacing:.24em;text-transform:uppercase;color:var(--mut-2);margin:0 0 10px;line-height:1.2}.pm-g a{display:block;font-family:var(--font-d);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink);text-decoration:none;line-height:1.35;padding:11px 0;border-bottom:1px solid var(--hair-soft);transition:color .25s cubic-bezier(.2,.6,.2,1)}.pm-g a:hover{color:var(--blue-ink)}.pm-g a[aria-current=page]{color:var(--blue-ink)}.pm-foot{margin-top:clamp(36px,6vh,56px);display:flex;align-items:center;justify-content:space-between;gap:20px 28px;flex-wrap:wrap}.pfa-menu a.pfa-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:16px 30px;background:var(--ink);color:#fff;border:1px solid var(--ink);line-height:1;text-decoration:none;cursor:pointer;transition:color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1)}.pfa-menu a.pfa-btn::before{content:"";position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.6,.2,1)}.pfa-menu a.pfa-btn:hover::before{transform:scaleX(1)}.pfa-menu a.pfa-btn:hover{color:var(--ink);border-color:var(--blue)}.pfa-menu a.pfa-btn span{position:relative;z-index:1}.pm-meta{font-family:var(--font-s);font-size:12px;letter-spacing:.08em;color:var(--mut)}.pfa-menu .pm-col,.pfa-menu .pm-foot{opacity:0;transform:translateY(12px);transition:opacity .4s cubic-bezier(.2,.6,.2,1),transform .4s cubic-bezier(.2,.6,.2,1)}.pfa-menu.open .pm-col,.pfa-menu.open .pm-foot{opacity:1;transform:translateY(0)}.pfa-menu.open .pm-col:nth-child(1){transition-delay:.05s}.pfa-menu.open .pm-col:nth-child(2){transition-delay:.11s}.pfa-menu.open .pm-col:nth-child(3){transition-delay:.17s}.pfa-menu.open .pm-col:nth-child(4){transition-delay:.23s}.pfa-menu.open .pm-foot{transition-delay:.3s}.pfa-menu a:focus-visible{outline:2px solid var(--blue-ink);outline-offset:3px}@media (max-width:1023px){.pm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pm-g a{font-size:16px;padding:13px 0}}@media (max-width:639px){.pm-grid{grid-template-columns:minmax(0,1fr)}.pm-g a{font-size:17px}.pm-foot{margin-top:32px}.pfa-menu a.pfa-btn{width:100%}}@media (prefers-reduced-motion:reduce){.pfa-menu,.pfa-menu .pm-col,.pfa-menu .pm-foot{transition:none!important}.pfa-menu .pm-col,.pfa-menu .pm-foot{opacity:1;transform:none}}</style><style id="pfa-law">
+/* ---- the law library ---- */
+.law{background:var(--ink);color:var(--white)}
+.law .eyebrow{color:var(--blue)}
+.law .sec-head h2{color:var(--white)}
+.law .sec-head p{color:rgba(232,236,239,.66)}
+.law-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px}
+.law-tab{font-family:var(--font-s);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;padding:0 18px;min-height:44px;display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.22);color:rgba(232,236,239,.78);background:transparent}
+.law-tab.on{background:var(--blue);border-color:var(--blue);color:var(--ink)}
+.law-tab.soon{opacity:.42;pointer-events:none}
+.law-tab .lt-s{font-size:9px;letter-spacing:.22em;opacity:.75}
+.law-file{display:grid;grid-template-columns:minmax(250px,330px) 1fr;gap:1px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14)}
+.law-side{background:var(--ink);padding:28px 26px}
+.law-side-k{font-family:var(--font-s);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+.law-side>p{font-size:.94rem;line-height:1.65;color:rgba(232,236,239,.72)}
+.law-facts{margin-top:26px}
+.law-f{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:11px 0;border-top:1px solid rgba(255,255,255,.1)}
+.law-f span{font-family:var(--font-s);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(232,236,239,.5)}
+.law-f b{font-family:var(--font-d);font-weight:700;font-size:.86rem;letter-spacing:.01em;color:var(--white);text-align:right}
+.law-arts{background:var(--ink)}
+.law-art{border-top:1px solid rgba(255,255,255,.14)}
+.law-art:first-child{border-top:0}
+.law-q{width:100%;display:flex;align-items:center;gap:18px;padding:19px 24px;min-height:62px;background:transparent;border:0;color:var(--white);cursor:pointer;text-align:left;font-family:var(--font-d);-webkit-appearance:none;appearance:none}
+.law-q:hover .law-t{color:var(--blue)}
+.law-q:focus-visible{outline:2px solid var(--blue);outline-offset:-3px}
+.law-no{font-family:var(--font-s);font-size:11px;letter-spacing:.2em;color:var(--blue);flex:none;width:26px}
+.law-t{font-weight:700;font-size:1.02rem;letter-spacing:-.005em;line-height:1.25;transition:color .15s ease}
+.law-x{margin-left:auto;flex:none;width:20px;height:20px;position:relative}
+.law-x::before,.law-x::after{content:"";position:absolute;left:50%;top:50%;background:rgba(232,236,239,.85);transform:translate(-50%,-50%)}
+.law-x::before{width:14px;height:1.6px}
+.law-x::after{width:1.6px;height:14px;transition:transform .18s ease}
+.law-art.open .law-x::after{transform:translate(-50%,-50%) scaleY(0)}
+.law-a{display:none;padding:2px 24px 28px 68px}
+.law-art.open .law-a{display:block}
+.law-a>p{font-size:.94rem;line-height:1.65;color:rgba(232,236,239,.78);max-width:74ch;margin-bottom:6px}
+.law-a>p b{color:var(--white);font-weight:700}
+.law-c{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:13px 0;border-top:1px solid rgba(255,255,255,.08);max-width:82ch}
+.law-c:first-of-type{border-top:0;margin-top:8px}
+.law-cite{font-family:var(--font-s);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);padding-top:3px;line-height:1.5}
+.law-c p{font-size:.92rem;line-height:1.62;color:rgba(232,236,239,.78)}
+.law-c p b{color:var(--white);font-weight:700}
+.law-shelf{display:flex;flex-wrap:wrap;gap:8px;margin-top:36px}
+.law-book{font-family:var(--font-s);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,236,239,.72);border:1px solid rgba(255,255,255,.18);padding:10px 13px}
+.law-note{margin-top:24px;font-family:var(--font-s);font-size:12.5px;letter-spacing:.02em;color:rgba(232,236,239,.55);max-width:74ch;line-height:1.7}
+.law-note a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(0,164,255,.4)}
+.law-note a:hover{border-bottom-color:var(--blue)}
+@media (max-width:960px){
+  .law-file{grid-template-columns:1fr}
+  .law-a{padding-left:24px}
+}
+@media (max-width:640px){
+  .law-c{grid-template-columns:1fr;gap:5px}
+  .law-cite{padding-top:0}
+  .law-q{padding:17px 18px;gap:12px}
+  .law-a{padding:2px 18px 24px 18px}
+  .law-side{padding:24px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  .law-t,.law-x::after{transition:none}
+}
+</style>
+</head>
 <body>
 
 <header class="pfa-nav" id="nav"><div class="pfa-nav-in"><a class="pfa-brand" href="index.html" aria-label="People for Animals - home"><span class="pfa-emblem" role="img" aria-label="People for Animals emblem"></span> <span class="pfa-brand-name">People for Animals</span></a><nav class="pfa-links" aria-label="Primary"><a href="store.html">Store</a> <a href="network.html">Network</a> <a href="csr.html">Partner</a> <a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a></nav><button class="pfa-burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button></div></header><nav class="pfa-menu" id="mobileMenu" aria-label="Site menu"><div class="pm-in"><div class="pm-grid"><div class="pm-col"><div class="pm-g"><p class="pm-k">Act</p><a href="network.html">Reach PFA</a><a href="adopt.html">Adopt</a><a href="give.html">Give</a><a href="services.html">Trusted Services</a><a href="heatmap.html">Heat Map</a></div></div><div class="pm-col"><div class="pm-g"><p class="pm-k">Belong</p><a href="membership.html">Become a Patron</a><a href="get-involved.html">Get Involved</a><a href="assembly.html">The Assembly</a><a href="champion.html">The Wildlife Gauntlet</a></div></div><div class="pm-col"><div class="pm-g"><p class="pm-k">Learn</p><a href="learning-center.html">The Learning Center</a><a href="stories.html">Stories</a><a href="watch-listen-do-meet.html">Watch. Listen. Do. Meet.</a><a href="founder.html">The Founder</a><a href="hall-of-fame.html">Hall of Fame</a></div></div><div class="pm-col"><div class="pm-g"><p class="pm-k">Partner</p><a href="csr.html">Corporate Partnership</a><a href="pfa-x.html">PFA X Certification</a></div><div class="pm-g"><p class="pm-k">Shop</p><a href="store.html">The Store</a><a href="store.html#/pharmacy">The Pharmacy</a></div></div></div><div class="pm-foot"><a href="membership.html" class="pfa-btn"><span>Become a Patron</span></a><p class="pm-meta">India's largest animal welfare organisation - since 1992</p></div></div></nav>
@@ -460,6 +521,139 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
   </div>
 </section>
 
+<!-- LAW -->
+<section class="sec law" id="law">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">The law library &middot; by animal</div>
+      <h2>The law also reads them one at a time.</h2>
+      <p>India writes its animal law species by species - one set of rules for the dog outside your gate, another for the bird in a cage. This shelf holds what actually stands today, statute by statute, judgment by judgment, in plain language. Checked against the statute book and the live Supreme Court record.</p>
+    </div>
+
+    <div class="law-tabs" role="tablist" aria-label="Choose an animal">
+      <button class="law-tab on" role="tab" aria-selected="true" type="button">Dog</button>
+      <button class="law-tab soon" role="tab" aria-selected="false" type="button" tabindex="-1">Cat <span class="lt-s">Soon</span></button>
+      <button class="law-tab soon" role="tab" aria-selected="false" type="button" tabindex="-1">Cow <span class="lt-s">Soon</span></button>
+      <button class="law-tab soon" role="tab" aria-selected="false" type="button" tabindex="-1">Birds <span class="lt-s">Soon</span></button>
+      <button class="law-tab soon" role="tab" aria-selected="false" type="button" tabindex="-1">Wildlife <span class="lt-s">Soon</span></button>
+    </div>
+
+    <div class="law-file">
+      <aside class="law-side">
+        <div class="law-side-k">The dog file</div>
+        <p>The most litigated animal in India. One constitutional duty, two criminal codes, a dedicated set of rules and a live Supreme Court bench decide what may and may not be done to a dog - the one on the street and the one on your sofa.</p>
+        <div class="law-facts">
+          <div class="law-f"><span>Instruments</span><b>9 in force</b></div>
+          <div class="law-f"><span>Apex matter</span><b>SMW(C) 5 of 2025</b></div>
+          <div class="law-f"><span>Latest ruling</span><b>19 May 2026</b></div>
+          <div class="law-f"><span>Checked</span><b>July 2026</b></div>
+        </div>
+      </aside>
+
+      <div class="law-arts">
+
+        <div class="law-art open">
+          <button class="law-q" type="button" aria-expanded="true" aria-controls="lawA1"><span class="law-no">01</span><span class="law-t">The floor under every dog</span><span class="law-x" aria-hidden="true"></span></button>
+          <div class="law-a" id="lawA1">
+            <p>Before any rule about streets or leashes, three things hold everywhere in India, for every dog.</p>
+            <div class="law-c"><div class="law-cite">Art 51A(g)</div><p>The Constitution makes compassion for living creatures a <b>fundamental duty of every citizen</b>. Not a suggestion - a duty, in the same article as respecting the flag.</p></div>
+            <div class="law-c"><div class="law-cite">PCA Act 1960</div><p>Section 3 puts a <b>duty of care</b> on anyone in charge of an animal. Section 11 lists the offences: beating, kicking, torturing, starving, overloading, chaining without food, water or shelter, abandoning, poisoning, mutilating.</p></div>
+            <div class="law-c"><div class="law-cite">SC, 2014</div><p>In <b>AWBI v. A. Nagaraja</b> the Supreme Court read the five freedoms into Indian law - freedom from hunger and thirst, from discomfort, from pain, injury and disease, from fear and distress, and the freedom to express natural behaviour.</p></div>
+            <div class="law-c"><div class="law-cite">SC, May 2026</div><p>The current frame: animal welfare is of real constitutional weight, but it <b>cannot eclipse the state's duty to protect human life</b> under Article 21. Every rule below now operates inside that balance.</p></div>
+          </div>
+        </div>
+
+        <div class="law-art">
+          <button class="law-q" type="button" aria-expanded="false" aria-controls="lawA2"><span class="law-no">02</span><span class="law-t">Cruelty is an offence, not a quarrel</span><span class="law-x" aria-hidden="true"></span></button>
+          <div class="law-a" id="lawA2">
+            <p>Since July 2024 the new criminal code treats violence against a dog as a crime in its own right - and it no longer matters what the animal was worth.</p>
+            <div class="law-c"><div class="law-cite">BNS s.325</div><p><b>Killing, poisoning, maiming</b> or rendering any animal useless is punishable with imprisonment of up to five years. The old value thresholds of the IPC are gone - the section protects the animal, not its price tag.</p></div>
+            <div class="law-c"><div class="law-cite">BNS s.291</div><p>The section that reaches a <b>negligent owner</b> - keeping an animal in a way that endangers human life or risks grievous hurt is itself an offence.</p></div>
+            <div class="law-c"><div class="law-cite">PCA s.11</div><p>Runs alongside for the full cruelty catalogue - including <b>abandonment</b>, which people rarely realise is listed as an offence by name.</p></div>
+            <div class="law-c"><div class="law-cite">BNSS 2023</div><p>How to act on it: report at any police station - killing or maiming an animal is a case the police <b>can register an FIR for and investigate</b>. If they refuse, the code gives you the written escalation route to the Superintendent, and then to the Magistrate.</p></div>
+          </div>
+        </div>
+
+        <div class="law-art">
+          <button class="law-q" type="button" aria-expanded="false" aria-controls="lawA3"><span class="law-no">03</span><span class="law-t">The street dog, as settled by the Supreme Court</span><span class="law-x" aria-hidden="true"></span></button>
+          <div class="law-a" id="lawA3">
+            <p>Between July 2025 and May 2026 the Supreme Court rebuilt this ground in <b>In Re: City Hounded by Strays, Kids Pay Price</b>. This is where it landed.</p>
+            <div class="law-c"><div class="law-cite">ABC Rules 2023</div><p>The only lawful management of street dogs is <b>capture, sterilise, vaccinate, return</b>, run by the local body through AWBI-recognised organisations, with trained catchers, humane catching methods and catch records. Culling is not an option the law gives any municipality, and dumping dogs in another locality is illegal - Rule 11(19) requires release in the same place they were picked up from.</p></div>
+            <div class="law-c"><div class="law-cite">Machinery first</div><p>The framework runs in one direction only: <b>a working sterilisation programme and compliant shelters come before any pickup</b>. The AWBI's procedure sets the shelter standards - defined capacities, fencing, kennels, veterinary access - and requires vaccination and sterilisation before sheltering. A removal drive without that machinery behind it is not enforcement of the law. It is a violation of it.</p></div>
+            <div class="law-c"><div class="law-cite">SC, Aug 2025</div><p>An order to remove Delhi's dogs to shelters lasted eleven days. The three-judge bench <b>restored sterilise-and-return</b>, and took the matter pan-India.</p></div>
+            <div class="law-c"><div class="law-cite">SC, May 2026</div><p>One carve-out, now settled: sterilised dogs are <b>not re-released inside institutional premises</b> - schools and colleges, hospitals, sports complexes, airports, bus stands and railway stations - and the AWBI's operating procedure validly extends this to religious sites, parks and tourist locations. Even there, removal runs only through the same machinery - the local body's teams, sterilisation and vaccination first, then a shelter built to the prescribed standards. Everywhere else, return to territory stands, and the High Courts now monitor compliance district by district.</p></div>
+            <div class="law-c"><div class="law-cite">No private hands</div><p>A dog resting somewhere - a corner, a market, a platform - is <b>not, by that fact, anyone's to seize</b>. The capture power belongs to the local authority's trained teams alone, operating under the Rules. A guard, a contractor, a society, a shopkeeper or an angry neighbour who catches, cages or carts a dog away is acting wholly outside the law, whatever the location.</p></div>
+            <div class="law-c"><div class="law-cite">Rule 7(2)</div><p>The Court held the street dog category is <b>classificatory, not a right to occupy</b> any particular space. Managing the population humanely and scientifically is the state's continuing duty - and officials who ignore it were expressly warned of contempt, disciplinary action and personal liability.</p></div>
+            <div class="law-c"><div class="law-cite">Euthanasia</div><p>Permitted only for <b>rabid, incurably ill or demonstrably dangerous</b> dogs, only after assessment by qualified veterinarians, strictly under the Act and the Rules. Nothing in the judgment licenses killing a healthy dog.</p></div>
+          </div>
+        </div>
+
+        <div class="law-art">
+          <button class="law-q" type="button" aria-expanded="false" aria-controls="lawA4"><span class="law-no">04</span><span class="law-t">Feeding - lawful, in the right place</span><span class="law-x" aria-hidden="true"></span></button>
+          <div class="law-a" id="lawA4">
+            <p>Feeding community dogs is part of the statutory scheme, not an act of defiance. The law asks one thing in return: structure.</p>
+            <div class="law-c"><div class="law-cite">ABC r.20</div><p>Local bodies and resident associations must <b>designate feeding spots</b> for community animals. Feeding at a designated spot is lawful by rule, not by anyone's permission.</p></div>
+            <div class="law-c"><div class="law-cite">SC + AWBI SOP</div><p>The Court has restricted free-for-all street feeding: use the <b>designated spots</b>, keep them clean. The AWBI's November 2025 procedure sets the feeding protocols and waste handling that municipalities must run.</p></div>
+            <div class="law-c"><div class="law-cite">Campuses</div><p>Inside educational institutions, feeding or maintaining dogs now requires the group or students to <b>file a liability affidavit</b> with the head of the institution - no affidavit, no feeding programme. That is the price the Court set for the right to care on campus.</p></div>
+            <div class="law-c"><div class="law-cite">BNS s.351</div><p>A feeder at a designated spot is doing something the rules provide for. <b>Threats and intimidation against a lawful feeder are criminal intimidation</b> under section 351 - document everything, and report it as the offence it is.</p></div>
+          </div>
+        </div>
+
+        <div class="law-art">
+          <button class="law-q" type="button" aria-expanded="false" aria-controls="lawA5"><span class="law-no">05</span><span class="law-t">The housing society's actual powers</span><span class="law-x" aria-hidden="true"></span></button>
+          <div class="law-a" id="lawA5">
+            <p>Societies have taken to writing their own animal law - circulars banning feeding, guards told to chase dogs out, catchers hired off the market. Here is the entire extent of what the law actually gives an RWA.</p>
+            <div class="law-c"><div class="law-cite">ABC r.20</div><p>The RWA's role, in full: <b>designate feeding spots</b> for the community animals of its area and cooperate with the local body's sterilisation programme. That is the list. There is no clause anywhere that hands a society a capture power, a relocation power, or a power to legislate dogs out of existence.</p></div>
+            <div class="law-c"><div class="law-cite">Bye-laws</div><p>A society's bye-laws and circulars sit <b>under the statute, not above it</b>. A resolution cannot ban pets, bar them from lifts, evict them, ban lawful feeding, or fine feeders - the AWBI's 2015 advisory says so in terms, and no general-body vote changes what a rule of law requires.</p></div>
+            <div class="law-c"><div class="law-cite">R.11(19) + PCA s.11</div><p>Hiring a private catcher, or having guards remove and dump dogs elsewhere, is <b>illegal relocation plus cruelty</b> - and if a dog is hurt in the process, section 325 of the BNS is squarely attracted, for the committee members who ordered it as much as the hands that did it.</p></div>
+            <div class="law-c"><div class="law-cite">BNS s.223</div><p>Where the municipality or district administration has issued orders under this framework - designated feeding spots, ABC directions, removal protocols - a society that defies them and runs its own regime is <b>disobeying an order duly promulgated by a public servant</b>, an offence in itself under section 223.</p></div>
+            <div class="law-c"><div class="law-cite">In one line</div><p>An RWA may feed, at designated spots, and cooperate. <b>It may not catch, cage, relocate, ban or punish.</b> Everything in the second list belongs to the state, or to no one.</p></div>
+          </div>
+        </div>
+
+        <div class="law-art">
+          <button class="law-q" type="button" aria-expanded="false" aria-controls="lawA6"><span class="law-no">06</span><span class="law-t">The pet dog papers</span><span class="law-x" aria-hidden="true"></span></button>
+          <div class="law-a" id="lawA6">
+            <p>Owning a dog comes with a short stack of paperwork and a few rights people keep being talked out of.</p>
+            <div class="law-c"><div class="law-cite">Licence</div><p>Most municipal laws require the dog to be <b>registered with the local body</b> and its anti-rabies vaccination kept current. City-specific - check yours.</p></div>
+            <div class="law-c"><div class="law-cite">AWBI, 2015</div><p>A housing society <b>cannot ban pets</b>, bar them from lifts, or evict them by bye-law. The AWBI's 2015 advisory says so in terms, and courts and consumer forums have consistently relied on it.</p></div>
+            <div class="law-c"><div class="law-cite">2017 + 2018 Rules</div><p>Breeders must be registered under the <b>Dog Breeding and Marketing Rules 2017</b>, shops under the <b>Pet Shop Rules 2018</b>. An unregistered breeder is operating outside the law - do not buy from one.</p></div>
+            <div class="law-c"><div class="law-cite">Breed bans</div><p>The 2024 central circular against 23 so-called ferocious breeds was <b>set aside by the Karnataka and Delhi High Courts</b> within weeks, and the Centre told the Bombay High Court it would not be enforced. There is no national breed ban in force - though individual cities do impose local conditions, so check your municipality.</p></div>
+            <div class="law-c"><div class="law-cite">PCA s.11</div><p><b>Abandoning a dog is an offence.</b> So is cosmetic mutilation - ear cropping and tail docking have no medical defence.</p></div>
+            <div class="law-c"><div class="law-cite">1978 Rules</div><p>Moving a dog across the country is governed by the <b>Transport of Animals Rules</b> - space, food, water and handling standards - and the railways carry dogs under their own conditions.</p></div>
+          </div>
+        </div>
+
+        <div class="law-art">
+          <button class="law-q" type="button" aria-expanded="false" aria-controls="lawA7"><span class="law-no">07</span><span class="law-t">When a dog bites</span><span class="law-x" aria-hidden="true"></span></button>
+          <div class="law-a" id="lawA7">
+            <p>The law answers a bite with process, not panic - and it holds every side to account.</p>
+            <div class="law-c"><div class="law-cite">The owner</div><p>A negligent owner answers under <b>BNS s.291</b> and in civil damages. The May 2026 judgment made accountability the price of asserting rights over any dog - owned, fed or maintained.</p></div>
+            <div class="law-c"><div class="law-cite">The victim</div><p>High Courts have pushed states toward <b>compensation schemes for bite victims</b>, anchored in the state's Article 21 duty to public safety. Immediate medical care and anti-rabies treatment come first, always.</p></div>
+            <div class="law-c"><div class="law-cite">The dog</div><p>A biting dog is <b>assessed, not condemned</b>. Rabid, incurably ill or demonstrably dangerous dogs follow the veterinary protocol above. The rest are sterilised, vaccinated and managed under the Rules.</p></div>
+            <div class="law-c"><div class="law-cite">The street</div><p>Retaliation is where the law is bluntest: <b>beating or poisoning dogs after an incident is exactly what BNS s.325 punishes</b>. Report the dog, treat the wound, let the process run.</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="law-shelf" aria-label="Primary sources">
+      <span class="law-book">Constitution &middot; Art 51A(g)</span>
+      <span class="law-book">PCA Act 1960</span>
+      <span class="law-book">ABC Rules 2023</span>
+      <span class="law-book">BNS 2023 &middot; s.223, s.291, s.325, s.351</span>
+      <span class="law-book">BNSS 2023</span>
+      <span class="law-book">Transport of Animals Rules 1978</span>
+      <span class="law-book">Dog Breeding Rules 2017</span>
+      <span class="law-book">Pet Shop Rules 2018</span>
+      <span class="law-book">AWBI SOP &middot; Nov 2025</span>
+      <span class="law-book">SMW(C) 5/2025 &middot; SC</span>
+    </div>
+    <p class="law-note">Plain-language orientation, read from the statutes and the live court record - not legal advice, and the record moves. For a live case, an FIR being refused, or a feeder under threat, <a href="network.html">reach the PFA network</a> and we will stand with you.</p>
+  </div>
+</section>
+
 <!-- PUBLISH -->
 <section class="sec" id="publish">
   <div class="wrap">
@@ -624,5 +818,18 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 </script>
 <script>!function(){var nav=document.getElementById("nav"),burger=document.getElementById("burger"),menu=document.getElementById("mobileMenu");if(nav){var onS=function(){nav.classList.toggle("scrolled",(window.scrollY||window.pageYOffset)>4)};window.addEventListener("scroll",onS,{passive:!0}),onS()}if(burger&&menu&&!burger.dataset.pfaBound){burger.dataset.pfaBound="1";var _y=0;function unlock(){var b=document.body.style;b.position="",b.top="",b.left="",b.right="",b.width="",b.overflow="",document.body.offsetHeight;var r=document.documentElement,p=r.style.scrollBehavior;r.style.scrollBehavior="auto",window.scrollTo(0,_y),r.style.scrollBehavior=p}burger.addEventListener("click",function(){var open=menu.classList.toggle("open");burger.classList.toggle("open",open),burger.setAttribute("aria-expanded",open?"true":"false"),open?function(){_y=window.scrollY||window.pageYOffset;var b=document.body.style;b.position="fixed",b.top=-_y+"px",b.left="0",b.right="0",b.width="100%",b.overflow="hidden"}():unlock()}),menu.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock()})}),document.addEventListener("keydown",function(e){"Escape"===e.key&&menu.classList.contains("open")&&(menu.classList.remove("open"),burger.classList.remove("open"),burger.setAttribute("aria-expanded","false"),unlock(),burger.focus())})}var here=location.pathname.split("/").pop()||"index.html";document.querySelectorAll(".pfa-links a, .pfa-menu a").forEach(function(a){var target=(a.getAttribute("href")||"").split("#")[0];target&&target===here&&!a.classList.contains("pfa-btn")&&a.setAttribute("aria-current","page")})}();</script>
 <script src="pfa-search.js" defer="defer"></script>
+<script>
+(function(){
+  var arts=document.querySelectorAll("#law .law-art");
+  arts.forEach(function(a){
+    var q=a.querySelector(".law-q");
+    if(!q)return;
+    q.addEventListener("click",function(){
+      var open=a.classList.toggle("open");
+      q.setAttribute("aria-expanded",open?"true":"false");
+    });
+  });
+})();
+</script>
 </body>
 </html>
