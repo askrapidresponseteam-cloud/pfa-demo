@@ -1,0 +1,234 @@
+/* PFA glass layer
+   ==========================================================================
+   A paint-only pass over the finished site. It changes how surfaces catch
+   light and nothing else.
+
+   The rule this file lives by: it may set background, background-image,
+   border-color, box-shadow, backdrop-filter and colour. It never sets width,
+   height, padding, margin, border-width, border-radius, font, line-height,
+   letter-spacing, display, position, gap or anything else that occupies
+   space. Where a surface needs an edge it did not have, that edge is an
+   inset box-shadow, because a box-shadow costs zero pixels and a border
+   costs one.
+
+   Two recipes, chosen by what sits behind the surface:
+
+     SHEEN    background-colour is left alone and a light gradient is laid
+              over it. Used for grid cells, buttons, chips and dark panels,
+              where going transparent would either let a gridline tint
+              through or cost white text its contrast.
+
+     GLASS    the surface goes translucent and picks up a backdrop blur.
+              Used for free-standing panels, overlays, fixed chrome and
+              form fields, where there is something behind worth seeing.
+
+   Blur is deliberately rationed. Overlays, fixed chrome and fields get it;
+   repeated cards do not, because a hundred blurred cards is a scrolling
+   cost with nothing to show for it on a near-white page.
+
+   Loaded last in the head so it wins on order at equal specificity. The
+   nav and menu need one extra step, since pfa-header.js appends its styles
+   after this file - hence header.pfa-nav and nav.pfa-menu below.
+   ========================================================================== */
+
+:root {
+  --g-rim: inset 0 1px 0 rgba(255, 255, 255, .82);
+  --g-rim-d: inset 0 1px 0 rgba(255, 255, 255, .13);
+  --g-edge: inset 0 0 0 1px rgba(255, 255, 255, .34);
+  --g-lift: 0 1px 2px rgba(14, 17, 22, .045), 0 14px 30px -20px rgba(14, 17, 22, .3);
+  --g-lift-s: 0 1px 2px rgba(14, 17, 22, .04), 0 8px 20px -14px rgba(14, 17, 22, .24);
+  --g-lift-d: 0 1px 2px rgba(14, 17, 22, .16), 0 16px 34px -22px rgba(14, 17, 22, .52);
+  --g-lift-dm: 0 1px 2px rgba(14, 17, 22, .1), 0 9px 20px -16px rgba(14, 17, 22, .38);
+  --g-drop: 0 40px 90px -50px rgba(14, 17, 22, .55), 0 2px 8px rgba(14, 17, 22, .06);
+  --g-sheen: linear-gradient(158deg, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, .34) 46%, rgba(255, 255, 255, 0) 78%);
+  --g-sheen-d: linear-gradient(158deg, rgba(255, 255, 255, .11) 0%, rgba(255, 255, 255, .03) 40%, rgba(255, 255, 255, 0) 72%);
+  --g-hair: rgba(14, 17, 22, .11);
+}
+
+/* --------------------------------------------------------------------------
+   1. Ambient. Something for the glass to refract, at an alpha you have to
+      look for. The palette is unchanged: this is the existing blue at 4%.
+   -------------------------------------------------------------------------- */
+body {
+  background-image:
+    radial-gradient(1100px 620px at 12% -6%, rgba(0, 164, 255, .05), transparent 62%),
+    radial-gradient(900px 520px at 92% 8%, rgba(0, 109, 179, .04), transparent 58%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.sec.porcelain, .porcelain {
+  background-image:
+    radial-gradient(760px 420px at 88% 0%, rgba(0, 164, 255, .055), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, 0) 46%);
+}
+
+/* --------------------------------------------------------------------------
+   2. Free-standing light panels. GLASS.
+   -------------------------------------------------------------------------- */
+.card, .hcard, .dcard, .px-card, .cat-tile, .tri-tile, .tri-panel, .unit-card,
+.fa-card, .ev, .sp, .voice, .std-dim, .amt, .cx-tile, .lookup-card,
+.std-card, .tcard, .apanel, .stamp, .pfaxt-badge, .review, .privacy, .verdict,
+.path, .cx-hcard, .file-thumb, .grid-prompt,
+.us-illus, .cobrand, .formerr, .tri-panel .c {
+  background-color: rgba(255, 255, 255, .74);
+  background-image: var(--g-sheen);
+  box-shadow: var(--g-rim), var(--g-edge), var(--g-lift);
+}
+
+/* the hairline stays a hairline, just cooler and a shade lighter */
+.dcard, .tri-tile, .std-dim, .amt, .lookup-card, .review, .privacy, .verdict,
+.file-thumb, .price-ribbon, .grid-prompt, .fa-empty, .cobrand, .formerr,
+.cat-tile, .fchip, .index-rows .r-tag, .sp-meta, .sp-go, .ev-foot, .vev,
+.foot-bottom, .pfa-foot, .pfa-esc {
+  border-color: var(--g-hair);
+}
+
+/* --------------------------------------------------------------------------
+   3. Grid cells. SHEEN only - these sit on a tinted grid, so the colour
+      underneath has to stay put or the gridline bleeds through.
+   -------------------------------------------------------------------------- */
+.tile, .cx-half, .freebar, .dcard-ph, .hof-stat, .pv-menu-sec {
+  background-image: var(--g-sheen);
+  box-shadow: var(--g-rim);
+}
+
+/* --------------------------------------------------------------------------
+   4. Ink surfaces. SHEEN only, never translucent - white type sits on these
+      and every point of contrast is spoken for.
+   -------------------------------------------------------------------------- */
+.chip, .px-chip, .pfa-btn, .med, .pcard, .cx-c, .cx-film-tag, .store-door, .rule-card,
+.dcard-loc, .story-thumb, .m-photo, .skip, .law-tab, .vava, .top, .sh-btn,
+.cx-allbtn, .btn, .grid-all, .ocr-btn, .sheet-close, .pfa-hint, .pfa-dym {
+  background-image: var(--g-sheen-d);
+}
+
+.chip, .px-chip, .pfa-btn, .med, .pcard, .store-door, .law-tab, .vava, .btn {
+  box-shadow: var(--g-rim-d), var(--g-lift-dm);
+}
+
+/* dark sections read as a single polished slab rather than flat black */
+.cx-sec, .cx-hero, .cx-film, .hero, .sh {
+  background-image: linear-gradient(168deg, rgba(255, 255, 255, .06) 0%, rgba(255, 255, 255, 0) 38%);
+}
+
+/* the hero already carries its own scrim stack, so leave that alone */
+.hero { background-image: none; }
+
+/* --------------------------------------------------------------------------
+   5. Fields. GLASS - a field should look like something you can put a
+      fingertip through.
+   -------------------------------------------------------------------------- */
+input[type=text], input[type=email], input[type=tel], input[type=number],
+input[type=date], input[type=search], input:not([type]), textarea, select,
+.fa-select, .tp-select, .net-loc, .np-geo, .search, .state-filter, .drop {
+  background-color: rgba(255, 255, 255, .7);
+  -webkit-backdrop-filter: blur(10px) saturate(1.25);
+  backdrop-filter: blur(10px) saturate(1.25);
+  box-shadow: var(--g-rim), 0 1px 2px rgba(14, 17, 22, .04);
+}
+
+/* --------------------------------------------------------------------------
+   6. Overlays and modals. GLASS, and the only place the blur runs deep.
+   -------------------------------------------------------------------------- */
+nav.pfa-menu {
+  background-color: rgba(255, 255, 255, .88);
+  -webkit-backdrop-filter: blur(34px) saturate(1.5);
+  backdrop-filter: blur(34px) saturate(1.5);
+  box-shadow: var(--g-rim), 0 30px 70px -50px rgba(14, 17, 22, .5);
+}
+
+.pfa-panel, .np-panel, .drawer, .apanel {
+  background-color: rgba(255, 255, 255, .9);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 220px);
+  -webkit-backdrop-filter: blur(34px) saturate(1.5);
+  backdrop-filter: blur(34px) saturate(1.5);
+  box-shadow: var(--g-rim), var(--g-drop);
+}
+
+.pfa-panel, .np-panel { border-color: rgba(255, 255, 255, .5); }
+
+/* scrims stop being a flat wash and become depth of field */
+.pfa-scrim, .np-overlay, .scrim, .pv-error {
+  -webkit-backdrop-filter: blur(9px) saturate(1.1);
+  backdrop-filter: blur(9px) saturate(1.1);
+}
+
+.pfa-res.on, .pfa-res:hover {
+  background-color: rgba(0, 164, 255, .09);
+}
+
+/* --------------------------------------------------------------------------
+   7. Fixed chrome. GLASS - it floats over the page, so it should read that
+      way. The nav already did this; the rest now agrees with it.
+   -------------------------------------------------------------------------- */
+header.pfa-nav {
+  background-color: rgba(14, 17, 22, .62);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 60%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  backdrop-filter: blur(22px) saturate(1.6);
+  box-shadow: var(--g-rim-d);
+}
+
+header.pfa-nav.scrolled {
+  background-color: rgba(14, 17, 22, .76);
+  box-shadow: var(--g-rim-d), 0 18px 40px -30px rgba(14, 17, 22, .7);
+}
+
+header.pfa-nav .pfa-nav-in .pfa-searchbar {
+  background-color: rgba(255, 255, 255, .09);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, 0));
+  box-shadow: var(--g-rim-d);
+}
+
+.pfa-cart, .toast, .net-toast, .uc-live {
+  background-color: rgba(14, 17, 22, .82);
+  background-image: var(--g-sheen-d);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow: var(--g-rim-d), var(--g-lift-d);
+}
+
+/* the back button is written inline by the page script, so it needs the
+   same weight to be reached - hover keeps working, it just runs from here */
+#pfaBack {
+  background-color: rgba(255, 255, 255, .72) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow: var(--g-rim), var(--g-edge), var(--g-lift) !important;
+}
+
+#pfaBack:hover {
+  background-color: rgba(0, 164, 255, .9) !important;
+  border-color: #00A4FF !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Carousel and player chrome sitting over artwork
+   -------------------------------------------------------------------------- */
+.sh-arrow, .story-play, .pv-surface, .pv-menu, .pv-badge, .law-book, .rl,
+.law-art, .cx-num, .statstrip, .np-sheet .sheet-close {
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: var(--g-rim-d);
+}
+
+/* --------------------------------------------------------------------------
+   9. Where blur is unavailable, the translucency alone would wash surfaces
+      out. Firefox with backdrop-filter off, older Safari, print.
+   -------------------------------------------------------------------------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  nav.pfa-menu, .pfa-panel, .np-panel, .drawer, .apanel { background-color: rgba(255, 255, 255, .98); }
+  header.pfa-nav { background-color: rgba(14, 17, 22, .9); }
+  .pfa-cart, .toast, .net-toast { background-color: rgba(14, 17, 22, .95); }
+  #pfaBack { background-color: #fff !important; }
+  input[type=text], input[type=email], input[type=tel], input[type=number],
+  input[type=date], input[type=search], input:not([type]), textarea, select,
+  .fa-select, .tp-select, .net-loc, .np-geo { background-color: rgba(255, 255, 255, .96); }
+  .card, .hcard, .dcard, .px-card, .cat-tile, .tri-tile, .tri-panel,
+  .unit-card, .fa-card, .ev, .sp, .voice, .cx-tile { background-color: rgba(255, 255, 255, .94); }
+}
+
+@media print {
+  * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+}
