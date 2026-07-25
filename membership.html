@@ -71,6 +71,13 @@ label .pill{margin-left:auto}
 .demo-code{font-family:var(--font-d);font-weight:800;letter-spacing:.28em;color:var(--ink)}
 
 /* location helper */
+/* location button, same component as network.html */
+.np-geo{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--hair);background:var(--white);padding:12px 16px;font-family:var(--font-s);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-ink);cursor:pointer;min-height:46px;white-space:nowrap;transition:border-color .2s ease}
+.np-geo svg{width:15px;height:15px;stroke:var(--blue-ink);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.np-geo:hover:not(:disabled){border-color:var(--ink)}
+.np-geo:disabled{opacity:.55;cursor:wait}
+@media (max-width:680px){.np-geo{width:100%;justify-content:center}}
+
 .geo-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
 .geo-note{font-family:var(--font-s);font-size:12.5px;line-height:1.7;color:var(--mut-2);flex:1;min-width:200px}
 
@@ -215,7 +222,7 @@ select:disabled{background-color:var(--porcelain);color:var(--mut-2);cursor:defa
 <p class="formerr" id="err2" role="alert" aria-live="assertive"></p>
 
 <div class="geo-row">
-<button type="button" class="mini-btn" id="geoBtn">Use my location</button>
+<button type="button" class="np-geo" id="geoBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="8"/></svg><span id="geoLabel">Use my location</span></button>
 <span class="geo-note" id="geoNote">Optional. It only fills the state and district, and you can change either one.</span>
 </div>
 
@@ -904,80 +911,364 @@ function setDistrict(state,raw){
   return false;
 }
 
-/* PIN code lookup, public India Post service */
-var pinCache={},pinBusy=false;
-function lookupPin(pin){
-  if(pinCache[pin])return Promise.resolve(pinCache[pin]);
-  return fetch("https://api.postalpincode.in/pincode/"+pin)
-    .then(function(r){return r.json();})
-    .then(function(j){
-      var row=j&&j[0];
-      if(!row||row.Status!=="Success"||!row.PostOffice||!row.PostOffice.length)return null;
-      var po=row.PostOffice[0];
-      var out={state:po.State,district:po.District,city:po.Block&&po.Block!=="NA"?po.Block:po.District,office:po.Name};
-      pinCache[pin]=out;
-      return out;
-    }).catch(function(){return null;});
+/* =====================================================================
+   WHERE ARE YOU
+   ---------------------------------------------------------------------
+   Everything here works with no network. Coordinates resolve to a state
+   from the local table below, and a PIN resolves to a state from its
+   postal circle. Online lookups are attempted on top of that, purely to
+   add the district and the town, and every one of them is allowed to
+   fail without stalling the journey.
+   ===================================================================== */
+
+/* nearest-point reference, the same idea network.html uses for its unit
+   finder: a local table, no lookup service. [lat,lng,state,district] */
+var GEO_PT=[
+[28.6139,77.2090,"Delhi","New Delhi"],[28.5900,77.0400,"Delhi","South West Delhi"],[28.7400,77.1100,"Delhi","North West Delhi"],[28.6700,77.2900,"Delhi","Shahdara"],[28.5200,77.2100,"Delhi","South Delhi"],
+[28.4595,77.0266,"Haryana","Gurugram"],[28.4089,77.3178,"Haryana","Faridabad"],[29.3909,76.9635,"Haryana","Panipat"],[30.3752,76.7821,"Haryana","Ambala"],[29.1492,75.7217,"Haryana","Hisar"],[28.8955,76.6066,"Haryana","Rohtak"],[29.6857,76.9905,"Haryana","Karnal"],[29.5349,75.0280,"Haryana","Sirsa"],[28.9931,77.0151,"Haryana","Sonipat"],[30.1290,77.2674,"Haryana","Yamunanagar"],[28.2100,77.3200,"Haryana","Palwal"],[27.9900,76.9900,"Haryana","Nuh"],
+[30.9010,75.8573,"Punjab","Ludhiana"],[31.6340,74.8723,"Punjab","Amritsar"],[31.3260,75.5762,"Punjab","Jalandhar"],[30.3398,76.3869,"Punjab","Patiala"],[30.2110,74.9455,"Punjab","Bathinda"],[32.2643,75.6421,"Punjab","Pathankot"],[30.7046,76.7179,"Punjab","Sahibzada Ajit Singh Nagar"],[30.9250,74.6130,"Punjab","Ferozepur"],[31.6300,75.5900,"Punjab","Kapurthala"],[31.5300,75.9800,"Punjab","Hoshiarpur"],
+[30.7333,76.7794,"Chandigarh","Chandigarh"],
+[31.1048,77.1734,"Himachal Pradesh","Shimla"],[32.2190,76.3234,"Himachal Pradesh","Kangra"],[31.7080,76.9320,"Himachal Pradesh","Mandi"],[30.9045,77.0967,"Himachal Pradesh","Solan"],[31.9578,77.1092,"Himachal Pradesh","Kullu"],[31.4685,76.2708,"Himachal Pradesh","Una"],[32.5556,76.1258,"Himachal Pradesh","Chamba"],[32.5730,77.0290,"Himachal Pradesh","Lahaul and Spiti"],[31.5300,78.2700,"Himachal Pradesh","Kinnaur"],[30.5700,77.4600,"Himachal Pradesh","Sirmaur"],[31.6800,76.5200,"Himachal Pradesh","Hamirpur"],
+[34.0837,74.7973,"Jammu and Kashmir","Srinagar"],[32.7266,74.8570,"Jammu and Kashmir","Jammu"],[33.7311,75.1487,"Jammu and Kashmir","Anantnag"],[34.1980,74.3640,"Jammu and Kashmir","Baramulla"],[32.9160,75.1420,"Jammu and Kashmir","Udhampur"],[32.3700,75.5200,"Jammu and Kashmir","Kathua"],[33.1460,75.5470,"Jammu and Kashmir","Doda"],[33.3800,74.0900,"Jammu and Kashmir","Poonch"],[34.5300,74.2500,"Jammu and Kashmir","Kupwara"],
+[34.1526,77.5771,"Ladakh","Leh"],[34.5539,76.1349,"Ladakh","Kargil"],[33.4500,76.9000,"Ladakh","Zanskar"],[34.6500,77.5500,"Ladakh","Nubra"],
+[30.3165,78.0322,"Uttarakhand","Dehradun"],[29.9457,78.1642,"Uttarakhand","Haridwar"],[29.3919,79.4542,"Uttarakhand","Nainital"],[28.9845,79.4004,"Uttarakhand","Udham Singh Nagar"],[29.5892,79.6467,"Uttarakhand","Almora"],[29.5828,80.2181,"Uttarakhand","Pithoragarh"],[30.2220,78.7830,"Uttarakhand","Pauri Garhwal"],[30.7268,78.4354,"Uttarakhand","Uttarkashi"],[30.3800,79.3200,"Uttarakhand","Chamoli"],[30.3800,78.4800,"Uttarakhand","Tehri Garhwal"],
+[26.8467,80.9462,"Uttar Pradesh","Lucknow"],[26.4499,80.3319,"Uttar Pradesh","Kanpur Nagar"],[25.3176,82.9739,"Uttar Pradesh","Varanasi"],[27.1767,78.0081,"Uttar Pradesh","Agra"],[25.4358,81.8463,"Uttar Pradesh","Prayagraj"],[28.9845,77.7064,"Uttar Pradesh","Meerut"],[28.6692,77.4538,"Uttar Pradesh","Ghaziabad"],[28.5355,77.3910,"Uttar Pradesh","Gautam Buddha Nagar"],[28.3670,79.4304,"Uttar Pradesh","Bareilly"],[27.8974,78.0880,"Uttar Pradesh","Aligarh"],[28.8386,78.7733,"Uttar Pradesh","Moradabad"],[26.7606,83.3732,"Uttar Pradesh","Gorakhpur"],[25.4484,78.5685,"Uttar Pradesh","Jhansi"],[27.4924,77.6737,"Uttar Pradesh","Mathura"],[26.7922,82.1998,"Uttar Pradesh","Ayodhya"],[29.9680,77.5460,"Uttar Pradesh","Saharanpur"],[29.4727,77.7085,"Uttar Pradesh","Muzaffarnagar"],[25.1460,82.5690,"Uttar Pradesh","Mirzapur"],[27.5610,80.6820,"Uttar Pradesh","Sitapur"],[26.0680,83.1860,"Uttar Pradesh","Azamgarh"],[25.7460,82.6870,"Uttar Pradesh","Jaunpur"],[27.9480,80.7790,"Uttar Pradesh","Kheri"],[27.1591,78.3957,"Uttar Pradesh","Firozabad"],[26.2200,84.3600,"Uttar Pradesh","Deoria"],[24.6900,83.0700,"Uttar Pradesh","Sonbhadra"],[27.1300,81.9500,"Uttar Pradesh","Gonda"],[25.9300,80.8100,"Uttar Pradesh","Fatehpur"],[26.7700,79.0300,"Uttar Pradesh","Farrukhabad"],
+[26.9124,75.7873,"Rajasthan","Jaipur"],[26.2389,73.0243,"Rajasthan","Jodhpur"],[24.5854,73.7125,"Rajasthan","Udaipur"],[25.2138,75.8648,"Rajasthan","Kota"],[28.0229,73.3119,"Rajasthan","Bikaner"],[26.4499,74.6399,"Rajasthan","Ajmer"],[27.5530,76.6346,"Rajasthan","Alwar"],[25.3407,74.6313,"Rajasthan","Bhilwara"],[27.6094,75.1399,"Rajasthan","Sikar"],[29.9038,73.8772,"Rajasthan","Ganganagar"],[26.9157,70.9083,"Rajasthan","Jaisalmer"],[25.7521,71.3967,"Rajasthan","Barmer"],[27.2152,77.5030,"Rajasthan","Bharatpur"],[25.7711,73.3234,"Rajasthan","Pali"],[23.8400,73.7100,"Rajasthan","Dungarpur"],[24.5900,72.7100,"Rajasthan","Sirohi"],[28.4300,75.6300,"Rajasthan","Jhunjhunu"],[26.1700,76.3500,"Rajasthan","Tonk"],
+[23.0225,72.5714,"Gujarat","Ahmedabad"],[21.1702,72.8311,"Gujarat","Surat"],[22.3072,73.1812,"Gujarat","Vadodara"],[22.3039,70.8022,"Gujarat","Rajkot"],[21.7645,72.1519,"Gujarat","Bhavnagar"],[22.4707,70.0577,"Gujarat","Jamnagar"],[23.2156,72.6369,"Gujarat","Gandhinagar"],[21.5222,70.4579,"Gujarat","Junagadh"],[23.2419,69.6669,"Gujarat","Kutch"],[22.5645,72.9289,"Gujarat","Anand"],[20.9467,72.9520,"Gujarat","Navsari"],[21.6417,69.6293,"Gujarat","Porbandar"],[22.8340,74.2590,"Gujarat","Dahod"],[23.5900,72.3700,"Gujarat","Patan"],[24.1700,72.4400,"Gujarat","Banaskantha"],[20.6100,72.9300,"Gujarat","Valsad"],
+[20.2738,73.0140,"Dadra and Nagar Haveli and Daman and Diu","Dadra and Nagar Haveli"],[20.3974,72.8328,"Dadra and Nagar Haveli and Daman and Diu","Daman"],[20.7144,70.9874,"Dadra and Nagar Haveli and Daman and Diu","Diu"],
+[23.2599,77.4126,"Madhya Pradesh","Bhopal"],[22.7196,75.8577,"Madhya Pradesh","Indore"],[23.1815,79.9864,"Madhya Pradesh","Jabalpur"],[26.2183,78.1828,"Madhya Pradesh","Gwalior"],[23.1765,75.7885,"Madhya Pradesh","Ujjain"],[23.8388,78.7378,"Madhya Pradesh","Sagar"],[24.5362,81.2961,"Madhya Pradesh","Rewa"],[24.5854,80.8322,"Madhya Pradesh","Satna"],[23.3315,75.0367,"Madhya Pradesh","Ratlam"],[22.0574,78.9382,"Madhya Pradesh","Chhindwara"],[21.8250,76.3520,"Madhya Pradesh","Khandwa"],[25.4230,77.6580,"Madhya Pradesh","Shivpuri"],[24.1990,82.6750,"Madhya Pradesh","Singrauli"],[21.8120,80.1840,"Madhya Pradesh","Balaghat"],[26.5000,78.8000,"Madhya Pradesh","Bhind"],[22.5700,75.3000,"Madhya Pradesh","Dhar"],[23.2900,79.4400,"Madhya Pradesh","Katni"],
+[21.2514,81.6296,"Chhattisgarh","Raipur"],[21.1938,81.3509,"Chhattisgarh","Durg"],[22.0797,82.1409,"Chhattisgarh","Bilaspur"],[22.3595,82.7501,"Chhattisgarh","Korba"],[19.0748,82.0290,"Chhattisgarh","Bastar"],[23.1195,83.1958,"Chhattisgarh","Surguja"],[21.8974,83.3950,"Chhattisgarh","Raigarh"],[21.0972,81.0300,"Chhattisgarh","Rajnandgaon"],[18.8000,81.3700,"Chhattisgarh","Sukma"],
+[19.0760,72.8777,"Maharashtra","Mumbai City"],[19.2183,72.9781,"Maharashtra","Thane"],[18.5204,73.8567,"Maharashtra","Pune"],[21.1458,79.0882,"Maharashtra","Nagpur"],[19.9975,73.7898,"Maharashtra","Nashik"],[19.8762,75.3433,"Maharashtra","Chhatrapati Sambhajinagar"],[17.6599,75.9064,"Maharashtra","Solapur"],[16.7050,74.2433,"Maharashtra","Kolhapur"],[20.9374,77.7796,"Maharashtra","Amravati"],[19.1383,77.3210,"Maharashtra","Nanded"],[16.8524,74.5815,"Maharashtra","Sangli"],[21.0077,75.5626,"Maharashtra","Jalgaon"],[20.7002,77.0082,"Maharashtra","Akola"],[18.4088,76.5604,"Maharashtra","Latur"],[16.9902,73.3120,"Maharashtra","Ratnagiri"],[19.9615,79.2961,"Maharashtra","Chandrapur"],[19.0952,74.7496,"Maharashtra","Ahilyanagar"],[19.6967,72.7699,"Maharashtra","Palghar"],[17.6805,74.0183,"Maharashtra","Satara"],[18.9900,75.7600,"Maharashtra","Beed"],[16.0000,73.4600,"Maharashtra","Sindhudurg"],[21.4600,80.2000,"Maharashtra","Gondia"],
+[15.4909,73.8278,"Goa","North Goa"],[15.2832,73.9862,"Goa","South Goa"],
+[12.9716,77.5946,"Karnataka","Bengaluru Urban"],[13.1000,77.5700,"Karnataka","Bengaluru Rural"],[12.2958,76.6394,"Karnataka","Mysuru"],[15.3647,75.1240,"Karnataka","Dharwad"],[12.9141,74.8560,"Karnataka","Dakshina Kannada"],[15.8497,74.4977,"Karnataka","Belagavi"],[17.3297,76.8343,"Karnataka","Kalaburagi"],[14.4644,75.9218,"Karnataka","Davanagere"],[15.1394,76.9214,"Karnataka","Ballari"],[13.9299,75.5681,"Karnataka","Shivamogga"],[13.3392,77.1010,"Karnataka","Tumakuru"],[13.3409,74.7421,"Karnataka","Udupi"],[16.8302,75.7100,"Karnataka","Vijayapura"],[13.0072,76.0962,"Karnataka","Hassan"],[14.2251,76.3980,"Karnataka","Chitradurga"],[16.2076,77.3463,"Karnataka","Raichur"],[12.4244,75.7382,"Karnataka","Kodagu"],[14.8135,74.1297,"Karnataka","Uttara Kannada"],[13.1357,78.1325,"Karnataka","Kolar"],[12.5218,76.8951,"Karnataka","Mandya"],[17.9100,77.5200,"Karnataka","Bidar"],[16.1800,75.7000,"Karnataka","Bagalkot"],[15.4300,76.1300,"Karnataka","Koppal"],[16.7700,77.1400,"Karnataka","Yadgir"],[12.7200,77.2800,"Karnataka","Ramanagara"],[13.4400,77.7300,"Karnataka","Chikkaballapur"],[13.3200,75.7700,"Karnataka","Chikkamagaluru"],[11.9200,76.9400,"Karnataka","Chamarajanagar"],[14.5300,75.4000,"Karnataka","Haveri"],[15.4300,75.6300,"Karnataka","Gadag"],[15.2700,76.3900,"Karnataka","Vijayanagara"],
+[8.5241,76.9366,"Kerala","Thiruvananthapuram"],[9.9312,76.2673,"Kerala","Ernakulam"],[11.2588,75.7804,"Kerala","Kozhikode"],[10.5276,76.2144,"Kerala","Thrissur"],[8.8932,76.6141,"Kerala","Kollam"],[11.8745,75.3704,"Kerala","Kannur"],[9.4981,76.3388,"Kerala","Alappuzha"],[10.7867,76.6548,"Kerala","Palakkad"],[11.0510,76.0711,"Kerala","Malappuram"],[9.5916,76.5222,"Kerala","Kottayam"],[12.4996,74.9869,"Kerala","Kasaragod"],[9.8497,76.9714,"Kerala","Idukki"],[11.6085,76.0838,"Kerala","Wayanad"],[9.2648,76.7870,"Kerala","Pathanamthitta"],
+[13.0827,80.2707,"Tamil Nadu","Chennai"],[11.0168,76.9558,"Tamil Nadu","Coimbatore"],[9.9252,78.1198,"Tamil Nadu","Madurai"],[10.7905,78.7047,"Tamil Nadu","Tiruchirappalli"],[11.6643,78.1460,"Tamil Nadu","Salem"],[8.7139,77.7567,"Tamil Nadu","Tirunelveli"],[11.3410,77.7172,"Tamil Nadu","Erode"],[12.9165,79.1325,"Tamil Nadu","Vellore"],[8.7642,78.1348,"Tamil Nadu","Thoothukudi"],[10.7870,79.1378,"Tamil Nadu","Thanjavur"],[10.3673,77.9803,"Tamil Nadu","Dindigul"],[8.1833,77.4119,"Tamil Nadu","Kanyakumari"],[11.1085,77.3411,"Tamil Nadu","Tiruppur"],[11.7480,79.7714,"Tamil Nadu","Cuddalore"],[12.5186,78.2137,"Tamil Nadu","Krishnagiri"],[11.4064,76.6932,"Tamil Nadu","Nilgiris"],[9.3639,78.8395,"Tamil Nadu","Ramanathapuram"],[12.8300,79.7000,"Tamil Nadu","Chengalpattu"],[13.1400,79.9100,"Tamil Nadu","Tiruvallur"],[12.2300,79.0700,"Tamil Nadu","Tiruvannamalai"],[11.9400,79.4900,"Tamil Nadu","Viluppuram"],[9.5700,77.9600,"Tamil Nadu","Virudhunagar"],[10.9600,79.3800,"Tamil Nadu","Thanjavur"],[8.9600,77.3100,"Tamil Nadu","Tenkasi"],
+[11.9416,79.8083,"Puducherry","Puducherry"],[10.9254,79.8380,"Puducherry","Karaikal"],[11.7024,75.5364,"Puducherry","Mahe"],[16.7333,82.2167,"Puducherry","Yanam"],
+[17.6868,83.2185,"Andhra Pradesh","Visakhapatnam"],[16.5062,80.6480,"Andhra Pradesh","NTR"],[16.3067,80.4365,"Andhra Pradesh","Guntur"],[14.4426,79.9865,"Andhra Pradesh","Sri Potti Sriramulu Nellore"],[15.8281,78.0373,"Andhra Pradesh","Kurnool"],[17.0005,81.8040,"Andhra Pradesh","East Godavari"],[13.6288,79.4192,"Andhra Pradesh","Tirupati"],[14.4674,78.8241,"Andhra Pradesh","YSR Kadapa"],[14.6819,77.6006,"Andhra Pradesh","Ananthapuramu"],[16.9891,82.2475,"Andhra Pradesh","Kakinada"],[16.7107,81.0952,"Andhra Pradesh","Eluru"],[13.2172,79.1003,"Andhra Pradesh","Chittoor"],[18.2949,83.8938,"Andhra Pradesh","Srikakulam"],[15.5057,80.0499,"Andhra Pradesh","Prakasam"],[18.1067,83.3956,"Andhra Pradesh","Vizianagaram"],[15.4800,78.4800,"Andhra Pradesh","Nandyal"],
+[17.3850,78.4867,"Telangana","Hyderabad"],[17.9689,79.5941,"Telangana","Warangal"],[18.6725,78.0941,"Telangana","Nizamabad"],[18.4386,79.1288,"Telangana","Karimnagar"],[17.2473,80.1514,"Telangana","Khammam"],[18.7550,79.4740,"Telangana","Peddapalli"],[16.7488,77.9854,"Telangana","Mahabubnagar"],[17.0575,79.2674,"Telangana","Nalgonda"],[19.6640,78.5320,"Telangana","Adilabad"],[18.1018,78.8520,"Telangana","Siddipet"],[17.6250,78.0870,"Telangana","Sangareddy"],[17.5400,78.5700,"Telangana","Medchal-Malkajgiri"],[17.3300,78.1600,"Telangana","Rangareddy"],
+[20.2961,85.8245,"Odisha","Khordha"],[20.4625,85.8830,"Odisha","Cuttack"],[22.2604,84.8536,"Odisha","Sundargarh"],[19.3150,84.7941,"Odisha","Ganjam"],[21.4669,83.9812,"Odisha","Sambalpur"],[19.8135,85.8312,"Odisha","Puri"],[21.4934,86.9335,"Odisha","Balasore"],[21.0574,86.4996,"Odisha","Bhadrak"],[21.9333,86.7333,"Odisha","Mayurbhanj"],[18.8120,82.7100,"Odisha","Koraput"],[20.8400,85.1010,"Odisha","Angul"],[20.4800,83.4300,"Odisha","Kalahandi"],[21.9100,83.1600,"Odisha","Jharsuguda"],
+[23.3441,85.3096,"Jharkhand","Ranchi"],[22.8046,86.2029,"Jharkhand","East Singhbhum"],[23.7957,86.4304,"Jharkhand","Dhanbad"],[23.6693,86.1511,"Jharkhand","Bokaro"],[24.4823,86.6999,"Jharkhand","Deoghar"],[23.9925,85.3637,"Jharkhand","Hazaribagh"],[24.1913,86.2996,"Jharkhand","Giridih"],[24.2676,87.2497,"Jharkhand","Dumka"],[24.0400,84.0700,"Jharkhand","Palamu"],[22.5600,85.8200,"Jharkhand","West Singhbhum"],
+[25.5941,85.1376,"Bihar","Patna"],[24.7955,85.0002,"Bihar","Gaya"],[25.2425,86.9842,"Bihar","Bhagalpur"],[26.1209,85.3647,"Bihar","Muzaffarpur"],[26.1542,85.8918,"Bihar","Darbhanga"],[25.7771,87.4753,"Bihar","Purnia"],[25.5541,84.6600,"Bihar","Bhojpur"],[25.4182,86.1272,"Bihar","Begusarai"],[25.5541,87.5586,"Bihar","Katihar"],[25.7815,84.7470,"Bihar","Saran"],[26.6470,84.9160,"Bihar","East Champaran"],[26.8020,84.5030,"Bihar","West Champaran"],[24.9500,84.0300,"Bihar","Rohtas"],[25.1900,85.5200,"Bihar","Nalanda"],[26.1500,87.0100,"Bihar","Saharsa"],
+[22.5726,88.3639,"West Bengal","Kolkata"],[22.5958,88.2636,"West Bengal","Howrah"],[23.5204,87.3119,"West Bengal","Paschim Bardhaman"],[23.6739,86.9524,"West Bengal","Paschim Bardhaman"],[26.7271,88.3953,"West Bengal","Darjeeling"],[25.0119,88.1433,"West Bengal","Malda"],[22.3460,87.2320,"West Bengal","Paschim Medinipur"],[22.7220,88.4810,"West Bengal","North 24 Parganas"],[23.4010,88.5020,"West Bengal","Nadia"],[23.2324,87.8615,"West Bengal","Purba Bardhaman"],[26.3250,89.4450,"West Bengal","Cooch Behar"],[23.3320,86.3650,"West Bengal","Purulia"],[24.0980,88.2510,"West Bengal","Murshidabad"],[22.0667,88.0698,"West Bengal","Purba Medinipur"],[22.2500,88.4300,"West Bengal","South 24 Parganas"],[23.2400,87.0700,"West Bengal","Bankura"],[26.5200,88.7200,"West Bengal","Jalpaiguri"],
+[27.3389,88.6065,"Sikkim","Gangtok"],[27.1667,88.3500,"Sikkim","Namchi"],[27.5100,88.5300,"Sikkim","Mangan"],[27.2900,88.2600,"Sikkim","Gyalshing"],
+[26.1445,91.7362,"Assam","Kamrup Metropolitan"],[27.4728,94.9120,"Assam","Dibrugarh"],[24.8333,92.7789,"Assam","Cachar"],[26.7509,94.2037,"Assam","Jorhat"],[26.3464,92.6840,"Assam","Nagaon"],[27.4922,95.3468,"Assam","Tinsukia"],[26.6338,92.8000,"Assam","Sonitpur"],[26.4831,90.5540,"Assam","Bongaigaon"],[26.0200,89.9700,"Assam","Dhubri"],[25.8400,93.4300,"Assam","Karbi Anglong"],[26.3220,90.9800,"Assam","Barpeta"],[26.7500,94.6300,"Assam","Sivasagar"],[27.2300,94.1100,"Assam","Lakhimpur"],
+[25.5788,91.8933,"Meghalaya","East Khasi Hills"],[25.5140,90.2030,"Meghalaya","West Garo Hills"],[25.4500,92.2000,"Meghalaya","West Jaintia Hills"],[25.5170,91.2670,"Meghalaya","West Khasi Hills"],[25.9000,91.8800,"Meghalaya","Ri Bhoi"],
+[23.8315,91.2868,"Tripura","West Tripura"],[23.5300,91.4900,"Tripura","Gomati"],[24.3660,92.1690,"Tripura","North Tripura"],[24.3320,92.0100,"Tripura","Unakoti"],[23.9370,91.8540,"Tripura","Dhalai"],
+[23.7271,92.7176,"Mizoram","Aizawl"],[22.8800,92.7300,"Mizoram","Lunglei"],[23.4560,93.3290,"Mizoram","Champhai"],[22.4900,92.9800,"Mizoram","Saiha"],[24.2200,92.6800,"Mizoram","Kolasib"],
+[24.8170,93.9368,"Manipur","Imphal West"],[24.6380,94.0100,"Manipur","Thoubal"],[24.3330,93.6830,"Manipur","Churachandpur"],[25.2700,94.0300,"Manipur","Senapati"],[25.0500,94.3600,"Manipur","Ukhrul"],
+[25.6751,94.1086,"Nagaland","Kohima"],[25.9063,93.7276,"Nagaland","Dimapur"],[26.3220,94.5150,"Nagaland","Mokokchung"],[26.2800,94.8300,"Nagaland","Tuensang"],[26.0980,94.2660,"Nagaland","Wokha"],[26.7500,95.0500,"Nagaland","Mon"],
+[27.0844,93.6053,"Arunachal Pradesh","Papum Pare"],[28.0660,95.3260,"Arunachal Pradesh","East Siang"],[27.9200,96.1600,"Arunachal Pradesh","Lohit"],[27.5860,91.8590,"Arunachal Pradesh","Tawang"],[27.5400,93.8300,"Arunachal Pradesh","Lower Subansiri"],[27.2650,92.4050,"Arunachal Pradesh","West Kameng"],[27.6660,95.8660,"Arunachal Pradesh","Namsai"],[27.1300,95.7300,"Arunachal Pradesh","Changlang"],
+[11.6234,92.7265,"Andaman and Nicobar Islands","South Andaman"],[12.9200,92.9000,"Andaman and Nicobar Islands","North and Middle Andaman"],[9.1667,92.7833,"Andaman and Nicobar Islands","Nicobar"],
+[10.5669,72.6420,"Lakshadweep","Lakshadweep"],[8.2833,73.0500,"Lakshadweep","Lakshadweep"],[11.1200,72.7300,"Lakshadweep","Lakshadweep"]
+];
+function nearestPoint(la,lo){
+  var best=null,bd=1e12,i,p,dla,dlo,d;
+  for(i=0;i<GEO_PT.length;i++){
+    p=GEO_PT[i];
+    dla=(p[0]-la)*111.0;
+    dlo=(p[1]-lo)*111.0*Math.cos(la*Math.PI/180);
+    d=dla*dla+dlo*dlo;
+    if(d<bd){bd=d;best=p;}
+  }
+  return best?{state:best[2],district:best[3],km:Math.sqrt(bd)}:null;
 }
-var fPin=el("fPin"),pinNote=el("pinNote");
+
+/* state envelopes: [latMin,latMax,lngMin,lngMax] plus a centre.
+   Several boxes per state where the territory is scattered.
+   Smallest containing box wins, so Delhi beats Haryana and Telangana
+   beats Andhra Pradesh on an overlap. */
+var GEO_BOX={
+"Jammu and Kashmir":[[32.2,35.8,73.9,79.3]],
+"Ladakh":[[32.3,36.0,75.8,80.3]],
+"Himachal Pradesh":[[30.2,33.3,75.5,79.1]],
+"Punjab":[[29.5,32.6,73.8,76.95]],
+"Chandigarh":[[30.66,30.80,76.68,76.86]],
+"Haryana":[[27.6,30.95,74.4,77.65]],
+"Delhi":[[28.40,28.89,76.83,77.36]],
+"Uttarakhand":[[28.86,31.5,77.5,81.05]],
+"Uttar Pradesh":[[23.8,30.4,77.0,84.7]],
+"Rajasthan":[[23.0,30.2,69.4,78.3]],
+"Gujarat":[[20.0,24.75,68.1,74.5]],
+"Dadra and Nagar Haveli and Daman and Diu":[[20.15,20.85,72.80,73.25],[20.68,20.78,70.90,71.05]],
+"Madhya Pradesh":[[21.05,26.9,74.0,82.85]],
+"Chhattisgarh":[[17.7,24.1,80.2,84.4]],
+"Maharashtra":[[15.6,22.1,72.6,80.95]],
+"Goa":[[14.85,15.82,73.6,74.35]],
+"Karnataka":[[11.5,18.5,74.0,78.6]],
+"Kerala":[[8.15,12.82,74.8,77.42]],
+"Tamil Nadu":[[8.05,13.62,76.2,80.4]],
+"Puducherry":[[11.72,12.05,79.70,79.90],[10.85,11.00,79.75,79.92],[11.65,11.78,75.48,75.62],[16.68,16.78,82.15,82.30]],
+"Andhra Pradesh":[[12.6,19.15,76.75,84.85]],
+"Telangana":[[15.8,19.95,77.2,81.85]],
+"Odisha":[[17.75,22.6,81.3,87.55]],
+"Jharkhand":[[21.9,25.35,83.3,87.95]],
+"Bihar":[[24.2,27.55,83.3,88.3]],
+"West Bengal":[[21.4,27.25,85.8,89.95]],
+"Sikkim":[[27.05,28.15,88.0,88.95]],
+"Assam":[[24.1,28.3,89.6,96.05]],
+"Meghalaya":[[25.0,26.15,89.8,92.85]],
+"Tripura":[[22.9,24.6,91.0,92.35]],
+"Mizoram":[[21.9,24.55,92.15,93.45]],
+"Manipur":[[23.8,25.7,92.95,94.8]],
+"Nagaland":[[25.15,27.05,93.3,95.25]],
+"Arunachal Pradesh":[[26.6,29.5,91.5,97.45]],
+"Andaman and Nicobar Islands":[[6.7,13.7,92.2,94.3]],
+"Lakshadweep":[[8.0,12.4,71.7,74.0]]
+};
+var GEO_MID={
+"Jammu and Kashmir":[33.7,75.2],"Ladakh":[34.2,77.6],"Himachal Pradesh":[31.9,77.2],
+"Punjab":[31.1,75.4],"Chandigarh":[30.73,76.78],"Haryana":[29.2,76.3],"Delhi":[28.65,77.10],
+"Uttarakhand":[30.1,79.2],"Uttar Pradesh":[26.9,80.9],"Rajasthan":[26.6,73.8],"Gujarat":[22.3,71.5],
+"Dadra and Nagar Haveli and Daman and Diu":[20.35,72.95],"Madhya Pradesh":[23.5,78.5],
+"Chhattisgarh":[21.3,82.0],"Maharashtra":[19.4,76.5],"Goa":[15.35,74.0],"Karnataka":[15.0,76.0],
+"Kerala":[10.5,76.3],"Tamil Nadu":[11.1,78.5],"Puducherry":[11.93,79.80],"Andhra Pradesh":[15.9,80.0],
+"Telangana":[17.9,79.3],"Odisha":[20.3,84.5],"Jharkhand":[23.6,85.3],"Bihar":[25.6,85.6],
+"West Bengal":[23.5,87.8],"Sikkim":[27.6,88.5],"Assam":[26.2,92.9],"Meghalaya":[25.5,91.3],
+"Tripura":[23.8,91.7],"Mizoram":[23.3,92.8],"Manipur":[24.7,93.9],"Nagaland":[26.1,94.3],
+"Arunachal Pradesh":[28.0,94.7],"Andaman and Nicobar Islands":[11.7,92.7],"Lakshadweep":[10.6,72.6]
+};
+function stateFromCoords(la,lo){
+  var best=null,bestArea=1e9,name;
+  for(name in GEO_BOX){
+    GEO_BOX[name].forEach(function(b){
+      if(la>=b[0]&&la<=b[1]&&lo>=b[2]&&lo<=b[3]){
+        var area=(b[1]-b[0])*(b[3]-b[2]);
+        if(area<bestArea){bestArea=area;best=name;}
+      }
+    });
+  }
+  if(best)return best;
+  var near=null,nd=1e9;
+  for(name in GEO_MID){
+    var m=GEO_MID[name],d=(m[0]-la)*(m[0]-la)+(m[1]-lo)*(m[1]-lo);
+    if(d<nd){nd=d;near=name;}
+  }
+  return nd<9?near:"";
+}
+
+/* nearest reference point first, envelopes only as a long range net */
+function placeFromCoords(la,lo){
+  var n=nearestPoint(la,lo);
+  if(n&&n.km<=60)return{state:n.state,district:n.district,km:Math.round(n.km)};
+  if(n&&n.km<=200)return{state:n.state,district:"",km:Math.round(n.km)};
+  var b=stateFromCoords(la,lo);
+  return b?{state:b,district:"",km:0}:null;
+}
+
+/* postal circle from the first two digits of a PIN. This is fixed by
+   India Post and does not move when districts are redrawn. */
+var PIN_CIRCLE={
+"11":"Delhi","12":"Haryana","13":"Haryana","14":"Punjab","15":"Punjab","16":"Punjab",
+"17":"Himachal Pradesh","18":"Jammu and Kashmir","19":"Jammu and Kashmir",
+"20":"Uttar Pradesh","21":"Uttar Pradesh","22":"Uttar Pradesh","23":"Uttar Pradesh",
+"24":"Uttar Pradesh","25":"Uttar Pradesh","26":"Uttar Pradesh","27":"Uttar Pradesh","28":"Uttar Pradesh",
+"30":"Rajasthan","31":"Rajasthan","32":"Rajasthan","33":"Rajasthan","34":"Rajasthan",
+"36":"Gujarat","37":"Gujarat","38":"Gujarat","39":"Gujarat",
+"40":"Maharashtra","41":"Maharashtra","42":"Maharashtra","43":"Maharashtra","44":"Maharashtra",
+"45":"Madhya Pradesh","46":"Madhya Pradesh","47":"Madhya Pradesh","48":"Madhya Pradesh",
+"49":"Chhattisgarh",
+"50":"Telangana","51":"Andhra Pradesh","52":"Andhra Pradesh","53":"Andhra Pradesh",
+"56":"Karnataka","57":"Karnataka","58":"Karnataka","59":"Karnataka",
+"60":"Tamil Nadu","61":"Tamil Nadu","62":"Tamil Nadu","63":"Tamil Nadu","64":"Tamil Nadu",
+"66":"Kerala","67":"Kerala","68":"Kerala","69":"Kerala",
+"70":"West Bengal","71":"West Bengal","72":"West Bengal","73":"West Bengal","74":"West Bengal",
+"75":"Odisha","76":"Odisha","77":"Odisha",
+"78":"Assam","79":"Arunachal Pradesh",
+"80":"Bihar","81":"Bihar","82":"Bihar","83":"Jharkhand","84":"Bihar","85":"Bihar",
+"90":"Army Post Office","99":"Army Post Office"
+};
+/* three digit corrections where a circle is shared */
+var PIN_FIX={
+"140":"Punjab","160":"Chandigarh","161":"Punjab","134":"Haryana",
+"194":"Ladakh","192":"Jammu and Kashmir","193":"Jammu and Kashmir",
+"246":"Uttarakhand","247":"Uttar Pradesh","248":"Uttarakhand","249":"Uttarakhand",
+"263":"Uttarakhand","262":"Uttar Pradesh",
+"396":"Dadra and Nagar Haveli and Daman and Diu","362":"Gujarat",
+"403":"Goa","737":"Sikkim",
+"500":"Telangana","501":"Telangana","502":"Telangana","503":"Telangana","504":"Telangana",
+"505":"Telangana","506":"Telangana","507":"Telangana","508":"Telangana","509":"Telangana",
+"605":"Tamil Nadu","533":"Andhra Pradesh",
+"605001":"Puducherry","673310":"Puducherry",
+"682555":"Lakshadweep","744":"Andaman and Nicobar Islands",
+"793":"Meghalaya","794":"Meghalaya","795":"Manipur","796":"Mizoram","797":"Nagaland","798":"Nagaland",
+"799":"Tripura","781":"Assam","787":"Assam","788":"Assam","790":"Arunachal Pradesh","791":"Arunachal Pradesh","792":"Arunachal Pradesh",
+"814":"Jharkhand","815":"Jharkhand","816":"Jharkhand","825":"Jharkhand","826":"Jharkhand","827":"Jharkhand","828":"Jharkhand","829":"Jharkhand","831":"Jharkhand","832":"Jharkhand","833":"Jharkhand","834":"Jharkhand","835":"Jharkhand"
+};
+function stateFromPin(pin){
+  var s=PIN_FIX[pin.slice(0,6)]||PIN_FIX[pin.slice(0,3)]||PIN_CIRCLE[pin.slice(0,2)]||"";
+  return STATES[s]?s:"";
+}
+
+/* if the town they typed is also the name of a district in the chosen
+   state, take that as the district. Costs nothing and catches most cities. */
+function districtFromCity(){
+  var st=val("fState"),city=val("fCity");
+  if(!st||!city||val("fDistrict"))return false;
+  return setDistrict(st,city);
+}
+
+/* ---------- optional online enrichment, never blocking ---------- */
+function getJSON(url,ms){
+  if(!window.fetch)return Promise.reject(new Error("no fetch"));
+  return Promise.race([
+    fetch(url,{mode:"cors",credentials:"omit"}).then(function(r){
+      if(!r.ok)throw new Error("http "+r.status);
+      return r.json();
+    }),
+    new Promise(function(_,rej){setTimeout(function(){rej(new Error("timeout"));},ms||7000);})
+  ]);
+}
+var netBlocked=false;
+function noteBlocked(){netBlocked=true;}
+
+function pinOnline(pin){
+  return getJSON("https://api.postalpincode.in/pincode/"+pin,7000).then(function(j){
+    var row=j&&j[0];
+    if(!row||row.Status!=="Success"||!row.PostOffice||!row.PostOffice.length)return null;
+    var po=row.PostOffice[0];
+    return{state:po.State,district:po.District,city:(po.Block&&po.Block!=="NA")?po.Block:po.District,office:po.Name};
+  }).catch(function(){
+    return getJSON("https://api.zippopotam.us/in/"+pin,7000).then(function(j){
+      var p=j&&j.places&&j.places[0];
+      if(!p)return null;
+      return{state:j.places[0].state,district:"",city:p["place name"],office:p["place name"]};
+    }).catch(function(){noteBlocked();return null;});
+  });
+}
+function geoOnline(la,lo){
+  return getJSON("https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+la+"&longitude="+lo+"&localityLanguage=en",7000)
+    .then(function(j){
+      var cands=[];
+      ((j.localityInfo&&j.localityInfo.administrative)||[]).forEach(function(a){if(a&&a.name)cands.push(a.name);});
+      if(j.locality)cands.push(j.locality);
+      if(j.city)cands.push(j.city);
+      return{state:j.principalSubdivision,cands:cands,city:j.city||j.locality||""};
+    })
+    .catch(function(){
+      return getJSON("https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&lat="+la+"&lon="+lo,8000)
+        .then(function(j){
+          var a=j&&j.address||{};
+          var cands=[a.state_district,a.county,a.city_district,a.city,a.town,a.village].filter(Boolean);
+          return{state:a.state||"",cands:cands,city:a.city||a.town||a.village||""};
+        })
+        .catch(function(){noteBlocked();return null;});
+    });
+}
+
+/* ---------- PIN field ---------- */
+var pinCache={},pinBusy=false,fPin=el("fPin"),pinNote=el("pinNote");
 on(fPin,"input",function(){
   this.value=this.value.replace(/\D/g,"").slice(0,6);
   renderCard();
   if(this.value.length!==6||pinBusy)return;
   var pin=this.value;
   if(!/^[1-9][0-9]{5}$/.test(pin)){pinNote.textContent="A PIN code does not start with zero.";return;}
-  pinBusy=true;pinNote.textContent="Looking up "+pin+".";
-  lookupPin(pin).then(function(r){
+
+  /* offline first, so the state is right even with no connection */
+  var offline=stateFromPin(pin),filled=false;
+  if(offline){
+    fState.value=offline;fillDistricts(offline,"");
+    var gs=grp("fState");if(gs)gs.classList.remove("invalid");
+    filled=true;
+    pinNote.textContent="State set from the PIN. Finding the district.";
+    if(districtFromCity())pinNote.textContent="State and district set from the PIN.";
+  }else pinNote.textContent="Looking up "+pin+".";
+
+  if(pinCache[pin]){applyPin(pinCache[pin],pin,filled);return;}
+  pinBusy=true;
+  pinOnline(pin).then(function(r){
     pinBusy=false;
-    if(!r){pinNote.textContent="We could not reach the postal lookup. Pick the state and district yourself.";return;}
-    var st=resolveState(r.state);
-    if(st){
-      fState.value=st;fillDistricts(st,"");
-      setDistrict(st,r.district);
-      var g=grp("fState");if(g)g.classList.remove("invalid");
-      var g2=grp("fDistrict");if(g2)g2.classList.remove("invalid");
-    }
-    if(!val("fCity")&&r.city)el("fCity").value=r.city;
-    pinNote.textContent=r.office?"Matched to "+r.office+".":"Matched.";
-    renderCard();saveDraft();
-    if(!val("fAddr"))focusSoon("fAddr");
+    if(r)pinCache[pin]=r;
+    applyPin(r,pin,filled);
   });
 });
+function applyPin(r,pin,filled){
+  if(!r){
+    pinNote.textContent=filled
+      ? "State set from the PIN. Pick your district from the list."
+      : "The postal lookup is not reachable from here. Pick the state and district below.";
+    renderCard();saveDraft();
+    if(!val("fAddr"))focusSoon(val("fDistrict")?"fAddr":"fDistrict");
+    return;
+  }
+  var st=resolveState(r.state)||val("fState");
+  if(st){
+    if(fState.value!==st){fState.value=st;fillDistricts(st,"");}
+    var gs=grp("fState");if(gs)gs.classList.remove("invalid");
+  }
+  if(r.district)setDistrict(st,r.district);
+  if(!val("fDistrict"))districtFromCity();
+  if(val("fDistrict")){var gd=grp("fDistrict");if(gd)gd.classList.remove("invalid");}
+  if(!val("fCity")&&r.city)el("fCity").value=r.city;
+  pinNote.textContent=r.office?"Matched to "+r.office+".":"Matched.";
+  renderCard();saveDraft();
+  if(!val("fAddr"))focusSoon(val("fDistrict")?"fAddr":"fDistrict");
+}
+on(el("fCity"),"blur",function(){if(districtFromCity())saveDraft();});
 
-/* optional GPS, fills state and district only */
-var geoBtn=el("geoBtn"),geoNote=el("geoNote");
+/* ---------- use my location ---------- */
+var geoBtn=el("geoBtn"),geoNote=el("geoNote"),geoLabel=el("geoLabel");
+function geoIdle(){geoBtn.disabled=false;geoBtn.removeAttribute("aria-busy");geoLabel.textContent="Use my location";}
+function geoBusy(t){geoBtn.disabled=true;geoBtn.setAttribute("aria-busy","true");geoLabel.textContent=t;}
 on(geoBtn,"click",function(){
-  if(!navigator.geolocation){geoNote.textContent="This browser cannot share a location. Pick the state and district below.";return;}
-  geoBtn.disabled=true;geoBtn.classList.add("busy");geoBtn.textContent="Locating";
-  geoNote.textContent="Asking your browser for a rough location.";
+  if(!navigator.geolocation){
+    geoNote.textContent="This browser cannot share a location. Pick the state and district below.";return;
+  }
+  if(!window.isSecureContext&&location.protocol!=="file:"){
+    geoNote.textContent="Location needs a secure address. Open this page over https and try again.";return;
+  }
+  geoBusy("Locating");
+  geoNote.textContent="Asking your browser where you are.";
   navigator.geolocation.getCurrentPosition(function(pos){
     var la=pos.coords.latitude,lo=pos.coords.longitude;
-    fetch("https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+la+"&longitude="+lo+"&localityLanguage=en")
-      .then(function(r){return r.json();})
-      .then(function(j){
-        resetGeo();
-        var st=resolveState(j&&j.principalSubdivision);
-        if(!st){geoNote.textContent="We could not place you inside an Indian state. Pick it below.";return;}
-        fState.value=st;fillDistricts(st,"");
-        var got=false,admin=(j.localityInfo&&j.localityInfo.administrative)||[];
-        var cands=admin.map(function(a){return a.name;});
-        if(j.locality)cands.push(j.locality);
-        if(j.city)cands.push(j.city);
-        for(var i=0;i<cands.length&&!got;i++){
-          var c=String(cands[i]||"").replace(/\s+district$/i,"");
-          if(!c||key(c)===key(st))continue;
-          if(STATES[st].some(function(d){return key(d)===key(c);})){got=setDistrict(st,c);}
+    /* offline resolution runs immediately and always succeeds inside India */
+    var near=placeFromCoords(la,lo),st=near?near.state:"";
+    if(st){
+      fState.value=st;fillDistricts(st,"");
+      var gs=grp("fState");if(gs)gs.classList.remove("invalid");
+      if(near.district)setDistrict(st,near.district);
+      if(!val("fDistrict"))districtFromCity();
+      renderCard();
+      geoNote.textContent=val("fDistrict")
+        ? "Filled from your location. Change either one if it is off."
+        : "State set. Finding your district.";
+    }else geoNote.textContent="That does not look like a location inside India. Pick the state below.";
+    geoBusy("Finding district");
+    geoOnline(la,lo).then(function(r){
+      geoIdle();
+      var state=st;
+      if(r&&r.state){var rs=resolveState(r.state);if(rs)state=rs;}
+      if(state&&fState.value!==state){fState.value=state;fillDistricts(state,"");}
+      var got=!!val("fDistrict");
+      if(r&&state&&!got){
+        for(var i=0;i<r.cands.length&&!got;i++){
+          var c=String(r.cands[i]||"").replace(/\s+district$/i,"").trim();
+          if(!c||key(c)===key(state))continue;
+          if(STATES[state].some(function(d){return key(d)===key(c)||key(d).indexOf(key(c))===0;}))got=setDistrict(state,c);
         }
-        if(!got&&!val("fCity")&&(j.city||j.locality))el("fCity").value=j.city||j.locality;
-        geoNote.textContent=got?"Filled from your location. Change either one if it is off.":"State filled. Pick your district from the list.";
-        renderCard();saveDraft();
-      }).catch(function(){resetGeo();geoNote.textContent="The lookup did not answer. Pick the state and district below.";});
-  },function(){
-    resetGeo();
-    geoNote.textContent="No location shared. That is fine, pick the state and district below.";
-  },{enableHighAccuracy:false,timeout:9000,maximumAge:600000});
+      }
+      if(r&&r.city&&!val("fCity"))el("fCity").value=r.city;
+      if(!got)got=districtFromCity();
+      if(got){
+        var gd=grp("fDistrict");if(gd)gd.classList.remove("invalid");
+        geoNote.textContent="Filled from your location. Change either one if it is off.";
+      }else if(state){
+        geoNote.textContent=netBlocked
+          ? "State set from your location. The district lookup is blocked on this site, so pick your district from the list."
+          : "State set from your location. Pick your district from the list.";
+        focusSoon("fDistrict");
+      }
+      renderCard();saveDraft();
+    });
+  },function(e){
+    geoIdle();
+    if(e&&e.code===1)geoNote.textContent="Location permission was refused. That is fine, pick the state and district below.";
+    else if(e&&e.code===3)geoNote.textContent="Your device took too long to answer. Pick the state and district below.";
+    else geoNote.textContent="No location available right now. Pick the state and district below.";
+  },{enableHighAccuracy:false,timeout:12000,maximumAge:600000});
 });
-function resetGeo(){geoBtn.disabled=false;geoBtn.classList.remove("busy");geoBtn.textContent="Use my location";}
+
+
 
 /* ---------- step two ---------- */
 function validate2(e){
