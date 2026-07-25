@@ -34,6 +34,14 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 .cx-hero::after{content:"";position:absolute;inset:0;z-index:1;background:
  linear-gradient(180deg,rgba(8,10,14,.62) 0%,rgba(8,10,14,.32) 38%,rgba(8,10,14,.88) 88%,rgba(8,10,14,.97) 100%)}
 .cx-hero .wrap{position:relative;z-index:2;padding-bottom:clamp(52px,7vw,84px);padding-top:calc(105px + 5px)}
+  /* The hero art is a backdrop, not a block in the flow. The video/poster rule
+     above already says so; the still image that replaced them was never given
+     the same treatment, so it sat in the flow and pushed the text 1024px down
+     the page. Same rule, same result: the eyebrow starts where it does on
+     every other page. */
+  .cx-hero .cx-heroart{position:absolute;inset:0;z-index:0}
+  .cx-hero .cx-heroart picture{display:block;width:100%;height:100%}
+  .cx-hero .cx-img{width:100%;height:100%;object-fit:cover}
 .cx-k{font-family:var(--font-s);font-size:11px;letter-spacing:.3em;text-transform:uppercase;
  display:flex;align-items:center;gap:11px;color:#8F99A3}
 .cx-k::before{content:"";width:9px;height:9px;background:var(--blue);flex:none}
