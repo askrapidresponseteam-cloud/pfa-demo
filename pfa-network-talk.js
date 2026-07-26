@@ -71,7 +71,10 @@
     ".tk-nearrow span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut-2,#7A848D)}",
     ".tk-nearrow:hover b{color:var(--blue-ink,#006DB3)}",
 
-    ".fa-act .us-2nd{background:0 0!important;border:0!important;padding:0!important;margin-left:18px;color:var(--blue-ink,#006DB3)!important;font-size:13px!important;font-weight:600;letter-spacing:.02em!important;text-transform:none!important;box-shadow:none!important;cursor:pointer;line-height:1.4;text-align:left}",
+    /* the action row is a nowrap flex line, so a full-width button in it
+       squeezes the link beside it onto two ragged lines */
+    ".fa-act .us-talk{width:auto!important;margin-top:0!important;flex:0 1 auto;padding:16px 30px;white-space:nowrap}",
+    ".fa-act .us-2nd{flex:none;white-space:nowrap;background:0 0!important;border:0!important;padding:0!important;margin-left:0;color:var(--blue-ink,#006DB3)!important;font-size:13px!important;font-weight:600;letter-spacing:.02em!important;text-transform:none!important;box-shadow:none!important;cursor:pointer;line-height:1.4;text-align:left}",
     ".fa-act .us-2nd:hover{text-decoration:underline}",
     ".tk-reply{margin:0 0 16px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut-2,#7A848D)}",
     ".tk-ask{margin:0 0 12px;font-size:17px;font-weight:700;color:var(--ink,#0E1116)}",
