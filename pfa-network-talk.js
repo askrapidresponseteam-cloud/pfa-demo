@@ -60,6 +60,10 @@
     ".tk-nearrow span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut-2,#7A848D)}",
     ".tk-nearrow:hover b{color:var(--blue-ink,#006DB3)}",
 
+    ".fa-act .us-2nd{background:0 0!important;border:0!important;padding:0!important;margin-left:18px;color:var(--blue-ink,#006DB3)!important;font-size:13px!important;font-weight:600;letter-spacing:.02em!important;text-transform:none!important;box-shadow:none!important;cursor:pointer;line-height:1.4;text-align:left}",
+    ".fa-act .us-2nd:hover{text-decoration:underline}",
+    ".tk-reply{margin:0 0 16px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut-2,#7A848D)}",
+    ".tk-ask{margin:0 0 12px;font-size:17px;font-weight:700;color:var(--ink,#0E1116)}",
     ".tk-steps{margin:20px 0 0;padding-left:20px;color:var(--mut,#55606A);font-size:14px;line-height:1.7}",
     ".tk-inline{margin-top:1px;padding:26px clamp(18px,3vw,30px);background:#fff;border:1px solid var(--hair-soft,rgba(14,17,22,.11));border-top:2px solid var(--blue,#00A4FF)}"
   ].join("");
@@ -110,7 +114,7 @@
     b.className = "us-talk";
     b.textContent = "Talk to " + u.city;
     b.addEventListener("click", function () {
-      if (window.PFATalk) PFATalk.open(u, body);
+      if (window.PFATalk) PFATalk.open(u, body, { inContext: true });
     });
 
     /* above Call unit, because calling is the urgent case and talking is the
@@ -142,10 +146,18 @@
       host.className = "tk-inline";
       card.parentNode.insertBefore(host, card.nextSibling);
       b.remove();
-      if (window.PFATalk) PFATalk.open(u, host);
+      if (window.PFATalk) PFATalk.open(u, host, { inContext: true });
       host.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
-    (card.querySelector(".fa-act") || card).appendChild(b);
+    /* One primary per surface. The card carried two dark buttons of equal
+       weight, and the other one opened a sheet whose headline action was
+       this same conversation. Talking is the thing you cannot do from the
+       card, so it takes the primary, and seeing the full unit steps down to
+       a quiet link rather than competing as a second button. */
+    var act = card.querySelector(".fa-act") || card;
+    act.insertBefore(b, act.firstChild);
+    var open = act.querySelector(".np-open");
+    if (open) open.classList.add("us-2nd");
   }
 
   function start() {
