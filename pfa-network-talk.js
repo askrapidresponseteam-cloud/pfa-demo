@@ -1,19 +1,30 @@
-/* Discussion, mounted inside the unit sheet.
+/* Talk, inside the unit's own panel.
 
-   pfa-network.js owns the sheet and rewrites its contents whenever a unit
-   opens, so rather than reach into it this watches the sheet and adds one
-   action after it renders. Nothing in the network script needs to change.
+   One home. The conversation with a unit lives in the unit sheet and
+   nowhere else. The result card starts it, the sheet starts it, and both
+   land in the same place, so there is never a second copy of the same
+   conversation on screen and never a panel stranded under a card.
 
-   The bubbles are square. The site has no rounded corners anywhere and a
-   chat is not a reason to start.
+   Inside the sheet it is a view, not a replacement: the unit's profile is
+   hidden while you talk and restored when you step back, with every button
+   still wired, because the nodes were never destroyed.
+
+   pfa-network.js owns the sheet and rewrites it whenever a unit opens, so
+   this file watches the sheet and adds to it after it renders. Nothing in
+   the network script changes.
 */
 (function () {
   "use strict";
 
   var CSS = [
-    /* the one action added to the unit sheet */
+    /* the one action added to unit surfaces */
     ".us-talk{display:block;width:100%;margin-top:22px;padding:16px 20px;border:1px solid var(--ink,#0E1116);background:var(--ink,#0E1116);color:#fff;font-family:var(--font-d,'Archivo',system-ui,sans-serif);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;line-height:1;transition:background .25s,color .25s,border-color .25s}",
     ".us-talk:hover{background:var(--blue,#00A4FF);border-color:var(--blue,#00A4FF);color:var(--ink,#0E1116)}",
+
+    /* the way back from the conversation to the profile. Also what keeps the
+       unit named while the compact panel below stays free of repetition. */
+    ".tk-unitback{display:block;margin:0 0 20px;padding:0;border:0;background:0 0;font-family:var(--font-s,'Marcellus',Georgia,serif);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut,#55606A);cursor:pointer;text-align:left}",
+    ".tk-unitback:hover{color:var(--ink,#0E1116)}",
 
     ".tk{font-family:var(--font-d,'Archivo',system-ui,sans-serif)}",
     ".tk *{box-sizing:border-box;border-radius:0}",
@@ -64,8 +75,7 @@
     ".fa-act .us-2nd:hover{text-decoration:underline}",
     ".tk-reply{margin:0 0 16px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut-2,#7A848D)}",
     ".tk-ask{margin:0 0 12px;font-size:17px;font-weight:700;color:var(--ink,#0E1116)}",
-    ".tk-steps{margin:20px 0 0;padding-left:20px;color:var(--mut,#55606A);font-size:14px;line-height:1.7}",
-    ".tk-inline{margin-top:1px;padding:26px clamp(18px,3vw,30px);background:#fff;border:1px solid var(--hair-soft,rgba(14,17,22,.11));border-top:2px solid var(--blue,#00A4FF)}"
+    ".tk-steps{margin:20px 0 0;padding-left:20px;color:var(--mut,#55606A);font-size:14px;line-height:1.7}"
   ].join("");
 
   var st = document.createElement("style");
@@ -73,9 +83,9 @@
   st.textContent = CSS;
   document.head.appendChild(st);
 
-  /* which unit the sheet is showing. The card carries it, so take it there
-     rather than parsing the heading back out of the rendered sheet. */
-  var current = null;
+  var current = null;      /* last grid card clicked, one way the sheet learns its unit */
+  var pendingTalk = null;  /* set by the card so the sheet opens straight into the talk */
+
   document.addEventListener("click", function (e) {
     var card = e.target.closest && e.target.closest(".unit-card[data-u]");
     if (card) current = card.getAttribute("data-u");
@@ -93,44 +103,98 @@
     return null;
   }
 
-  function addAction() {
-    var body = document.getElementById("sheetBody");
-    if (!body || body.querySelector(".us-talk") || body.querySelector(".tk")) return;
-
-    /* Read the unit out of the sheet rather than remembering which card was
-       clicked. The sheet is also opened from the result card and from a
-       #u-<id> deep link, and neither of those goes through a card click, so
-       the remembered id was empty and no button appeared. */
+  /* the sheet is opened from cards, the result, and deep links; read the
+     unit out of what it rendered rather than remembering how it opened */
+  function resolveUnit(body) {
     var tag = body.querySelector("[data-u]");
     var u = unitById(tag ? tag.getAttribute("data-u") : current);
     if (!u) {
       var nm = body.querySelector(".us-name");
       if (nm) u = unitByCity(nm.textContent.replace(/^PFA\s+/, "").trim());
     }
-    if (!u) return;
-
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "us-talk";
-    b.textContent = "Talk to " + u.city;
-    b.addEventListener("click", function () {
-      if (window.PFATalk) PFATalk.open(u, body, { inContext: true });
-    });
-
-    /* above Call unit, because calling is the urgent case and talking is the
-       usual one. The pair below stays exactly where it was. */
-    var contact = body.querySelector(".us-contact");
-    if (contact) contact.parentNode.insertBefore(b, contact);
-    else body.appendChild(b);
+    return u;
   }
 
-  /* the result card is the first thing you see after locating, so the
-     conversation belongs there rather than three clicks inside a modal */
+  /* --------------------------------------------------------------------
+     The conversation as a view of the sheet. The profile is hidden, not
+     destroyed, so stepping back restores it with its buttons still wired.
+     The slim bar above the panel keeps the unit named, which is what lets
+     the compact panel below it say nothing twice.
+     -------------------------------------------------------------------- */
+  function enterTalk(u, body) {
+    if (body.querySelector(".tk-host")) return;
+    var kids = Array.prototype.slice.call(body.children);
+    kids.forEach(function (c) { c.style.display = "none"; });
+
+    var back = document.createElement("button");
+    back.type = "button";
+    back.className = "tk-unitback";
+    back.textContent = "\u2190  PFA " + u.city;
+    back.setAttribute("aria-label", "Back to the PFA " + u.city + " profile");
+
+    var host = document.createElement("div");
+    host.className = "tk-host";
+
+    back.addEventListener("click", function () {
+      back.remove();
+      host.remove();
+      kids.forEach(function (c) { c.style.display = ""; });
+    });
+
+    body.appendChild(back);
+    body.appendChild(host);
+    if (window.PFATalk) PFATalk.open(u, host, { inContext: true });
+
+    var sheet = document.getElementById("unitSheet");
+    if (sheet) sheet.scrollTop = 0;
+    body.scrollTop = 0;
+  }
+
+  function addAction() {
+    var body = document.getElementById("sheetBody");
+    if (!body) return;
+    var u = resolveUnit(body);
+    if (!u) return;
+
+    if (!body.querySelector(".us-talk")) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "us-talk";
+      b.textContent = "Talk to " + u.city;
+      b.addEventListener("click", function () { enterTalk(u, body); });
+      /* above Call unit: calling is the urgent case, talking is the usual one */
+      var contact = body.querySelector(".us-contact");
+      if (contact) contact.parentNode.insertBefore(b, contact);
+      else body.appendChild(b);
+    }
+
+    if (pendingTalk === u.id) {
+      pendingTalk = null;
+      enterTalk(u, body);
+    }
+  }
+
+  /* --------------------------------------------------------------------
+     The result card starts the same conversation in the same place. It
+     routes through the sheet's own deep link, so the sheet opens exactly
+     as it does from anywhere else, then goes straight in.
+     -------------------------------------------------------------------- */
+  function openSheetTalk(u) {
+    pendingTalk = u.id;
+    var want = "#u-" + u.id;
+    if (location.hash === want) {
+      try { window.dispatchEvent(new HashChangeEvent("hashchange")); }
+      catch (e) { location.hash = ""; location.hash = want; }
+    } else {
+      location.hash = want;
+    }
+  }
+
   function addToResult() {
     var res = document.getElementById("faResult");
     if (!res) return;
     var card = res.querySelector(".fa-card");
-    if (!card || card.querySelector(".us-talk") || res.querySelector(".tk")) return;
+    if (!card || card.querySelector(".us-talk")) return;
     var name = card.querySelector(".fa-name");
     if (!name) return;
     var u = unitByCity(name.textContent.replace(/^PFA\s+/, "").trim());
@@ -140,20 +204,9 @@
     b.type = "button";
     b.className = "us-talk";
     b.textContent = "Talk to " + u.city;
-    b.addEventListener("click", function () {
-      /* opens where you are standing. No modal, no page change. */
-      var host = document.createElement("div");
-      host.className = "tk-inline";
-      card.parentNode.insertBefore(host, card.nextSibling);
-      b.remove();
-      if (window.PFATalk) PFATalk.open(u, host, { inContext: true });
-      host.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    });
-    /* One primary per surface. The card carried two dark buttons of equal
-       weight, and the other one opened a sheet whose headline action was
-       this same conversation. Talking is the thing you cannot do from the
-       card, so it takes the primary, and seeing the full unit steps down to
-       a quiet link rather than competing as a second button. */
+    b.addEventListener("click", function () { openSheetTalk(u); });
+
+    /* one primary per surface: talking takes it, the profile steps down */
     var act = card.querySelector(".fa-act") || card;
     act.insertBefore(b, act.firstChild);
     var open = act.querySelector(".np-open");
