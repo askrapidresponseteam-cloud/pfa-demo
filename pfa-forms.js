@@ -101,11 +101,11 @@
       ".pfa-tel{display:flex;align-items:stretch;width:100%}",
       ".pfa-tel-cc{display:flex;align-items:center;padding:0 12px;flex:none;",
         "font-family:var(--font-s,inherit);font-size:13px;letter-spacing:.06em;",
-        "color:var(--mut-2,#7A848D);background:var(--porcelain,#F4F6F7);",
+        "color:var(--mut-2,#7A848D);background:var(--porcelain,#12161C);",
         "border:1px solid var(--hair,rgba(14,17,22,.14));border-right:0;border-radius:0;",
         "user-select:none}",
       ".pfa-tel input{flex:1;min-width:0;border-radius:0!important}",
-      ".fgroup.invalid .pfa-tel-cc{border-color:var(--bad,#c0392b)}"
+      ".fgroup.invalid .pfa-tel-cc{border-color:var(--bad,#FF6B6B)}"
     ].join("");
     document.head.appendChild(st);
   }

@@ -55,17 +55,17 @@ since pfa-header.js appends its styles
    ========================================================================== */
 
 :root {
-  --g-rim: inset 0 1px 0 rgba(255, 255, 255, .82);
+  --g-rim: inset 0 1px 0 rgba(255, 255, 255, .10);
   --g-rim-d: inset 0 1px 0 rgba(255, 255, 255, .13);
-  --g-edge: inset 0 0 0 1px rgba(255, 255, 255, .34);
+  --g-edge: inset 0 0 0 1px rgba(255, 255, 255, .06);
   --g-lift: 0 1px 2px rgba(14, 17, 22, .045), 0 14px 30px -20px rgba(14, 17, 22, .3);
   --g-lift-s: 0 1px 2px rgba(14, 17, 22, .04), 0 8px 20px -14px rgba(14, 17, 22, .24);
   --g-lift-d: 0 1px 2px rgba(14, 17, 22, .16), 0 16px 34px -22px rgba(14, 17, 22, .52);
   --g-lift-dm: 0 1px 2px rgba(14, 17, 22, .1), 0 9px 20px -16px rgba(14, 17, 22, .38);
-  --g-drop: 0 40px 90px -50px rgba(14, 17, 22, .55), 0 2px 8px rgba(14, 17, 22, .06);
-  --g-sheen: linear-gradient(158deg, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, .34) 46%, rgba(255, 255, 255, 0) 78%);
+  --g-drop: 0 40px 90px -50px rgba(0, 0, 0, .75), 0 2px 8px rgba(0, 0, 0, .3);
+  --g-sheen: linear-gradient(158deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, .02) 44%, rgba(255, 255, 255, 0) 76%);
   --g-sheen-d: linear-gradient(158deg, rgba(255, 255, 255, .11) 0%, rgba(255, 255, 255, .03) 40%, rgba(255, 255, 255, 0) 72%);
-  --g-hair: rgba(14, 17, 22, .11);
+  --g-hair: rgba(255, 255, 255, .12);
 }
 
 /* --------------------------------------------------------------------------
@@ -75,8 +75,8 @@ at an alpha you have to
    -------------------------------------------------------------------------- */
 body {
   background-image:
-    radial-gradient(1100px 620px at 12% -6%, rgba(0, 164, 255, .05), transparent 62%),
-    radial-gradient(900px 520px at 92% 8%, rgba(0, 109, 179, .04), transparent 58%);
+    radial-gradient(1100px 620px at 12% -6%, rgba(0, 164, 255, .07), transparent 62%),
+    radial-gradient(900px 520px at 92% 8%, rgba(0, 109, 179, .09), transparent 58%);
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
@@ -84,8 +84,8 @@ body {
 .sec.porcelain,
 .porcelain {
   background-image:
-    radial-gradient(760px 420px at 88% 0%, rgba(0, 164, 255, .055), transparent 62%),
-    linear-gradient(180deg, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, 0) 46%);
+    radial-gradient(760px 420px at 88% 0%, rgba(0, 164, 255, .06), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, .035) 0%, rgba(255, 255, 255, 0) 46%);
 }
 
 /* --------------------------------------------------------------------------
@@ -119,7 +119,7 @@ body {
 .grid-prompt,
 .cobrand,
 .tri-panel .c {
-  background-color: rgba(255, 255, 255, .74);
+  background-color: rgba(21, 25, 31, .94);
   background-image: var(--g-sheen);
   box-shadow: var(--g-rim), var(--g-edge), var(--g-lift);
 }
@@ -213,7 +213,7 @@ so leave that alone */
 and the only place the blur runs deep.
    -------------------------------------------------------------------------- */
 nav.pfa-menu {
-  background-color: rgba(255, 255, 255, .88);
+  background-color: rgba(14, 17, 22, .88);
   -webkit-backdrop-filter: blur(34px) saturate(1.5);
   backdrop-filter: blur(34px) saturate(1.5);
   box-shadow: var(--g-rim), 0 30px 70px -50px rgba(14, 17, 22, .5);
@@ -223,15 +223,15 @@ nav.pfa-menu {
 .np-panel,
 .drawer,
 .apanel {
-  background-color: rgba(255, 255, 255, .9);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 220px);
+  background-color: rgba(14, 17, 22, .9);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, 0) 220px);
   -webkit-backdrop-filter: blur(34px) saturate(1.5);
   backdrop-filter: blur(34px) saturate(1.5);
   box-shadow: var(--g-rim), var(--g-drop);
 }
 
 .pfa-panel,
-.np-panel { border-color: rgba(255, 255, 255, .5); }
+.np-panel { border-color: rgba(255, 255, 255, .12); }
 
 /* scrims stop being a flat wash and become depth of field */
 .pfa-scrim,
@@ -266,7 +266,7 @@ header.pfa-nav.scrolled {
 }
 
 header.pfa-nav .pfa-nav-in .pfa-searchbar {
-  background-color: rgba(255, 255, 255, .09);
+  background-color: rgba(255, 255, 255, .07);
   background-image: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, 0));
   box-shadow: var(--g-rim-d);
 }
@@ -318,7 +318,7 @@ it just runs from here */
 .pfa-panel,
 .np-panel,
 .drawer,
-.apanel { background-color: rgba(255, 255, 255, .98); }
+.apanel { background-color: rgba(14, 17, 22, .98); }
   header.pfa-nav { background-color: rgba(14, 17, 22, .9); }
   .pfa-cart,
 .toast,
@@ -336,7 +336,7 @@ it just runs from here */
 .ev,
 .sp,
 .voice,
-.cx-tile { background-color: rgba(255, 255, 255, .94); }
+.cx-tile { background-color: rgba(20, 24, 30, .96); }
 }
 
 @media print {

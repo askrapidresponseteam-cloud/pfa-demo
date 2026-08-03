@@ -9,24 +9,24 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Marcellus&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root{--band:#080B0F;              /* a band that was dark stays a well */
     --font-d:'Archivo',system-ui,sans-serif;
     --font-s:'Marcellus',Georgia,serif;
-    --white:#FFFFFF;
-    --porcelain:#F4F6F7;
-    --ink:#0E1116;
-    --ink-2:#171C23;
-    --ink-3:#1F2630;
+    --white:#0E1116;
+    --porcelain:#12161C;
+    --ink:#F4F6F7;
+    --ink-2:#DCE3E8;
+    --ink-3:#D3DBE1;
     --blue:#00A4FF;
-    --blue-ink:#006DB3;
-    --blue-mid:#0090E0;
-    --hair:#D9DEE3;
-    --hair-soft:#E8ECEF;
-    --mut:#5A646E;
+    --blue-ink:#5BC4FF;
+    --blue-mid:#35B6FF;
+    --hair:rgba(255,255,255,0.14);
+    --hair-soft:#171C23;
+    --mut:#8B959E;
     --mut-2:#8F98A1;
-    --ok:#1B8A4B;
-    --warn:#B26A00;
-    --err:#C0341D;
+    --ok:#3CD98A;
+    --warn:#E7A93A;
+    --err:#FF6B6B;
     --ease:cubic-bezier(.2,.6,.2,1);
     --side:248px;
     --top:64px;
@@ -49,7 +49,7 @@
 
   /* ---------------- sidebar ---------------- */
   .side{
-    width:var(--side);flex:none;background:var(--ink);color:#fff;
+    width:var(--side);flex:none;background:var(--band);color:#fff;
     display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:50;
   }
   .side-brand{
@@ -57,7 +57,7 @@
     padding:0 20px;border-bottom:1px solid rgba(255,255,255,.1);flex:none;
   }
   .side-brand .mark{width:26px;height:26px;background:var(--blue);flex:none;display:grid;place-items:center;}
-  .side-brand .mark svg{width:16px;height:16px;fill:var(--ink);}
+  .side-brand .mark svg{width:16px;height:16px;fill:var(--band);}
   .side-brand b{font-family:var(--font-s);font-weight:400;font-size:12px;letter-spacing:.22em;text-transform:uppercase;}
   .side-nav{flex:1;overflow-y:auto;padding:16px 0 24px;}
   .nav-g{margin-bottom:20px;}
@@ -74,7 +74,7 @@
   .nav-i:hover{background:rgba(255,255,255,.05);color:#fff;}
   .nav-i.on{background:rgba(0,164,255,.12);border-left-color:var(--blue);color:#fff;}
   .nav-i .pill{
-    margin-left:auto;background:var(--blue);color:var(--ink);font-size:10px;font-weight:800;
+    margin-left:auto;background:var(--blue);color:var(--band);font-size:10px;font-weight:800;
     padding:2px 6px;letter-spacing:.04em;
   }
   .nav-i .pill.warn{background:var(--warn);color:#fff;}
@@ -92,7 +92,7 @@
   .top .crumb{font-family:var(--font-s);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut-2);display:block;margin-bottom:1px;}
   .top-r{margin-left:auto;display:flex;align-items:center;gap:10px;}
   .who{display:flex;align-items:center;gap:9px;padding-left:12px;border-left:1px solid var(--hair);}
-  .who .av{width:28px;height:28px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none;}
+  .who .av{width:28px;height:28px;background:var(--ink);color:#0E1116;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none;}
   .who-t{line-height:1.25;}
   .who-t b{display:block;font-size:12px;font-weight:700;}
   .who-t span{font-size:10.5px;color:var(--mut-2);}
@@ -102,14 +102,14 @@
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
     font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
-    padding:10px 16px;background:var(--ink);color:#fff;border:1px solid var(--ink);
+    padding:10px 16px;background:var(--ink);color:#0E1116;border:1px solid var(--ink);
     transition:background .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease);white-space:nowrap;
   }
-  .btn:hover{background:var(--blue);border-color:var(--blue);color:var(--ink);}
+  .btn:hover{background:var(--blue);border-color:var(--blue);color:var(--white);}
   .btn.ghost{background:transparent;color:var(--ink);border-color:var(--hair);}
   .btn.ghost:hover{border-color:var(--blue-ink);color:var(--blue-ink);background:transparent;}
-  .btn.danger{background:var(--err);border-color:var(--err);color:#fff;}
-  .btn.danger:hover{background:#9E2916;border-color:#9E2916;color:#fff;}
+  .btn.danger{background:var(--err);border-color:var(--err);color:#0E1116;}
+  .btn.danger:hover{background:#E97461;border-color:#E97461;color:#0E1116;}
   .btn.sm{padding:7px 11px;font-size:10.5px;}
   .btn:disabled{opacity:.38;pointer-events:none;}
   .btn svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none;}
@@ -137,11 +137,11 @@
     letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;
     background:var(--porcelain);color:var(--mut);border:1px solid var(--hair);white-space:nowrap;
   }
-  .tag.ok{background:rgba(27,138,75,.1);color:var(--ok);border-color:rgba(27,138,75,.3);}
-  .tag.warn{background:rgba(178,106,0,.1);color:var(--warn);border-color:rgba(178,106,0,.3);}
-  .tag.err{background:rgba(192,52,29,.1);color:var(--err);border-color:rgba(192,52,29,.3);}
-  .tag.blue{background:rgba(0,109,179,.1);color:var(--blue-ink);border-color:rgba(0,109,179,.3);}
-  .tag.ink{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .tag.ok{background:rgba(60,217,138,.1);color:var(--ok);border-color:rgba(60,217,138,.3);}
+  .tag.warn{background:rgba(231,169,58,.1);color:var(--warn);border-color:rgba(231,169,58,.3);}
+  .tag.err{background:rgba(255,107,107,.1);color:var(--err);border-color:rgba(255,107,107,.3);}
+  .tag.blue{background:rgba(91,196,255,.1);color:var(--blue-ink);border-color:rgba(91,196,255,.3);}
+  .tag.ink{background:var(--ink);color:#0E1116;border-color:var(--ink);}
 
   /* ---------------- table ---------------- */
   .tbl-wrap{overflow-x:auto;max-width:100%;}
@@ -175,7 +175,7 @@
     transition:all .18s var(--ease);
   }
   .chip:hover{border-color:var(--ink);color:var(--ink);}
-  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#0E1116;}
   .bar .sp{margin-left:auto;display:flex;gap:9px;align-items:center;}
   .srch{position:relative;}
   .srch input{padding-left:32px;width:210px;}
@@ -211,15 +211,15 @@
   /* ---------------- misc ---------------- */
   .toast{
     position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:80;
-    background:var(--ink);color:#fff;padding:13px 20px;font-size:12.5px;font-weight:600;
+    background:var(--ink);color:#0E1116;padding:13px 20px;font-size:12.5px;font-weight:600;
     opacity:0;pointer-events:none;transition:opacity .22s var(--ease),transform .22s var(--ease);
     display:flex;align-items:center;gap:12px;max-width:min(520px,92vw);
   }
   .toast.on{opacity:1;transform:translate(-50%,0);}
   .toast b{color:var(--blue);}
   .banner{
-    background:#FFF6E5;border:1px solid rgba(178,106,0,.35);padding:12px 15px;
-    font-size:12px;color:#7A4A00;line-height:1.6;margin-bottom:20px;display:flex;gap:11px;align-items:flex-start;
+    background:#AD7100;border:1px solid rgba(231,169,58,.35);padding:12px 15px;
+    font-size:12px;color:#FFCF85;line-height:1.6;margin-bottom:20px;display:flex;gap:11px;align-items:flex-start;
   }
   .banner svg{width:15px;height:15px;stroke:var(--warn);stroke-width:2;fill:none;flex:none;margin-top:1px;}
   .banner b{font-weight:800;}
@@ -262,8 +262,8 @@
   .media .slot img,.media .slot video{width:100%;height:100%;object-fit:cover;display:block;}
   .media .slot .add{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--mut-2);font-size:10px;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:6px;}
   .media .slot .add svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.6;fill:none;}
-  .media .slot .kind{position:absolute;left:6px;top:6px;background:var(--ink);color:#fff;font-size:9px;font-weight:800;letter-spacing:.1em;padding:2px 5px;text-transform:uppercase;}
-  .media .slot .cover{position:absolute;right:6px;top:6px;background:var(--blue);color:var(--ink);font-size:9px;font-weight:800;letter-spacing:.1em;padding:2px 5px;text-transform:uppercase;}
+  .media .slot .kind{position:absolute;left:6px;top:6px;background:var(--ink);color:#0E1116;font-size:9px;font-weight:800;letter-spacing:.1em;padding:2px 5px;text-transform:uppercase;}
+  .media .slot .cover{position:absolute;right:6px;top:6px;background:var(--blue);color:var(--white);font-size:9px;font-weight:800;letter-spacing:.1em;padding:2px 5px;text-transform:uppercase;}
   .media .slot .del{
     position:absolute;right:6px;bottom:6px;width:24px;height:24px;background:rgba(14,17,22,.85);
     color:#fff;display:grid;place-items:center;opacity:0;transition:opacity .16s var(--ease);
@@ -271,7 +271,7 @@
   .media .slot:hover .del{opacity:1;}
   .media .slot .del svg{width:11px;height:11px;stroke:currentColor;stroke-width:2.4;fill:none;}
   .media .slot .setcover{
-    position:absolute;left:6px;bottom:6px;background:rgba(255,255,255,.94);color:var(--ink);
+    position:absolute;left:6px;bottom:6px;background:rgba(14,17,22,.94);color:var(--ink);
     font-size:9px;font-weight:800;letter-spacing:.1em;padding:3px 6px;text-transform:uppercase;
     opacity:0;transition:opacity .16s var(--ease);
   }
@@ -304,28 +304,66 @@
     .srch input{width:100%;}
     .srch{flex:1;}
   }
-.skip{position:fixed;top:-64px;left:16px;z-index:300;background:var(--ink);color:#fff;padding:13px 18px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:top .2s ease}.skip:focus{top:12px;outline:2px solid var(--blue)}.nojs{max-width:1220px;margin:0 auto;padding:clamp(48px,6vw,88px) clamp(20px,4vw,48px)}.nojs-e{font-family:var(--font-s);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:22px}.nojs-h{font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1.05;letter-spacing:-.015em;max-width:20ch}.nojs-p{color:var(--mut);margin-top:20px;max-width:56ch}.nojs-a{display:inline-block;margin-top:28px;background:var(--ink);color:#fff;padding:14px 22px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
-.gate{position:fixed;inset:0;z-index:200;background:var(--ink);display:flex;align-items:center;justify-content:center;padding:24px;}
+.skip{position:fixed;top:-64px;left:16px;z-index:300;background:var(--ink);color:#0E1116;padding:13px 18px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:top .2s ease}.skip:focus{top:12px;outline:2px solid var(--blue)}.nojs{max-width:1220px;margin:0 auto;padding:clamp(48px,6vw,88px) clamp(20px,4vw,48px)}.nojs-e{font-family:var(--font-s);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:22px}.nojs-h{font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1.05;letter-spacing:-.015em;max-width:20ch}.nojs-p{color:var(--mut);margin-top:20px;max-width:56ch}.nojs-a{display:inline-block;margin-top:28px;background:var(--ink);color:#0E1116;padding:14px 22px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.gate{position:fixed;inset:0;z-index:200;background:var(--band);display:flex;align-items:center;justify-content:center;padding:24px;}
 .gate[hidden]{display:none;}
 body.locked .shell,body.locked .drw,body.locked .scrim{display:none;}
 .gate-in{width:100%;max-width:420px;text-align:left;}
 .gate-mark{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;background:var(--blue);margin-bottom:22px;}
-.gate-mark svg{width:20px;height:20px;fill:var(--ink);}
+.gate-mark svg{width:20px;height:20px;fill:var(--band);}
 .gate-k{font-family:var(--font-d);font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0 0 10px;}
-.gate-h{font-family:var(--font-s);font-size:30px;font-weight:400;line-height:1.15;color:var(--white);margin:0 0 12px;}
+.gate-h{font-family:var(--font-s);font-size:30px;font-weight:400;line-height:1.15;color:var(--ink);margin:0 0 12px;}
 .gate-p{font-family:var(--font-d);font-size:13px;line-height:1.6;color:var(--mut-2);margin:0 0 24px;}
 .gate .btn{width:100%;}
 .gate[data-state="working"] .btn,.gate[data-state="error"] .btn{opacity:.45;pointer-events:none;}
 .gate-spin{margin-top:18px;}
 .gate-spin span{display:block;width:20px;height:20px;border:2px solid var(--ink-3);border-top-color:var(--blue);animation:gspin .7s linear infinite;}
 @keyframes gspin{to{transform:rotate(360deg)}}
-.gate-err{font-family:var(--font-d);font-size:12.5px;line-height:1.6;color:var(--white);background:var(--err);padding:12px 14px;margin:18px 0 0;}
+.gate-err{font-family:var(--font-d);font-size:12.5px;line-height:1.6;color:var(--ink);background:var(--err);padding:12px 14px;margin:18px 0 0;}
+
+/* ---- contrast pins: measured against the rendered page ---- */
+/* A button with no styling of its own falls back to the browser's chrome:
+   black type on a white face. Inheriting the colour alone left white on white,
+   so the face has to go too. Any class rule still wins over both. */
+button{color:inherit;background-color:transparent}
+
+/* The places widget is shared, but only one page ever styled its chips, so on
+   every other page they arrived unstyled. They travel with the site now. */
+.pfa-chips-lab{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mut-2);margin-right:2px}
+.pfa-chip{background:transparent;border:1px solid var(--hair);color:var(--ink);font-size:13px;padding:7px 13px;cursor:pointer;transition:border-color .15s ease,color .15s ease}
+.pfa-chip:hover{border-color:var(--blue);color:var(--blue)}
+
+/* floating chrome stays dark glass, so its type stays light */
+.pfa-cart{color:#F4F6F7;border-color:rgba(255,255,255,.5)}
+.pfa-cart:hover{background:#00A4FF;border-color:#00A4FF;color:#0E1116}
+.pfa-cart .cart-count{background:#00A4FF;color:#0E1116}
+.pfa-cart:hover .cart-count{background:#0E1116;color:#F4F6F7}
+.toast,.net-toast,.svc-toast,.hof-toast,.uc-live{color:#F4F6F7}
+p.gate-err{color:#0E1116}
+
+/* ---------------- site visibility ---------------- */
+.vis-note{font-size:13px;line-height:1.65;color:var(--mut);max-width:70ch;margin:0}
+.vis-card .card-h{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.vis-file{font-family:var(--font-d);font-size:11px;letter-spacing:.08em;color:var(--mut-2);margin-left:8px}
+.vis-sw{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.vis-sw input{width:16px;height:16px;accent-color:var(--blue);cursor:pointer}
+.vis-sw.off{color:var(--mut-2)}
+.vis-always{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut-2)}
+.vis-secs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px 22px}
+.vis-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--hair-soft);cursor:pointer;font-size:13px;color:var(--ink)}
+.vis-row input{width:15px;height:15px;accent-color:var(--blue);cursor:pointer;flex:none}
+.vis-row code{margin-left:auto;font-size:11px;color:var(--mut-2)}
+.vis-row.off span{color:var(--mut-2);text-decoration:line-through}
+.vis-actions{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 8px}
+.vis-out{background:var(--porcelain);border:1px solid var(--hair);padding:16px;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--mut);max-height:300px;overflow:auto}
 </style>
 <script src="vendor/firebase-app-compat.js"></script>
 <script src="vendor/firebase-auth-compat.js"></script>
 <script src="pfa-firebase-config.js"></script>
 <script src="pfa-admin-auth.js"></script>
-<link rel="stylesheet" href="pfa-glass.css"></head>
+<link rel="stylesheet" href="pfa-glass.css"><script src="pfa-site-map.js"></script>
+<script src="pfa-visibility.js"></script>
+</head>
 <body class="locked"><a class="skip" href="#view">Skip to content</a>
 <div class="gate" id="gate" data-state="signin" role="dialog" aria-modal="true" aria-labelledby="gateH">
   <div class="gate-in">
@@ -1951,5 +1989,92 @@ PFAAuth.ready(function(who){
   route();
 });
 </script>
-<script>!function(){if(window.__pfaBack)return;window.__pfaBack=1;var HOME="index.html",KEY="pfaIdx",idx=1,ss=null;try{ss=window.sessionStorage;ss.setItem("__pfaT","1");ss.removeItem("__pfaT")}catch(e){ss=null}function hi(){if(!ss)return 0;var v=parseInt(ss.getItem(KEY)||"0",10);return v>0?v:0}function stamp(){var s=null;try{s=history.state}catch(e){}if(s&&typeof s.pfaIdx==="number"&&s.pfaIdx>0){idx=s.pfaIdx}else{idx=hi()+1;try{history.replaceState({pfaIdx:idx},"")}catch(e){}}if(ss){try{ss.setItem(KEY,String(idx>hi()?idx:hi()))}catch(e){}}}var here=(location.pathname.split("/").pop()||"index.html").toLowerCase();var NOBTN=here===""||here==="index.html"||here==="admin.html";stamp();if(NOBTN){window.addEventListener("hashchange",stamp);window.addEventListener("popstate",stamp);window.addEventListener("pageshow",function(ev){if(ev.persisted)stamp()});return;}var b=document.createElement("a");b.id="pfaBack";b.href=HOME;b.style.cssText="position:fixed;left:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:none;align-items:center;gap:10px;font-family:'Archivo',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#FFFFFF;color:#0E1116;border:1px solid #0E1116;padding:14px 20px;line-height:1;cursor:pointer;text-decoration:none;box-shadow:0 12px 32px -12px rgba(14,17,22,.35);border-radius:0";b.addEventListener("mouseenter",function(){b.style.background="#00A4FF";b.style.borderColor="#00A4FF"});b.addEventListener("mouseleave",function(){b.style.background="#FFFFFF";b.style.borderColor="#0E1116"});b.addEventListener("click",function(e){e.preventDefault();if(idx>1&&history.length>1){history.back()}else{location.href=HOME}});function sync(){var back=idx>1;b.setAttribute("data-mode",back?"back":"home");b.innerHTML='<span aria-hidden="true">&#8592;</span><span>'+(back?"Back":"Home")+"</span>";b.setAttribute("aria-label",back?"Go back one step":"Go to the home page");b.style.display="inline-flex";}function mount(){sync();(document.body||document.documentElement).appendChild(b)}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",mount)}else{mount()}window.addEventListener("hashchange",function(){stamp();sync()});window.addEventListener("popstate",function(){stamp();sync()});window.addEventListener("pageshow",function(ev){if(ev.persisted){stamp();sync()}});}();</script></body>
+<script>!function(){if(window.__pfaBack)return;window.__pfaBack=1;var HOME="index.html",KEY="pfaIdx",idx=1,ss=null;try{ss=window.sessionStorage;ss.setItem("__pfaT","1");ss.removeItem("__pfaT")}catch(e){ss=null}function hi(){if(!ss)return 0;var v=parseInt(ss.getItem(KEY)||"0",10);return v>0?v:0}function stamp(){var s=null;try{s=history.state}catch(e){}if(s&&typeof s.pfaIdx==="number"&&s.pfaIdx>0){idx=s.pfaIdx}else{idx=hi()+1;try{history.replaceState({pfaIdx:idx},"")}catch(e){}}if(ss){try{ss.setItem(KEY,String(idx>hi()?idx:hi()))}catch(e){}}}var here=(location.pathname.split("/").pop()||"index.html").toLowerCase();var NOBTN=here===""||here==="index.html"||here==="admin.html";stamp();if(NOBTN){window.addEventListener("hashchange",stamp);window.addEventListener("popstate",stamp);window.addEventListener("pageshow",function(ev){if(ev.persisted)stamp()});return;}var b=document.createElement("a");b.id="pfaBack";b.href=HOME;b.style.cssText="position:fixed;left:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:none;align-items:center;gap:10px;font-family:'Archivo',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#FFFFFF;color:#0E1116;border:1px solid #0E1116;padding:14px 20px;line-height:1;cursor:pointer;text-decoration:none;box-shadow:0 12px 32px -12px rgba(14,17,22,.35);border-radius:0";b.addEventListener("mouseenter",function(){b.style.background="#00A4FF";b.style.borderColor="#00A4FF"});b.addEventListener("mouseleave",function(){b.style.background="#FFFFFF";b.style.borderColor="#0E1116"});b.addEventListener("click",function(e){e.preventDefault();if(idx>1&&history.length>1){history.back()}else{location.href=HOME}});function sync(){var back=idx>1;b.setAttribute("data-mode",back?"back":"home");b.innerHTML='<span aria-hidden="true">&#8592;</span><span>'+(back?"Back":"Home")+"</span>";b.setAttribute("aria-label",back?"Go back one step":"Go to the home page");b.style.display="inline-flex";}function mount(){sync();(document.body||document.documentElement).appendChild(b)}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",mount)}else{mount()}window.addEventListener("hashchange",function(){stamp();sync()});window.addEventListener("popstate",function(){stamp();sync()});window.addEventListener("pageshow",function(ev){if(ev.persisted){stamp();sync()}});}();
+/* ---------------- site visibility ---------------- */
+NAV.push({ g:"Site", items:[ { r:"visibility", t:"Pages and sections", i:"set", cap:"settings.write" } ] });
+TITLES.visibility = ["Site", "Pages and sections"];
+
+VIEWS.visibility = function () {
+  var map = (window.PFA_SITE_MAP && window.PFA_SITE_MAP.pages) || [];
+  var cfg = window.PFAVisibility ? window.PFAVisibility.get() : { pages:{}, sections:{} };
+  if (!map.length) {
+    return Promise.resolve('<div class="empty">pfa-site-map.js is not loaded, so there is nothing to list.</div>');
+  }
+  var h = '<div class="card" style="margin-bottom:20px"><div class="card-h"><h3>What the site shows</h3></div>' +
+          '<div class="card-b"><p class="vis-note">Turning a page off takes it off the site and stops it being linked from the nav, the menu or the foot. Turning a section off leaves the page in place and drops that block. Nothing is deleted here, so anything can be turned back on. Use <b>Copy as defaults</b> to make a change permanent in the build.</p></div></div>';
+  map.forEach(function (p) {
+    var pOn = cfg.pages[p.file] !== false;
+    h += '<div class="card vis-card" style="margin-bottom:14px"><div class="card-h">' +
+         '<h3>' + esc(p.label) + '<span class="vis-file">' + esc(p.file) + '</span></h3>' +
+         (p.canHide
+           ? '<label class="vis-sw' + (pOn ? '' : ' off') + '"><input type="checkbox" data-page="' + esc(p.file) + '"' + (pOn ? ' checked' : '') + '><span>' + (pOn ? 'On' : 'Off') + '</span></label>'
+           : '<span class="vis-always">Always on</span>') +
+         '</div>';
+    if (p.sections && p.sections.length) {
+      h += '<div class="card-b"><div class="vis-secs">';
+      p.sections.forEach(function (s) {
+        var m = cfg.sections[p.file] || {}, on = m[s.key] !== false;
+        h += '<label class="vis-row' + (on ? '' : ' off') + '">' +
+             '<input type="checkbox" data-page="' + esc(p.file) + '" data-key="' + esc(s.key) + '"' + (on ? ' checked' : '') + '>' +
+             '<span>' + esc(s.label) + '</span><code>' + esc(s.key) + '</code></label>';
+      });
+      h += '</div></div>';
+    }
+    h += '</div>';
+  });
+  h += '<div class="vis-actions">' +
+       '<button class="btn" id="visSave" type="button">Save</button>' +
+       '<button class="btn ghost" id="visReset" type="button">Turn everything back on</button>' +
+       '<button class="btn ghost" id="visExport" type="button">Copy as defaults</button></div>' +
+       '<pre class="vis-out" id="visOut" hidden></pre>';
+  return Promise.resolve(h);
+};
+
+WIRE.visibility = function () {
+  function collect() {
+    var cfg = { pages:{}, sections:{} };
+    Array.prototype.forEach.call($("#view").querySelectorAll('input[type="checkbox"]'), function (cb) {
+      var pg = cb.getAttribute("data-page"), key = cb.getAttribute("data-key");
+      if (key) {
+        if (!cb.checked) { cfg.sections[pg] = cfg.sections[pg] || {}; cfg.sections[pg][key] = false; }
+      } else if (!cb.checked) { cfg.pages[pg] = false; }
+    });
+    return cfg;
+  }
+  $("#view").addEventListener("change", function (e) {
+    var cb = e.target;
+    if (!cb || cb.type !== "checkbox") return;
+    var row = cb.parentElement;
+    row.classList.toggle("off", !cb.checked);
+    var s = row.querySelector("span");
+    if (row.classList.contains("vis-sw") && s) s.textContent = cb.checked ? "On" : "Off";
+  });
+  $("#visSave").addEventListener("click", function () {
+    var cfg = collect();
+    if (window.PFAVisibility && window.PFAVisibility.save(cfg)) {
+      var off = Object.keys(cfg.pages).length, secs = 0;
+      for (var k in cfg.sections) secs += Object.keys(cfg.sections[k]).length;
+      toast(off || secs ? ("Saved: " + off + " pages and " + secs + " sections off") : "Saved: everything on");
+    } else { toast("Could not save"); }
+  });
+  $("#visReset").addEventListener("click", function () {
+    if (window.PFAVisibility) window.PFAVisibility.clear();
+    Array.prototype.forEach.call($("#view").querySelectorAll('input[type="checkbox"]'), function (cb) {
+      cb.checked = true;
+      cb.parentElement.classList.remove("off");
+      var s = cb.parentElement.querySelector("span");
+      if (cb.parentElement.classList.contains("vis-sw") && s) s.textContent = "On";
+    });
+    toast("Everything back on");
+  });
+  $("#visExport").addEventListener("click", function () {
+    var snippet = "window.PFA_VISIBILITY_DEFAULTS = " + JSON.stringify(collect(), null, 2) + ";";
+    var out = $("#visOut");
+    out.textContent = "Paste this over the last line of pfa-site-map.js to ship the change:\n\n" + snippet;
+    out.hidden = false;
+    if (navigator.clipboard) navigator.clipboard.writeText(snippet).then(function () { toast("Copied"); }, function () {});
+  });
+};
+renderNav();
+</script></body>
 </html>

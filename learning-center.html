@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Marcellus&display=swap" rel="stylesheet">
 <style>
-:root{
-  --white:#FFFFFF;--porcelain:#F4F6F7;--paper:#ECEEF0;
-  --ink:#0E1116;--ink-soft:#1A1F26;--mut:#55606A;--mut-2:#7A848D;
-  --blue:#00A4FF;--blue-mid:#0090E0;--blue-ink:#006DB3;
-  --err:#B3261E;--ok:#1B7F4B;
-  --hair:rgba(14,17,22,0.14);--hair-soft:rgba(14,17,22,0.08);
+:root{--band:#080B0F;              /* a band that was dark stays a well */
+  --white:#0E1116;--porcelain:#12161C;--paper:#12161C;
+  --ink:#F4F6F7;--ink-soft:#DCE3E8;--mut:#8B959E;--mut-2:#6E7883;
+  --blue:#00A4FF;--blue-mid:#35B6FF;--blue-ink:#5BC4FF;
+  --err:#FF6B6B;--ok:#3CD98A;
+  --hair:rgba(255,255,255,0.14);--hair-soft:rgba(255,255,255,0.08);
   --font-d:'Archivo',system-ui,sans-serif;--font-s:'Marcellus',Georgia,serif;
   --ease:cubic-bezier(.2,.6,.2,1);
 }
@@ -33,14 +33,14 @@ a{color:inherit;text-decoration:none}
 /* ---- canonical shared chrome (from site) ---- */
 .pfa-cart,.pfa-cart *,.pfa-mobile,.pfa-mobile *{box-sizing:border-box;border-radius:0!important;margin:0}
 
-.pfa-cart{position:fixed;right:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#0e1116;color:#fff;border:1px solid #fff;padding:14px 20px;line-height:1;cursor:pointer;box-shadow:0 12px 32px -12px rgba(14,17,22,.45);transition:background .3s cubic-bezier(.2,.6,.2,1),color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1),transform .3s cubic-bezier(.2,.6,.2,1)}
+.pfa-cart{position:fixed;right:clamp(20px,4vw,48px);bottom:28px;z-index:990;display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:#F4F6F7;color:#0E1116;border:1px solid #0E1116;padding:14px 20px;line-height:1;cursor:pointer;box-shadow:0 12px 32px -12px rgba(14,17,22,.45);transition:background .3s cubic-bezier(.2,.6,.2,1),color .3s cubic-bezier(.2,.6,.2,1),border-color .3s cubic-bezier(.2,.6,.2,1),transform .3s cubic-bezier(.2,.6,.2,1)}
 .pfa-cart:hover{background:#00a4ff;border-color:#00a4ff;color:#0e1116;transform:translateY(-2px)}
 .pfa-cart .cart-count{background:#00a4ff;color:#0e1116;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;padding:0 5px;transition:background .3s cubic-bezier(.2,.6,.2,1),color .3s cubic-bezier(.2,.6,.2,1)}
-.pfa-cart:hover .cart-count{background:#0e1116;color:#fff}
-.pfa-mobile{position:fixed;inset:76px 0 0 0;background:#fff;z-index:999;padding:40px clamp(20px,6vw,48px);display:flex;flex-direction:column;gap:8px;overflow-y:auto;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.2,.6,.2,1),visibility 0s linear .35s;counter-reset:pfa-menu}
+.pfa-cart:hover .cart-count{background:#F4F6F7;color:#0E1116}
+.pfa-mobile{position:fixed;inset:76px 0 0 0;background:#0E1116;z-index:999;padding:40px clamp(20px,6vw,48px);display:flex;flex-direction:column;gap:8px;overflow-y:auto;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.2,.6,.2,1),visibility 0s linear .35s;counter-reset:pfa-menu}
 .pfa-mobile.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}
-.pfa-mobile a{display:flex;align-items:baseline;gap:16px;font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.6rem,7vw,2.4rem);text-transform:uppercase;color:#0e1116;text-decoration:none;line-height:1.25;padding:14px 0;border-bottom:1px solid rgba(14,17,22,.14);opacity:0;transform:translateY(14px);transition:opacity .4s cubic-bezier(.2,.6,.2,1),transform .4s cubic-bezier(.2,.6,.2,1),color .2s cubic-bezier(.2,.6,.2,1)}
-.pfa-mobile a:not(.pfa-btn)::before{counter-increment:pfa-menu;content:counter(pfa-menu,decimal-leading-zero);font-size:12px;font-weight:600;font-stretch:100%;letter-spacing:.14em;color:#7a848d;flex:none}
+.pfa-mobile a{display:flex;align-items:baseline;gap:16px;font-family:var(--font-d);font-weight:800;font-stretch:112%;font-size:clamp(1.6rem,7vw,2.4rem);text-transform:uppercase;color:#F4F6F7;text-decoration:none;line-height:1.25;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);opacity:0;transform:translateY(14px);transition:opacity .4s cubic-bezier(.2,.6,.2,1),transform .4s cubic-bezier(.2,.6,.2,1),color .2s cubic-bezier(.2,.6,.2,1)}
+.pfa-mobile a:not(.pfa-btn)::before{counter-increment:pfa-menu;content:counter(pfa-menu,decimal-leading-zero);font-size:12px;font-weight:600;font-stretch:100%;letter-spacing:.14em;color:#6E7883;flex:none}
 .pfa-mobile.open a{opacity:1;transform:translateY(0)}
 .pfa-mobile.open a:first-child{transition-delay:.05s}
 .pfa-mobile.open a:nth-child(2){transition-delay:.09s}
@@ -51,9 +51,9 @@ a{color:inherit;text-decoration:none}
 .pfa-mobile.open a:nth-child(7){transition-delay:.29s}
 .pfa-mobile.open a:nth-child(8){transition-delay:.33s}
 .pfa-mobile.open a:nth-child(9){transition-delay:.37s}.pfa-mobile.open a:nth-child(10){transition-delay:.41s}.pfa-mobile.open a:nth-child(11){transition-delay:.45s}.pfa-mobile.open a:nth-child(12){transition-delay:.49s}.pfa-mobile.open a:nth-child(13){transition-delay:.53s}.pfa-mobile.open a:nth-child(14){transition-delay:.57s}.pfa-mobile.open a:nth-child(15){transition-delay:.61s}.pfa-mobile.open a:nth-child(16){transition-delay:.65s}.pfa-mobile.open a:nth-child(17){transition-delay:.69s}.pfa-mobile.open a:nth-child(18){transition-delay:.73s}
-.pfa-mobile a:hover,.pfa-mobile a[aria-current=page]{color:#006db3}
+.pfa-mobile a:hover,.pfa-mobile a[aria-current=page]{color:#5BC4FF}
 .pfa-mobile a.pfa-btn{border-bottom:none;margin-top:24px;align-self:flex-start;padding:16px 30px;font-size:13px;font-stretch:100%}
-.pfa-cart:focus-visible,.pfa-mobile a:focus-visible{outline:2px solid #006DB3;outline-offset:3px}
+.pfa-cart:focus-visible,.pfa-mobile a:focus-visible{outline:2px solid #5BC4FF;outline-offset:3px}
 
 
 @media (prefers-reduced-motion:reduce){.pfa-cart,.pfa-mobile,.pfa-mobile a{transition:none!important}.pfa-mobile a{opacity:1;transform:none}}
@@ -151,9 +151,9 @@ a{color:inherit;text-decoration:none}
 .answer b{font-weight:700}
 
 /* ---- band of numbers ---- */
-.band{background:var(--ink);color:var(--white);border-bottom:1px solid var(--ink)}
+.band{background:var(--band);color:var(--ink);border-bottom:1px solid var(--band)}
 .band .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.14)}
-.stat{background:var(--ink);padding:38px 26px}
+.stat{background:var(--band);padding:38px 26px}
 .stat .n{font-family:var(--font-s);font-size:clamp(34px,4vw,50px);line-height:1;color:var(--blue)}
 .stat .l{margin-top:12px;font-size:13px;color:rgba(255,255,255,.72);max-width:24ch}
 @media(max-width:820px){.band .wrap{grid-template-columns:1fr 1fr}}
@@ -217,11 +217,11 @@ a{color:inherit;text-decoration:none}
 .btn.ghost:hover{background:var(--ink);color:var(--white)}
 
 /* ---- closing ---- */
-.close{background:var(--ink);color:var(--white);padding:88px 0}
+.close{background:var(--band);color:var(--ink);padding:88px 0}
 .close h2{font-family:var(--font-d);font-weight:900;font-stretch:112%;font-size:clamp(1.8rem,3.6vw,3rem);line-height:1.04;letter-spacing:-.02em;text-transform:uppercase;max-width:20ch;hyphens:none}
 .close p{margin-top:22px;color:rgba(255,255,255,.72);max-width:52ch;font-size:18px}
 .close .btn{width:auto;margin-top:34px;background:var(--blue);border-color:var(--blue)}
-.close .btn:hover{background:var(--white);border-color:var(--white);color:var(--ink)}
+.close .btn:hover{background:var(--ink);border-color:var(--ink);color:var(--band)}
 
 /* ---- footer ---- */
 .foot{padding:40px 0;font-size:13px;color:var(--mut)}
@@ -242,24 +242,24 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 .eyebrow{display:flex;align-items:center;gap:12px}
 .eyebrow::before{content:"";width:9px;height:9px;background:var(--blue);flex:none}
 /* ---- the law library ---- */
-.law{background:var(--ink);color:var(--white)}
+.law{background:var(--band);color:var(--ink)}
 .law .eyebrow{color:#EDF1F4}
-.law .sec-head h2{color:var(--white)}
+.law .sec-head h2{color:var(--ink)}
 .law .sec-head p{color:rgba(232,236,239,.66)}
 .law-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px}
 .law-tab{font-family:var(--font-s);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;padding:0 18px;min-height:44px;display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.22);color:rgba(232,236,239,.78);background:transparent}
-.law-tab.on{background:var(--blue);border-color:var(--blue);color:var(--ink)}
+.law-tab.on{background:var(--blue);border-color:var(--blue);color:var(--white)}
 .law-tab.soon{opacity:.42;pointer-events:none}
 .law-tab .lt-s{font-size:9px;letter-spacing:.22em;opacity:.75}
 .law-file{display:grid;grid-template-columns:minmax(250px,330px) 1fr;gap:1px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14)}
-.law-side{background:var(--ink);padding:28px 26px}
+.law-side{background:var(--band);padding:28px 26px}
 .law-side-k{font-family:var(--font-s);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
 .law-side>p{font-size:.94rem;line-height:1.65;color:rgba(232,236,239,.72)}
 .law-facts{margin-top:26px}
 .law-f{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:11px 0;border-top:1px solid rgba(255,255,255,.1)}
 .law-f span{font-family:var(--font-s);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(232,236,239,.5)}
 .law-f b{font-family:var(--font-d);font-weight:700;font-size:.86rem;letter-spacing:.01em;color:var(--white);text-align:right}
-.law-arts{background:var(--ink)}
+.law-arts{background:var(--band)}
 .law-art{border-top:1px solid rgba(255,255,255,.14)}
 .law-art:first-child{border-top:0}
 .law-q{width:100%;display:flex;align-items:center;gap:18px;padding:19px 24px;min-height:62px;background:transparent;border:0;color:var(--white);cursor:pointer;text-align:left;font-family:var(--font-d);-webkit-appearance:none;appearance:none}
@@ -268,7 +268,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 .law-no{font-family:var(--font-s);font-size:11px;letter-spacing:.2em;color:var(--blue);flex:none;width:26px}
 .law-t{font-weight:700;font-size:1.02rem;letter-spacing:-.005em;line-height:1.25;transition:color .15s ease}
 .law-x{margin-left:auto;flex:none;width:20px;height:20px;position:relative}
-.law-x::before,.law-x::after{content:"";position:absolute;left:50%;top:50%;background:rgba(232,236,239,.85);transform:translate(-50%,-50%)}
+.law-x::before,.law-x::after{content:"";position:absolute;left:50%;top:50%;background:rgba(14,17,22,.85);transform:translate(-50%,-50%)}
 .law-x::before{width:14px;height:1.6px}
 .law-x::after{width:1.6px;height:14px;transition:transform .18s ease}
 .law-art.open .law-x::after{transform:translate(-50%,-50%) scaleY(0)}
@@ -301,9 +301,43 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
   .law-t,.law-x::after{transition:none}
 }
 </style>
-<style id="pfa-hero-lock">header.hero .eyebrow,header.hero h1,header.hero .lede{margin-left:0!important;margin-right:0!important;max-width:none!important}header.hero .eyebrow{display:inline-flex!important;align-items:center!important;gap:12px!important;font-size:12px!important;font-weight:400!important;letter-spacing:.26em!important;text-transform:uppercase!important;margin-top:0!important;margin-bottom:0!important;width:auto!important}header.hero .eyebrow::before{content:""!important;width:10px!important;height:10px!important;background:var(--blue)!important;flex:none!important;border-radius:0!important;box-shadow:none!important;margin:0!important}header.hero h1{margin-top:22px!important}</style><link rel="stylesheet" href="pfa-glass.css"></head>
+<style id="pfa-hero-lock">header.hero .eyebrow,header.hero h1,header.hero .lede{margin-left:0!important;margin-right:0!important;max-width:none!important}header.hero .eyebrow{display:inline-flex!important;align-items:center!important;gap:12px!important;font-size:12px!important;font-weight:400!important;letter-spacing:.26em!important;text-transform:uppercase!important;margin-top:0!important;margin-bottom:0!important;width:auto!important}header.hero .eyebrow::before{content:""!important;width:10px!important;height:10px!important;background:var(--blue)!important;flex:none!important;border-radius:0!important;box-shadow:none!important;margin:0!important}header.hero h1{margin-top:22px!important}
+/* ---- contrast pins: measured against the rendered page ---- */
+/* A button with no styling of its own falls back to the browser's chrome:
+   black type on a white face. Inheriting the colour alone left white on white,
+   so the face has to go too. Any class rule still wins over both. */
+button{color:inherit;background-color:transparent}
+
+/* The places widget is shared, but only one page ever styled its chips, so on
+   every other page they arrived unstyled. They travel with the site now. */
+.pfa-chips-lab{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mut-2);margin-right:2px}
+.pfa-chip{background:transparent;border:1px solid var(--hair);color:var(--ink);font-size:13px;padding:7px 13px;cursor:pointer;transition:border-color .15s ease,color .15s ease}
+.pfa-chip:hover{border-color:var(--blue);color:var(--blue)}
+
+/* floating chrome stays dark glass, so its type stays light */
+.pfa-cart{color:#F4F6F7;border-color:rgba(255,255,255,.5)}
+.pfa-cart:hover{background:#00A4FF;border-color:#00A4FF;color:#0E1116}
+.pfa-cart .cart-count{background:#00A4FF;color:#0E1116}
+.pfa-cart:hover .cart-count{background:#0E1116;color:#F4F6F7}
+.toast,.net-toast,.svc-toast,.hof-toast,.uc-live{color:#F4F6F7}
+.law-f b{color:#F4F6F7}
+span.law-t{color:#F4F6F7 !important}
+.law-c b{color:#F4F6F7 !important}
+.pfa-sq{color:#0E1116}
+.law .sec-head h2{color:#F4F6F7}
+.law-f b{color:#F4F6F7}
+.law-c p b{color:#F4F6F7}
+.law-arts b{color:#F4F6F7}
+.law-a p b{color:#F4F6F7}
+
+/* ---- one opening line for every page ---- */
+:root{--page-top:calc(76px + clamp(26px,3.5vw,48px))}
+header.hero.pfa-start{padding-top:calc(var(--page-top) - 3px)!important}
+</style><link rel="stylesheet" href="pfa-glass.css"></head>
 <body>
 
+<script src="pfa-site-map.js"></script>
+<script src="pfa-visibility.js"></script>
 <script src="pfa-header.js"></script>
 
 <!-- HERO -->
@@ -324,20 +358,20 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
           <div class="stage-badge" id="badge">Reading&hellip;</div>
           <svg id="face" viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A cat's face that changes as you score it">
             <!-- head -->
-            <ellipse id="head" cx="150" cy="140" rx="86" ry="78" fill="none" stroke="#0E1116" stroke-width="2.5"/>
+            <ellipse id="head" cx="150" cy="140" rx="86" ry="78" fill="none" stroke="#F4F6F7" stroke-width="2.5"/>
             <!-- ears -->
-            <path id="earL" d="M92 84 L60 30 L128 60 Z" fill="none" stroke="#0E1116" stroke-width="2.5"/>
-            <path id="earR" d="M208 84 L240 30 L172 60 Z" fill="none" stroke="#0E1116" stroke-width="2.5"/>
+            <path id="earL" d="M92 84 L60 30 L128 60 Z" fill="none" stroke="#F4F6F7" stroke-width="2.5"/>
+            <path id="earR" d="M208 84 L240 30 L172 60 Z" fill="none" stroke="#F4F6F7" stroke-width="2.5"/>
             <!-- eyes -->
-            <ellipse id="eyeL" cx="120" cy="130" rx="15" ry="14" fill="none" stroke="#0E1116" stroke-width="2.5"/>
-            <ellipse id="eyeR" cx="180" cy="130" rx="15" ry="14" fill="none" stroke="#0E1116" stroke-width="2.5"/>
-            <circle cx="120" cy="130" r="4" fill="#0E1116" id="pupL"/>
-            <circle cx="180" cy="130" r="4" fill="#0E1116" id="pupR"/>
+            <ellipse id="eyeL" cx="120" cy="130" rx="15" ry="14" fill="none" stroke="#F4F6F7" stroke-width="2.5"/>
+            <ellipse id="eyeR" cx="180" cy="130" rx="15" ry="14" fill="none" stroke="#F4F6F7" stroke-width="2.5"/>
+            <circle cx="120" cy="130" r="4" fill="#F4F6F7" id="pupL"/>
+            <circle cx="180" cy="130" r="4" fill="#F4F6F7" id="pupR"/>
             <!-- muzzle -->
-            <path id="nose" d="M143 166 L157 166 L150 176 Z" fill="#0E1116"/>
-            <path id="mouth" d="M150 176 L150 188 M150 188 C140 199 126 197 121 188 M150 188 C160 199 174 197 179 188" fill="none" stroke="#0E1116" stroke-width="2.5"/>
+            <path id="nose" d="M143 166 L157 166 L150 176 Z" fill="#F4F6F7"/>
+            <path id="mouth" d="M150 176 L150 188 M150 188 C140 199 126 197 121 188 M150 188 C160 199 174 197 179 188" fill="none" stroke="#F4F6F7" stroke-width="2.5"/>
             <!-- whiskers -->
-            <g id="whisk" stroke="#0E1116" stroke-width="1.6">
+            <g id="whisk" stroke="#F4F6F7" stroke-width="1.6">
               <path d="M116 172 L52 160"/><path d="M116 180 L50 184"/>
               <path d="M184 172 L248 160"/><path d="M184 180 L250 184"/>
             </g>
@@ -383,7 +417,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 </section>
 
 <!-- LIBRARY -->
-<section class="sec" id="library">
+<section data-sec="library" class="sec" id="library">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">The library &middot; by animal</div>
@@ -395,7 +429,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
       <div class="sp soon">
         
         <div class="sp-art">
-          <svg viewBox="0 0 150 120" role="img" aria-label="Cat"><g fill="none" stroke="#0E1116" stroke-width="2.5"><ellipse cx="75" cy="66" rx="42" ry="38"/><path d="M42 34 L24 6 L60 22 Z"/><path d="M108 34 L126 6 L90 22 Z"/><ellipse cx="60" cy="60" rx="7" ry="7"/><ellipse cx="90" cy="60" rx="7" ry="7"/><path d="M71 78 L79 78 L75 84 Z" fill="#0E1116" stroke="none"/><path d="M58 82 L30 76 M58 88 L30 92 M92 82 L120 76 M92 88 L120 92" stroke-width="1.4"/></g></svg>
+          <svg viewBox="0 0 150 120" role="img" aria-label="Cat"><g fill="none" stroke="#F4F6F7" stroke-width="2.5"><ellipse cx="75" cy="66" rx="42" ry="38"/><path d="M42 34 L24 6 L60 22 Z"/><path d="M108 34 L126 6 L90 22 Z"/><ellipse cx="60" cy="60" rx="7" ry="7"/><ellipse cx="90" cy="60" rx="7" ry="7"/><path d="M71 78 L79 78 L75 84 Z" fill="#F4F6F7" stroke="none"/><path d="M58 82 L30 76 M58 88 L30 92 M92 82 L120 76 M92 88 L120 92" stroke-width="1.4"/></g></svg>
         </div>
         <div class="sp-body">
           <div class="sp-tag">Cat</div>
@@ -408,7 +442,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
       <div class="sp soon">
         
         <div class="sp-art">
-          <svg viewBox="0 0 150 120" role="img" aria-label="Dog"><g fill="none" stroke="#0E1116" stroke-width="2.5"><ellipse cx="75" cy="70" rx="40" ry="34"/><path d="M40 50 C24 44 22 74 40 78 Z"/><path d="M110 50 C126 44 128 74 110 78 Z"/><circle cx="62" cy="64" r="6"/><circle cx="88" cy="64" r="6"/><ellipse cx="75" cy="84" rx="9" ry="6" fill="#0E1116" stroke="none"/><path d="M75 90 L75 98" /></g></svg>
+          <svg viewBox="0 0 150 120" role="img" aria-label="Dog"><g fill="none" stroke="#F4F6F7" stroke-width="2.5"><ellipse cx="75" cy="70" rx="40" ry="34"/><path d="M40 50 C24 44 22 74 40 78 Z"/><path d="M110 50 C126 44 128 74 110 78 Z"/><circle cx="62" cy="64" r="6"/><circle cx="88" cy="64" r="6"/><ellipse cx="75" cy="84" rx="9" ry="6" fill="#F4F6F7" stroke="none"/><path d="M75 90 L75 98" /></g></svg>
         </div>
         <div class="sp-body">
           <div class="sp-tag">Dog</div>
@@ -420,7 +454,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 
       <div class="sp soon">
         <div class="sp-art">
-          <svg viewBox="0 0 150 120" role="img" aria-label="Cow"><g fill="none" stroke="#0E1116" stroke-width="2.5"><ellipse cx="75" cy="72" rx="38" ry="34"/><path d="M46 50 C30 30 22 40 30 54 C36 62 44 58 46 50 Z"/><path d="M104 50 C120 30 128 40 120 54 C114 62 106 58 104 50 Z"/><circle cx="63" cy="66" r="5"/><circle cx="87" cy="66" r="5"/><ellipse cx="75" cy="88" rx="20" ry="13"/><circle cx="68" cy="88" r="2.5" fill="#0E1116" stroke="none"/><circle cx="82" cy="88" r="2.5" fill="#0E1116" stroke="none"/></g></svg>
+          <svg viewBox="0 0 150 120" role="img" aria-label="Cow"><g fill="none" stroke="#F4F6F7" stroke-width="2.5"><ellipse cx="75" cy="72" rx="38" ry="34"/><path d="M46 50 C30 30 22 40 30 54 C36 62 44 58 46 50 Z"/><path d="M104 50 C120 30 128 40 120 54 C114 62 106 58 104 50 Z"/><circle cx="63" cy="66" r="5"/><circle cx="87" cy="66" r="5"/><ellipse cx="75" cy="88" rx="20" ry="13"/><circle cx="68" cy="88" r="2.5" fill="#F4F6F7" stroke="none"/><circle cx="82" cy="88" r="2.5" fill="#F4F6F7" stroke="none"/></g></svg>
         </div>
         <div class="sp-body">
           <div class="sp-tag">Cow</div>
@@ -432,7 +466,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 
       <div class="sp soon">
         <div class="sp-art">
-          <svg viewBox="0 0 150 120" role="img" aria-label="Hen"><g fill="none" stroke="#0E1116" stroke-width="2.5"><ellipse cx="80" cy="74" rx="34" ry="30"/><circle cx="54" cy="50" r="18"/><path d="M50 34 C48 26 56 26 54 34 M58 33 C58 25 66 27 62 34" /><path d="M38 50 L26 46 L38 56 Z" fill="#0E1116" stroke="none"/><circle cx="48" cy="48" r="3" fill="#0E1116" stroke="none"/><path d="M104 66 C120 60 122 78 106 82"/></g></svg>
+          <svg viewBox="0 0 150 120" role="img" aria-label="Hen"><g fill="none" stroke="#F4F6F7" stroke-width="2.5"><ellipse cx="80" cy="74" rx="34" ry="30"/><circle cx="54" cy="50" r="18"/><path d="M50 34 C48 26 56 26 54 34 M58 33 C58 25 66 27 62 34" /><path d="M38 50 L26 46 L38 56 Z" fill="#F4F6F7" stroke="none"/><circle cx="48" cy="48" r="3" fill="#F4F6F7" stroke="none"/><path d="M104 66 C120 60 122 78 106 82"/></g></svg>
         </div>
         <div class="sp-body">
           <div class="sp-tag">Hen</div>
@@ -444,7 +478,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 
       <div class="sp soon">
         <div class="sp-art">
-          <svg viewBox="0 0 150 120" role="img" aria-label="Sheep"><g fill="none" stroke="#0E1116" stroke-width="2.5"><path d="M75 42 C52 42 44 60 52 74 C44 88 58 100 72 94 C82 104 100 98 98 84 C114 82 112 60 98 58 C102 44 84 36 75 42 Z"/><ellipse cx="75" cy="80" rx="20" ry="22" fill="#fff"/><circle cx="68" cy="76" r="3" fill="#0E1116" stroke="none"/><circle cx="82" cy="76" r="3" fill="#0E1116" stroke="none"/><path d="M70 92 C73 96 77 96 80 92" /></g></svg>
+          <svg viewBox="0 0 150 120" role="img" aria-label="Sheep"><g fill="none" stroke="#F4F6F7" stroke-width="2.5"><path d="M75 42 C52 42 44 60 52 74 C44 88 58 100 72 94 C82 104 100 98 98 84 C114 82 112 60 98 58 C102 44 84 36 75 42 Z"/><ellipse cx="75" cy="80" rx="20" ry="22" fill="#0E1116"/><circle cx="68" cy="76" r="3" fill="#F4F6F7" stroke="none"/><circle cx="82" cy="76" r="3" fill="#F4F6F7" stroke="none"/><path d="M70 92 C73 96 77 96 80 92" /></g></svg>
         </div>
         <div class="sp-body">
           <div class="sp-tag">Sheep</div>
@@ -456,7 +490,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 
       <div class="sp soon">
         <div class="sp-art">
-          <svg viewBox="0 0 150 120" role="img" aria-label="A family and their animals"><g fill="none" stroke="#0E1116" stroke-width="2.5"><circle cx="52" cy="44" r="13"/><path d="M40 100 L40 70 C40 60 64 60 64 70 L64 100"/><circle cx="96" cy="50" r="10"/><path d="M86 100 L86 74 C86 66 106 66 106 74 L106 100"/><ellipse cx="126" cy="92" rx="14" ry="10"/><path d="M116 88 L110 84"/></g></svg>
+          <svg viewBox="0 0 150 120" role="img" aria-label="A family and their animals"><g fill="none" stroke="#F4F6F7" stroke-width="2.5"><circle cx="52" cy="44" r="13"/><path d="M40 100 L40 70 C40 60 64 60 64 70 L64 100"/><circle cx="96" cy="50" r="10"/><path d="M86 100 L86 74 C86 66 106 66 106 74 L106 100"/><ellipse cx="126" cy="92" rx="14" ry="10"/><path d="M116 88 L110 84"/></g></svg>
         </div>
         <div class="sp-body">
           <div class="sp-tag">Family</div>
@@ -470,7 +504,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="sec alt" id="how">
+<section data-sec="how" class="sec alt" id="how">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">What you get here</div>
@@ -497,7 +531,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 </section>
 
 <!-- LAW -->
-<section class="sec law" id="law">
+<section data-sec="law" class="sec law" id="law">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">The law library &middot; by animal</div>
@@ -630,7 +664,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 </section>
 
 <!-- PUBLISH -->
-<section class="sec" id="publish">
+<section data-sec="publish" class="sec" id="publish">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">For veterinarians</div>
@@ -661,7 +695,7 @@ footer{border-top:1px solid var(--hair);padding:clamp(60px,8vw,90px) 0 40px;line
 </section>
 
 <!-- CLOSE -->
-<section class="close">
+<section data-sec="close" class="close">
   <div class="wrap">
     <h2>An animal in pain will not tell you. Learn to see it anyway.</h2>
     <p>Start with the cat above. The full guide it comes from is in development, built to the same standard as everything here.</p>
