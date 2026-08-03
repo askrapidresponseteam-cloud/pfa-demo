@@ -87,12 +87,15 @@ length shared by the card and both faces.
 
 Three further corrections, all in `tools/tweaks.py` and each revertible on its own:
 
-- **The mark.** It is a full-colour raster, white line art on a blue block, and
-  it was the only blue on a black and gold foil face, so it read as a sticker
-  rather than a stamp. On the card it is now rendered in the same champagne as
-  the wordmark: measured hue 48 and saturation .48, against the wordmark's 43
-  and .70, with no blue pixels left. The mark is untouched everywhere else on
-  the site.
+- **The mark is never recoloured.** It carries its own blue and white on the
+  card exactly as it does everywhere else on the site.
+- **The ground.** The face was a neutral charcoal. A navy wash now lays over it,
+  sampled against the reference card: its navy field is rgb(14,23,34) at hue
+  213, and the card now lands on rgb(16,24,34) at hue 215. It washes over the
+  ground rather than replacing it, so the guilloche still shows through.
+- **A hairline rule set in from the edge**, in the reference's gold, which is
+  what makes a card read as a plate rather than a printed rectangle. The mark
+  repeats large and faint on the right at 6% opacity, tone on tone.
 - **The photo window.** A flat slab with square corners cut into a rounded,
   foil-edged card, which read as a hole. It now has a hairline in the card's
   gold, a corner that follows the card's own, and a little depth.
@@ -100,6 +103,19 @@ Three further corrections, all in `tools/tweaks.py` and each revertible on its o
   pressed into the last twelfth, leaving the face looking half empty. The
   number and name now sit in that band, where the embossed line sits on a real
   card: the number moved from 68% down the face to 51%.
+
+## The menu sheet
+
+The menu was a translucent sheet over a 34px blur, so what it looked like
+depended on the page behind it. Over the film hero on Watch. Listen. Do. Meet.
+it picked up the photo and rendered mottled and brighter than elsewhere;
+measured across seven pages the sheet varied by 8.8 in luminance with identical
+CSS on every page. The difference was the backdrop, not the styling.
+
+It is now an opaque sheet carrying the same sheen and rim, with the blur
+dropped as redundant. Measured again across eight pages: 16.72 luminance on
+every one, spread 0.00. Type, spacing, stagger and timing were always shared,
+since they live in `pfa-header.js`.
 
 ## The moving parts
 

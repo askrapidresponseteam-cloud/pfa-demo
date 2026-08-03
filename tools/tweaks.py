@@ -21,12 +21,8 @@ TWEAKS = {
 /* both faces sit on the same pixel, so the edges cannot disagree */
 .mface{inset:0;transform-origin:50% 50%}
 
-/* The mark on the card is a full-colour raster: white line art on a blue
-   block. On a black and gold foil face it read as a sticker rather than a
-   stamp, and it was the only blue on the card. This renders it in the same
-   champagne as the wordmark and the hologram. Measured hue 48, saturation .48,
-   against the wordmark's 43 and .70. The mark is untouched everywhere else. */
-.m-chip .emblem{filter:grayscale(1) sepia(1) saturate(4.5) hue-rotate(-32deg) brightness(.94)}
+/* The mark is never recoloured. It carries its own blue and white on the card
+   exactly as it does everywhere else on the site. */
 
 /* The photo window was a flat slab with square corners cut into a rounded,
    foil-edged card, so it read as a hole punched in the face. A hairline in the
@@ -39,6 +35,29 @@ TWEAKS = {
   box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 1px 0 rgba(0,0,0,.35);
 }
 .m-photo-ph{color:#C6CDD6}
+
+/* The face was a neutral charcoal. A navy wash lays over it so the ground
+   reads deep blue like the reference: sampled from the reference card its navy
+   field is rgb(14,23,34) at hue 213, and this lands on rgb(16,24,34) at hue
+   215. The guilloche still shows through, because this washes over the ground
+   rather than replacing it.
+   Replacing it would mean carrying its 24KB data URI a second time. */
+.m-tint{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;overflow:hidden;
+  background:linear-gradient(150deg,rgba(14,36,68,.70) 0,rgba(5,14,28,.55) 52%,rgba(11,26,50,.66) 100%)}
+
+/* the hairline rule set in from the edge, which is what makes the reference
+   read as a plate rather than a printed rectangle */
+.m-tint::before{content:"";position:absolute;inset:4.4%;
+  border:1px solid rgba(192,158,102,.62);
+  border-radius:calc(var(--card-radius) * .55)}
+
+/* the mark again, large and faint on the right, tone on tone */
+.m-tint::after{content:"";position:absolute;right:-2%;top:9%;width:50%;height:82%;
+  background:url("media/pfa-emblem.png") center/contain no-repeat;opacity:.06}
+
+/* content sits above the wash; the photo is positioned and follows it in the
+   markup, so it paints above without needing a z-index of its own */
+.mface.front>.m-top,.mface.front>.m-mid,.mface.front>.m-foot{position:relative;z-index:1}
 
 /* The middle band is 46% of the card's height and its content was pressed into
    the last twelfth of it, which left the face looking half empty. The number
@@ -64,7 +83,27 @@ TWEAKS = {
 }
 
 
+# One span on the front face carries the wash, the rule and the crest. The back
+# face has no .m-sweep, so this lands on the front only.
+MARKUP = {
+    "membership.html": [
+        ('<span class="m-sweep"></span>',
+         '<span class="m-sweep"></span><span class="m-tint" aria-hidden="true"></span>'),
+    ],
+}
+
+
 def main(root):
+    for page, edits in MARKUP.items():
+        path = os.path.join(root, page)
+        if not os.path.exists(path):
+            continue
+        h = open(path, encoding="utf-8").read()
+        for old, new in edits:
+            if new not in h and old in h:
+                h = h.replace(old, new, 1)
+        open(path, "w", encoding="utf-8").write(h)
+
     for page, css in TWEAKS.items():
         path = os.path.join(root, page)
         if not os.path.exists(path):
