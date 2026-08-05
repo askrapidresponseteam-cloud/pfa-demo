@@ -23,10 +23,18 @@ SUBS = [
     ("radial-gradient(760px 420px at 88% 0%, rgba(0, 164, 255, .055), transparent 62%),\n    linear-gradient(180deg, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, 0) 46%);",
      "radial-gradient(760px 420px at 88% 0%, rgba(0, 164, 255, .06), transparent 62%),\n    linear-gradient(180deg, rgba(255, 255, 255, .035) 0%, rgba(255, 255, 255, 0) 46%);"),
     ("background-color: rgba(255, 255, 255, .74);", "background-color: rgba(21, 25, 31, .94);"),
+    # The menu sheet was translucent over a blur, so how it read depended on the
+    # page behind it: over the film hero it picked up the photo and came out
+    # mottled and brighter than elsewhere. Measured across seven pages the sheet
+    # varied by 8.8 in luminance. An opaque sheet with the same sheen and rim
+    # renders identically everywhere, and the blur behind it is then redundant.
     ("""nav.pfa-menu {
-  background-color: rgba(255, 255, 255, .88);""",
+  background-color: rgba(255, 255, 255, .88);
+  -webkit-backdrop-filter: blur(34px) saturate(1.5);
+  backdrop-filter: blur(34px) saturate(1.5);""",
      """nav.pfa-menu {
-  background-color: rgba(14, 17, 22, .88);"""),
+  background-color: #0E1116;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, 0) 240px);"""),
     ("""  background-color: rgba(255, 255, 255, .9);
   background-image: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 220px);""",
      """  background-color: rgba(14, 17, 22, .9);

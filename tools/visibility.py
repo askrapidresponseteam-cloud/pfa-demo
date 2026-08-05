@@ -33,6 +33,7 @@ REGISTRY = [
         ("propose", "Propose an assembly"),
     ], True),
     ("champion.html", "Champion", [], True),
+    ("cinekind.html", "CineKind Awards", [], True),
     ("csr.html", "Corporate partnership", [
         ("partner-standing", "A partner with standing"),
         ("campaigns", "Three campaigns"),
