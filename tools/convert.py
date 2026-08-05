@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, "/home/claude/tools")
 from darken import transform_css, transform_html, transform_js  # noqa: E402
 
-SKIP_HTML = {"index.html", "champion.html"}
+SKIP_HTML = {"index.html", "champion.html", "cinekind.html"}
 
 # Surfaces that were already dark on the light site. They keep their authored
 # colours and only their background token is re-pointed, so an accent band

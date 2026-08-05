@@ -23,6 +23,9 @@ window.PFA_SITE_MAP = {
     { file: "champion.html", label: "Champion", canHide: true, sections: [
         
     ] },
+    { file: "cinekind.html", label: "CineKind Awards", canHide: true, sections: [
+        
+    ] },
     { file: "csr.html", label: "Corporate partnership", canHide: true, sections: [
         { key: "partner-standing", label: "A partner with standing" },
         { key: "campaigns", label: "Three campaigns" },

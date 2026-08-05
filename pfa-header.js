@@ -49,7 +49,8 @@
       ["Stories", "stories.html"],
       ["Watch. Listen. Do. Meet.", "watch-listen-do-meet.html"],
       ["The Founder", "founder.html"],
-      ["Hall of Fame", "hall-of-fame.html"]
+      ["Hall of Fame", "hall-of-fame.html"],
+      ["CineKind Awards", "cinekind.html"]
     ]}],
     [
       { k: "Partner", links: [

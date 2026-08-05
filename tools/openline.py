@@ -7,7 +7,9 @@ import glob, os, sys
 from playwright.sync_api import sync_playwright
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else "/home/claude/out"
-EXCLUDED = {"store.html", "champion.html", "admin.html"}
+# cinekind is a site of its own inside the site: its hero, opening line and
+# type scale are CineKind's, and the layout pass skips it for that reason
+EXCLUDED = {"store.html", "champion.html", "admin.html", "cinekind.html"}
 
 JS = """()=>{
   const hiddenish=e=>{

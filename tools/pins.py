@@ -206,6 +206,8 @@ def main():
         b = pw.chromium.launch()
         pg = b.new_page(viewport={"width": 1440, "height": 900})
         for name in pages:
+            if name == "cinekind.html":      # its own build, its own type scale
+                continue
             path = os.path.join(ROOT, name)
             html = strip_old(open(path, encoding="utf-8").read())
             open(path, "w", encoding="utf-8").write(html)

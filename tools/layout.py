@@ -16,7 +16,7 @@ import glob, os, re, sys
 from playwright.sync_api import sync_playwright
 
 MARK = "/* ---- one opening line for every page ---- */"
-SKIP = {"store.html", "champion.html", "admin.html"}
+SKIP = {"store.html", "champion.html", "admin.html", "cinekind.html"}
 PAGE_TOP = "calc(76px + clamp(26px,3.5vw,48px))"
 TARGET = 124          # where the home page hero opens at 1440 x 900
 

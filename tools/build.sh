@@ -9,6 +9,7 @@ cp "$T/pfa-visibility.js" "$DST/pfa-visibility.js"
 python3 $T/convert.py     "$DST"          # light palette -> ink, band by band
 python3 $T/glass.py       "$DST/pfa-glass.css"
 python3 $T/index_align.py "$DST/index.html"
+python3 $T/cinekind_link.py "$DST"        # ship CineKind and link it
 python3 $T/pins.py        "$DST"          # measured contrast corrections
 python3 $T/visibility.py  "$DST"          # registry, section markers, runtime
 python3 $T/admin_panel.py "$DST"          # console panel

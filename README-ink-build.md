@@ -117,6 +117,24 @@ dropped as redundant. Measured again across eight pages: 16.72 luminance on
 every one, spread 0.00. Type, spacing, stagger and timing were always shared,
 since they live in `pfa-header.js`.
 
+## CineKind
+
+CineKind is the award PFA presents with the Film Federation of India, so it sits
+beside Hall of Fame: the same shelf, recognition rather than service. It appears
+in the Explore column of the footer on all 18 public pages and in the Learn group
+of the shared menu, the same pairing in both places. The links were already in
+the markup and pointed at a page that did not exist; the page now exists.
+
+It ships inside the site rather than as an outbound link, so the zip is
+self-contained and the links work with nothing deployed. If CineKind gets its own
+domain, `TARGET` in `tools/cinekind_link.py` is the only line that changes.
+
+Every other pass skips `cinekind.html`. It has its own hero, its own opening line
+and its own type scale, so the palette conversion, the contrast pins and the
+opening-line normaliser all leave it alone, the same way they leave the store and
+the gauntlet alone. Its own lockup returns to CineKind rather than to the host
+site, and it keeps its own nav rather than wearing the PFA header.
+
 ## The moving parts
 
 | file | what it does |
