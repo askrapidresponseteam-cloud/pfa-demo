@@ -12,6 +12,7 @@ its own domain, TARGET below is the only line that changes.
 Every other pass skips cinekind.html: it has its own hero, its own opening line
 and its own type scale, and none of the PFA page machinery should touch it.
 """
+import base64
 import glob
 import os
 import re
@@ -32,9 +33,25 @@ def main(root):
         print("  cinekind: source not built, skipped"); return
     shutil.copyfile(SOURCE, dst)
 
+    s = open(dst, encoding="utf-8").read()
+
+    # The films come out of the markup and become real files. vercel.json sends
+    # media-src 'self', so a data: URI video is refused on the deployed site
+    # while a data: URI poster is allowed, which is why it played locally and
+    # showed only stills once served. Files also stream, take range requests
+    # and pick up the year-long immutable cache already set on /media.
+    media = os.path.join(root, "media")
+    os.makedirs(media, exist_ok=True)
+    names = ["cinekind-lion.mp4", "cinekind-langur.mp4", "cinekind-elephant.mp4"]
+    found = re.findall(r'"data:video/mp4;base64,([A-Za-z0-9+/=]+)"', s)
+    for i, payload in enumerate(found):
+        name = names[i] if i < len(names) else "cinekind-%d.mp4" % i
+        open(os.path.join(media, name), "wb").write(base64.b64decode(payload))
+        s = s.replace('"data:video/mp4;base64,' + payload + '"', '"media/%s"' % name, 1)
+    print("  films externalised: %d" % len(found))
+
     # the lockup is CineKind's own mark, so it returns to CineKind, not to the
     # host site it now sits inside
-    s = open(dst, encoding="utf-8").read()
     s = s.replace('<a class="brand" href="/" aria-label="CineKind with People for Animals">',
                   '<a class="brand" href="%s" aria-label="CineKind with People for Animals">' % TARGET, 1)
     open(dst, "w", encoding="utf-8").write(s)
