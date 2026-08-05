@@ -156,6 +156,59 @@ it stays a single file, which is right for opening from disk but will hit the
 same policy if you deploy that file. Deploy `cinekind.html` from the site build
 instead, or add `data:` to `media-src`.
 
+## The right-click guard
+
+Sixteen pages carried their own inline copy of a guard and four carried none, so
+the site behaved differently depending on where you were. `tools/noctx.py`
+removes those copies and links one shared `pfa-noctx.js` on every public page.
+
+It blocks the context menu, image dragging, F12, Ctrl+Shift+I/J/C and Ctrl+U/S,
+and turns off the iOS long-press callout on pictures and film. That last part
+matters: iOS fires no contextmenu event at all, so before this a long press
+still offered Save Image on every phone.
+
+Two exemptions, both deliberate. Form fields keep their menu so paste works in
+the card journey, the seat booking and the enquiry forms; the old guard already
+made that exemption for text selection and this extends the same intent. And
+admin.html is left alone entirely, because the console is the back office, staff
+paste into it and copy record ids out of it, and it sits behind a sign-in. Both
+are one line in `tools/noctx.py`.
+
+Text stays selectable everywhere on purpose, so a phone number or an address can
+still be copied. Worth saying plainly: none of this is protection. The source is
+readable and the media is still in the network tab. It raises the effort.
+
+## Minification
+
+`tools/minify.py`. No minifier is installed and there is no network to fetch
+one, so it is written here, which makes correctness matter more than the last
+few per cent. CSS loses its comments and its slack, but never the space around
++ and - because calc() and clamp() need it, and never the space in a selector
+before a colon because "a :hover" and "a:hover" are different selectors. HTML
+collapses runs of whitespace to one space rather than removing them, because
+between two inline elements that space is rendered. Javascript loses only its
+indentation, its blank lines and its whole-line // comments.
+
+That last rule is deliberately dull. A first attempt tokenised the javascript to
+strip comments properly and read a division as the start of a regular
+expression; the scanner lost its place, and from there a https:// inside a
+string looked like a comment and an image/* looked like the start of one, which
+truncated working files into syntax errors. Telling those apart needs a real
+parser and gzip has already taken most of that saving.
+
+Verified with `tools/domdiff.py`, which walks every element of every page in
+both builds and compares its box and computed styles, having first run the
+source against itself to measure what moves on its own. All twenty pages came
+back with zero differences against a zero noise floor, every inline and
+standalone script parses, and all twenty admin routes render with no errors.
+
+The result is 3.3 per cent off raw and 2.7 per cent gzipped, which is the honest
+number. The weight is not in the whitespace: 297KB of the HTML is embedded
+base64, and 272KB of that is the CineKind hero poster in a single file. Moving
+those four data URIs out to /media would take more off cinekind.html alone than
+this entire pass takes off the site. They are left in place because that page
+also gets deployed as a standalone single file.
+
 ## The moving parts
 
 | file | what it does |
