@@ -343,10 +343,24 @@ $('adminSignIn').addEventListener('click', async () => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
-    $('signInMsg').textContent = 'That email and password did not match.';
+    const code = String(error && error.code || '');
+    const why = {
+      'auth/operation-not-allowed': 'Email/password sign-in is not enabled yet. Firebase console → Authentication → Sign-in method → Email/Password → Enable.',
+      'auth/unauthorized-domain': 'This domain is not authorised in Firebase. Authentication → Settings → Authorized domains → add ' + location.hostname + '.',
+      'auth/user-not-found': 'No staff account exists for that email. Create it in Firebase → Authentication → Users.',
+      'auth/invalid-credential': 'That email and password did not match (or the account does not exist yet in Firebase → Authentication → Users).',
+      'auth/wrong-password': 'That password did not match.',
+      'auth/invalid-email': 'That does not look like an email address.',
+      'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.',
+      'auth/network-request-failed': 'Could not reach Firebase. Check the connection and try again.'
+    }[code] || ('Sign-in failed' + (code ? ' (' + code + ')' : '') + '.');
+    $('signInMsg').textContent = why;
     $('signInMsg').classList.add('error');
   }
 });
+['adminEmail', 'adminPassword'].forEach((id) => $(id).addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') { event.preventDefault(); $('adminSignIn').click(); }
+}));
 
 $('adminSignOut').addEventListener('click', () => signOut(auth));
 
