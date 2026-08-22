@@ -7,7 +7,7 @@ that routes every `/api/*` URL to `lib/routes/`. Public URLs are unchanged.
 
 ```bash
 cd ~/Desktop/PFA_Full_Website
-npm test                     # expect 148 pass, 0 fail
+npm test                     # expect 154 pass, 0 fail
 git add -A && git commit -m "v1.36: single API function + Shopify order webhooks"
 git push origin main
 npx vercel --prod --force

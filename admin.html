@@ -270,6 +270,51 @@
   .verify-card dt{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-top:3px}
   .verify-card dd{margin:0}
 
+
+  /* ---- issue cards ------------------------------------------------------ */
+  .cards-top{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:14px}
+  .cards-top .seg.type button{min-height:44px;padding:0 18px;font-size:10px}
+  .cards-top .grow{flex:1 1 200px;min-width:0;max-width:360px}
+  .cards-top input[type=search]{min-height:44px;font-size:13px}
+  .photo-btn{position:relative;overflow:hidden}
+  .photo-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .photo-btn b{font-family:var(--mono);font-size:11px;margin-left:8px;font-weight:400;color:var(--green)}
+  .act-bar{position:sticky;top:84px;z-index:15;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;
+    margin:0 0 14px;padding:12px 16px;background:var(--ink);color:#fff}
+  .act-bar .sel{font-size:13px;margin-right:auto}
+  .act-bar .sel b{font-family:var(--font-display);font-size:22px;letter-spacing:-.03em;font-weight:500;margin-right:8px;vertical-align:-2px}
+  .act-bar .sel span{color:rgba(255,255,255,.7)}
+  .act-bar .btn{min-height:42px;padding:0 16px;font-size:9px;border-color:rgba(255,255,255,.35);background:transparent;color:#fff}
+  .act-bar .btn:hover{background:rgba(255,255,255,.12)}
+  .act-bar .btn.primary{background:var(--blue);border-color:var(--blue)}
+  .act-bar .btn.primary:hover{background:#0A85F6}
+  .act-bar .btn[disabled]{opacity:.4;cursor:default}
+  .act-bar select{min-height:42px;width:auto;font-size:12px;padding:0 30px 0 10px;background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+  .act-bar select option{color:var(--ink)}
+  .cards-table th:first-child,.cards-table td:first-child{width:34px;padding-right:0}
+  .cards-table input[type=checkbox]{margin:0;width:16px;height:16px;min-height:16px;accent-color:var(--blue)}
+  .cards-table tr.off td{opacity:.45}
+  .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .tag{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;background:var(--tint-grey);color:#5C6771;white-space:nowrap;word-spacing:.085em}
+  .tag.good{background:var(--tint-green);color:var(--green)}
+  .tag.info{background:var(--tint-blue);color:var(--blue)}
+  .tag.warn{background:var(--tint-amber);color:var(--amber)}
+  .tag.bad{background:var(--tint-coral);color:var(--danger)}
+  .tag small{font-family:var(--mono);letter-spacing:0;text-transform:none;font-size:10px;opacity:.8}
+  .run{border:1px solid var(--line);background:#fff;padding:18px 20px;margin:0 0 14px}
+  .run-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .run-head h3{margin:0;font-size:15px;font-weight:500;letter-spacing:-.01em}
+  .run-head span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .bar{height:6px;background:var(--tint-grey);margin:12px 0 10px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .25s}
+  .run.done .bar i{background:var(--green)}
+  .run p{margin:0;font-size:13px;line-height:1.55;color:#4F5A64}
+  .run ul{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:#4F5A64;line-height:1.6}
+  .run .run-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .run .run-acts .btn{min-height:38px;padding:0 14px;font-size:9px}
+  .preview-strip{display:flex;gap:10px;overflow:auto;padding:12px 0 4px;scrollbar-width:thin}
+  .preview-strip canvas{height:150px;width:auto;border:1px solid var(--line);background:#fff;flex:0 0 auto}
+
   /* ---- responsive ------------------------------------------------------ */
   @media(max-width:1180px){
     .ov-grid{grid-template-columns:1fr 1fr}
@@ -285,6 +330,7 @@
     .rail-link[aria-current="page"]:before{display:none}
     .rail-foot{display:none}
     .topbar{top:0}
+    .act-bar{top:0}
     .ov-top{grid-template-columns:1fr}
     .today{min-height:300px}
   }
@@ -338,6 +384,7 @@
       <button class="rail-link" data-tab="payments" type="button">Payments</button>
       <button class="rail-link" data-tab="store" type="button">Store orders <span class="count" id="navToShip"></span></button>
       <p class="rail-group">Tools</p>
+      <button class="rail-link" data-tab="cards" type="button">Issue cards</button>
       <button class="rail-link" data-tab="import" type="button">Import register</button>
       <button class="rail-link" data-tab="verify" type="button">Verify a card</button>
     </nav>
@@ -450,6 +497,37 @@
       <p aria-live="polite" class="msg" id="recordsMsg"></p>
     </div>
 
+    <!-- Issue cards ----------------------------------------------------->
+    <div class="page" data-panel="cards" hidden>
+      <div class="cards-top">
+        <div class="seg type" id="cardType" role="group" aria-label="Card type">
+          <button type="button" data-type="patron" aria-pressed="true">Patron cards</button>
+          <button type="button" data-type="caretaker" aria-pressed="false">Caretaker cards</button>
+        </div>
+        <div class="seg" id="cardFilter" role="group" aria-label="Who">
+          <button type="button" data-filter="unsent" aria-pressed="true">Not yet emailed</button>
+          <button type="button" data-filter="unprinted" aria-pressed="false">Not yet printed</button>
+          <button type="button" data-filter="current" aria-pressed="false">Everyone current</button>
+          <button type="button" data-filter="all" aria-pressed="false">Everyone</button>
+        </div>
+        <div class="grow"><input id="cardQuery" placeholder="Name, number, email or mobile" type="search" aria-label="Find a person"></div>
+        <label class="btn light sm photo-btn" title="Photographs named by card number, matched here in the browser and never uploaded">Add photos<b id="photoCount"></b>
+          <input accept="image/*" id="photoFiles" multiple type="file"></label>
+      </div>
+
+      <div class="act-bar" id="actBar">
+        <div class="sel"><b id="selCount">0</b><span id="selNote">selected</span></div>
+        <select id="pdfDpi" aria-label="Print quality"><option value="300">300 dpi &middot; print shop</option><option value="600">600 dpi &middot; master</option></select>
+        <button class="btn" id="actPdf" type="button">Download PDF</button>
+        <button class="btn" id="actEmail" type="button">Email cards</button>
+        <button class="btn primary" id="actBoth" type="button">PDF + email</button>
+      </div>
+
+      <div id="cardRun" hidden></div>
+      <div id="cardsHost"><div class="table-wrap"><div class="empty">Loading&hellip;</div></div></div>
+      <p aria-live="polite" class="msg" id="cardsMsg"></p>
+    </div>
+
     <!-- Import ---------------------------------------------------------->
     <div class="page" data-panel="import" hidden>
       <p class="note">
@@ -499,6 +577,10 @@
 </div>
 <div id="tip" role="tooltip"></div>
 
+<script defer src="assets/qr.js"></script>
+<script defer src="assets/card-fields.js"></script>
+<script defer src="assets/caretaker-card.js"></script>
+<script defer src="assets/patron-card-pdf.js"></script>
 <script src="assets/firebase-config.js"></script>
 <script>
 /* Runs before the panel script so a missing config is explained rather than
@@ -740,6 +822,7 @@ const PAGES = {
   caretakers:  ['Caretaker cards', 'Community caretaker cards that have been issued.'],
   payments:    ['Payments', 'Card payments through CCAvenue: memberships, donations and caretaker postage.'],
   store:       ['Store orders', 'Paws & Tails orders, mirrored from Shopify.'],
+  cards:       ['Issue cards', 'Patron and Caretaker cards in bulk: a print-ready PDF, an email to each holder, or both.'],
   import:      ['Import the membership register', 'Bring the office spreadsheet into the live register, safely.'],
   verify:      ['Verify a card', 'Check any member or caretaker card number.']
 };
@@ -763,6 +846,7 @@ function show(tab) {
 
   if (tab === 'overview') return loadMetrics();
   if (tab === 'circle') return loadCircle();
+  if (tab === 'cards') return loadCards();
   if (isRegister) {
     state.register = tab;
     $('subFilters').hidden = tab !== 'submissions';
@@ -787,6 +871,7 @@ document.querySelectorAll('.rail-link').forEach((button) => {
 $('pageRefresh').addEventListener('click', () => {
   if (state.tab === 'overview') return loadMetrics();
   if (state.tab === 'circle') return loadCircle();
+  if (state.tab === 'cards') return loadCards();
   if (REGISTERS.includes(state.tab)) load(true);
 });
 </script>
@@ -1675,6 +1760,314 @@ $('importGo').addEventListener('click', async () => {
     $('importGo').disabled = true;
     await runImport(false);
   } catch (error) { $('importMsg').textContent = error.message; $('importMsg').classList.add('is-error'); }
+});
+</script>
+<script>
+/* ---- issue cards ------------------------------------------------------- */
+/* The cards are drawn here, in this browser, by the same two files the
+   public site draws them with - assets/patron-card-pdf.js for the Patron
+   card and assets/caretaker-card.js for the Caretaker card. There is no
+   second design. The server supplies the register rows, sends the emails and
+   records what was printed.
+
+   Photographs never leave the office: files chosen with "Add photos" are
+   matched to card numbers by their file name and drawn into the PDF on this
+   machine. Nothing is uploaded. */
+
+const cards = { type: 'patron', filter: 'unsent', rows: [], selected: new Set(), photos: new Map(), busy: false, mailConfigured: true };
+const PDF_BATCH = 50;
+
+function cardsFilterLabels(type) {
+  const f = $('cardFilter');
+  f.querySelector('[data-filter="unsent"]').textContent = type === 'patron' ? 'Not yet emailed' : 'Not emailed from here';
+}
+
+async function loadCards() {
+  if (cards.busy) return;
+  $('cardsMsg').textContent = '';
+  $('cardsMsg').classList.remove('is-error');
+  $('pageStamp').textContent = 'Loading\u2026';
+  $('cardsHost').innerHTML = '<div class="table-wrap"><div class="empty">Loading the register&hellip;</div></div>';
+  try {
+    const q = $('cardQuery').value.trim();
+    const data = await call('/api/admin/cards?type=' + cards.type + '&filter=' + cards.filter + (q ? '&q=' + encodeURIComponent(q) : ''));
+    cards.rows = data.rows || [];
+    cards.mailConfigured = data.mailConfigured !== false;
+    /* The filter already says who; everyone it returns starts selected, so
+       the common case is one click. Untick the exceptions. */
+    cards.selected = new Set(cards.rows.map((r) => r.id));
+    drawCards();
+    const notes = [];
+    if (data.capped) notes.push(`Showing the first ${fmt.int(data.registerTotal)} on the register; search to reach the rest.`);
+    if (!cards.mailConfigured) notes.push('Email is not set up on the server yet (PFA_MAIL_API_KEY), so cards can be downloaded but not emailed from here.');
+    $('cardsMsg').textContent = notes.join(' ');
+    $('pageStamp').textContent = `${fmt.int(cards.rows.length)} of ${fmt.int(data.registerTotal)} on the register`;
+  } catch (error) {
+    $('cardsHost').innerHTML = '';
+    $('cardsMsg').textContent = error.message;
+    $('cardsMsg').classList.add('is-error');
+    $('pageStamp').textContent = '';
+  }
+}
+
+function cardTags(r) {
+  const t = [];
+  if (r.state === 'expired') t.push('<span class="tag bad">Expired</span>');
+  if (r.state === 'revoked') t.push('<span class="tag bad">Revoked</span>');
+  if (r.emailedAt) t.push(`<span class="tag good">Emailed <small>${esc(date(r.emailedAt))}</small></span>`);
+  else if (!r.email) t.push('<span class="tag warn">No email</span>');
+  if (r.printedAt || r.printed) t.push(`<span class="tag info">Printed${r.printedAt ? ` <small>${esc(date(r.printedAt))}</small>` : ''}</span>`);
+  if (cards.photos.has(r.id)) t.push('<span class="tag good">Photo</span>');
+  if (cards.type === 'patron' && !(r.addressLines || []).length) t.push('<span class="tag">No address</span>');
+  return `<div class="tags">${t.join('')}</div>`;
+}
+
+function drawCards() {
+  const rows = cards.rows;
+  if (!rows.length) {
+    const why = { unsent: 'Everyone in this list has been emailed their card.', unprinted: 'Every card in this list has been printed.', current: 'Nobody current on this register yet.', all: 'Nobody on this register yet.' }[cards.filter];
+    $('cardsHost').innerHTML = `<div class="table-wrap"><div class="empty"><b>Nothing to issue</b>${esc(why)}</div></div>`;
+    updateSelection();
+    return;
+  }
+  const all = rows.every((r) => cards.selected.has(r.id));
+  $('cardsHost').innerHTML = `<div class="table-wrap"><table class="cards-table"><thead><tr>
+      <th><input type="checkbox" id="selAll" aria-label="Select everyone shown"${all ? ' checked' : ''}></th>
+      <th>Name</th><th>Number</th><th>${cards.type === 'patron' ? 'Member since' : 'Issued'}</th><th>Valid until</th><th>Card</th>
+    </tr></thead><tbody>` + rows.map((r) => `
+      <tr class="${cards.selected.has(r.id) ? '' : 'off'}">
+        <td><input type="checkbox" data-sel="${esc(r.id)}" aria-label="Select ${esc(r.name)}"${cards.selected.has(r.id) ? ' checked' : ''}></td>
+        <td>${esc(r.name || '\u2014')}<span class="sub">${esc(r.email || r.mobile || 'no contact')}${r.email && r.mobile ? ' \u00b7 ' + esc(r.mobile) : ''}</span></td>
+        <td class="mono">${esc(r.id)}</td>
+        <td class="mono">${date(cards.type === 'patron' ? r.since : r.issuedAt)}</td>
+        <td class="mono">${date(r.valid)}</td>
+        <td>${cardTags(r)}</td>
+      </tr>`).join('') + '</tbody></table></div>';
+  updateSelection();
+}
+
+function updateSelection() {
+  const n = cards.rows.filter((r) => cards.selected.has(r.id)).length;
+  const withEmail = cards.rows.filter((r) => cards.selected.has(r.id) && r.email).length;
+  $('selCount').textContent = fmt.int(n);
+  $('selNote').textContent = n === 1 ? 'card selected' : 'cards selected' + (n && withEmail < n ? ` \u00b7 ${fmt.int(n - withEmail)} without an email address` : '');
+  const off = cards.busy || n === 0;
+  $('actPdf').disabled = off;
+  $('actEmail').disabled = off || withEmail === 0 || !cards.mailConfigured;
+  $('actBoth').disabled = off || withEmail === 0 || !cards.mailConfigured;
+}
+
+$('cardsHost').addEventListener('change', (event) => {
+  const t = event.target;
+  if (t.id === 'selAll') {
+    if (t.checked) cards.rows.forEach((r) => cards.selected.add(r.id)); else cards.selected.clear();
+    drawCards();
+  } else if (t.dataset.sel) {
+    if (t.checked) cards.selected.add(t.dataset.sel); else cards.selected.delete(t.dataset.sel);
+    t.closest('tr').classList.toggle('off', !t.checked);
+    updateSelection();
+  }
+});
+$('cardType').addEventListener('click', (event) => {
+  const b = event.target.closest('button'); if (!b || cards.busy) return;
+  cards.type = b.dataset.type; cards.filter = 'unsent';
+  document.querySelectorAll('#cardType button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelectorAll('#cardFilter button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.filter === 'unsent')));
+  cardsFilterLabels(cards.type);
+  loadCards();
+});
+$('cardFilter').addEventListener('click', (event) => {
+  const b = event.target.closest('button'); if (!b || cards.busy) return;
+  cards.filter = b.dataset.filter;
+  document.querySelectorAll('#cardFilter button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  loadCards();
+});
+$('cardQuery').addEventListener('keydown', (event) => { if (event.key === 'Enter') loadCards(); });
+
+/* ---- photographs, matched by file name ----------------------------------- */
+function idStem(value) { return String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+
+$('photoFiles').addEventListener('change', async () => {
+  const files = [...$('photoFiles').files];
+  if (!files.length) return;
+  const C = window.PFACaretakerCard;
+  if (!C) { $('cardsMsg').textContent = 'The card renderer has not loaded yet. Try again in a moment.'; return; }
+  $('photoCount').textContent = '\u2026';
+  const ids = cards.rows.map((r) => r.id).concat([...cards.photos.keys()]);
+  let matched = 0; const unmatched = [];
+  for (const file of files) {
+    const stem = idStem(file.name.replace(/\.[a-z0-9]+$/i, ''));
+    const id = ids.find((i) => stem.includes(idStem(i)));
+    if (!id) { unmatched.push(file.name); continue; }
+    try {
+      cards.photos.set(id, await C.normalisePhoto(file, 1400));
+      matched += 1;
+    } catch (error) { unmatched.push(file.name); }
+  }
+  $('photoCount').textContent = cards.photos.size ? `${fmt.int(cards.photos.size)} \u2713` : '';
+  $('cardsMsg').textContent = `${fmt.int(matched)} ${matched === 1 ? 'photograph' : 'photographs'} matched by card number.`
+    + (unmatched.length ? ` Not matched (name the file after the card number): ${unmatched.slice(0, 5).join(', ')}${unmatched.length > 5 ? ` and ${unmatched.length - 5} more` : ''}.` : '')
+    + ' Photographs stay on this computer.';
+  $('photoFiles').value = '';
+  drawCards();
+});
+
+/* ---- drawing ------------------------------------------------------------- */
+function readyRenderers() {
+  const ok = window.PFACaretakerCard && window.PFAPatronCard && window.PFACardFields && window.PFAQR;
+  if (!ok) throw new Error('The card renderers have not finished loading. Wait a moment and try again.');
+}
+
+/* Two pages, front and back, at the chosen density, through the public
+   site's own renderer for that card. */
+async function renderPages(r, dpi) {
+  const C = window.PFACaretakerCard;
+  const photo = cards.photos.get(r.id) || '';
+  if (cards.type === 'patron') {
+    const P = window.PFAPatronCard;
+    const full = await P.hydrate({
+      id: r.id, name: r.name, since: r.since, valid: r.valid, photo,
+      addressLines: r.addressLines || [], standing: r.state === 'expired' ? 'Expired' : 'Patron'
+    });
+    /* A placeholder address is for previews. A card being issued with no
+       address on record carries a blank block, not "Address line". */
+    if (full.ghost && full.ghost.address) full.addressLines = [{ text: '', ghost: false }];
+    return ['front', 'back'].map((side) => {
+      const canvas = P.offscreen(side, full, dpi);
+      return { width: canvas.width, height: canvas.height, bytes: C.jpegBytes(canvas, 0.92), wMm: P.CARD.w, hMm: P.CARD.h, canvas };
+    });
+  }
+  const assets = await C.loadAssets();
+  const issued = r.issuedAt ? new Date(r.issuedAt) : new Date();
+  const full = await C.hydrate({
+    cardId: r.id, name: r.name, address: r.address, mobile: r.mobile, email: r.email, photo,
+    issuedOn: C.issuedOnLabel(issued), year: issued.getFullYear(),
+    qr: location.origin + '/caretaker-card.html?id=' + encodeURIComponent(r.id)
+  });
+  return ['front', 'back'].map((side) => {
+    const canvas = document.createElement('canvas');
+    C.draw(canvas, side, full, assets, C.CARD.w * dpi / 25.4, 1);
+    return { width: canvas.width, height: canvas.height, bytes: C.jpegBytes(canvas, 0.92), canvas };
+  });
+}
+
+function runBox(title, total) {
+  const host = $('cardRun');
+  host.hidden = false;
+  host.innerHTML = `<div class="run"><div class="run-head"><h3>${esc(title)}</h3><span id="runStamp">0 / ${fmt.int(total)}</span></div>
+    <div class="bar"><i id="runBar"></i></div><p id="runText">Starting\u2026</p><div class="preview-strip" id="runStrip" hidden></div><div id="runOut"></div></div>`;
+  return {
+    step(done, text) {
+      $('runStamp').textContent = `${fmt.int(done)} / ${fmt.int(total)}`;
+      $('runBar').style.width = (100 * done / Math.max(1, total)).toFixed(1) + '%';
+      if (text) $('runText').textContent = text;
+    },
+    preview(canvas) {
+      const strip = $('runStrip'); strip.hidden = false;
+      if (strip.children.length >= 8) strip.removeChild(strip.firstChild);
+      strip.appendChild(canvas);
+    },
+    done(text, html) {
+      host.querySelector('.run').classList.add('done');
+      $('runText').textContent = text;
+      if (html) $('runOut').innerHTML = html;
+    }
+  };
+}
+
+function selectedRows() { return cards.rows.filter((r) => cards.selected.has(r.id)); }
+
+async function makePdfs(rows, dpi, box) {
+  const C = window.PFACaretakerCard;
+  const stem = cards.type === 'patron' ? 'pfa-patron-cards' : 'pfa-caretaker-cards';
+  const files = [];
+  let pages = [], from = 1, done = 0;
+  for (const r of rows) {
+    const two = await renderPages(r, dpi);
+    pages.push(...two.map((p) => ({ width: p.width, height: p.height, bytes: p.bytes, wMm: p.wMm, hMm: p.hMm })));
+    const small = document.createElement('canvas');
+    small.width = Math.round(two[0].width / 4); small.height = Math.round(two[0].height / 4);
+    small.getContext('2d').drawImage(two[0].canvas, 0, 0, small.width, small.height);
+    box.preview(small);
+    done += 1;
+    box.step(done, `Drawing ${esc(r.name || r.id)}\u2026`);
+    if (pages.length / 2 >= PDF_BATCH || done === rows.length) {
+      const name = rows.length > PDF_BATCH ? `${stem}-${String(from).padStart(3, '0')}-${String(done).padStart(3, '0')}.pdf` : `${stem}.pdf`;
+      C.saveBlob(C._buildPdf(pages), name);
+      files.push(name);
+      pages = []; from = done + 1;
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    }
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+  return files;
+}
+
+async function recordPrinted(ids) {
+  const done = [];
+  for (let i = 0; i < ids.length; i += 25) {
+    const out = await post('/api/admin/cards', { action: 'printed', type: cards.type, ids: ids.slice(i, i + 25) });
+    done.push(...(out.results || []));
+  }
+  return done;
+}
+
+async function emailCards(rows, box, offset, total) {
+  const results = [];
+  for (let i = 0; i < rows.length; i += 20) {
+    const chunk = rows.slice(i, i + 20);
+    const out = await post('/api/admin/cards', { action: 'email', type: cards.type, ids: chunk.map((r) => r.id) });
+    results.push(...(out.results || []));
+    box.step(offset + Math.min(i + 20, rows.length), `Emailing\u2026 ${fmt.int(results.filter((x) => x.ok).length)} sent`);
+  }
+  return results;
+}
+
+async function runCards(mode) {
+  if (cards.busy) return;
+  const rows = selectedRows();
+  if (!rows.length) return;
+  const withEmail = rows.filter((r) => r.email);
+  const wantsEmail = mode === 'email' || mode === 'both';
+  const wantsPdf = mode === 'pdf' || mode === 'both';
+  if (wantsEmail && !confirm(`Email ${fmt.int(withEmail.length)} ${cards.type === 'patron' ? 'Patron' : 'Caretaker'} ${withEmail.length === 1 ? 'card' : 'cards'} now?${withEmail.length < rows.length ? `\n\n${fmt.int(rows.length - withEmail.length)} selected have no email address and will be skipped.` : ''}`)) return;
+  try { readyRenderers(); } catch (error) { $('cardsMsg').textContent = error.message; $('cardsMsg').classList.add('is-error'); return; }
+
+  cards.busy = true; updateSelection();
+  const dpi = Number($('pdfDpi').value) || 300;
+  const total = (wantsPdf ? rows.length : 0) + (wantsEmail ? withEmail.length : 0);
+  const box = runBox(mode === 'pdf' ? 'Making the PDF' : mode === 'email' ? 'Emailing cards' : 'Making the PDF and emailing', total);
+  const summary = [];
+  try {
+    let files = [];
+    if (wantsPdf) {
+      files = await makePdfs(rows, dpi, box);
+      const printed = await recordPrinted(rows.map((r) => r.id));
+      summary.push(`<li>${fmt.int(rows.length)} ${rows.length === 1 ? 'card' : 'cards'} drawn at ${dpi} dpi, front and back, into ${files.length === 1 ? `<b>${esc(files[0])}</b>` : `${files.length} files (${esc(files[0])} \u2026 ${esc(files[files.length - 1])})`}. Marked printed: ${fmt.int(printed.filter((x) => x.ok).length)}.</li>`);
+      const noPhoto = rows.filter((r) => !cards.photos.has(r.id)).length;
+      if (noPhoto && cards.type === 'caretaker') summary.push(`<li>${fmt.int(noPhoto)} ${noPhoto === 1 ? 'card has' : 'cards have'} no photograph; the photo well is left blank. Use <b>Add photos</b> before printing if the office has them.</li>`);
+    }
+    if (wantsEmail) {
+      const results = await emailCards(withEmail, box, wantsPdf ? rows.length : 0, total);
+      const sent = results.filter((x) => x.ok).length;
+      const failed = results.filter((x) => !x.ok);
+      summary.push(`<li>${fmt.int(sent)} ${sent === 1 ? 'email' : 'emails'} sent${rows.length > withEmail.length ? `; ${fmt.int(rows.length - withEmail.length)} skipped for having no address` : ''}.</li>`);
+      if (failed.length) summary.push(`<li>Not sent: ${failed.slice(0, 8).map((f) => `<span class="mono">${esc(f.id)}</span> (${esc(f.reason || 'failed')})`).join(', ')}${failed.length > 8 ? ` and ${failed.length - 8} more` : ''}.</li>`);
+    }
+    box.done('Done.', `<ul>${summary.join('')}</ul><div class="run-acts"><button class="btn light" type="button" data-run-close>Close</button></div>`);
+  } catch (error) {
+    box.done('Stopped: ' + error.message, `<ul>${summary.join('')}</ul><div class="run-acts"><button class="btn light" type="button" data-run-close>Close</button></div>`);
+  } finally {
+    cards.busy = false;
+    loadCards();
+  }
+}
+
+$('actPdf').addEventListener('click', () => runCards('pdf'));
+$('actEmail').addEventListener('click', () => runCards('email'));
+$('actBoth').addEventListener('click', () => runCards('both'));
+$('cardRun').addEventListener('click', (event) => {
+  if (event.target.closest('[data-run-close]')) { $('cardRun').hidden = true; $('cardRun').innerHTML = ''; }
 });
 </script>
 </body></html>
