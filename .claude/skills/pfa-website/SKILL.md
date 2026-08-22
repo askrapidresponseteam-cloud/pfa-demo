@@ -5,7 +5,7 @@ description: Working rules for the People for Animals (PFA) website repo — a s
 
 # PFA website — rules for assistants
 
-Read `HANDBOOK.md` at the repo root for the full picture. The non-negotiables:
+Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the repo root first. The non-negotiables:
 
 ## Architecture constraints
 - **Vercel Hobby: max 12 functions, crons at most daily.** The whole API is

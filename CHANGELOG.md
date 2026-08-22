@@ -1,5 +1,13 @@
+## v1.46 — 22 Aug 2026
+
+- **Admin sign-in reworked to not need the Firebase JS SDK.** It now calls Google's Identity Toolkit REST API directly (`accounts:signInWithPassword` + token refresh), so the page no longer depends on an ES-module import from `www.gstatic.com` — the failure mode that left the button inert. Same accounts, same ID tokens; the server still verifies them with the admin SDK and requires the `admin` claim. Session lives in `sessionStorage` (survives reload, gone when the tab closes).
+- Status messages are always visible (they were being hidden by the site-wide `.error{display:none}` form rule) and name the real reason: provider disabled, unknown user, wrong password, disabled account, rate limited, network blocked.
+- Enter submits the form.
+
 ## v1.45 — 22 Aug 2026
 
+- **Admin sign-in fixed.** Status messages were rendered invisible by the site-wide `.error{display:none}` form rule, so the page appeared dead on any failure. Messages now always show; real Firebase error reasons are displayed (not enabled / domain not authorised / no such user / wrong password); Enter submits; SDK load failures are reported on the page.
+- `ARCHITECTURE.md`: system diagram, money flows, data model, trust boundaries and the control at each, availability/degradation, known gaps, secrets inventory.
 - **Admin: Store orders register.** `/api/admin/records?type=store` reads the `storeOrders` mirror (newest first, cursor paging, search by `PFA-ST-<n>` or Shopify id). The Store tab in `admin.html` lists each order with customer, items, total, status, courier tracking and a link to the order in Shopify. Overview shows store-order counts.
 - Handbook §2b: go-live dependency matrix — public site vs admin portal, Firestore rules, admin sign-in steps.
 

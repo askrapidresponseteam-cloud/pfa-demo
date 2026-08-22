@@ -292,8 +292,8 @@
 </script>
 <script defer src="assets/field-rules.js"></script>
 <script>
-/* If the Firebase SDK (www.gstatic.com) or the panel script fails to load, say so
-   instead of leaving a dead button. Cleared by the module below once it has run. */
+/* If the panel script fails for any reason, say so on the page instead of
+   leaving a dead button. Cleared once the script below has wired up. */
 (function () {
   var msg = document.getElementById('signInMsg');
   function show(text) { if (!msg || window.__pfaAdminReady) return; msg.textContent = text; msg.classList.add('is-error'); }
@@ -302,13 +302,13 @@
     var isScript = el && el.tagName === 'SCRIPT';
     if (el && el !== window && !isScript) return; // fonts/images failing are not fatal
     var src = (e && (e.filename || (isScript && el.src))) || '';
-    show('The admin page could not start: ' + ((e && e.message) || 'a script failed to load') + (src ? ' (' + src + ')' : '') + '. If you use an ad/tracker blocker, allow www.gstatic.com for this site.');
+    show('The admin page could not start: ' + ((e && e.message) || 'a script failed to load') + (src ? ' (' + src + ')' : '') + '.');
   }, true);
   window.addEventListener('unhandledrejection', function (e) { show('The admin page could not start: ' + (e && e.reason && (e.reason.message || e.reason)) + '.'); });
-  setTimeout(function () { if (!window.__pfaAdminReady) show('The sign-in script did not start within 8 seconds. The Firebase SDK from www.gstatic.com is probably blocked on this network or by a browser extension.'); }, 8000);
+  setTimeout(function () { if (!window.__pfaAdminReady) show('The sign-in script did not start. Reload the page; if it keeps happening, report it.'); }, 8000);
 }());
 </script>
-<script type="module">
+<script>
 /* The panel talks to /api/admin/* with a Firebase ID token. The token carries
    an `admin: true` claim, which is the same claim firestore.rules checks, so
    the panel and the database agree about who is an administrator.
@@ -316,19 +316,109 @@
    The web config below is not a secret - it identifies the project to the
    Firebase SDK and is safe in page source. What protects the data is the
    claim, the security rules and the server checking the token. */
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+/* Sign-in talks to Google's Identity Toolkit REST API directly rather than
+   loading the Firebase JS SDK from www.gstatic.com. Same accounts, same ID
+   tokens (the server still verifies them with the admin SDK) - but nothing
+   can leave the page inert because a CDN module failed to load, and it does
+   not depend on the OAuth "authorised domains" list. The session (id token +
+   refresh token) is kept in sessionStorage, so closing the tab signs out. */
+const API_KEY = window.PFA_FIREBASE_API_KEY;
+const IDENTITY = 'https://identitytoolkit.googleapis.com/v1/accounts:';
+const SECURETOKEN = 'https://securetoken.googleapis.com/v1/token?key=' + encodeURIComponent(API_KEY);
+const SESSION_KEY = 'pfa_admin_session_v1';
 
-const firebaseConfig = {
-  apiKey: window.PFA_FIREBASE_API_KEY,
-  authDomain: window.PFA_FIREBASE_AUTH_DOMAIN,
-  projectId: window.PFA_FIREBASE_PROJECT_ID
+const auth = {
+  currentUser: null,
+  _listener: null,
+  _read() {
+    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch (error) { return null; }
+  },
+  _write(session) {
+    try {
+      if (session) sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      else sessionStorage.removeItem(SESSION_KEY);
+    } catch (error) {}
+  },
+  _user(session) {
+    if (!session) return null;
+    return {
+      email: session.email,
+      uid: session.uid,
+      getIdToken: async () => auth._freshToken(session)
+    };
+  },
+  async _freshToken(session) {
+    if (Date.now() < session.expiresAt - 60000) return session.idToken;
+    const response = await fetch(SECURETOKEN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(session.refreshToken)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.id_token) throw new Error('Your session expired. Sign in again.');
+    session.idToken = data.id_token;
+    session.refreshToken = data.refresh_token || session.refreshToken;
+    session.expiresAt = Date.now() + (Number(data.expires_in) || 3600) * 1000;
+    auth._write(session);
+    auth.currentUser = auth._user(session);
+    return session.idToken;
+  },
+  _emit() { if (auth._listener) auth._listener(auth.currentUser); }
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+function onAuthStateChanged(_auth, listener) {
+  auth._listener = listener;
+  const session = auth._read();
+  auth.currentUser = auth._user(session);
+  setTimeout(() => listener(auth.currentUser), 0);
+}
+
+async function signInWithEmailAndPassword(_auth, email, password) {
+  if (!API_KEY) { const e = new Error('config'); e.code = 'auth/invalid-api-key'; throw e; }
+  let response;
+  try {
+    response = await fetch(IDENTITY + 'signInWithPassword?key=' + encodeURIComponent(API_KEY), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, returnSecureToken: true })
+    });
+  } catch (networkError) {
+    const e = new Error('network'); e.code = 'auth/network-request-failed'; throw e;
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const reason = String((data.error && data.error.message) || 'UNKNOWN');
+    const e = new Error(reason);
+    e.code = {
+      EMAIL_NOT_FOUND: 'auth/user-not-found',
+      INVALID_PASSWORD: 'auth/wrong-password',
+      INVALID_LOGIN_CREDENTIALS: 'auth/invalid-credential',
+      INVALID_EMAIL: 'auth/invalid-email',
+      USER_DISABLED: 'auth/user-disabled',
+      TOO_MANY_ATTEMPTS_TRY_LATER: 'auth/too-many-requests',
+      OPERATION_NOT_ALLOWED: 'auth/operation-not-allowed',
+      PASSWORD_LOGIN_DISABLED: 'auth/operation-not-allowed'
+    }[reason.split(' :')[0].trim()] || ('auth/' + reason.toLowerCase());
+    throw e;
+  }
+  const session = {
+    email: data.email,
+    uid: data.localId,
+    idToken: data.idToken,
+    refreshToken: data.refreshToken,
+    expiresAt: Date.now() + (Number(data.expiresIn) || 3600) * 1000
+  };
+  auth._write(session);
+  auth.currentUser = auth._user(session);
+  auth._emit();
+  return { user: auth.currentUser };
+}
+
+async function signOut() {
+  auth._write(null);
+  auth.currentUser = null;
+  auth._emit();
+}
 
 const $ = (id) => document.getElementById(id);
 const state = { tab: 'submissions', cursor: null, rows: [] };
@@ -369,7 +459,9 @@ $('adminSignIn').addEventListener('click', async () => {
       'auth/wrong-password': 'That password did not match.',
       'auth/invalid-email': 'That does not look like an email address.',
       'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.',
-      'auth/network-request-failed': 'Could not reach Firebase. Check the connection and try again.'
+      'auth/network-request-failed': 'Could not reach Google sign-in. Check the connection, VPN or any blocker, then try again.',
+      'auth/invalid-api-key': 'assets/firebase-config.js has no API key.',
+      'auth/user-disabled': 'That account is disabled in Firebase.'
     }[code] || ('Sign-in failed' + (code ? ' (' + code + ')' : '') + '.');
     $('signInMsg').textContent = why;
     $('signInMsg').classList.add('is-error');

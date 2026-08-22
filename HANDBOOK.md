@@ -1,6 +1,8 @@
 # PFA Website — Operations Handbook
 
-_Current version: v1.45 (22 Aug 2026). Update this line with every release._
+_Current version: v1.46 (22 Aug 2026). Update this line with every release._
+
+**Companion:** `ARCHITECTURE.md` — system design, money flows, data model, trust boundaries, security controls, known gaps, secrets inventory.
 
 Read this first. It is the one document that explains how the site is built,
 how it is deployed, what went wrong on 22 Aug 2026 and why, and exactly what
@@ -61,6 +63,8 @@ in `api/index.js`. The function count stays 1.
 | Site search linked to `/products/<handle>.html`, which never existed; 404 page rendered unstyled | Products only lived in a quick-view modal with no URL; 404.html used relative asset paths | Every product has a real page at `/products/<handle>` (v1.38). All product links must use that path. 404.html uses absolute paths. |
 | "Store partner payment is not connected in this build" at checkout | `window.PFA_COMMERCE.liveOrders` kill switch existed but nothing set it | `assets/commerce-config.js` sets it `true`. Set `false` only to pause the store. |
 | Whole site 404 after a CLI deploy | `npx vercel --prod` uploaded a 5-file skeleton folder | Deploy only via `git push`; Instant Rollback to recover; then `vercel promote` the good build |
+| Admin page looked "dead" — no feedback on sign-in | `site.css` has a global `.error{display:none}` for form validation; admin reused the class for its status line, so every message was invisible | `.admin-msg` forced visible, uses `.is-error`. Rule: never reuse `.error`/`.field` classes outside forms. |
+| Admin sign-in button did nothing | Two causes: the site-wide `.error{display:none}` hid every status message, and the page depended on an ES module from `www.gstatic.com` | Messages forced visible (`.is-error`); sign-in moved to the Identity Toolkit REST API — no CDN module, no authorised-domain requirement (v1.46) |
 | Vendor PDF contained a live Admin API token | Vendor sent credentials in documentation | Credentials go only in Vercel env vars. Ask vendor to rotate the token after go-live. |
 
 **Golden rule:** after any deploy, run
@@ -96,7 +100,7 @@ routes work even before that because they use the admin SDK.
 1. Firebase console → Authentication → Sign-in method → **Email/Password → Enable**.
 2. Authentication → Users → **Add user** (your email + strong password).
 3. Authentication → Settings → Authorized domains → add `pfa-full-website.vercel.app`
-   (and the custom domain when it exists).
+   (good practice; since v1.46 sign-in uses the REST API and does not require it).
 4. Grant the admin claim from your Mac:
    ```bash
    cd ~/PFA_Full_Website
@@ -340,4 +344,5 @@ New collections added 22 Aug: `storeOrders` (admin-readable),
 | `assets/track-order.js` | Tracking page (reads API) |
 | `test/shopify-webhooks.test.js` | Full order lifecycle tests |
 | `firestore.rules` | Access rules incl. new store collections |
+| `ARCHITECTURE.md` | Architecture and security reference |
 | `.claude/skills/pfa-website/SKILL.md` | Instructions for AI assistants working on this repo |
