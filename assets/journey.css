@@ -1,0 +1,267 @@
+/* PFA application journeys - the shared form system.
+
+   Used by BOTH the Patron membership journey and the Colony Animal Caretaker
+   Card journey. It is one file on purpose: the two applications are the same
+   product and must not be allowed to drift apart into two lookalikes. Every
+   colour, radius and weight below comes from assets/site.css; nothing here
+   introduces a new visual language. */
+
+[hidden] { display: none !important; }
+
+/* A journey stays closed until the person asks for it. */
+.journey[data-journey-open="false"] { display: none !important; }
+#join[data-journey-open="false"] { display: none !important; }
+.journey, #join { scroll-margin-top: 96px; }
+
+.form-body { padding-bottom: 42px; }
+
+.simple-form-group + .simple-form-group { margin-top: 48px; }
+.physical-toggle + .simple-form-group { margin-top: 48px; }
+.simple-form-title { margin: 0 0 22px; }
+
+.form-grid { column-gap: 24px !important; row-gap: 24px !important; }
+.form-grid .field { min-width: 0; }
+
+.field label:first-child { display: block; margin-bottom: 10px; }
+.field input, .field textarea { box-sizing: border-box; width: 100%; }
+
+.location-line { align-items: center; display: flex; flex-wrap: wrap; gap: 16px 20px; margin-top: 20px; margin-bottom: 26px; }
+.location-line .btn { flex: 0 0 auto; }
+.location-line .btn[disabled] { cursor: wait; opacity: .65; }
+.location-status { flex: 1 1 260px; line-height: 1.5; }
+.location-status[data-state="success"] { color: #187044; }
+.location-status[data-state="error"] { color: #a23a2b; }
+
+.form-grid.location-grid { grid-template-columns: minmax(120px, .7fr) minmax(0, 1.15fr) minmax(0, 1.15fr); }
+.form-grid.location-grid .full { grid-column: 1 / -1; }
+
+.optional-photo {
+  border-top: 1px solid rgba(22, 22, 22, .12);
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  padding-top: 22px;
+}
+.optional-photo summary { cursor: pointer; font-weight:500; list-style-position: outside; margin-left: 18px; }
+.optional-photo .optional-photo-body { padding-top: 20px; }
+
+.physical-toggle {
+  align-items: center;
+  display: grid !important;
+  gap: 20px 24px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  margin-top: 40px;
+  padding: 28px 30px;
+}
+.physical-toggle > div { min-width: 0; }
+.physical-toggle .help { margin: 8px 0 0; }
+.physical-price { white-space: nowrap; }
+
+.payment-note { border-top: 1px solid rgba(22, 22, 22, .12); margin-top: 40px; padding-top: 30px; }
+.payment-note p { margin: 8px 0 0; }
+
+.form-actions { margin-top: 24px; }
+.form-actions + .help { margin: 16px 0 0; }
+
+/* --- Journey scenes ------------------------------------------------------
+   Both journeys move through steps on one page rather than across reloads.
+   Only the active step is in the document flow. */
+[data-scene] { display: none; }
+[data-scene].is-active { display: block; }
+
+/* --- Canvas card preview -------------------------------------------------
+   The Caretaker Card is drawn on canvas rather than in the DOM, so it needs a
+   frame of its own. It deliberately borrows the Patron card's placement,
+   caption and toggle so the two previews sit identically on the page. */
+.card-canvas { margin-inline: auto; max-width: 340px; width: 100%; }
+.card-canvas .faces { display: grid; }
+.card-canvas .faces > figure { grid-area: 1 / 1; margin: 0; }
+.card-canvas .faces > figure[hidden] { display: none; }
+
+.card-canvas canvas {
+  border-radius: 3.72% / 2.35%;
+  box-shadow: 0 24px 56px -18px rgba(10, 11, 13, .42), 0 2px 8px rgba(10, 11, 13, .10);
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+/* --- Issued summary ------------------------------------------------------ */
+.issued-head { text-align: center; }
+.issued-number {
+  color: var(--blue);
+  font-size: clamp(19px, 4.4vw, 24px);
+  font-weight:500;
+  letter-spacing: .14em;
+  margin: 18px 0 0;
+}
+
+/* --- Choice cards --------------------------------------------------------
+   Same border, radius and hover as .route-card in the site theme. */
+.journey-choices { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 34px; }
+
+.journey-choice {
+  background: #fff;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  padding: 26px 24px;
+  text-align: left;
+  transition: border-color .18s ease, transform .18s ease;
+  width: 100%;
+}
+.journey-choice:hover { border-color: var(--ink); transform: translateY(-2px); }
+.journey-choice small {
+  color: var(--blue);
+  display: block;
+  font-size: 10px;
+  font-weight:500;
+  letter-spacing: .2em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.journey-choice h3 { font-size: 20px; margin: 0 0 8px; }
+.journey-choice p { color: var(--muted); font-size: 13.5px; line-height: 1.55; margin: 0; }
+
+/* --- Delivery tracker ---------------------------------------------------- */
+.track { display: grid; margin-top: 26px; }
+.track-step { display: grid; gap: 2px 16px; grid-template-columns: 12px 1fr; padding-bottom: 22px; position: relative; }
+.track-step::before {
+  background: #D8DEE4;
+  border-radius: 50%;
+  content: "";
+  grid-column: 1;
+  height: 11px;
+  margin-top: 5px;
+  width: 11px;
+}
+.track-step:not(:last-child)::after {
+  background: #E4E8EC;
+  content: "";
+  height: calc(100% - 16px);
+  left: 5px;
+  position: absolute;
+  top: 16px;
+  width: 1px;
+}
+.track-step.done::before { background: var(--blue); }
+.track-step.done:not(:last-child)::after { background: var(--blue); }
+.track-step.current::before { box-shadow: 0 0 0 4px rgba(6, 83, 238, .16); }
+.track-step.exception::before { background: var(--danger); }
+.track-step strong { font-size: 14.5px; grid-column: 2; }
+.track-step span { color: var(--muted); font-size: 11.5px; grid-column: 2; }
+
+/* --- Photo control ------------------------------------------------------- */
+.photo-row { align-items: center; display: flex; gap: 16px; }
+.photo-thumb {
+  background: var(--soft) center/cover no-repeat;
+  border: 1px solid var(--line);
+  flex: none;
+  height: 58px;
+  width: 58px;
+}
+
+.journey-status { color: var(--blue); font-size: 12px; font-weight:500; margin: 14px 0 0; min-height: 16px; }
+.journey-status.error { color: var(--danger); }
+
+@media (max-width: 720px) {
+  .form-body { padding-bottom: 32px; }
+  .form-grid.location-grid { grid-template-columns: 1fr; }
+  .form-grid.location-grid .full { grid-column: auto; }
+  .location-line .btn { width: 100%; }
+  .physical-toggle { grid-template-columns: minmax(0, 1fr) auto; padding: 22px 20px; }
+  .physical-toggle .physical-price { grid-column: 1; grid-row: 2; justify-self: start; }
+  .physical-toggle .switch { grid-column: 2; grid-row: 1 / span 2; }
+  .journey-choices { grid-template-columns: 1fr; }
+}
+
+/* --- Photograph control --------------------------------------------------
+   Shared by both journeys. Same border, soft fill and hairlines as the rest
+   of the form system; nothing new is introduced. */
+.pe { display: grid; gap: 14px; }
+
+.pe-stage {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  cursor: grab;
+  margin-inline: auto;
+  max-width: 220px;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+  width: 100%;
+}
+.pe-stage.is-dragging { cursor: grabbing; }
+.pe-stage canvas { display: block; width: 100%; }
+
+.pe-empty {
+  color: var(--muted);
+  font-size: 11px;
+  inset: 0;
+  letter-spacing: .14em;
+  margin: 0;
+  place-content: center;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+  display: grid;
+}
+
+.pe-zoom { align-items: center; display: flex; gap: 14px; }
+.pe-zoom span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight:500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.pe-zoom input[type="range"] { accent-color: var(--blue); flex: 1; min-width: 0; }
+.pe-hint { margin: 10px 0 0; }
+
+.pe-warn {
+  border-left: 3px solid var(--amber);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 10px 0 10px 14px;
+}
+.pe-warn.soft { border-color: var(--amber); color: var(--amber); }
+.pe-warn.poor { border-color: var(--danger); color: var(--danger); }
+
+/* --- Duplicate notice ---------------------------------------------------- */
+.journey-notice {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  background: var(--soft);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 24px;
+  padding: 16px 18px;
+}
+.journey-notice strong { display: block; margin-bottom: 6px; }
+.journey-notice a { color: var(--blue); text-decoration: underline; }
+
+/* site.css hides every .error so that a field's message only shows once the
+   field is marked invalid. A status line is not a field: when it carries an
+   error it must be seen. */
+.journey-status.error { display: block; padding: 10px 12px; background: #FFF3F1; border: 1px solid rgba(208,52,44,.25); font-size: 13px; line-height: 1.5; }
+
+/* DUMMY-GEN (testing only; delete with the block in caretaker.html) */
+.dummy-gen { margin-top: 18px; padding: 14px; border: 1.5px dashed #b4531a; background: #fff8f3; }
+.dummy-gen-badge { display: inline-block; margin-bottom: 10px; padding: 4px 8px; background: #b4531a; color: #fff; font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.dummy-gen .help { margin-top: 8px; }
+
+/* The empty photo frame is the upload control. */
+.pe-stage { cursor: pointer; }
+.pe-stage:has(canvas:not([hidden])) { cursor: grab; }
+.pe-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 20px; }
+.pe-empty strong { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink, #111318); }
+.pe-empty span { font-size: 11px; color: #77818A; letter-spacing: 0; text-transform: none; }
+.pe-stage:hover .pe-empty strong, .pe-stage:focus-visible .pe-empty strong { color: var(--blue); }
+.pe-change { margin-top: 10px; appearance: none; background: none; border: 1px solid #C9D2D8; padding: 9px 14px; font: inherit; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.pe-change:hover { border-color: var(--blue); color: var(--blue); }
+.patron-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.pe-stage { border: 1.5px dashed #C9D2D8; transition: border-color .2s; }
+.pe-stage:hover, .pe-stage:focus-visible { border-color: var(--blue); outline: 0; }
+.pe-stage.is-dragging, .pe:has([data-pe-change]:not([hidden])) .pe-stage { border-style: solid; }
+.pe-empty strong::before { content: "+"; display: block; margin: 0 auto 6px; width: 36px; height: 36px; line-height: 34px; border: 1.5px solid currentColor; font-size: 22px; font-weight: 400; }

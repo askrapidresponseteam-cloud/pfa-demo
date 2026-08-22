@@ -1,0 +1,301 @@
+[
+  {
+    "name": "320x480",
+    "width": 320,
+    "height": 480,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 320,
+        "h": 480
+      },
+      "docW": 320,
+      "docH": 6913
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 320,
+        "h": 480
+      },
+      "docW": 320,
+      "docH": 6910
+    }
+  },
+  {
+    "name": "320x568",
+    "width": 320,
+    "height": 568,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 320,
+        "h": 568
+      },
+      "docW": 320,
+      "docH": 6998
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 320,
+        "h": 568
+      },
+      "docW": 320,
+      "docH": 6998
+    }
+  },
+  {
+    "name": "360x640",
+    "width": 360,
+    "height": 640,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 360,
+        "h": 640
+      },
+      "docW": 360,
+      "docH": 7115
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 360,
+        "h": 640
+      },
+      "docW": 360,
+      "docH": 7115
+    }
+  },
+  {
+    "name": "390x844",
+    "width": 390,
+    "height": 844,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "docW": 390,
+      "docH": 7526
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "docW": 390,
+      "docH": 7526
+    }
+  },
+  {
+    "name": "412x915",
+    "width": 412,
+    "height": 915,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 412,
+        "h": 915
+      },
+      "docW": 412,
+      "docH": 7734
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 412,
+        "h": 915
+      },
+      "docW": 412,
+      "docH": 7734
+    }
+  },
+  {
+    "name": "640x960",
+    "width": 640,
+    "height": 960,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 640,
+        "h": 960
+      },
+      "docW": 640,
+      "docH": 7865
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 640,
+        "h": 960
+      },
+      "docW": 640,
+      "docH": 7865
+    }
+  },
+  {
+    "name": "768x1024",
+    "width": 768,
+    "height": 1024,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 768,
+        "h": 1024
+      },
+      "docW": 768,
+      "docH": 6435
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 768,
+        "h": 1024
+      },
+      "docW": 768,
+      "docH": 6435
+    }
+  },
+  {
+    "name": "980x720",
+    "width": 980,
+    "height": 720,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 980,
+        "h": 720
+      },
+      "docW": 980,
+      "docH": 6368
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 980,
+        "h": 720
+      },
+      "docW": 980,
+      "docH": 6368
+    }
+  },
+  {
+    "name": "1024x768",
+    "width": 1024,
+    "height": 768,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 1024,
+        "h": 768
+      },
+      "docW": 1024,
+      "docH": 5705
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 1024,
+        "h": 768
+      },
+      "docW": 1024,
+      "docH": 5705
+    }
+  },
+  {
+    "name": "1280x720",
+    "width": 1280,
+    "height": 720,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 1280,
+        "h": 720
+      },
+      "docW": 1280,
+      "docH": 5074
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 1280,
+        "h": 720
+      },
+      "docW": 1280,
+      "docH": 5074
+    }
+  },
+  {
+    "name": "1366x768",
+    "width": 1366,
+    "height": 768,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 1366,
+        "h": 768
+      },
+      "docW": 1366,
+      "docH": 5312
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 1366,
+        "h": 768
+      },
+      "docW": 1366,
+      "docH": 5312
+    }
+  },
+  {
+    "name": "1440x900",
+    "width": 1440,
+    "height": 900,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 1440,
+        "h": 900
+      },
+      "docW": 1440,
+      "docH": 5598
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 1440,
+        "h": 900
+      },
+      "docW": 1440,
+      "docH": 5598
+    }
+  },
+  {
+    "name": "1920x1080",
+    "width": 1920,
+    "height": 1080,
+    "initial": {
+      "errors": [],
+      "viewport": {
+        "w": 1920,
+        "h": 1080
+      },
+      "docW": 1920,
+      "docH": 5826
+    },
+    "entered": {
+      "errors": [],
+      "viewport": {
+        "w": 1920,
+        "h": 1080
+      },
+      "docW": 1920,
+      "docH": 5826
+    }
+  }
+]

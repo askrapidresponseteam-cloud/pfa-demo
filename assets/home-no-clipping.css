@@ -1,0 +1,704 @@
+/* ======================================================================
+   PFA HOME: COMPLETE NO-CLIPPING / NO-OVERLAP PASS
+   Loaded after the immersive styles. Every content section uses explicit
+   safe areas, intrinsic sizing and responsive grids. Decorative elements
+   remain inside their own containers and interactive states never move
+   over neighbouring content.
+   ====================================================================== */
+
+.home-immersive{
+  --home-section-x:clamp(20px,4.2vw,72px);
+  --home-section-y:clamp(78px,8vw,132px);
+  --home-content-max:1440px;
+}
+
+.home-immersive,
+.home-immersive .home-main,
+.home-immersive .home-main > section,
+.home-immersive footer{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+}
+
+.home-immersive .home-main > section,
+.home-immersive footer{
+  scroll-margin-top:calc(var(--header) + 24px + env(safe-area-inset-top));
+}
+
+.home-immersive :where(h1,h2,h3,p,blockquote,strong,small,em,a,span){
+  min-width:0;
+}
+
+.home-immersive :where(.home-impact-copy,.impact-stats,.impact-stat,.help-content,.help-routes,.help-route,.visible-head,.visible-grid,.visible-card,.visible-copy,.ways-copy,.ways-grid,.way-card,.home-founder,.footer-inner,.footer-grid,.footer-brand,footer nav){
+  min-width:0;
+}
+
+.home-immersive :where(.home-impact-copy h2,.help-content h2,.visible-head h2,.ways-copy h2,.home-founder blockquote,.help-visual-tag strong,.visible-copy strong,.way-card strong){
+  max-width:100%;
+  overflow-wrap:break-word;
+  word-break:normal;
+  text-wrap:balance;
+}
+
+/* Section 02: impact -------------------------------------------------- */
+.home-impact{
+  width:min(100%,var(--home-content-max));
+  max-width:var(--home-content-max);
+  padding:var(--home-section-y) var(--home-section-x);
+  grid-template-columns:minmax(0,1.08fr) minmax(480px,.92fr);
+  gap:clamp(48px,6vw,96px);
+  align-items:end;
+  overflow:visible;
+}
+
+.home-impact-copy h2{
+  font-size:clamp(44px,5.2vw,80px);
+  line-height:.98;
+  letter-spacing:-.052em;
+}
+
+.impact-stats{
+  width:100%;
+  max-width:100%;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+.impact-stat{
+  min-width:0;
+  min-height:260px;
+  padding:clamp(20px,2vw,28px);
+  overflow:visible;
+  transform:none!important;
+}
+
+.impact-stat:hover,
+.impact-stat:focus-visible{
+  transform:none!important;
+}
+
+.impact-stat strong{
+  max-width:100%;
+  font-size:clamp(34px,3vw,50px);
+  line-height:1;
+  letter-spacing:-.052em;
+  white-space:normal;
+  overflow-wrap:normal;
+}
+
+.impact-stat span,
+.impact-stat small{
+  max-width:100%;
+  line-height:1.35;
+  overflow-wrap:break-word;
+}
+
+/* Section 03: help ---------------------------------------------------- */
+.home-help{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  min-height:0;
+  align-items:stretch;
+  overflow:visible;
+}
+
+.help-visual{
+  min-width:0;
+  min-height:clamp(720px,64vw,960px);
+  overflow:hidden;
+}
+
+.help-visual img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.help-visual-tag{
+  left:clamp(24px,4vw,60px);
+  right:clamp(24px,4vw,60px);
+  bottom:clamp(28px,4vw,58px);
+  max-width:calc(100% - clamp(48px,8vw,120px));
+}
+
+.help-visual-tag strong{
+  font-size:clamp(32px,3.5vw,58px);
+  line-height:.98;
+}
+
+.help-content{
+  width:100%;
+  padding:clamp(72px,7vw,112px) var(--home-section-x);
+  justify-content:flex-start;
+  overflow:visible;
+}
+
+.help-content h2{
+  font-size:clamp(44px,5vw,76px);
+  line-height:.98;
+}
+
+.help-routes{
+  width:100%;
+  margin-top:clamp(38px,4.5vw,62px);
+  overflow:visible;
+}
+
+.help-route{
+  width:100%;
+  grid-template-columns:42px minmax(0,1fr) 34px;
+  gap:clamp(14px,1.6vw,22px);
+  min-height:132px;
+  padding:24px 0;
+  overflow:visible;
+}
+
+.help-route:hover,
+.help-route:focus-visible{
+  padding-left:0;
+  padding-right:0;
+}
+
+.help-route > span:nth-child(2){
+  min-width:0;
+}
+
+.help-route small,
+.help-route strong,
+.help-route em{
+  max-width:100%;
+  overflow-wrap:break-word;
+}
+
+.help-route strong{
+  font-size:clamp(21px,1.85vw,29px);
+  line-height:1.08;
+}
+
+.help-route > b{
+  width:34px;
+  min-width:34px;
+  text-align:right;
+  transform:none!important;
+}
+
+/* Section 04: work made visible -------------------------------------- */
+.home-visible{
+  padding:var(--home-section-y) var(--home-section-x);
+  overflow:visible;
+}
+
+.visible-head,
+.visible-grid{
+  width:min(100%,var(--home-content-max));
+  max-width:var(--home-content-max);
+}
+
+.visible-head h2{
+  font-size:clamp(44px,5.2vw,80px);
+  line-height:.98;
+}
+
+.visible-grid{
+  min-height:720px;
+  grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+  grid-template-rows:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+
+.visible-card{
+  display:grid;
+  align-items:end;
+  min-width:0;
+  min-height:340px;
+  padding:clamp(24px,3vw,46px);
+  isolation:isolate;
+  overflow:hidden;
+}
+
+.visible-media{
+  z-index:0;
+}
+
+.visible-copy{
+  position:relative;
+  z-index:2;
+  left:auto;
+  right:auto;
+  bottom:auto;
+  width:100%;
+  max-width:100%;
+  align-self:end;
+}
+
+.visible-copy strong{
+  max-width:min(100%,700px);
+  font-size:clamp(28px,3vw,48px);
+  line-height:.98;
+}
+
+.visible-card:not(.visible-card-story) .visible-copy strong{
+  font-size:clamp(23px,2.25vw,35px);
+}
+
+.visible-copy small,
+.visible-copy em{
+  max-width:100%;
+  line-height:1.35;
+  overflow-wrap:break-word;
+}
+
+/* Section 05: every way in ------------------------------------------- */
+.home-ways{
+  width:min(100%,var(--home-content-max));
+  max-width:var(--home-content-max);
+  padding:var(--home-section-y) var(--home-section-x);
+  overflow:visible;
+}
+
+.ways-copy{
+  grid-template-columns:minmax(0,1.1fr) minmax(260px,.55fr);
+  gap:clamp(36px,5vw,72px);
+}
+
+.ways-copy h2{
+  font-size:clamp(44px,5.2vw,80px);
+  line-height:.98;
+}
+
+.ways-grid{
+  width:100%;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  overflow:visible;
+}
+
+.way-card{
+  min-width:0;
+  min-height:350px;
+  padding:clamp(24px,2.2vw,30px);
+  overflow:hidden;
+  transform:none!important;
+  box-shadow:none!important;
+}
+
+.way-card:before{
+  right:18px;
+  top:18px;
+  width:clamp(76px,7vw,108px);
+  height:clamp(76px,7vw,108px);
+  border-width:clamp(14px,1.5vw,22px);
+  transform:none!important;
+}
+
+.way-card:hover,
+.way-card:focus-visible{
+  transform:none!important;
+  box-shadow:inset 0 0 0 2px rgba(6,83,238,.18)!important;
+}
+
+.way-card:hover:before,
+.way-card:focus-visible:before{
+  transform:none!important;
+}
+
+.way-mark{
+  max-width:100%;
+  transform:none!important;
+}
+
+.way-card small,
+.way-card strong,
+.way-card em{
+  max-width:100%;
+  line-height:1.25;
+  overflow-wrap:break-word;
+}
+
+.way-card strong{
+  font-size:clamp(22px,1.85vw,30px);
+  line-height:1.04;
+}
+
+/* Section 06: founder ------------------------------------------------- */
+.home-founder{
+  min-height:clamp(580px,48vw,720px);
+  padding:clamp(88px,9vw,132px) var(--home-section-x);
+  overflow:hidden;
+}
+
+.founder-orbit{
+  inset:clamp(24px,4vw,64px) var(--home-section-x);
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:center;
+  gap:clamp(8px,2vw,28px);
+  overflow:visible;
+}
+
+.founder-orbit span,
+.founder-orbit span:nth-child(1),
+.founder-orbit span:nth-child(2),
+.founder-orbit span:nth-child(3){
+  position:static;
+  inset:auto;
+  display:block;
+  width:100%;
+  max-width:100%;
+  font-size:clamp(90px,20vw,290px);
+  line-height:1;
+  letter-spacing:-.07em;
+  text-align:center;
+  overflow:visible;
+}
+
+.home-founder blockquote{
+  width:min(100%,1120px);
+  max-width:1120px;
+  font-size:clamp(46px,6vw,92px);
+  line-height:.98;
+  letter-spacing:-.052em;
+}
+
+.home-founder > p,
+.founder-link{
+  max-width:100%;
+  line-height:1.4;
+  text-align:center;
+  overflow-wrap:break-word;
+}
+
+.founder-link{
+  min-height:52px;
+  height:auto;
+  padding:14px 20px;
+}
+
+/* Footer -------------------------------------------------------------- */
+.home-immersive footer{
+  overflow:visible;
+}
+
+.home-immersive .footer-inner{
+  width:min(100%,var(--home-content-max));
+  max-width:var(--home-content-max);
+}
+
+.home-immersive .footer-grid{
+  grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(0,1fr));
+  gap:clamp(32px,4vw,56px);
+}
+
+.home-immersive .footer-brand p,
+.home-immersive footer nav,
+.home-immersive footer nav a,
+.home-immersive .footer-bottom{
+  max-width:100%;
+  overflow-wrap:break-word;
+}
+
+/* Wide-to-tablet transitions ----------------------------------------- */
+@media(max-width:1180px){
+  .home-impact{
+    grid-template-columns:1fr;
+    align-items:start;
+  }
+  .impact-stats{
+    max-width:900px;
+  }
+  .ways-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .home-immersive .footer-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .home-immersive .footer-brand{
+    grid-column:1/-1;
+  }
+}
+
+@media(max-width:980px){
+  .home-help{
+    grid-template-columns:1fr;
+  }
+  .help-visual{
+    min-height:clamp(500px,72vw,660px);
+  }
+  .help-visual img{
+    position:absolute;
+  }
+  .help-content{
+    padding-top:clamp(64px,8vw,92px);
+    padding-bottom:clamp(64px,8vw,92px);
+  }
+  .visible-grid{
+    min-height:0;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-rows:minmax(540px,auto) minmax(360px,auto);
+  }
+  .visible-card-story{
+    grid-column:1/-1;
+    grid-row:auto;
+  }
+  .visible-card-wire,
+  .visible-card-cinekind{
+    grid-column:auto;
+    grid-row:auto;
+  }
+}
+
+/* Mobile -------------------------------------------------------------- */
+@media(max-width:760px){
+  .home-immersive{
+    --home-section-x:20px;
+    --home-section-y:clamp(70px,19vw,88px);
+  }
+
+  .home-impact{
+    gap:40px;
+  }
+
+  .home-impact-copy h2,
+  .help-content h2,
+  .visible-head h2,
+  .ways-copy h2{
+    font-size:clamp(40px,11.5vw,56px);
+    line-height:1;
+    letter-spacing:-.048em;
+  }
+
+  .home-impact-copy > p:last-child,
+  .ways-copy > p:last-child{
+    font-size:16px;
+    line-height:1.55;
+  }
+
+  .impact-stats{
+    grid-template-columns:1fr;
+  }
+
+  .impact-stat{
+    min-height:148px;
+    padding:22px;
+  }
+
+  .impact-stat strong{
+    font-size:clamp(42px,13vw,54px);
+  }
+
+  .help-visual{
+    min-height:clamp(420px,125vw,520px);
+  }
+
+  .help-visual-tag{
+    left:20px;
+    right:20px;
+    bottom:24px;
+    max-width:calc(100% - 40px);
+  }
+
+  .help-visual-tag strong{
+    font-size:clamp(30px,9vw,42px);
+    line-height:1;
+  }
+
+  .help-content{
+    padding:var(--home-section-y) var(--home-section-x);
+  }
+
+  .help-route{
+    grid-template-columns:30px minmax(0,1fr) 28px;
+    gap:12px;
+    min-height:0;
+    padding:22px 0;
+  }
+
+  .help-route strong{
+    font-size:clamp(21px,6.4vw,26px);
+    line-height:1.08;
+  }
+
+  .help-route > b{
+    width:28px;
+    min-width:28px;
+    font-size:22px;
+  }
+
+  .visible-head{
+    margin-bottom:38px;
+  }
+
+  .visible-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:none;
+    gap:14px;
+  }
+
+  .visible-card,
+  .visible-card-story,
+  .visible-card-wire,
+  .visible-card-cinekind{
+    grid-column:auto;
+    grid-row:auto;
+    min-height:clamp(360px,112vw,460px);
+    padding:24px;
+  }
+
+  .visible-card:not(.visible-card-story){
+    min-height:clamp(340px,100vw,410px);
+  }
+
+  .visible-copy strong,
+  .visible-card:not(.visible-card-story) .visible-copy strong{
+    font-size:clamp(27px,8.4vw,36px);
+    line-height:1;
+  }
+
+  .ways-copy{
+    display:block;
+  }
+
+  .ways-copy > p:last-child{
+    margin-top:22px;
+  }
+
+  .ways-grid{
+    grid-template-columns:1fr;
+    margin-top:40px;
+  }
+
+  .way-card{
+    min-height:270px;
+    padding:24px;
+  }
+
+  .way-card:before{
+    right:16px;
+    top:16px;
+    width:82px;
+    height:82px;
+    border-width:16px;
+  }
+
+  .way-card strong{
+    font-size:clamp(24px,7vw,30px);
+  }
+
+  .home-founder{
+    min-height:560px;
+    padding:82px 20px;
+  }
+
+  .founder-orbit{
+    inset:30px 16px;
+    gap:4px;
+  }
+
+  .founder-orbit span,
+  .founder-orbit span:nth-child(1),
+  .founder-orbit span:nth-child(2),
+  .founder-orbit span:nth-child(3){
+    font-size:clamp(82px,24vw,104px);
+  }
+
+  .home-founder blockquote{
+    font-size:clamp(42px,11.8vw,58px);
+    line-height:1;
+    letter-spacing:-.048em;
+  }
+
+  .home-founder > p{
+    margin-top:26px;
+    font-size:8px;
+    letter-spacing:.16em;
+  }
+
+  .founder-link{
+    width:min(100%,310px);
+    margin-top:28px;
+    padding:14px 16px;
+  }
+
+  .home-immersive .footer-grid{
+    grid-template-columns:1fr;
+    gap:40px;
+  }
+
+  .home-immersive .footer-brand{
+    grid-column:auto;
+  }
+}
+
+@media(max-width:360px){
+  .home-immersive{
+    --home-section-x:18px;
+  }
+
+  .home-impact-copy h2,
+  .help-content h2,
+  .visible-head h2,
+  .ways-copy h2{
+    font-size:clamp(38px,11.5vw,44px);
+  }
+
+  .impact-stat{
+    padding:20px;
+  }
+
+  .help-route{
+    grid-template-columns:26px minmax(0,1fr) 24px;
+    gap:9px;
+  }
+
+  .help-route > b{
+    width:24px;
+    min-width:24px;
+  }
+
+  .visible-card,
+  .visible-card-story,
+  .visible-card-wire,
+  .visible-card-cinekind{
+    padding:20px;
+  }
+
+  .visible-copy strong,
+  .visible-card:not(.visible-card-story) .visible-copy strong{
+    font-size:clamp(25px,8.5vw,31px);
+  }
+
+  .way-card{
+    padding:22px;
+  }
+
+  .home-founder blockquote{
+    font-size:clamp(39px,11.8vw,47px);
+  }
+}
+
+/* Short viewport heights: content sections remain intrinsic and the
+   opening section already has its own compact viewport rules. */
+@media(max-height:620px){
+  .home-impact,
+  .home-visible,
+  .home-ways{
+    --home-section-y:72px;
+  }
+}
+
+/* Reveal states use opacity only. Layout-affecting translation can make
+   neighbouring cards visually cross while one item is entering. */
+.home-reveal,
+.home-reveal.is-visible{
+  transform:none!important;
+}
+
+/* Keep the longest desktop statistic on one line without allowing it to
+   touch the card boundary. At narrower widths the stats receive more room. */
+@media(min-width:1181px){
+  .impact-stat:nth-child(3) strong{
+    font-size:clamp(30px,2.2vw,36px);
+    white-space:nowrap;
+  }
+}

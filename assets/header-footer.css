@@ -1,0 +1,403 @@
+/* PFA header and footer - the single source of truth.
+
+   These two components appear on every page, so they are defined once, here,
+   and this file is linked last on every page - after site.css, after journey.css,
+   and after index.html's own inline styles. Loading last is what makes it
+   authoritative: whatever a page said about the header or footer before, this
+   is what wins.
+
+   The reason it exists: index.html carried its own copy of thirty-six header
+   and footer rules, and the two copies had drifted - a sticky header on the
+   home page against a fixed one everywhere else, and nav colours that only the
+   other pages ever saw. One file removes the possibility of that happening
+   again. Change the header here and it changes everywhere. */
+
+/* ---- Header -------------------------------------------------------------- */
+.site-header{
+  position:fixed;
+  inset:0 0 auto;
+  z-index:100;
+  height:calc(var(--header) + env(safe-area-inset-top));
+  padding:env(safe-area-inset-top) var(--pad) 0;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:clamp(16px,2vw,32px);
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(16px);
+}
+
+.desktop-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(16px,2.1vw,32px);
+  min-width:0;
+  color:#4E5963;
+  font-size:14px;
+}
+.desktop-nav a{position:relative;padding:12px 0;white-space:nowrap}
+.desktop-nav a.active{color:var(--ink)}
+
+/* The three destinations each carry their own colour. Everything else stays
+   in grey, so colour means "this is a place to go", not decoration. */
+.desktop-nav a.nav-store{color:var(--blue)}
+.desktop-nav a.nav-store:hover,
+.desktop-nav a.nav-store.active{color:#043bb5}
+
+.desktop-nav a.nav-involved{color:#b4531a}
+.desktop-nav a.nav-involved:hover,
+.desktop-nav a.nav-involved.active{color:#8c3f12}
+
+.desktop-nav a.nav-members{color:#1f7a52}
+.desktop-nav a.nav-members:hover,
+.desktop-nav a.nav-members.active{color:#155c3d}
+
+/* The underline follows the link's own colour rather than reverting to ink. */
+.desktop-nav a.active:after,
+.desktop-nav a:hover:after,
+.desktop-nav a:focus-visible:after{background:currentColor}
+
+.header-actions{display:flex;align-items:center;gap:10px;justify-self:end}
+
+/* This file loads last, so its .desktop-nav rule was overriding the
+   breakpoint in site.css and leaving the full desktop nav on screen next to
+   the hamburger on every phone. The breakpoint has to be restated here to
+   win, which is the price of being the authoritative file. */
+@media(max-width:980px){
+  .desktop-nav,
+  .header-icon{display:none}
+  .menu-button{display:flex}
+}
+
+/* ---- Mobile menu --------------------------------------------------------- */
+.mobile-nav a{
+  padding:5px 0;
+  font-size:clamp(34px,10vw,56px);
+  font-weight:500;
+  line-height:1.1;
+  letter-spacing:-.05em;
+}
+
+/* ---- Footer -------------------------------------------------------------- */
+footer{
+  background:#fff;
+  color:var(--ink);
+  border-top:1px solid var(--line);
+  padding:clamp(58px,6vw,92px) var(--pad) 34px;
+}
+.footer-grid a{color:var(--ink);font-size:14px}
+.footer-grid a:hover{color:var(--blue)}
+
+/* Usability floor: same look, larger touch. Nothing here changes a colour,
+   a font or a border; it only guarantees a finger can land. */
+.skip{min-height:44px;display:flex;align-items:center}
+.search-field,.filter-select{min-height:40px}
+.door-link{display:inline-flex;align-items:center;min-height:44px}
+.replay-button{display:inline-flex;align-items:center;min-height:44px}
+.lc-copy,.lc-build{min-height:44px;max-width:100%}
+.lc-handover-form button{min-height:44px;max-width:100%}
+.live-title-button{min-height:40px}
+#timerToggle,#timerReset,#painReset{min-height:44px;max-width:100%}
+
+/* Header calls to action: Store, Get involved, Members. Sharp-edged
+   outlined buttons in their own colour that fill on hover, with the fill
+   wiping in from the left. The active page is shown filled. */
+.desktop-nav a.nav-cta{--cta:var(--blue);position:relative;isolation:isolate;overflow:hidden;margin-left:2px;padding:9px 14px;border:1.5px solid var(--cta);border-radius:0;color:var(--cta);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;line-height:1;transition:color .22s ease,transform .18s ease,box-shadow .22s ease}
+.desktop-nav a.nav-cta:before{content:"";position:absolute;inset:0;background:var(--cta);transform:scaleX(0);transform-origin:left center;transition:transform .26s cubic-bezier(.2,.8,.2,1);z-index:-1}
+.desktop-nav a.nav-cta:after{display:none}
+.desktop-nav a.nav-cta:hover,.desktop-nav a.nav-cta:focus-visible{color:#fff;box-shadow:3px 3px 0 rgba(17,19,24,.18);transform:translate(-1px,-1px)}
+.desktop-nav a.nav-cta:hover:before,.desktop-nav a.nav-cta:focus-visible:before{transform:scaleX(1)}
+.desktop-nav a.nav-cta.active{color:#fff;border-bottom-color:var(--cta)}
+.desktop-nav a.nav-cta.active:before{transform:scaleX(1)}
+.desktop-nav a.nav-cta.nav-store{--cta:var(--blue,#0a4cff);margin-left:clamp(6px,1vw,14px)}
+.desktop-nav a.nav-cta.nav-involved{--cta:#b4531a}
+.desktop-nav a.nav-cta.nav-members{--cta:#1f7a52}
+.desktop-nav a.nav-cta.nav-store.active,.desktop-nav a.nav-cta.nav-involved.active,.desktop-nav a.nav-cta.nav-members.active{color:#fff}
+
+/* ---- Header, second pass -------------------------------------------------
+
+   The header was doing its job and nothing more: a white bar, a hairline, and
+   links that each grew their own underline. This pass gives it depth and
+   motion without touching the one thing that is not up for discussion, the
+   white background. If anything it is whiter than before: the .96 alpha and
+   the blur behind it are gone, because a translucent bar over a scrolling page
+   is never quite the same white twice.
+
+   What it does NOT do is change the header's height on scroll. That is the
+   fashionable move and it would break this site: --header is what the sticky
+   sub-navs on the Circle pages, the scroll-padding and the body offset are all
+   measured against, so a header that shrinks to 64px leaves a 14px gap under
+   itself with the page sliding through it. Depth and motion get the same
+   result without moving anything. */
+
+.site-header{
+  background:#fff;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  border-bottom:1px solid transparent;
+  transition:box-shadow .32s ease,border-color .32s ease;
+}
+
+/* At the top of the page the header is a clean white surface with nothing
+   drawn under it. The line and the lift arrive together, the moment there is
+   something scrolled underneath for them to describe. */
+.site-header.is-scrolled{
+  border-bottom-color:var(--line);
+  box-shadow:0 1px 0 rgba(14,17,22,.04),0 14px 34px -20px rgba(14,17,22,.34);
+}
+
+/* How far down the page you are, read off the bottom edge of the header. Two
+   pixels of the brand gradient, scaled rather than resized so it runs on the
+   compositor and costs nothing on scroll. */
+.site-header:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:2px;
+  transform:scaleX(var(--scroll-progress,0));
+  transform-origin:left center;
+  background:linear-gradient(90deg,var(--blue),var(--blue2));
+  opacity:var(--scroll-progress-shown,0);
+  transition:opacity .3s ease;
+  pointer-events:none;
+}
+
+/* ---- The nav indicator ---------------------------------------------------
+
+   One bar that slides between the links instead of a separate underline
+   growing under each. It takes the colour of the link it is under, so the
+   colour system still says what it said before, and it rests on the current
+   page when the pointer leaves.
+
+   It is added by site.js, and site.js adds .has-indicator at the same time.
+   Nothing here fires until that class is set, so with JavaScript off the
+   original per-link underline is still what you get. */
+.desktop-nav{position:relative}
+
+.desktop-nav.has-indicator a:not(.nav-cta):after{display:none}
+
+.nav-indicator{
+  position:absolute;
+  left:0;
+  bottom:2px;
+  width:1px;
+  height:2px;
+  transform:translate3d(var(--nav-ind-x,0),0,0) scaleX(var(--nav-ind-w,0));
+  transform-origin:left center;
+  background:var(--nav-ind-colour,var(--blue));
+  opacity:var(--nav-ind-shown,0);
+  pointer-events:none;
+  will-change:transform;
+  transition:transform .42s cubic-bezier(.22,.8,.24,1),
+             opacity .24s ease,
+             background-color .28s ease;
+}
+
+.desktop-nav a:not(.nav-cta){
+  color:#4E5963;
+  transition:color .22s ease;
+}
+.desktop-nav a:not(.nav-cta):hover{color:var(--ink)}
+
+/* ---- Header controls ------------------------------------------------------
+   The nav buttons already fill on hover with a hard offset shadow. The search
+   and menu buttons were the only things in the bar that did nothing at all, so
+   they now answer in the same language rather than a softer one of their own. */
+.header-icon,.menu-button{
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .18s ease,box-shadow .22s ease;
+}
+.header-icon:hover,.menu-button:hover,
+.header-icon:focus-visible,.menu-button:focus-visible{
+  background:var(--ink);
+  border-color:var(--ink);
+  color:#fff;
+  transform:translate(-1px,-1px);
+  box-shadow:3px 3px 0 rgba(14,17,22,.16);
+}
+.menu-button:hover i,.menu-button:focus-visible i{background:#fff}
+
+.header-donate{
+  transition:background .22s ease,transform .18s ease,box-shadow .22s ease;
+}
+.header-donate:hover,.header-donate:focus-visible{
+  transform:translate(-1px,-1px);
+  box-shadow:3px 3px 0 rgba(14,17,22,.2);
+}
+
+.brand{transition:transform .24s cubic-bezier(.22,.8,.24,1)}
+.brand:hover{transform:scale(1.025)}
+.brand img{display:block}
+
+/* A visible ring on every header control, since several of them are now
+   reachable by keyboard and were showing nothing at all. */
+.site-header a:focus-visible,
+.site-header button:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:3px;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .site-header,.site-header:after,.nav-indicator,
+  .header-icon,.menu-button,.header-donate,.brand{
+    transition-duration:.01ms !important;
+  }
+  .brand:hover,.header-icon:hover,.menu-button:hover,.header-donate:hover{transform:none}
+}
+
+/* ---- The nav, rebuilt -----------------------------------------------------
+
+   Two passes on this. The first made all six items share the buttons' 11px
+   uppercase type, on the theory that one type system would look resolved. It
+   did the opposite: six identical runs of letterspaced capitals with no size
+   or weight between them is a wall, and a wall has no hierarchy. That pass is
+   gone.
+
+   What was actually dating the bar was the hard-outlined rectangles. Three
+   1.5px boxes in three different colours, each with an offset drop shadow, all
+   shouting at the same volume so none of them wins. The colour coding is worth
+   keeping - it is the one idea in the header - but it does not need a box
+   around it to be legible.
+
+   So: the labels go back to the lowercase they are authored in, at a size you
+   read rather than decode. The boxes become soft tints of the same colours,
+   which fill solid on hover. Same three colours, same three destinations, a
+   quarter of the noise. */
+
+.desktop-nav{
+  gap:clamp(2px,.5vw,8px);
+  font-size:15px;
+}
+
+.desktop-nav a{
+  position:relative;
+  z-index:1;
+  padding:9px 13px;
+  font-size:15px;
+  font-weight:500;
+  letter-spacing:-.006em;
+  line-height:1;
+  text-transform:none;
+  border-radius:2px;
+}
+
+.desktop-nav a:not(.nav-cta){
+  color:#5A646E;
+  transition:color .2s ease;
+}
+.desktop-nav a:not(.nav-cta):hover{color:var(--ink)}
+.desktop-nav a:not(.nav-cta).active{color:var(--ink);font-weight:600}
+
+/* ---- The three destinations ----------------------------------------------
+   A tinted chip at rest, the full colour on hover. No border, no offset
+   shadow: the weight comes from the fill, which is what makes it feel like a
+   surface rather than a drawn rectangle. */
+.desktop-nav a.nav-cta{
+  --cta:var(--blue);
+  --cta-soft:#EDF2FE;
+  overflow:visible;
+  isolation:auto;
+  margin-left:0;
+  padding:9px 14px;
+  border:0;
+  border-radius:2px;
+  background:var(--cta-soft);
+  color:var(--cta);
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:-.006em;
+  text-transform:none;
+  line-height:1;
+  transition:background-color .22s ease,color .22s ease,transform .2s cubic-bezier(.22,.8,.24,1);
+}
+.desktop-nav a.nav-cta:before{display:none}
+.desktop-nav a.nav-cta:hover,
+.desktop-nav a.nav-cta:focus-visible{
+  background:var(--cta);
+  color:#fff;
+  box-shadow:none;
+  transform:translateY(-1px);
+}
+.desktop-nav a.nav-cta.active{background:var(--cta);color:#fff}
+.desktop-nav a.nav-cta.active:before{display:none}
+
+.desktop-nav a.nav-cta.nav-store{--cta:#0653EE;--cta-soft:#ECF1FE;margin-left:clamp(10px,1.4vw,20px)}
+.desktop-nav a.nav-cta.nav-involved{--cta:#B4531A;--cta-soft:#FBF1EA}
+.desktop-nav a.nav-cta.nav-members{--cta:#1F7A52;--cta-soft:#EAF4EF}
+
+/* ---- The indicator, as a chip --------------------------------------------
+   An underline under a lowercase word with descenders sits too low to read as
+   attached to it. A chip behind the word does not have that problem, and it
+   also gives the three plain links the same physical presence as the three
+   tinted ones, so the row reads as one row of six rather than three and three. */
+.nav-indicator{
+  top:50%;
+  bottom:auto;
+  height:34px;
+  margin-top:-17px;
+  border-radius:2px;
+  background:var(--nav-ind-colour,var(--ink));
+  opacity:0;
+  z-index:0;
+}
+.desktop-nav.has-indicator .nav-indicator{opacity:calc(var(--nav-ind-shown,0) * .085)}
+
+/* ---- The search button ----------------------------------------------------
+   The last outlined box in the bar, and the only thing left drawing a border
+   around itself. It gets the same treatment. */
+.header-icon{
+  border-color:transparent;
+  background:transparent;
+  color:#5A646E;
+  border-radius:2px;
+}
+.header-icon:hover,.header-icon:focus-visible{
+  background:rgba(14,17,22,.06);
+  border-color:transparent;
+  color:var(--ink);
+  transform:none;
+  box-shadow:none;
+}
+
+/* Donate stays the loudest thing in the bar, which is the point of it, but
+   loses the hard offset shadow so it sits in the same world as the rest. */
+.header-donate{
+  border-radius:2px;
+  letter-spacing:.12em;
+}
+.header-donate:hover,.header-donate:focus-visible{
+  transform:translateY(-1px);
+  box-shadow:0 6px 18px -6px rgba(6,83,238,.55);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .desktop-nav a.nav-cta:hover,.header-donate:hover{transform:none}
+}
+
+/* The search glyph lost its border and with it most of its presence, so it
+   gets the size back that the border used to give it. */
+.header-icon{font-size:21px;width:42px}
+
+/* ---- Help --------------------------------------------------------------
+
+   The help desk - report something, ask a question, follow one you raised -
+   sat halfway down network.html, which meant that finding it required already
+   knowing where it was. It is the most urgent thing on the site: someone with
+   an animal in trouble in front of them should not have to read past a shop
+   to reach it. So it is first in the action group, and it is the one chip that
+   is not a place to browse.
+
+   Amber rather than a fourth brand colour, because it is the only item in the
+   bar that means "something is wrong". */
+.desktop-nav a.nav-cta.nav-help{--cta:#8A5A00;--cta-soft:#FDF3E0;margin-left:clamp(10px,1.4vw,20px)}
+.desktop-nav a.nav-cta.nav-store{margin-left:0}
+
+/* One more item needs a little more room. Below this the bar hands over to
+   the menu button, which was already happening - just 80px earlier. */
+@media(max-width:1100px){
+  .desktop-nav,.header-icon{display:none}
+  .menu-button{display:flex}
+}

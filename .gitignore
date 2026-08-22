@@ -1,0 +1,15 @@
+# Local secrets. Never commit CCAvenue credentials.
+.env
+.env.*
+!.env.example
+
+# Never commit the downloaded live PHP integration or keys.
+**/ccavRequestHandler.php
+**/ccavResponseHandler.php
+**/Crypto.php
+
+# Local and platform files
+.DS_Store
+.vercel
+node_modules
+npm-debug.log*

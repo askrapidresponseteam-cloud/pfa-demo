@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta content="v1.35 (2026-08-22)" name="pfa-build"/>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin | PFA</title>
+<link href="media/pfa-emblem.png" rel="icon">
+<link href="assets/site.css" rel="stylesheet">
+<link href="assets/header-footer.css" rel="stylesheet">
+<style>
+  /* The portal is staff-facing, so it carries the mark and the type of the
+     site but not its navigation - a member's route through PFA is not an
+     administrator's. Everything below is drawn from the same variables the
+     public pages use, so a change to the palette or the type reaches here too. */
+  body{background:var(--soft,#f4f7f9)}
+
+  .admin-head{
+    position:sticky;top:0;z-index:20;
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;
+    height:var(--header);padding:0 clamp(20px,3vw,34px);
+    background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);
+    backdrop-filter:blur(16px);
+  }
+  .admin-head .brand{display:flex;align-items:center;gap:14px;min-width:0}
+  .admin-head .brand img{width:104px;height:auto;display:block}
+  .admin-head .brand span{
+    padding-left:14px;border-left:1px solid var(--line);
+    font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);
+  }
+  .admin-head .who{
+    justify-self:end;display:flex;align-items:center;gap:12px;
+    font-size:11px;color:var(--muted);white-space:nowrap;
+  }
+
+  .admin-wrap{max-width:var(--max,1440px);margin:0 auto;padding:26px clamp(20px,3vw,34px) 90px}
+  .admin-panel{background:#fff;border:1px solid var(--line);padding:clamp(18px,2.4vw,26px)}
+
+  /* The side toggle on the cards is the site's tab control; the portal uses
+     the same one rather than inventing a second. */
+  .admin-tabs{display:flex;width:max-content;max-width:100%;flex-wrap:wrap;
+    border:1px solid #CAD2D8;margin-bottom:22px}
+  .admin-tabs button{
+    min-height:40px;padding:0 16px;border:0;border-right:1px solid #CAD2D8;background:#fff;
+    font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  }
+  .admin-tabs button:last-child{border-right:0}
+  .admin-tabs button[aria-selected="true"]{background:var(--ink);color:#fff}
+
+  /* Uppercase micro-type in Clash Display closes its word spaces up - the tab
+     read "VERIFY ACARD". Same correction the public pages carry, applied to the
+     portal's own controls. */
+  .admin-tabs button,
+  .admin-head .brand span,
+  .signin .eyebrow,
+  th,
+  .pill,
+  .rowbtn,
+  .metric span,
+  .metric-head{word-spacing:.085em}
+
+  .admin-search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .admin-search input{flex:1 1 320px;min-width:0}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:600}
+  td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  tbody tr:hover{background:var(--soft,#f4f7f9)}
+
+  .pill{display:inline-block;padding:4px 10px;font-size:9px;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase}
+  .pill.valid{background:#e9f6ef;color:#1f7a52}
+  .pill.expired{background:#fdecea;color:#b3261e}
+  .pill.unknown{background:var(--soft,#eef1f3);color:#5c6771}
+
+  .admin-msg{margin:14px 0 0;font-size:13px;color:var(--muted)}
+  .admin-msg.error{color:var(--danger)}
+  .admin-empty{padding:42px 0;text-align:center;color:var(--muted)}
+  .admin-who{color:var(--muted);font-size:11px}
+  .admin-more{margin-top:16px}
+
+  /* Sign in: the mark, an eyebrow and a headline, exactly as a page of the
+     site would open. */
+  .signin{max-width:430px;margin:9vh auto;background:#fff;border:1px solid var(--line);
+    padding:clamp(24px,3vw,34px)}
+  .signin img{width:132px;height:auto;display:block;margin-bottom:22px}
+  .signin .eyebrow{margin:0}
+  .signin h1{font-size:clamp(26px,3vw,34px);margin:10px 0 8px;letter-spacing:-.02em}
+  .signin p.lead-sm{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 18px}
+  .signin label{margin-top:14px}
+  .signin .btn{margin-top:20px;width:100%}
+
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .metric{border:1px solid var(--line);padding:16px}
+  .metric b{display:block;font-size:30px;line-height:1;letter-spacing:-.03em}
+  .metric span{display:block;margin-top:7px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .metric.alert b{color:#b3261e}
+  .metric-head{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+  .notice{border-left:3px solid var(--blue);background:var(--soft-blue);padding:18px 20px}
+  .notice p{margin:10px 0 0;font-size:13px;line-height:1.55;color:#4F5A64}
+  .fields{margin:6px 0 0;font-size:12px;color:var(--muted)}
+  .fields b{color:var(--ink);font-weight:600}
+  .rowbtn{min-height:32px;padding:0 10px;border:1px solid #CAD2D8;background:#fff;font-size:9px;
+    letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-right:6px}
+  .rowbtn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+  [hidden]{display:none !important}
+.circle-row{border:1px solid #CAD2D8;background:#fff;padding:14px 16px;margin-bottom:10px}
+  .circle-row-head{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:11px;color:#5B6167;margin-bottom:8px;align-items:center}
+  .circle-row-text{margin:0 0 10px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+  .circle-row-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .circle-danger{color:#8C2B1D;border-color:#D8B6AF}
+  .circle-replies{margin-top:12px;border-top:1px dashed #CAD2D8;padding-top:12px}
+  .circle-reply{padding:8px 0 12px;border-bottom:1px solid #E7EBEE;font-size:12px}
+  .circle-reply p{margin:6px 0 8px;white-space:pre-wrap;word-break:break-word}
+  .circle-chip{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;border:1px solid #CAD2D8}
+  .circle-chip.good{border-color:#9DBFA5;color:#1F5C2E}
+  .circle-chip.warn{border-color:#D8C08A;color:#7A5A12}
+  .circle-chip.bad{border-color:#D8B6AF;color:#8C2B1D}
+  .admin-note{font-size:12px;line-height:1.6;color:#5B6167;margin:0 0 14px;max-width:70ch}
+  .import-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:16px}
+  .import-map-row{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#5B6167}
+  .import-map-row select{min-height:40px;border:1px solid #CAD2D8;background:#fff;padding:0 10px;font-size:13px}
+  .import-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
+  .import-summary div{border:1px solid #CAD2D8;background:#fff;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+  .import-summary strong{font-size:26px;line-height:1}
+  .import-summary span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5B6167}
+  .import-summary .bad strong{color:#8C2B1D}
+  .import-summary .warn strong{color:#7A5A12}
+  .import-rows{border:1px solid #CAD2D8;background:#fff;max-height:420px;overflow:auto}
+  .import-row{display:grid;grid-template-columns:80px 180px 1fr;gap:12px;padding:9px 14px;border-bottom:1px solid #E7EBEE;font-size:12px}
+  .import-row.bad{background:rgba(140,43,29,.05)}
+  .import-row.warn{background:rgba(122,90,18,.05)}
+  #importFile{min-height:40px;font-size:12px}
+  </style>
+</head>
+<body>
+
+<!-- Sign in ---------------------------------------------------------------->
+<section class="signin" id="signIn">
+  <img alt="People for Animals" src="media/pfa-logo.png">
+  <p class="eyebrow">People for Animals</p>
+  <h1>Admin</h1>
+  <p class="lead-sm">Staff sign-in. Your account needs administrator access before this will let you in.</p>
+  <div class="field"><label for="adminEmail">Email</label>
+    <input autocomplete="username" id="adminEmail" type="email"></div>
+  <div class="field"><label for="adminPassword">Password</label>
+    <input autocomplete="current-password" id="adminPassword" type="password"></div>
+  <button class="btn dark" id="adminSignIn" type="button">Sign in</button>
+  <p aria-live="polite" class="admin-msg" id="signInMsg"></p>
+</section>
+
+<!-- Panel ------------------------------------------------------------------>
+<header class="admin-head" hidden id="adminHead">
+  <a class="brand" href="index.html">
+    <img alt="People for Animals" src="media/pfa-logo.png">
+    <span>Admin</span>
+  </a>
+  <span></span>
+  <div class="who">
+    <span id="adminWho"></span>
+    <button class="btn light" id="adminSignOut" type="button">Sign out</button>
+  </div>
+</header>
+
+<div class="admin-wrap" hidden id="panel">
+
+
+  <div class="admin-panel">
+    <div class="admin-tabs" role="tablist">
+      <button aria-selected="true" data-tab="overview" role="tab" type="button">Overview</button>
+      <button aria-selected="false" data-tab="submissions" role="tab" type="button">Submissions</button>
+      <button aria-selected="false" data-tab="members" role="tab" type="button">Members</button>
+      <button aria-selected="false" data-tab="circle" role="tab" type="button">Circle</button>
+      <button aria-selected="false" data-tab="import" role="tab" type="button">Import</button>
+      <button aria-selected="false" data-tab="caretakers" role="tab" type="button">Caretakers</button>
+      <button aria-selected="false" data-tab="payments" role="tab" type="button">Payments</button>
+      <button aria-selected="false" data-tab="store" role="tab" type="button">Store</button>
+      <button aria-selected="false" data-tab="verify" role="tab" type="button">Verify a card</button>
+    </div>
+
+    <!-- Overview -->
+    <div data-panel="overview">
+      <div class="metrics" id="metricCards"><div class="admin-empty">Loading&hellip;</div></div>
+      <h2 class="metric-head">Waiting, by category</h2>
+      <div id="kindHost"></div>
+      <p class="admin-msg" id="metricsMsg"></p>
+    </div>
+
+    <!-- Store -->
+    <div data-panel="store" hidden>
+      <div class="notice">
+        <strong>Store orders are held in Shopify, not in this database.</strong>
+        <p>Checkout runs through the Shopify Storefront API, so the order, the customer and the
+        fulfilment status all live in the Shopify admin &mdash; this panel would only be showing a
+        stale copy. Open Shopify for orders, refunds and shipping.</p>
+        <p><a class="btn dark" href="https://sg37v1-ta.myshopify.com/admin/orders" rel="noopener" target="_blank">Open Shopify orders</a></p>
+        <p class="admin-msg">Card payments &mdash; membership and caretaker printing &mdash; go through
+        CCAvenue and <em>are</em> here, under Payments.</p>
+      </div>
+    </div>
+
+    <!-- Registers -->
+    <div data-panel="records" hidden>
+      <div class="admin-search">
+        <input id="adminQuery" placeholder="Card number, or mobile number for members" type="search">
+        <button class="btn dark" id="adminSearch" type="button">Search</button>
+        <button class="btn light" id="adminClear" type="button">Show all</button>
+      </div>
+      <div class="admin-search" hidden id="subFilters">
+        <select class="filter-select" id="filterKind"><option value="">Every category</option></select>
+        <select class="filter-select" id="filterStatus">
+          <option value="new">Waiting</option>
+          <option value="in-progress">In progress</option>
+          <option value="handled">Handled</option>
+          <option value="spam">Spam</option>
+          <option value="">Any status</option>
+        </select>
+      </div>
+      <div id="tableHost"><div class="admin-empty">Loading&hellip;</div></div>
+      <button class="btn light admin-more" hidden id="adminMore" type="button">Load more</button>
+      <p aria-live="polite" class="admin-msg" id="recordsMsg"></p>
+    </div>
+
+    <!-- Verification -->
+    <div class="admin-panel" data-panel="import" hidden>
+    <div class="admin-head"><h2>Import the membership register</h2></div>
+    <p class="admin-note">
+      Upload the office spreadsheet (.xlsx, .xls or .csv). Nothing is saved
+      until you have seen what the import would do and pressed Import.
+      Running the same sheet twice updates people rather than duplicating them.
+    </p>
+    <div class="admin-search">
+      <input accept=".xlsx,.xls,.csv" id="importFile" type="file">
+      <button class="btn light" id="importCheck" type="button" disabled>Check the sheet</button>
+      <button class="btn dark" id="importGo" type="button" disabled>Import for real</button>
+    </div>
+    <div id="importMap" hidden>
+      <p class="admin-note">Which column holds what? The obvious ones are matched for you.</p>
+      <div class="import-map" id="importMapFields"></div>
+    </div>
+    <p class="admin-msg" id="importMsg"></p>
+    <div id="importSummary"></div>
+    <div id="importRows"></div>
+  </div>
+
+  <div class="admin-panel" data-panel="circle" hidden>
+    <div class="admin-head">
+      <h2>The Circle</h2>
+      <div class="admin-search">
+        <select id="circleScope" aria-label="What to moderate">
+          <option value="posts">Posts</option>
+          <option value="profiles">Members</option>
+        </select>
+        <input id="circleQuery" placeholder="Search text, name or member number" type="search">
+        <button class="btn light" id="circleRefresh" type="button">Refresh</button>
+      </div>
+    </div>
+    <p class="admin-msg" id="circleMsg"></p>
+    <div id="circleList"><div class="admin-empty">Open this tab to load the latest posts.</div></div>
+  </div>
+
+  <div data-panel="verify" hidden>
+      <div class="admin-search">
+        <input id="verifyId" placeholder="PFA-MBR-XXXXXXXX or PFA-CCT-XXXXXXXX" type="search">
+        <button class="btn dark" id="verifyGo" type="button">Check</button>
+      </div>
+      <div id="verifyOut"></div>
+      <p class="admin-msg">This is the same check anyone can run at <code>/api/verify-card</code>. It reports only
+        the holder's name, the card type and whether it is in date &mdash; never the record behind it.</p>
+    </div>
+  </div>
+</div>
+
+<script src="assets/firebase-config.js"></script>
+<script>
+/* Checks that must run even if the module below never does. An ES module that
+   fails to import - no network, a blocked CDN, a corporate proxy - aborts
+   silently and would otherwise leave an inert sign-in form with no
+   explanation. */
+(function () {
+  'use strict';
+  var msg = document.getElementById('signInMsg');
+  var button = document.getElementById('adminSignIn');
+  function fail(text) { msg.textContent = text; msg.classList.add('error'); button.disabled = true; }
+
+  if (!window.PFA_FIREBASE_API_KEY || String(window.PFA_FIREBASE_PROJECT_ID).indexOf('REPLACE') === 0) {
+    return fail('assets/firebase-config.js has not been filled in yet. Firebase console \u2192 Project settings \u2192 Your apps \u2192 Web app.');
+  }
+  /* The module sets this once it has loaded. If it never arrives, say so. */
+  window.setTimeout(function () {
+    if (!window.PFA_ADMIN_READY) {
+      fail('The Firebase sign-in library could not be loaded. Check the connection, then reload.');
+    }
+  }, 6000);
+}());
+</script>
+<script defer src="assets/field-rules.js"></script>
+<script type="module">
+/* The panel talks to /api/admin/* with a Firebase ID token. The token carries
+   an `admin: true` claim, which is the same claim firestore.rules checks, so
+   the panel and the database agree about who is an administrator.
+
+   The web config below is not a secret - it identifies the project to the
+   Firebase SDK and is safe in page source. What protects the data is the
+   claim, the security rules and the server checking the token. */
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: window.PFA_FIREBASE_API_KEY,
+  authDomain: window.PFA_FIREBASE_AUTH_DOMAIN,
+  projectId: window.PFA_FIREBASE_PROJECT_ID
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const $ = (id) => document.getElementById(id);
+const state = { tab: 'submissions', cursor: null, rows: [] };
+
+async function call(path) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not signed in.');
+  const token = await user.getIdToken();
+  const response = await fetch(path, { headers: { Authorization: 'Bearer ' + token } });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || 'That request failed.');
+  return data;
+}
+
+/* ---- sign in ---------------------------------------------------------- */
+$('adminSignIn').addEventListener('click', async () => {
+  $('signInMsg').textContent = 'Checking\u2026';
+  $('signInMsg').classList.remove('error');
+  const email = $('adminEmail').value.trim();
+  const password = $('adminPassword').value;
+  const R = window.PFA_RULES;
+  const emailError = R ? R.checkField('email', email, { required: true, emptyMessage: 'Enter your staff email.' }) : null;
+  if (emailError || !password) {
+    $('signInMsg').textContent = emailError || 'Enter your password.';
+    $('signInMsg').classList.add('error');
+    ($(emailError ? 'adminEmail' : 'adminPassword')).focus();
+    return;
+  }
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    $('signInMsg').textContent = 'That email and password did not match.';
+    $('signInMsg').classList.add('error');
+  }
+});
+
+$('adminSignOut').addEventListener('click', () => signOut(auth));
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    $('panel').hidden = true;
+    $('adminHead').hidden = true;
+    $('signIn').hidden = false;
+    return;
+  }
+  try {
+    const session = await call('/api/admin/records?type=session');
+    $('adminWho').textContent = session.admin.email || session.admin.uid;
+    $('signIn').hidden = true;
+    $('adminHead').hidden = false;
+    $('panel').hidden = false;
+    loadMetrics();
+  } catch (error) {
+    // Signed in, but not an administrator.
+    $('signInMsg').textContent =
+      'That account is not an administrator. Ask someone with access to run scripts/grant-admin.js for you.';
+    $('signInMsg').classList.add('error');
+    await signOut(auth);
+  }
+});
+
+/* ---- tabs ------------------------------------------------------------- */
+document.querySelectorAll('[data-tab]').forEach((button) => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach((b) =>
+      b.setAttribute('aria-selected', String(b === button)));
+    const tab = button.dataset.tab;
+    const isRegister = ['submissions', 'members', 'caretakers', 'payments'].includes(tab);
+    document.querySelector('[data-panel="overview"]').hidden = tab !== 'overview';
+    document.querySelector('[data-panel="store"]').hidden = tab !== 'store';
+    document.querySelector('[data-panel="verify"]').hidden = tab !== 'verify';
+    document.querySelector('[data-panel="records"]').hidden = !isRegister;
+    document.querySelector('[data-panel="circle"]').hidden = tab !== 'circle';
+    document.querySelector('[data-panel="import"]').hidden = tab !== 'import';
+    $('subFilters').hidden = tab !== 'submissions';
+    $('adminQuery').placeholder = tab === 'submissions'
+      ? 'Reference, e.g. PFA-C-2026-0001'
+      : 'Card number, or mobile number for members';
+    if (tab === 'overview') return loadMetrics();
+    if (tab === 'circle') return loadCircle();
+    if (isRegister) { state.tab = tab; load(true); }
+  });
+});
+
+/* ---- overview --------------------------------------------------------- */
+const KINDS = {};
+
+async function loadMetrics() {
+  $('metricsMsg').textContent = '';
+  $('metricCards').innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+  try {
+    const data = await call('/api/admin/metrics');
+    const c = data.cards;
+    const money = data.revenue30d || { inr: 0, usd: 0, count: 0 };
+    $('metricCards').innerHTML = [
+      card(c.submissionsWaiting, 'Waiting on us', c.submissionsWaiting > 0),
+      card(c.submissionsLast7, 'Arrived this week'),
+      card(c.submissionsTotal, 'Submissions, all time'),
+      card(c.members, 'Members'),
+      card(c.caretakers, 'Caretaker cards'),
+      card('\u20B9' + money.inr.toLocaleString('en-IN'), 'Card payments, 30 days')
+    ].join('');
+
+    const rows = Object.keys(data.byKind)
+      .map((k) => Object.assign({ kind: k }, data.byKind[k]))
+      .sort((a, b) => b.waiting - a.waiting);
+    rows.forEach((row) => { KINDS[row.kind] = row.label; });
+    fillKindFilter();
+    $('kindHost').innerHTML = '<table><tbody>' + rows.map((row) => `
+      <tr><td>${escapeHtml(row.label)}</td>
+      <td class="num" style="width:90px">${row.waiting}</td>
+      <td style="width:130px">${row.waiting
+        ? `<button class="rowbtn" data-open-kind="${row.kind}" type="button">Open</button>` : ''}</td></tr>`).join('')
+      + '</tbody></table>';
+
+    if (money.capped) $('metricsMsg').textContent =
+      'Payment totals are summed over the most recent 500 records.';
+    if (data.note) $('metricsMsg').textContent += (money.capped ? ' ' : '') + data.note;
+  } catch (error) {
+    $('metricCards').innerHTML = '';
+    $('metricsMsg').textContent = error.message;
+    $('metricsMsg').classList.add('error');
+  }
+}
+
+function card(value, label, alert) {
+  return `<div class="metric${alert ? ' alert' : ''}"><b>${escapeHtml(value)}</b><span>${escapeHtml(label)}</span></div>`;
+}
+
+function fillKindFilter() {
+  const select = $('filterKind');
+  if (select.options.length > 1) return;
+  Object.keys(KINDS).forEach((kind) => {
+    const option = document.createElement('option');
+    option.value = kind; option.textContent = KINDS[kind];
+    select.appendChild(option);
+  });
+}
+
+/* Jump from the overview straight into that category's queue. */
+document.addEventListener('click', (event) => {
+  const target = event.target.closest('[data-open-kind]');
+  if (!target) return;
+  document.querySelector('[data-tab="submissions"]').click();
+  $('filterKind').value = target.dataset.openKind;
+  $('filterStatus').value = 'new';
+  load(true);
+});
+
+/* ---- registers -------------------------------------------------------- */
+/* Older records are shown in Title Case even where they were stored as typed. */
+function personName(value) {
+  return window.PFA_RULES ? window.PFA_RULES.nameCase(value || '') : String(value == null ? '' : value);
+}
+function escapeHtml(value) {
+  const node = document.createElement('div');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
+
+function date(value) {
+  if (!value) return '\u2014';
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? '\u2014'
+    : parsed.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function summarise(fields) {
+  const keys = Object.keys(fields || {}).slice(0, 3);
+  if (!keys.length) return '';
+  return '<div class="fields">' + keys.map((k) =>
+    `<b>${escapeHtml(k)}:</b> ${escapeHtml(String(fields[k]).slice(0, 90))}`).join(' &middot; ') + '</div>';
+}
+
+function table(rows) {
+  if (!rows.length) return '<div class="admin-empty">Nothing to show.</div>';
+  const t = state.tab;
+
+  if (t === 'submissions') {
+    return `<table><thead><tr>
+      <th>Reference</th><th>Category</th><th>Received</th><th>Status</th><th>Action</th>
+    </tr></thead><tbody>` + rows.map((row) => `
+      <tr>
+        <td class="num">${escapeHtml(row.reference)}${summarise(row.fields)}</td>
+        <td>${escapeHtml(row.kindLabel)}<br><span class="admin-who">${escapeHtml(row.page)}</span></td>
+        <td class="num">${date(row.createdAt)}</td>
+        <td><span class="pill ${row.status === 'handled' ? 'valid' : (row.status === 'spam' ? 'unknown' : 'expired')}">${escapeHtml(row.status)}</span></td>
+        <td>
+          <button class="rowbtn" data-set-status="in-progress" data-ref="${escapeHtml(row.reference)}" type="button">Taking it</button>
+          <button class="rowbtn" data-set-status="handled" data-ref="${escapeHtml(row.reference)}" type="button">Done</button>
+          <button class="rowbtn" data-set-status="spam" data-ref="${escapeHtml(row.reference)}" type="button">Spam</button>
+        </td>
+      </tr>`).join('') + '</tbody></table>';
+  }
+
+  if (t === 'payments') {
+    return `<table><thead><tr>
+      <th>Order</th><th>For</th><th>Who</th><th>Amount</th><th>Status</th>
+    </tr></thead><tbody>` + rows.map((row) => `
+      <tr>
+        <td class="num">${escapeHtml(row.orderId)}<br><span class="admin-who">${escapeHtml(row.paymentMode)}</span></td>
+        <td>${escapeHtml(row.type)}</td>
+        <td>${escapeHtml(personName(row.name))}<br><span class="admin-who">${escapeHtml(row.email || row.mobile)}</span></td>
+        <td class="num">${row.currency === 'USD' ? '$' : '\u20B9'}${row.amount.toLocaleString('en-IN')}</td>
+        <td><span class="pill ${row.status === 'paid' ? 'valid' : 'unknown'}">${escapeHtml(row.status)}</span></td>
+      </tr>`).join('') + '</tbody></table>';
+  }
+
+  const members = t === 'members';
+  const head = members
+    ? ['Member number', 'Name', 'Contact', 'Since', 'Valid until', 'State']
+    : ['Card number', 'Name', 'Issued', 'Valid until', 'Printed', 'State'];
+  const body = rows.map((row) => members ? `
+    <tr>
+      <td class="num">${escapeHtml(row.cardId)}</td>
+      <td>${escapeHtml(personName(row.name))}</td>
+      <td>${escapeHtml(row.email)}<br><span class="admin-who">${escapeHtml(row.mobile)}</span></td>
+      <td class="num">${date(row.memberSince)}</td>
+      <td class="num">${date(row.validUntil)}</td>
+      <td><span class="pill ${row.state}">${row.state}</span></td>
+    </tr>` : `
+    <tr>
+      <td class="num">${escapeHtml(row.cardId)}</td>
+      <td>${escapeHtml(personName(row.name))}</td>
+      <td class="num">${date(row.issuedAt)}</td>
+      <td class="num">${date(row.validUntil)}</td>
+      <td>${row.printed ? 'Yes' : 'No'}</td>
+      <td><span class="pill ${row.state}">${row.state}</span></td>
+    </tr>`).join('');
+  return `<table><thead><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+/* Marking a submission is the one write the panel makes. */
+document.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-set-status]');
+  if (!button) return;
+  button.disabled = true;
+  try {
+    const user = auth.currentUser;
+    const token = await user.getIdToken();
+    const response = await fetch('/api/admin/submission-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ reference: button.dataset.ref, status: button.dataset.setStatus })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'That could not be saved.');
+    load(true);
+  } catch (error) {
+    $('recordsMsg').textContent = error.message;
+    $('recordsMsg').classList.add('error');
+    button.disabled = false;
+  }
+});
+
+async function load(reset) {
+  if (reset) { state.cursor = null; state.rows = []; $('tableHost').innerHTML = '<div class="admin-empty">Loading&hellip;</div>'; }
+  $('recordsMsg').textContent = '';
+  $('recordsMsg').classList.remove('error');
+  const term = $('adminQuery').value.trim();
+  const params = new URLSearchParams({ type: state.tab, limit: '25' });
+  if (term) params.set('q', term);
+  if (state.tab === 'submissions') {
+    if ($('filterKind').value) params.set('kind', $('filterKind').value);
+    if ($('filterStatus').value) params.set('status', $('filterStatus').value);
+  }
+  if (state.cursor && !term) params.set('cursor', state.cursor);
+
+  try {
+    const data = await call('/api/admin/records?' + params.toString());
+    state.rows = reset ? data.rows : state.rows.concat(data.rows);
+    state.cursor = data.cursor || null;
+    $('tableHost').innerHTML = table(state.rows);
+    $('adminMore').hidden = Boolean(data.done) || !state.cursor || Boolean(term);
+    if (data.message) $('recordsMsg').textContent = data.message;
+  } catch (error) {
+    $('tableHost').innerHTML = '';
+    $('recordsMsg').textContent = error.message;
+    $('recordsMsg').classList.add('error');
+  }
+}
+
+$('adminSearch').addEventListener('click', () => load(true));
+$('adminQuery').addEventListener('keydown', (event) => { if (event.key === 'Enter') load(true); });
+$('adminClear').addEventListener('click', () => { $('adminQuery').value = ''; load(true); });
+$('adminMore').addEventListener('click', () => load(false));
+$('filterKind').addEventListener('change', () => load(true));
+$('filterStatus').addEventListener('change', () => load(true));
+
+/* ---- verification ----------------------------------------------------- */
+$('verifyGo').addEventListener('click', async () => {
+  const id = $('verifyId').value.trim().toUpperCase();
+  $('verifyOut').innerHTML = '<div class="admin-empty">Checking&hellip;</div>';
+  try {
+    const response = await fetch('/api/verify-card?id=' + encodeURIComponent(id));
+    const data = await response.json();
+    if (!data.found) {
+      $('verifyOut').innerHTML = `<div class="admin-empty">${escapeHtml(data.message || 'No live card carries that number.')}</div>`;
+      return;
+    }
+    $('verifyOut').innerHTML = `<table><tbody>
+      <tr><th>Card</th><td class="num">${escapeHtml(data.cardId)}</td></tr>
+      <tr><th>Type</th><td>${escapeHtml(data.cardType)}</td></tr>
+      <tr><th>Holder</th><td>${escapeHtml(personName(data.name))}</td></tr>
+      <tr><th>Valid until</th><td class="num">${date(data.validUntil)}</td></tr>
+      <tr><th>State</th><td><span class="pill ${data.status}">${escapeHtml(data.status)}</span></td></tr>
+    </tbody></table>`;
+  } catch (error) {
+    $('verifyOut').innerHTML = '<div class="admin-empty">That could not be checked.</div>';
+  }
+});
+$('verifyId').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('verifyGo').click(); });
+
+/* ---- the circle ------------------------------------------------------- */
+
+async function post(path, body) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not signed in.');
+  const token = await user.getIdToken();
+  const response = await fetch(path, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || 'That request failed.');
+  return data;
+}
+
+const esc = (t) => String(t == null ? '' : t)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const when = (ms) => ms ? new Date(ms).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+
+function loadCircle() {
+  return $('circleScope').value === 'profiles' ? loadCircleProfiles() : loadCirclePosts();
+}
+
+async function loadCirclePosts() {
+  $('circleMsg').textContent = '';
+  $('circleList').innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+  try {
+    const q = $('circleQuery').value.trim();
+    const data = await call('/api/admin/circle?action=posts&limit=60' + (q ? '&q=' + encodeURIComponent(q) : ''));
+    const posts = data.posts || [];
+    if (!posts.length) {
+      $('circleList').innerHTML = '<div class="admin-empty">' + (q ? 'Nothing matches that search.' : 'No posts yet.') + '</div>';
+      return;
+    }
+    $('circleList').innerHTML = posts.map((p) => `
+      <div class="circle-row" data-post="${esc(p.id)}">
+        <div class="circle-row-head">
+          <span>${when(p.at)}</span>
+          <span><strong>${esc(p.authorName || 'Unnamed')}</strong> &middot; ${esc(p.authorId)}</span>
+          <span>${esc(p.circleId)} &middot; ${esc(p.kind)}${p.closed ? ' &middot; closed' : ''}</span>
+        </div>
+        <p class="circle-row-text">${esc(p.text)}</p>
+        <div class="circle-row-actions">
+          <button class="btn light" data-replies="${esc(p.id)}" type="button">Replies (${p.replyCount})</button>
+          <button class="btn light circle-danger" data-del-post="${esc(p.id)}" type="button">Delete post</button>
+        </div>
+        <div class="circle-replies" hidden></div>
+      </div>`).join('');
+  } catch (error) {
+    $('circleList').innerHTML = '';
+    $('circleMsg').textContent = error.message;
+  }
+}
+
+async function loadCircleProfiles() {
+  $('circleMsg').textContent = '';
+  $('circleList').innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+  try {
+    const q = $('circleQuery').value.trim();
+    const data = await call('/api/admin/circle?action=profiles' + (q ? '&q=' + encodeURIComponent(q) : ''));
+    const profiles = data.profiles || [];
+    if (!profiles.length) {
+      $('circleList').innerHTML = '<div class="admin-empty">' + (q ? 'Nothing matches that search.' : 'Nobody has joined the Circle yet.') + '</div>';
+      return;
+    }
+    const chip = (p) =>
+      p.standing === 'active' ? '<span class="circle-chip good">Active</span>' :
+      p.standing === 'grace'  ? '<span class="circle-chip warn">Grace &middot; ' + p.graceDaysLeft + 'd left</span>' :
+      p.standing === 'ended'  ? '<span class="circle-chip bad">Ended</span>' :
+                                '<span class="circle-chip">No record</span>';
+    $('circleList').innerHTML = profiles.map((p) => `
+      <div class="circle-row">
+        <div class="circle-row-head">
+          <span><strong>${esc(personName(p.name) || 'Unnamed')}</strong> &middot; ${esc(p.handle || '')}</span>
+          <span>${esc(p.id)}</span>
+          <span>${esc([p.city, p.state].filter(Boolean).join(', '))}</span>
+          ${chip(p)}
+        </div>
+        <div class="circle-row-actions">
+          <button class="btn light" data-extend="${esc(p.id)}" type="button">Extend 1 year</button>
+          <button class="btn light circle-danger" data-remove="${esc(p.id)}" type="button">Remove from Circle</button>
+        </div>
+      </div>`).join('');
+  } catch (error) {
+    $('circleList').innerHTML = '';
+    $('circleMsg').textContent = error.message;
+  }
+}
+
+$('circleList').addEventListener('click', async (event) => {
+  const b = event.target.closest('button');
+  if (!b) return;
+  $('circleMsg').textContent = '';
+  try {
+    if (b.dataset.replies) {
+      const row = b.closest('.circle-row');
+      const box = row.querySelector('.circle-replies');
+      if (!box.hidden) { box.hidden = true; return; }
+      box.hidden = false;
+      box.innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+      const data = await call('/api/admin/circle?action=replies&post=' + encodeURIComponent(b.dataset.replies));
+      const replies = data.replies || [];
+      box.innerHTML = replies.length ? replies.map((r) => `
+        <div class="circle-reply">
+          <span>${when(r.at)} &middot; <strong>${esc(r.authorName || r.authorId)}</strong></span>
+          <p>${esc(r.text)}</p>
+          <button class="btn light circle-danger" data-del-reply="${esc(r.id)}" data-of="${esc(b.dataset.replies)}" type="button">Delete reply</button>
+        </div>`).join('') : '<div class="admin-empty">No replies.</div>';
+      return;
+    }
+    if (b.dataset.delPost) {
+      if (!confirm('Delete this post and all its replies? This cannot be undone.')) return;
+      const out = await post('/api/admin/circle', { action: 'delete-post', id: b.dataset.delPost });
+      $('circleMsg').textContent = 'Post removed' + (out.replies ? ' with ' + out.replies + ' replies.' : '.');
+      return loadCirclePosts();
+    }
+    if (b.dataset.delReply) {
+      if (!confirm('Delete this reply? This cannot be undone.')) return;
+      await post('/api/admin/circle', { action: 'delete-reply', post: b.dataset.of, id: b.dataset.delReply });
+      $('circleMsg').textContent = 'Reply removed.';
+      return loadCirclePosts();
+    }
+    if (b.dataset.extend) {
+      if (!confirm('Extend this membership by one year from today or its current expiry, whichever is later?')) return;
+      const out = await post('/api/admin/circle', { action: 'extend-membership', id: b.dataset.extend, months: 12 });
+      $('circleMsg').textContent = 'Membership now valid until ' + new Date(out.validUntil).toLocaleDateString('en-IN', { dateStyle: 'long' }) + '.';
+      return loadCircleProfiles();
+    }
+    if (b.dataset.remove) {
+      const purge = confirm('Also delete everything this member has posted?\n\nOK removes their posts and replies too. Cancel removes only their profile and keeps what they wrote.');
+      if (!confirm('Remove ' + b.dataset.remove + ' from the Circle' + (purge ? ' and delete all their content' : '') + '? This cannot be undone.')) return;
+      const out = await post('/api/admin/circle', { action: 'remove-profile', id: b.dataset.remove, purge });
+      $('circleMsg').textContent = 'Removed.' + (purge ? ' Deleted ' + out.postsRemoved + ' posts and ' + out.repliesRemoved + ' replies.' : '');
+      return loadCircleProfiles();
+    }
+  } catch (error) {
+    $('circleMsg').textContent = error.message;
+  }
+});
+$('circleRefresh').addEventListener('click', loadCircle);
+$('circleQuery').addEventListener('keydown', (event) => { if (event.key === 'Enter') loadCircle(); });
+$('circleScope').addEventListener('change', loadCircle);
+
+/* ---- import the membership register ----------------------------------- */
+/* The sheet is read in the browser, so member names and numbers are never
+   handed to a third party just to be parsed. Only the mapped columns are
+   sent, and only to PFA's own API. */
+
+let importRows = [];
+let importHeaders = [];
+
+/* One cell holding "Anirban Roy", a mobile and an email, in any order and
+   with any separator. Pull each out by what it looks like, not where it sits. */
+function splitContactCell(value) {
+  let text = String(value == null ? '' : value).replace(/\r/g, ' ');
+  let email = '';
+  const em = text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
+  if (em) { email = em[0].toLowerCase(); text = text.replace(em[0], ' '); }
+  let mobile = '';
+  const runs = text.match(/\d[\d\s-]{8,}\d/g) || [];
+  for (const run of runs) {
+    let d = run.replace(/\D/g, '');
+    if (d.length === 12 && d.startsWith('91')) d = d.slice(2);
+    else if (d.length === 11 && d.startsWith('0')) d = d.slice(1);
+    else if (d.length > 10) d = d.slice(-10);
+    if (/^[6-9]\d{9}$/.test(d)) { mobile = d; text = text.replace(run, ' '); break; }
+  }
+  const name = text.replace(/\d+/g, ' ').replace(/\s+/g, ' ').trim().replace(/^[,.\-|/]+|[,.\-|/]+$/g, '');
+  return { name, mobile, email };
+}
+
+const FIELDS = [
+  ['name',        'Full name',        true,  ['name (split)', 'name', 'full name', 'member name', 'membername']],
+  ['mobile',      'Mobile number',    true,  ['mobile (split)', 'mobile', 'phone', 'contact', 'mobile no', 'phone no', 'mobile number']],
+  ['email',       'Email',            false, ['email (split)', 'email', 'e-mail', 'email id', 'mail']],
+  ['memberSince', 'Member since',     false, ['member since', 'joined', 'join date', 'date of joining', 'since']],
+  ['validUntil',  'Valid until',      false, ['valid until', 'valid till', 'expiry', 'expires', 'renewal', 'renewal date']],
+  ['legacyId',    'Existing number',  false, ['membership number', 'member no', 'member number', 'membership no', 'card no', 'id']]
+];
+
+function guessColumn(field, headers) {
+  const hints = FIELDS.find((f) => f[0] === field)[3];
+  const lower = headers.map((h) => String(h).toLowerCase().trim());
+  for (const hint of hints) {
+    const i = lower.indexOf(hint);
+    if (i > -1) return headers[i];
+  }
+  for (const hint of hints) {
+    const i = lower.findIndex((h) => h.includes(hint));
+    if (i > -1) return headers[i];
+  }
+  return '';
+}
+
+function drawMapping() {
+  $('importMapFields').innerHTML = FIELDS.map(([key, label, required]) => `
+    <label class="import-map-row">
+      <span>${label}${required ? ' *' : ''}</span>
+      <select data-map="${key}">
+        <option value="">Not in this sheet</option>
+        ${importHeaders.map((h) => `<option value="${esc(h)}">${esc(h)}</option>`).join('')}
+      </select>
+    </label>`).join('');
+  FIELDS.forEach(([key]) => {
+    const sel = document.querySelector(`[data-map="${key}"]`);
+    sel.value = guessColumn(key, importHeaders) || '';
+  });
+  $('importMap').hidden = false;
+}
+
+function mappedRows() {
+  const map = {};
+  document.querySelectorAll('[data-map]').forEach((s) => { map[s.dataset.map] = s.value; });
+  return importRows.map((row, i) => {
+    const out = { __line: i + 2 };
+    Object.keys(map).forEach((k) => { if (map[k]) out[k] = row[map[k]]; });
+    return out;
+  });
+}
+
+$('importFile').addEventListener('change', async () => {
+  const file = $('importFile').files[0];
+  $('importMsg').textContent = '';
+  $('importSummary').innerHTML = '';
+  $('importRows').innerHTML = '';
+  $('importGo').disabled = true;
+  if (!file) return;
+  try {
+    const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs');
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { cellDates: true });
+
+    /* PFA's own register is not a tidy table. It is 22 sheets, one per
+       state plus a payments sheet, the heading is not always on the first
+       row, and the name, mobile and email of a member sit together in a
+       single cell separated by line breaks or just spaces. Reading only
+       sheet one and trusting row one would silently import a fraction of
+       the register, so every sheet is read and the crammed cell is taken
+       apart by pattern rather than by position. */
+    importRows = [];
+    const sheetsRead = [];
+    wb.SheetNames.forEach((sheetName) => {
+      const grid = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, defval: '', raw: false, blankrows: false });
+      if (!grid.length) return;
+      let head = 0;
+      for (let i = 0; i < Math.min(6, grid.length); i++) {
+        if (grid[i].some((c) => /name|member/i.test(String(c)))) { head = i; break; }
+      }
+      const headers = grid[head].map((h, i) => String(h).trim() || ('Column ' + (i + 1)));
+      const body = grid.slice(head + 1);
+      body.forEach((r) => {
+        if (!r.some((c) => String(c).trim())) return;
+        const row = { __sheet: sheetName };
+        headers.forEach((h, i) => { row[h] = r[i] == null ? '' : r[i]; });
+        importRows.push(row);
+      });
+      if (body.length) sheetsRead.push(sheetName);
+    });
+
+    if (!importRows.length) { $('importMsg').textContent = 'No rows found in that file.'; return; }
+
+    const keys = new Set();
+    importRows.forEach((r) => Object.keys(r).forEach((k) => { if (k !== '__sheet') keys.add(k); }));
+    importHeaders = [...keys];
+
+    /* If any column holds a name, a mobile and an email together, split it
+       into three real columns so the mapping below has something to map. */
+    const combined = importHeaders.find((h) =>
+      importRows.filter((r) => /@/.test(String(r[h])) && /\d{10}/.test(String(r[h]).replace(/\D/g, ''))).length > importRows.length * 0.2);
+    if (combined) {
+      importRows.forEach((r) => {
+        const parts = splitContactCell(r[combined]);
+        r['Name (split)'] = parts.name;
+        r['Mobile (split)'] = parts.mobile;
+        r['Email (split)'] = parts.email;
+      });
+      importHeaders.push('Name (split)', 'Mobile (split)', 'Email (split)');
+    }
+
+    drawMapping();
+    $('importCheck').disabled = false;
+    $('importMsg').textContent = importRows.length + ' rows read from ' + sheetsRead.length +
+      ' sheet' + (sheetsRead.length === 1 ? '' : 's') +
+      (combined ? ', and the combined name/mobile/email column was split for you' : '') +
+      '. Nothing has been saved.';
+  } catch (error) {
+    $('importMsg').textContent = 'Could not read that file: ' + error.message;
+  }
+});
+
+function summaryCard(s, dry) {
+  return `<div class="import-summary">
+    <div><strong>${s.create}</strong><span>new members</span></div>
+    <div><strong>${s.update}</strong><span>already on the register</span></div>
+    <div><strong>${s.duplicate}</strong><span>repeated in the sheet</span></div>
+    <div class="${s.error ? 'bad' : ''}"><strong>${s.error}</strong><span>rows with a problem</span></div>
+    <div class="${s.noEmail ? 'warn' : ''}"><strong>${s.noEmail}</strong><span>no email, cannot sign in</span></div>
+  </div>${dry ? '<p class="admin-note">Nothing has been saved yet.</p>' : ''}`;
+}
+
+function rowTable(results) {
+  const notable = results.filter((r) => r.status === 'error' || r.status === 'duplicate' || !r.canSignIn);
+  if (!notable.length) return '<p class="admin-note">Every row is clean.</p>';
+  return '<div class="import-rows">' + notable.slice(0, 200).map((r) => `
+    <div class="import-row ${r.status === 'error' ? 'bad' : r.status === 'duplicate' ? 'warn' : ''}">
+      <span>Row ${r.line}</span>
+      <span>${esc(r.name || '')}</span>
+      <span>${esc(r.reason || (r.canSignIn === false ? 'No email, so this member cannot be sent a sign-in code.' : ''))}</span>
+    </div>`).join('') + '</div>';
+}
+
+async function runImport(dryRun) {
+  const rows = mappedRows();
+  const missing = FIELDS.filter(([k, , req]) => req && !document.querySelector(`[data-map="${k}"]`).value);
+  if (missing.length) {
+    $('importMsg').textContent = 'Choose which column holds the ' + missing.map((m) => m[1].toLowerCase()).join(' and the ') + '.';
+    return null;
+  }
+  $('importMsg').textContent = dryRun ? 'Checking\u2026' : 'Importing\u2026';
+  const merged = { rows: 0, create: 0, update: 0, duplicate: 0, error: 0, noEmail: 0 };
+  let all = [];
+  for (let i = 0; i < rows.length; i += 400) {
+    const res = await post('/api/admin/import-members', { rows: rows.slice(i, i + 400), dryRun });
+    Object.keys(merged).forEach((k) => { merged[k] += res.summary[k] || 0; });
+    all = all.concat(res.results || []);
+    $('importMsg').textContent = (dryRun ? 'Checking' : 'Importing') + ' ' + Math.min(i + 400, rows.length) + ' of ' + rows.length + '\u2026';
+  }
+  $('importSummary').innerHTML = summaryCard(merged, dryRun);
+  $('importRows').innerHTML = rowTable(all);
+  $('importMsg').textContent = dryRun
+    ? 'Checked. Read the numbers above, then press Import for real.'
+    : 'Imported. ' + merged.create + ' added, ' + merged.update + ' updated.';
+  return merged;
+}
+
+$('importCheck').addEventListener('click', async () => {
+  try {
+    const s = await runImport(true);
+    if (s) $('importGo').disabled = (s.create + s.update) === 0;
+  } catch (error) { $('importMsg').textContent = error.message; }
+});
+
+$('importGo').addEventListener('click', async () => {
+  if (!confirm('Import this sheet into the live membership register?')) return;
+  try {
+    $('importGo').disabled = true;
+    await runImport(false);
+  } catch (error) { $('importMsg').textContent = error.message; }
+});
+</script>
+</body></html>

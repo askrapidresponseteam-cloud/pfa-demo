@@ -1,0 +1,26 @@
+{
+  "_comment": [
+    "Firestore only, on purpose. There is deliberately no `hosting` block here.",
+    "",
+    "This site runs on Vercel. Everything under /api is a Node serverless",
+    "function - the admin panel calls /api/admin/metrics, /api/admin/records,",
+    "/api/admin/circle, /api/admin/import-members and /api/admin/submission-status,",
+    "and none of those can run on Firebase Hosting, which serves static files.",
+    "Deploying this directory to Firebase Hosting would put admin.html on the",
+    "internet with every request behind it returning 404, which looks like a",
+    "broken panel rather than a misconfigured one.",
+    "",
+    "Firebase is used here for three things only: Firestore, Authentication,",
+    "and the custom claim that marks an administrator. `firebase deploy` should",
+    "only ever push the rules and the indexes:",
+    "",
+    "  firebase deploy --only firestore:rules --project pfa-new-website",
+    "",
+    "which is what BACKEND-SETUP.md tells you to run, and what this file makes",
+    "possible - without it the CLI has no idea where firestore.rules lives."
+  ],
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

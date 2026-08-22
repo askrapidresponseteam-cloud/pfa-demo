@@ -1,0 +1,239 @@
+rules_version = '2';
+
+/* PFA Firestore rules.
+
+   The starting position is that the browser reads nothing. Everything the site
+   needs is served by the API routes in /api, which run with the admin SDK and
+   bypass these rules. So the rules exist to answer one question: if somebody
+   takes the web API key out of the page source and talks to Firestore directly,
+   what can they reach? The answer should be "their own membership record, and
+   nothing else".
+
+   Two things worth stating plainly, because they are the requirements:
+
+   - A member's uid IS their member number. The API mints custom tokens with
+     uid = PFA-MBR-XXXXXXXX, so `request.auth.uid == memberId` needs no lookup
+     and cannot be spoofed by a client.
+
+   - Caretakers have no auth user at all. There is no token in existence whose
+     uid is a PFA-CCT number, so no caretaker can satisfy any rule below. Their
+     card stays public at its own URL, which is served by the API, not by these
+     rules. That is the separation you asked for, enforced rather than assumed.
+*/
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Set with a custom claim by an admin; never self-assigned.
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function isMember() {
+      return signedIn() && request.auth.token.role == 'member';
+    }
+
+    /* ---- Members -------------------------------------------------------
+       A member may read their own record and nothing else. Nobody writes
+       from the browser: membership is created and amended by the payment
+       and admin routes, which use the admin SDK. */
+    match /members/{memberId} {
+      allow get: if isAdmin() || (isMember() && request.auth.uid == memberId);
+      allow list: if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    /* One-time sign-in codes. Only the server ever touches these. If the
+       browser could read them, emailing them would be pointless. */
+    match /memberAuthCodes/{memberId} {
+      allow read, write: if false;
+    }
+
+    /* ---- Caretakers ----------------------------------------------------
+       Separate collections, and closed to the browser entirely. The public
+       card page is served by /api/caretaker/card, which decides what of the
+       record a visitor is allowed to see. */
+    match /caretakerApplicants/{id}   { allow read, write: if isAdmin(); }
+    match /caretakerCards/{id}        { allow read, write: if isAdmin(); }
+    match /caretakerAddresses/{id}    { allow read, write: if isAdmin(); }
+    match /caretakerOrders/{id}       { allow read, write: if isAdmin(); }
+    match /caretakerShipments/{id}    { allow read, write: if isAdmin(); }
+    match /caretakerPublic/{id}       { allow read, write: if isAdmin(); }
+    match /caretakerMobileIndex/{id}  { allow read, write: if false; }
+    match /caretakerIdentityIndex/{id}{ allow read, write: if false; }
+    match /caretakerEmails/{id}       { allow read, write: if false; }
+    match /caretakerAudit/{id}        { allow read, write: if isAdmin(); }
+
+    /* ---- Money and operations -----------------------------------------
+       Nothing here is ever a browser's business. */
+    match /transactions/{id}          { allow read: if isAdmin(); allow write: if false; }
+    match /paymentEvents/{id}         { allow read: if isAdmin(); allow write: if false; }
+    match /paymentIdempotency/{id}    { allow read, write: if false; }
+    match /storeCheckoutIntents/{id}  { allow read, write: if false; }
+    match /submissions/{id}           { allow read: if isAdmin(); allow write: if false; }
+
+
+    /* ---- The Circle (members area) -------------------------------------
+       These are the only collections in the project that a browser both
+       reads and writes, so they carry the whole weight of the rules.
+
+       Two things are enforced here rather than in the page, because a rule
+       in a page is a suggestion:
+
+       - A member may delete their own post or reply and nobody else's. The
+         Delete button is hidden elsewhere as a courtesy; this is the part
+         that cannot be worked around from a console.
+
+       - A member may add or remove only their own id from a reaction list.
+         Without this, one request could empty every reaction on the site or
+         stuff a post with fake helpers.
+
+       Identity needs no lookup: the custom token is minted with
+       uid = PFA-MBR-XXXXXXXX, so request.auth.uid is the member number. */
+
+    function ownsDoc() {
+      return isMember() && request.auth.uid == resource.data.authorId;
+    }
+
+    function claimsSelf() {
+      return isMember() && request.resource.data.authorId == request.auth.uid;
+    }
+
+    function textWithinLimit() {
+      return request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 401;
+    }
+
+    /* The delta between the old and new list must be exactly the caller, in
+       either direction. Adding somebody else, or removing anybody else, is a
+       different set and fails. */
+    function selfOnlyDelta(field) {
+      let me     = [request.auth.uid].toSet();
+      let before = resource.data.keys().hasAll([field]) ? resource.data[field].toSet() : [].toSet();
+      let after  = request.resource.data[field].toSet();
+      let added   = after.difference(before);
+      let removed = before.difference(after);
+      return (added.size() == 0 && removed.size() == 0)
+          || (added == me && removed.size() == 0)
+          || (removed == me && added.size() == 0);
+    }
+
+    function onlyChanged(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    /* What a profile written from the browser may contain. The same shape as
+       assets/field-rules.js: a name is letters with the usual name punctuation
+       and no digits; a handle is lowercase letters, digits and underscores;
+       everything else is bounded free text. Merge writes only send the keys
+       they change, so each key is checked only when present. */
+    function validProfile() {
+      let d = request.resource.data;
+      return d.name is string
+          && d.name.size() >= 2 && d.name.size() <= 60
+          && !d.name.matches('.*[0-9<>{}|^~`@#$%*=+/].*')
+          && (!d.keys().hasAny(['handle']) || (d.handle is string && d.handle.size() <= 20 && d.handle.matches('[a-z0-9_]*')))
+          && (!d.keys().hasAny(['state'])  || (d.state is string && d.state.size() <= 60 && !d.state.matches('.*[0-9].*')))
+          && (!d.keys().hasAny(['city'])   || (d.city is string && d.city.size() <= 60 && !d.city.matches('.*[0-9].*')))
+          && (!d.keys().hasAny(['role'])   || (d.role is string && d.role.size() <= 60))
+          && (!d.keys().hasAny(['bio'])    || (d.bio is string && d.bio.size() <= 240));
+    }
+
+    /* Profiles are readable by any signed-in member, because a name has to
+       appear next to a post. Writable only by their owner. */
+    match /circleProfiles/{memberId} {
+      allow read:   if isMember() || isAdmin();
+      allow create, update: if isAdmin()
+                            || (isMember() && request.auth.uid == memberId
+                                && validProfile());
+      allow delete: if isAdmin() || (isMember() && request.auth.uid == memberId);
+
+      /* Which circles this member has joined. Their own business only. */
+      match /joined/{circleId} {
+        allow read, write: if isAdmin() || (isMember() && request.auth.uid == memberId);
+      }
+    }
+
+    /* Circles are structure, not content. Members read them; only an admin
+       creates or renames one. */
+    match /circles/{circleId} {
+      allow read:  if isMember() || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /circlePosts/{postId} {
+      allow read: if isMember() || isAdmin();
+
+      allow create: if isAdmin()
+                    || (claimsSelf()
+                        && textWithinLimit()
+                        && request.resource.data.tags is list
+                        && request.resource.data.tags.size() <= 3
+                        && request.resource.data.replyCount == 0
+                        && request.resource.data.helpful.size() == 0
+                        && request.resource.data.same.size() == 0
+                        && request.resource.data.joining.size() == 0
+                        && request.resource.data.closed == false);
+
+      /* Three separate reasons an update is allowed, and nothing else is.
+         Note that the text is never among them: a post cannot be edited
+         after the fact, so what people replied to stays what was said. */
+      allow update: if isAdmin()
+                    // 1. reacting: add or remove yourself from one list
+                    || (isMember()
+                        && onlyChanged(['helpful', 'same', 'joining'])
+                        && selfOnlyDelta('helpful')
+                        && selfOnlyDelta('same')
+                        && selfOnlyDelta('joining'))
+                    // 2. the author closing or reopening their own question
+                    || (ownsDoc() && onlyChanged(['closed']))
+                    // 3. the reply counter, which anyone replying has to move.
+                    //    It may only ever step by one, so it cannot be used
+                    //    to write a fake number onto somebody's post.
+                    || (isMember() && onlyChanged(['replyCount'])
+                        && (request.resource.data.replyCount == resource.data.replyCount + 1
+                         || request.resource.data.replyCount == resource.data.replyCount - 1));
+
+      allow delete: if isAdmin() || ownsDoc();
+
+      match /replies/{replyId} {
+        allow read: if isMember() || isAdmin();
+
+        allow create: if isAdmin()
+                      || (claimsSelf()
+                          && textWithinLimit()
+                          && request.resource.data.helpful.size() == 0);
+
+        allow update: if isAdmin()
+                      || (isMember()
+                          && onlyChanged(['helpful'])
+                          && selfOnlyDelta('helpful'));
+
+        /* Your own reply, or the author of the post pruning their thread. */
+        allow delete: if isAdmin()
+                      || ownsDoc()
+                      || (isMember() &&
+                          get(/databases/$(database)/documents/circlePosts/$(postId)).data.authorId == request.auth.uid);
+      }
+    }
+
+    /* Events are created by administrators; members only ever add or remove
+       themselves from the going list. */
+    match /circleEvents/{eventId} {
+      allow read:   if isMember() || isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+                    || (isMember() && onlyChanged(['going']) && selfOnlyDelta('going'));
+    }
+
+    /* Anything added later is closed until somebody decides otherwise. */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

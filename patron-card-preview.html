@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta content="v1.35 (2026-08-22)" name="pfa-build"/>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Patron card - preview</title>
+<style>
+/* This page links no stylesheet of its own, so the site faces are declared
+   here to keep the card preview identical to the live card. */
+@font-face{font-family:"Archia";src:url("assets/fonts/Archia-Regular.woff2") format("woff2"),url("assets/fonts/Archia-Regular.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Clash Display";src:url("assets/fonts/ClashDisplay-Variable.woff2") format("woff2"),url("assets/fonts/ClashDisplay-Variable.woff") format("woff");font-weight:200 700;font-style:normal;font-display:swap}
+@font-face{font-family:"PFA Sans";src:url("assets/fonts/Archia-Regular.woff2") format("woff2"),url("assets/fonts/Archia-Regular.woff") format("woff");font-weight:100 400;font-style:normal;font-display:swap}
+@font-face{font-family:"PFA Sans";src:url("assets/fonts/ClashDisplay-Variable.woff2") format("woff2"),url("assets/fonts/ClashDisplay-Variable.woff") format("woff");font-weight:401 900;font-style:normal;font-display:swap}
+:root { color-scheme: light; --blue: #16b6ff; --blue-mid: #35b6ff; --mut-2: #626c76;
+  --font-body:"Archia",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-display:"Clash Display","Archia",ui-sans-serif,system-ui,sans-serif;
+  --font-ui:"PFA Sans","Archia",ui-sans-serif,system-ui,sans-serif;
+  --sans:var(--font-ui); --font-d:var(--font-display); --font-s:var(--font-body); }
+* { box-sizing: border-box; }
+body { background:#fff; color:#0e1116; margin:0; padding:52px 24px 72px;
+  font-family: var(--font-ui); font-synthesis-weight:none; }
+.wrap { margin-inline:auto; max-width:1120px; }
+.eyebrow { color:#626c76; font-size:10.5px; font-weight:500; letter-spacing:.24em; margin:0 0 12px; text-transform:uppercase; }
+h1 { font-size:clamp(30px,5vw,44px); letter-spacing:-.02em; line-height:1.06; margin:0 0 10px; }
+.lead { color:#626c76; font-size:16px; line-height:1.6; margin:0 0 44px; max-width:46ch; }
+.pair { display:grid; gap:40px; grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:80px; }
+.pair figure { margin:0; }
+.pair figcaption { color:#626c76; font-size:10.5px; font-weight:600; letter-spacing:.22em;
+  margin-top:18px; text-align:center; text-transform:uppercase; }
+.note { border-top:1px solid rgba(14,17,22,.12); color:#626c76; font-size:13px; line-height:1.7; margin-top:68px; padding-top:20px; }
+@media (max-width:980px) { .pair { grid-template-columns:1fr; } body { padding:34px 18px 54px; } }
+
+/* ==========================================================================
+   PFA Patron card - matched to the CHECK reference.
+   Charcoal radial face, emblem lockup top left, portrait top right,
+   number and dates on the left, name and standing on the signature row.
+   No corner marks. Both faces fully opaque.
+   ========================================================================== */
+
+/* ISO/IEC 7810 ID-1 corner: 3.18mm on an 85.60mm card = 3.72% of the width.
+   Given as two percentages so the corners stay circular on a 1.586:1 box:
+   3.72 x 1.586 = 5.90. */
+.pfa-card { --card-radius: 3.72% / 5.90%; }
+
+.pfa-card-button {
+  appearance: none !important;
+  -webkit-appearance: none;
+  background: 0 0 !important;
+  border: none !important;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  font-family: inherit;
+  padding: 0 !important;
+  text-align: left;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pfa-card-button:focus-visible { outline: none; }
+
+.pfa-card-button:focus-visible .pfa-card {
+  outline: 2px solid var(--blue, #16b6ff);
+  outline-offset: 12px;
+}
+
+.pfa-card-scene {
+  display: block;
+  margin-inline: auto;
+  max-width: 500px;
+  perspective: 1600px;
+  width: 100%;
+}
+
+.pfa-card {
+  aspect-ratio: 1.586 / 1;
+  border-radius: var(--card-radius) !important;
+  display: block;
+  font-family: var(--font-d, var(--sans, "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif));
+  position: relative;
+  transform: rotateY(0deg);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.2, .85, .25, 1);
+  width: 100%;
+}
+
+.pfa-card[data-view="back"],
+.pfa-card.is-flipped,
+.pfa-card.flipped {
+  -webkit-transform: rotateY(180deg) !important;
+  transform: rotateY(180deg) !important;
+}
+
+/* --- the two faces, opaque ---------------------------------------------- */
+.pfa-card-face {
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  background-color: #fff !important;
+  border: 1px solid rgba(14, 17, 22, .16) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: 0 18px 40px -26px rgba(14, 17, 22, .35);
+  color: var(--ink, #0E1116);
+  display: flex !important;
+  flex-direction: column;
+  inset: 0;
+  opacity: 1 !important;
+  overflow: hidden;
+  padding: 6.5% 7%;
+  position: absolute;
+  transform-origin: 50% 50%;
+  transform-style: flat;
+}
+
+.pfa-card-front {
+  background: #fff !important;
+  -webkit-transform: rotateY(0deg) translateZ(1px) !important;
+  transform: rotateY(0deg) translateZ(1px) !important;
+  z-index: 2;
+}
+
+.pfa-card-back {
+  background: #fff !important;
+  padding: 0;
+  -webkit-transform: rotateY(180deg) translateZ(1px) !important;
+  transform: rotateY(180deg) translateZ(1px) !important;
+  z-index: 1;
+}
+
+/* Soft diagonal sheen across the surface. */
+.pfa-card-face::after {
+  /* Matte: the sheen is removed, not faded. */
+  display: none;
+}
+
+/* Emblem watermark on the back. */
+.pfa-card-back::before {
+  /* Nothing behind the text on the back. */
+  display: none;
+}
+
+/* One pass of light when the card first appears. */
+.pfa-card-shine {
+  background: linear-gradient(105deg, transparent, rgba(188, 226, 255, .35), transparent);
+  bottom: 0;
+  display: block !important;
+  left: -40%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 32%;
+}
+
+.pfa-card-front .pfa-card-shine {
+  animation: pfa-sweep 1.4s ease .45s 1 forwards;
+}
+
+@keyframes pfa-sweep {
+  0%   { opacity: 0; transform: translateX(0); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(450%); }
+}
+
+/* --- front: masthead ---------------------------------------------------- */
+.pfa-card-top {
+  align-items: center;
+  display: flex !important;
+  gap: 3.6%;
+  justify-content: flex-start;
+  left: auto !important;
+  position: relative !important;
+  right: auto !important;
+  top: auto !important;
+  z-index: 1;
+}
+
+/* The full lockup, emblem and wordmark in one asset. */
+.pfa-card-emblem {
+  aspect-ratio: 386 / 259;
+  background: transparent !important;
+  display: block;
+  filter: none !important;
+  flex: none;
+  /* This page has no container-query context, so cqw is not available here.
+     The lockup is 386x259, and the target height is 13.95% of the card's
+     width; .pfa-card-top spans 86% of that width, so the equivalent is
+     13.95 x (386/259) / 0.86 = 24.2%. */
+  height: auto !important;
+  object-fit: contain;
+  object-position: left center;
+  width: 24.2% !important;
+}
+
+/* The wordmark is part of the logo artwork now, so the text is not needed. */
+.pfa-card-wordmark { display: none !important; }
+
+/* --- front: portrait ---------------------------------------------------- */
+.pfa-card-photo {
+  align-items: center;
+  position: absolute !important;
+  aspect-ratio: 3 / 4;
+  background: #F4F6F8 !important;
+  border: 0 !important;
+  border-radius: 5.5% / 4.1% !important;
+  bottom: auto !important;
+  box-shadow: inset 0 0 0 1px rgba(14, 17, 22, .18);
+  display: flex !important;
+  justify-content: center;
+  left: auto !important;
+  overflow: hidden;
+  right: 6.5% !important;
+  top: 20% !important;
+  width: 22% !important;
+  z-index: 1;
+}
+
+.pfa-card-photo img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  width: 100%;
+}
+
+.pfa-card-photo > span {
+  color: #767676 !important;
+  font-family: var(--font-s, var(--sans, "Archivo", ui-sans-serif, system-ui, sans-serif));
+  font-size: clamp(6px, 1.1vw, 8px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+/* --- front: number and dates -------------------------------------------- */
+.pfa-card-number {
+  color: #000000 !important;
+  display: block;
+  flex: none;
+  font-family: var(--font-d, var(--sans, "Archivo", ui-sans-serif, system-ui, sans-serif));
+  font-size: clamp(11px, 2.7vw, 17px) !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  left: auto !important;
+  letter-spacing: .2em;
+  margin-top: 11%;
+  padding-right: 30%;
+  position: relative !important;
+  right: auto !important;
+  text-shadow: none;
+  text-transform: none;
+  top: auto !important;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.pfa-card-dates {
+  display: flex !important;
+  gap: 11%;
+  left: auto !important;
+  margin-top: 3.4%;
+  padding-right: 30%;
+  position: relative !important;
+  right: auto !important;
+  top: auto !important;
+  z-index: 1;
+}
+
+.pfa-card-dates > span {
+  display: block;
+  min-width: 0;
+}
+
+.pfa-card-dates small {
+  color: #3D3D3D !important;
+  display: block;
+  font-family: var(--font-s, var(--sans, "Archivo", ui-sans-serif, system-ui, sans-serif));
+  font-size: clamp(5.5px, 1.05vw, 7.5px) !important;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: .26em;
+  margin-bottom: 3%;
+  text-transform: uppercase;
+}
+
+.pfa-card-dates strong {
+  color: #000000 !important;
+  display: block;
+  font-size: clamp(8px, 1.7vw, 11.5px) !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+
+/* --- front: name and standing ------------------------------------------- */
+.pfa-card-bottom {
+  align-items: flex-end;
+  bottom: auto !important;
+  display: flex !important;
+  justify-content: space-between;
+  left: auto !important;
+  margin-top: auto;
+  position: relative !important;
+  right: auto !important;
+  z-index: 1;
+}
+
+.pfa-card-name {
+  color: #0072C6 !important;
+  display: inline-block;
+  font-family: var(--font-d, var(--sans, "Archivo", ui-sans-serif, system-ui, sans-serif));
+  font-size: clamp(15px, 3.3vw, 22px) !important;
+  font-stretch: 118%;
+  font-weight:500;
+  letter-spacing: -.005em;
+  line-height: .98;
+  max-width: 100%;
+  min-height: 1.2em;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  text-shadow: none;
+  text-transform: uppercase;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.pfa-card-name.ghost { color: rgba(53, 182, 255, .4) !important; }
+
+.pfa-card-standing {
+  color: #3D3D3D !important;
+  display: block;
+  font-size: clamp(8px, 1.8vw, 11px) !important;
+  font-weight:500;
+  letter-spacing: .24em;
+  padding-bottom: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* --- back: address, then the two lines ---------------------------------- */
+.pfa-card-back-main {
+  align-items: center;
+  display: flex !important;
+  flex: 1;
+  inset: auto !important;
+  padding: 9% 7% 0 !important;
+  position: relative !important;
+  z-index: 1;
+}
+
+.pfa-card-address {
+  align-self: auto !important;
+  overflow: hidden;
+  color: #000000 !important;
+  display: block !important;
+  flex: 1;
+  font-size: clamp(8px, 1.7vw, 10.5px) !important;
+  letter-spacing: .1em;
+  line-height: 1.95;
+  max-width: 100% !important;
+  min-width: 0;
+  text-align: left;
+  text-transform: uppercase;
+  position: relative !important;
+}
+
+.pfa-card-address small {
+  color: #3D3D3D !important;
+  display: block;
+  font-family: var(--font-s, var(--sans, "Archivo", ui-sans-serif, system-ui, sans-serif));
+  font-size: clamp(6px, 1.1vw, 7.5px) !important;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: .3em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+/* Three stacked lines, exactly as the reference card sets them:
+   street, then district and PIN, then state. Empty lines collapse. */
+.pfa-card-address > span {
+  color: #000000;
+  display: block;
+  font-weight: 500;
+  letter-spacing: .1em;
+  line-height: 1.95;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color .25s ease;
+  white-space: nowrap;
+}
+
+.pfa-card-address > span:empty { display: none; }
+
+.pfa-card-address > span.ghost {
+  color: #767676;
+  font-weight: 400;
+}
+
+/* Sink for the joined address, so any other script writing it has a target. */
+.pfa-card-address [data-patron-address] { display: none !important; }
+
+.pfa-card-back-foot {
+  align-items: center;
+  bottom: auto !important;
+  color: #767676 !important;
+  display: flex !important;
+  flex: none;
+  flex-direction: column;
+  font-size: clamp(6px, 1.15vw, 7.5px) !important;
+  gap: 9px;
+  left: auto !important;
+  letter-spacing: .16em;
+  line-height: 1.5;
+  padding: 0 7% 6%;
+  position: relative !important;
+  right: auto !important;
+  text-align: center;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+.pfa-card-back-foot span {
+  color: #3D3D3D !important;
+  font-size: inherit !important;
+  letter-spacing: inherit;
+  max-width: 100%;
+  text-transform: uppercase;
+}
+
+.pfa-card-back-foot strong {
+  color: #000000 !important;
+  font-size: inherit !important;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+/* --- caption ------------------------------------------------------------ */
+.pfa-card-hint {
+  align-items: center;
+  color: var(--mut-2, #626c76) !important;
+  display: flex;
+  font-family: var(--sans, "Archivo", ui-sans-serif, system-ui, sans-serif);
+  font-size: 10.5px;
+  font-weight: 600;
+  gap: 10px;
+  justify-content: center;
+  letter-spacing: .22em;
+  margin: 18px 0 0;
+  text-transform: uppercase;
+  position: relative !important;
+}
+
+.pfa-card-hint::before {
+  background: var(--blue, #16b6ff);
+  content: "";
+  flex: none;
+  height: 8px;
+  width: 8px;
+}
+
+/* No corner marks, no watermark on the front. */
+.pfa-card-corner { display: none !important; }
+.pfa-card-front .pfa-card-watermark { display: none !important; }
+.pfa-card-back .pfa-card-watermark { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pfa-card { transition-duration: .01ms; }
+  .pfa-card-front .pfa-card-shine { animation: none; }
+}
+
+
+h1,h2,h3,h4,h5,h6,strong,b,th,dt,legend,summary{font-weight:500}
+
+/* The QR on the back, matching the live card. */
+.pfa-card-qr {
+  align-items: center;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6%;
+  width: 20%;
+}
+.pfa-card-qr canvas {
+  aspect-ratio: 1;
+  display: block;
+  height: auto;
+  width: 100%;
+}
+.pfa-card-qr small {
+  color: #3D3D3D;
+  font-size: clamp(5px, 1.1vw, 7.5px);
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+</style><link href="assets/header-footer.css" rel="stylesheet"/></head>
+<body><div class="wrap">
+  <p class="eyebrow">Preview</p>
+  <h1>The Patron card.</h1>
+  <p class="lead">Click or tap the card to turn it over.</p>
+
+  <button class="pfa-card-button" type="button" data-card-flip aria-pressed="false"
+          aria-label="PFA Patron card preview. Select to flip the card"><span class="pfa-card-scene">
+      <span class="pfa-card" data-patron-card data-view="front">
+        <span class="pfa-card-face pfa-card-front">
+          <span class="pfa-card-shine"></span>
+          <span class="pfa-card-top">
+            <img class="pfa-card-emblem" src="media/pfa-logo-lockup.png" alt="People for Animals">
+          </span>
+          <span class="pfa-card-photo" data-patron-photo><span>Photo</span></span>
+          <span class="pfa-card-number" data-patron-number>PFA 0004 1927</span>
+          <span class="pfa-card-dates">
+            <span><small>Member since</small><strong>2026</strong></span>
+            <span><small>Valid till</small><strong>08 / 27</strong></span>
+          </span>
+          <span class="pfa-card-bottom">
+            <strong class="pfa-card-name" data-patron-name>ANANYA KRISHNAMURTHY</strong>
+            <span class="pfa-card-standing">Patron</span>
+          </span>
+        </span>
+        <span class="pfa-card-face pfa-card-back">
+          <span class="pfa-card-back-main">
+            <span class="pfa-card-address">
+              <small>Address</small>
+              <span data-patron-addr1>2-114 KADIYALI, MANIPAL ROAD</span>
+              <span data-patron-addr2>UDUPI 576102</span>
+              <span data-patron-addr3>KARNATAKA</span>
+              <strong data-patron-address hidden></strong>
+            </span>
+            <span class="pfa-card-qr"><canvas id="previewQr" width="240" height="240"></canvas><small>Scan to verify</small></span>
+          </span>
+          <span class="pfa-card-back-foot">
+            <span>This card certifies Patron membership with People for Animals</span>
+            <strong>peopleforanimalsindia.org</strong>
+          </span>
+        </span>
+      </span>
+    </span></button>
+  <p class="pfa-card-hint">Tap the card to flip</p>
+
+  <div class="pair">
+    <figure><div class="pfa-card-button" style="cursor:default"><span class="pfa-card-scene">
+      <span class="pfa-card" data-patron-card data-view="front">
+        <span class="pfa-card-face pfa-card-front">
+          <span class="pfa-card-shine"></span>
+          <span class="pfa-card-top">
+            <img class="pfa-card-emblem" src="media/pfa-logo-lockup.png" alt="People for Animals">
+          </span>
+          <span class="pfa-card-photo" data-patron-photo><span>Photo</span></span>
+          <span class="pfa-card-number" data-patron-number>PFA 0004 1927</span>
+          <span class="pfa-card-dates">
+            <span><small>Member since</small><strong>2026</strong></span>
+            <span><small>Valid till</small><strong>08 / 27</strong></span>
+          </span>
+          <span class="pfa-card-bottom">
+            <strong class="pfa-card-name" data-patron-name>ANANYA KRISHNAMURTHY</strong>
+            <span class="pfa-card-standing">Patron</span>
+          </span>
+        </span>
+        <span class="pfa-card-face pfa-card-back">
+          <span class="pfa-card-back-main">
+            <span class="pfa-card-address">
+              <small>Address</small>
+              <span data-patron-addr1>2-114 KADIYALI, MANIPAL ROAD</span>
+              <span data-patron-addr2>UDUPI 576102</span>
+              <span data-patron-addr3>KARNATAKA</span>
+              <strong data-patron-address hidden></strong>
+            </span>
+          </span>
+          <span class="pfa-card-back-foot">
+            <span>This card certifies Patron membership with People for Animals</span>
+            <strong>peopleforanimalsindia.org</strong>
+          </span>
+        </span>
+      </span>
+    </span></div><figcaption>Front</figcaption></figure>
+    <figure><div class="pfa-card-button" style="cursor:default"><span class="pfa-card-scene">
+      <span class="pfa-card" data-patron-card data-view="back">
+        <span class="pfa-card-face pfa-card-front">
+          <span class="pfa-card-shine"></span>
+          <span class="pfa-card-top">
+            <img class="pfa-card-emblem" src="media/pfa-logo-lockup.png" alt="People for Animals">
+          </span>
+          <span class="pfa-card-photo" data-patron-photo><span>Photo</span></span>
+          <span class="pfa-card-number" data-patron-number>PFA 0004 1927</span>
+          <span class="pfa-card-dates">
+            <span><small>Member since</small><strong>2026</strong></span>
+            <span><small>Valid till</small><strong>08 / 27</strong></span>
+          </span>
+          <span class="pfa-card-bottom">
+            <strong class="pfa-card-name" data-patron-name>ANANYA KRISHNAMURTHY</strong>
+            <span class="pfa-card-standing">Patron</span>
+          </span>
+        </span>
+        <span class="pfa-card-face pfa-card-back">
+          <span class="pfa-card-back-main">
+            <span class="pfa-card-address">
+              <small>Address</small>
+              <span data-patron-addr1>2-114 KADIYALI, MANIPAL ROAD</span>
+              <span data-patron-addr2>UDUPI 576102</span>
+              <span data-patron-addr3>KARNATAKA</span>
+              <strong data-patron-address hidden></strong>
+            </span>
+          </span>
+          <span class="pfa-card-back-foot">
+            <span>This card certifies Patron membership with People for Animals</span>
+            <strong>peopleforanimalsindia.org</strong>
+          </span>
+        </span>
+      </span>
+    </span></div><figcaption>Back &mdash; filled</figcaption></figure>
+    <figure><div class="pfa-card-button" style="cursor:default"><span class="pfa-card-scene">
+      <span class="pfa-card" data-patron-card data-view="back">
+        <span class="pfa-card-face pfa-card-front">
+          <span class="pfa-card-shine"></span>
+          <span class="pfa-card-top">
+            <img class="pfa-card-emblem" src="media/pfa-logo-lockup.png" alt="People for Animals">
+          </span>
+          <span class="pfa-card-photo" data-patron-photo><span>Photo</span></span>
+          <span class="pfa-card-number" data-patron-number>PFA 0004 1927</span>
+          <span class="pfa-card-dates">
+            <span><small>Member since</small><strong>2026</strong></span>
+            <span><small>Valid till</small><strong>08 / 27</strong></span>
+          </span>
+          <span class="pfa-card-bottom">
+            <strong class="pfa-card-name" data-patron-name>ANANYA KRISHNAMURTHY</strong>
+            <span class="pfa-card-standing">Patron</span>
+          </span>
+        </span>
+        <span class="pfa-card-face pfa-card-back">
+          <span class="pfa-card-back-main">
+            <span class="pfa-card-address">
+              <small>Address</small>
+              <span class="ghost" data-patron-addr1>Address line</span>
+              <span class="ghost" data-patron-addr2>District, PIN</span>
+              <span class="ghost" data-patron-addr3>State</span>
+              <strong data-patron-address hidden></strong>
+            </span>
+          </span>
+          <span class="pfa-card-back-foot">
+            <span>This card certifies Patron membership with People for Animals</span>
+            <strong>peopleforanimalsindia.org</strong>
+          </span>
+        </span>
+      </span>
+    </span></div><figcaption>Back &mdash; before typing</figcaption></figure>
+  </div>
+
+  <p class="note">The logo is embedded here so this file runs on its own. The page itself loads
+  <code>media/pfa-card-logo.png</code> and <code>media/pfa-card-mark.png</code> &mdash; both are in the same
+  folder as this preview, ready to drop into <code>media/</code>. Name, number, dates and address are samples.</p>
+</div>
+<script src="assets/qr.js"></script>
+<script>
+(() => {
+  /* Same payload the live card carries: the verification route, which answers
+     only whether a card is real and in date. */
+  const canvas = document.getElementById('previewQr');
+  if (canvas && window.PFAQR) {
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, 240, 240);
+    window.PFAQR.paint(ctx, 'https://peopleforanimalsindia.org/api/verify-card?id=PFA-MBR-4K7M2QX9', 10, 10, 220);
+  }
+})();
+</script>
+<script>
+(() => {
+  const flip = document.querySelector('.pfa-card-button[data-card-flip]');
+  if (!flip) return;
+  flip.addEventListener('click', () => {
+    const card = flip.querySelector('[data-patron-card]');
+    const back = card.dataset.view === 'back';
+    card.dataset.view = back ? 'front' : 'back';
+    flip.setAttribute('aria-pressed', String(!back));
+  });
+})();
+</script>
+</body></html>

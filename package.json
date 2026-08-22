@@ -1,0 +1,15 @@
+{
+  "name": "pfa-website-vercel",
+  "private": true,
+  "version": "1.0.0",
+  "description": "People for Animals website with server-side CCAvenue payments and Firebase persistence.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.4.0"
+  }
+}
