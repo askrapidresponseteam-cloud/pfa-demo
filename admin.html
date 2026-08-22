@@ -72,8 +72,8 @@
   .pill.expired{background:#fdecea;color:#b3261e}
   .pill.unknown{background:var(--soft,#eef1f3);color:#5c6771}
 
-  .admin-msg{margin:14px 0 0;font-size:13px;color:var(--muted)}
-  .admin-msg.error{color:var(--danger)}
+  .admin-msg{margin:14px 0 0;font-size:13px;color:var(--muted);display:block !important;min-height:1.2em;line-height:1.5}
+  .admin-msg.error,.admin-msg.is-error{color:var(--danger);display:block !important}
   .admin-empty{padding:42px 0;text-align:center;color:var(--muted)}
   .admin-who{color:var(--muted);font-size:11px}
   .admin-more{margin-top:16px}
@@ -277,7 +277,7 @@
   'use strict';
   var msg = document.getElementById('signInMsg');
   var button = document.getElementById('adminSignIn');
-  function fail(text) { msg.textContent = text; msg.classList.add('error'); button.disabled = true; }
+  function fail(text) { msg.textContent = text; msg.classList.add('is-error'); button.disabled = true; }
 
   if (!window.PFA_FIREBASE_API_KEY || String(window.PFA_FIREBASE_PROJECT_ID).indexOf('REPLACE') === 0) {
     return fail('assets/firebase-config.js has not been filled in yet. Firebase console \u2192 Project settings \u2192 Your apps \u2192 Web app.');
@@ -296,7 +296,7 @@
    instead of leaving a dead button. Cleared by the module below once it has run. */
 (function () {
   var msg = document.getElementById('signInMsg');
-  function show(text) { if (!msg || window.__pfaAdminReady) return; msg.textContent = text; msg.classList.add('error'); }
+  function show(text) { if (!msg || window.__pfaAdminReady) return; msg.textContent = text; msg.classList.add('is-error'); }
   window.addEventListener('error', function (e) {
     var el = e && e.target;
     var isScript = el && el.tagName === 'SCRIPT';
@@ -346,14 +346,14 @@ async function call(path) {
 /* ---- sign in ---------------------------------------------------------- */
 $('adminSignIn').addEventListener('click', async () => {
   $('signInMsg').textContent = 'Checking\u2026';
-  $('signInMsg').classList.remove('error');
+  $('signInMsg').classList.remove('is-error');
   const email = $('adminEmail').value.trim();
   const password = $('adminPassword').value;
   const R = window.PFA_RULES;
   const emailError = R ? R.checkField('email', email, { required: true, emptyMessage: 'Enter your staff email.' }) : null;
   if (emailError || !password) {
     $('signInMsg').textContent = emailError || 'Enter your password.';
-    $('signInMsg').classList.add('error');
+    $('signInMsg').classList.add('is-error');
     ($(emailError ? 'adminEmail' : 'adminPassword')).focus();
     return;
   }
@@ -372,7 +372,7 @@ $('adminSignIn').addEventListener('click', async () => {
       'auth/network-request-failed': 'Could not reach Firebase. Check the connection and try again.'
     }[code] || ('Sign-in failed' + (code ? ' (' + code + ')' : '') + '.');
     $('signInMsg').textContent = why;
-    $('signInMsg').classList.add('error');
+    $('signInMsg').classList.add('is-error');
   }
 });
 ['adminEmail', 'adminPassword'].forEach((id) => $(id).addEventListener('keydown', (event) => {
@@ -400,7 +400,7 @@ onAuthStateChanged(auth, async (user) => {
     // Signed in, but not an administrator.
     $('signInMsg').textContent =
       'That account is not an administrator. Ask someone with access to run scripts/grant-admin.js for you.';
-    $('signInMsg').classList.add('error');
+    $('signInMsg').classList.add('is-error');
     await signOut(auth);
   }
 });
@@ -467,7 +467,7 @@ async function loadMetrics() {
   } catch (error) {
     $('metricCards').innerHTML = '';
     $('metricsMsg').textContent = error.message;
-    $('metricsMsg').classList.add('error');
+    $('metricsMsg').classList.add('is-error');
   }
 }
 
@@ -613,7 +613,7 @@ document.addEventListener('click', async (event) => {
     load(true);
   } catch (error) {
     $('recordsMsg').textContent = error.message;
-    $('recordsMsg').classList.add('error');
+    $('recordsMsg').classList.add('is-error');
     button.disabled = false;
   }
 });
@@ -621,7 +621,7 @@ document.addEventListener('click', async (event) => {
 async function load(reset) {
   if (reset) { state.cursor = null; state.rows = []; $('tableHost').innerHTML = '<div class="admin-empty">Loading&hellip;</div>'; }
   $('recordsMsg').textContent = '';
-  $('recordsMsg').classList.remove('error');
+  $('recordsMsg').classList.remove('is-error');
   const term = $('adminQuery').value.trim();
   const params = new URLSearchParams({ type: state.tab, limit: '25' });
   if (term) params.set('q', term);
@@ -641,7 +641,7 @@ async function load(reset) {
   } catch (error) {
     $('tableHost').innerHTML = '';
     $('recordsMsg').textContent = error.message;
-    $('recordsMsg').classList.add('error');
+    $('recordsMsg').classList.add('is-error');
   }
 }
 
