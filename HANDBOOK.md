@@ -1,6 +1,6 @@
 # PFA Website — Operations Handbook
 
-_Current version: v1.40 (22 Aug 2026). Update this line with every release._
+_Current version: v1.41 (22 Aug 2026). Update this line with every release._
 
 Read this first. It is the one document that explains how the site is built,
 how it is deployed, what went wrong on 22 Aug 2026 and why, and exactly what
@@ -148,7 +148,7 @@ Check what's set: `npx vercel env ls`
 | `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` | everything | set ✔ |
 | `PUBLIC_SITE_URL` | payment return URLs | should be the live domain |
 | `PFA_SHOPIFY_STORE_DOMAIN` | store checkout, webhooks | `sg37v1-ta.myshopify.com` — **add** |
-| `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | store checkout | **missing — confirmed 22 Aug (`SHOPIFY_STOREFRONT_NOT_CONFIGURED`). Waiting on vendor.** |
+| `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | store checkout (address prefilled) | Optional since v1.41: without it checkout falls back to a cart permalink. The seller's **public** storefront token is visible in pawsandtails24.com page source (`storefrontAccessToken`); using it is fine but tell the vendor. |
 | `PFA_SHOPIFY_WEBHOOK_SECRET` | webhooks | **waiting on vendor** |
 | `PFA_SHOPIFY_ADMIN_TOKEN` | catalogue stock levels | optional; the `shpat_…` value |
 | `PFA_ADMIN_TOKEN` | email worker manual trigger | set if you want §6 |

@@ -175,3 +175,25 @@ test('rejects reuse of an Idempotency-Key after delivery details change', async 
   assert.equal(second.statusCode, 409);
   assert.equal(second.body.code, 'IDEMPOTENCY_CONFLICT');
 });
+
+test('without a Storefront token the checkout falls back to a cart permalink that still carries the PFA reference', async () => {
+  const saved = { pub: process.env.PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN, priv: process.env.PFA_SHOPIFY_STOREFRONT_PRIVATE_ACCESS_TOKEN };
+  delete process.env.PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+  delete process.env.PFA_SHOPIFY_STOREFRONT_PRIVATE_ACCESS_TOKEN;
+  handler._private.resetForTests();
+  try {
+    const response = { headers: {}, setHeader(k, v) { this.headers[k] = v; }, end(b) { this.body = JSON.parse(b); } };
+    await handler(requestFor(order, 'permalink-1'), response);
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.body.checkoutMode, 'CART_PERMALINK');
+    assert.equal(response.body.addressPrefilled, false);
+    const url = new URL(response.body.paymentUrl);
+    assert.equal(url.hostname, 'sg37v1-ta.myshopify.com');
+    assert.equal(url.pathname, '/cart/47369248768175:1');
+    assert.equal(url.searchParams.get('attributes[PFA checkout reference]'), 'permalink-1');
+    assert.equal(url.searchParams.get('checkout[shipping_address][zip]'), '576101');
+  } finally {
+    if (saved.pub) process.env.PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN = saved.pub;
+    if (saved.priv) process.env.PFA_SHOPIFY_STOREFRONT_PRIVATE_ACCESS_TOKEN = saved.priv;
+  }
+});

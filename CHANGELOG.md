@@ -1,3 +1,7 @@
+## v1.41 — 22 Aug 2026
+
+- **Checkout works without a Storefront token.** If `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` is absent, `/api/pfa-orders` hands the shopper to Shopify via a cart permalink (`/cart/<variant>:<qty>?attributes[PFA checkout reference]=…`). Address is typed on Shopify's page but order matching for webhooks still works. With the token present, the address-prefilled Storefront cart is used as before. Response reports `checkoutMode` and `addressPrefilled`.
+
 ## v1.40 — 22 Aug 2026
 
 - Checkout shows the API's real error message (e.g. "Seller checkout setup is incomplete…") instead of a generic one.
