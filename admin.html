@@ -50,7 +50,6 @@
      portal's own controls. */
   .admin-tabs button,
   .admin-head .brand span,
-  .signin .eyebrow,
   th,
   .pill,
   .rowbtn,
@@ -78,13 +77,12 @@
   .admin-who{color:var(--muted);font-size:11px}
   .admin-more{margin-top:16px}
 
-  /* Sign in: the mark, an eyebrow and a headline, exactly as a page of the
-     site would open. */
+  /* Sign in: the mark and a headline, exactly as a page of the site would
+     open. The logo already says who we are, so there is no eyebrow. */
   .signin{max-width:430px;margin:9vh auto;background:#fff;border:1px solid var(--line);
     padding:clamp(24px,3vw,34px)}
   .signin img{width:132px;height:auto;display:block;margin-bottom:22px}
-  .signin .eyebrow{margin:0}
-  .signin h1{font-size:clamp(26px,3vw,34px);margin:10px 0 8px;letter-spacing:-.02em}
+  .signin h1{font-size:clamp(26px,3vw,34px);margin:0 0 8px;letter-spacing:-.02em}
   .signin p.lead-sm{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 18px}
   .signin label{margin-top:14px}
   .signin .btn{margin-top:20px;width:100%}
@@ -137,7 +135,6 @@
 <!-- Sign in ---------------------------------------------------------------->
 <section class="signin" id="signIn">
   <img alt="People for Animals" src="media/pfa-logo.png">
-  <p class="eyebrow">People for Animals</p>
   <h1>Admin</h1>
   <p class="lead-sm">Staff sign-in. Your account needs administrator access before this will let you in.</p>
   <div class="field"><label for="adminEmail">Email</label>
@@ -269,25 +266,18 @@
 
 <script src="assets/firebase-config.js"></script>
 <script>
-/* Checks that must run even if the module below never does. An ES module that
-   fails to import - no network, a blocked CDN, a corporate proxy - aborts
-   silently and would otherwise leave an inert sign-in form with no
-   explanation. */
+/* Runs before the panel script so a missing config is explained rather than
+   failing later. Sign-in no longer loads anything from a CDN, so there is no
+   library to wait for; the guard below watches the panel script itself. */
 (function () {
   'use strict';
   var msg = document.getElementById('signInMsg');
   var button = document.getElementById('adminSignIn');
-  function fail(text) { msg.textContent = text; msg.classList.add('is-error'); button.disabled = true; }
-
   if (!window.PFA_FIREBASE_API_KEY || String(window.PFA_FIREBASE_PROJECT_ID).indexOf('REPLACE') === 0) {
-    return fail('assets/firebase-config.js has not been filled in yet. Firebase console \u2192 Project settings \u2192 Your apps \u2192 Web app.');
+    msg.textContent = 'assets/firebase-config.js has not been filled in yet. Firebase console \u2192 Project settings \u2192 Your apps \u2192 Web app.';
+    msg.classList.add('is-error');
+    button.disabled = true;
   }
-  /* The module sets this once it has loaded. If it never arrives, say so. */
-  window.setTimeout(function () {
-    if (!window.PFA_ADMIN_READY) {
-      fail('The Firebase sign-in library could not be loaded. Check the connection, then reload.');
-    }
-  }, 6000);
 }());
 </script>
 <script defer src="assets/field-rules.js"></script>
