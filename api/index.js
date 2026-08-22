@@ -1,6 +1,6 @@
 'use strict';
 
-// Single Vercel function that serves every /api/* route.
+// Single Vercel function that serves every /api/* route (see vercel.json rewrites).
 // Vercel Hobby allows 12 Serverless Functions per deployment; the 23 handlers
 // now live in lib/routes and are required lazily, so only the module for the
 // requested route is loaded per invocation. Public URLs are unchanged.
@@ -71,7 +71,12 @@ const LOADERS = {
 };
 
 function routeKey(request) {
-  const segments = request.query && request.query.path;
+  // vercel.json rewrites /api/<anything> here with ?__route=<anything>.
+  const q = request.query || {};
+  const rewritten = q.__route;
+  if (Array.isArray(rewritten) && rewritten.length) return rewritten.join('/');
+  if (typeof rewritten === 'string' && rewritten) return rewritten.replace(/^\/+|\/+$/g, '');
+  const segments = q.path;
   if (Array.isArray(segments) && segments.length) return segments.join('/');
   if (typeof segments === 'string' && segments) return segments;
   try {
@@ -92,7 +97,13 @@ module.exports = async function handler(request, response) {
     return response.end(JSON.stringify({ code: 'NOT_FOUND', message: 'Unknown API route.' }));
   }
   // Remove the catch-all segment so handlers see the same query they always did.
-  if (request.query && typeof request.query === 'object') delete request.query.path;
+  if (request.query && typeof request.query === 'object') { delete request.query.path; delete request.query.__route; }
+  // Handlers that parse request.url themselves must not see the routing param.
+  if (typeof request.url === 'string' && request.url.includes('__route=')) {
+    const u = new URL(request.url, 'https://pfa.local');
+    u.searchParams.delete('__route');
+    request.url = u.pathname + (u.search || '');
+  }
   return load()(request, response);
 };
 
