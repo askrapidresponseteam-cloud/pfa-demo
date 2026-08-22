@@ -214,10 +214,23 @@ document.addEventListener('DOMContentLoaded',function(){
     });
   });
 });
-PFA.saveSubmission=function(kind,data){var key='pfa_submissions';var all=PFA.store(key)||[];var ref=PFA.ref(kind);all.unshift({ref:ref,kind:kind,data:data,at:Date.now(),status:'Received'});PFA.store(key,all);
-try{fetch('/api/pfa-submissions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:kind,reference:ref,data:data,page:location.pathname})}).catch(function(){});}catch(_){/* offline or blocked: local reference still stands */}
-return ref};
-PFA.renderRef=function(host,ref,title){host.innerHTML='<div class="ref-box"><strong>'+PFA.escape(ref)+'</strong><p>'+PFA.escape(title||'Received. Keep this number for follow-up.')+'</p><button class="btn light" type="button" data-copy-ref>Copy number</button></div>';var b=PFA.q('[data-copy-ref]',host);if(b)b.onclick=function(){PFA.copy(ref)}};
+/* The server issues the number. This returns a promise of it; renderRef
+   knows how to wait for one. A copy of the number (and nothing else) is kept
+   on this device so the follow-up form can offer it back. If the send fails,
+   the promise carries a retry, so the person can try again without retyping. */
+PFA.saveSubmission=function(kind,data){var payload=JSON.stringify({kind:kind,data:data,page:location.pathname});
+function send(){var p=fetch('/api/pfa-submissions',{method:'POST',headers:{'Content-Type':'application/json'},body:payload})
+.then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,j:j}})},function(){throw new Error('Could not reach PFA. Check the connection, then try again.')})
+.then(function(x){if(!x.ok||!x.j||!x.j.ok||!x.j.reference){var detail=x.j&&x.j.fields&&x.j.fields[0]?x.j.fields[0].message:(x.j&&x.j.error)||'PFA could not record this right now.';throw new Error(detail)}
+var all=PFA.store('pfa_submissions')||[];all.unshift({ref:x.j.reference,kind:kind,at:Date.now()});PFA.store('pfa_submissions',all.slice(0,20));return x.j.reference});
+p.retry=send;return p}
+return send()};
+PFA.followUrl=function(ref){return 'network.html#follow='+encodeURIComponent(ref)};
+PFA.renderRef=function(host,ref,title){
+if(ref&&typeof ref.then==='function'){host.innerHTML='<div class="ref-box is-sending"><strong>Sending to PFA\u2026</strong><p>Your reference number is being issued.</p></div>';
+ref.then(function(r){PFA.renderRef(host,r,title)},function(err){host.innerHTML='<div class="ref-box is-error"><strong>Not sent</strong><p>'+PFA.escape(err&&err.message||'PFA could not record this right now.')+'</p><button class="btn dark" type="button" data-retry-ref>Try again</button></div>';
+var b=PFA.q('[data-retry-ref]',host);if(b)b.onclick=function(){PFA.renderRef(host,ref.retry?ref.retry():ref,title)}});return}
+host.innerHTML='<div class="ref-box"><p class="ref-kicker">Your reference number</p><strong>'+PFA.escape(ref)+'</strong><p>'+PFA.escape(title||'Received. Keep this number for follow-up.')+'</p><p class="ref-follow">Follow it any time from Help \u2192 Follow one you raised, with the email or mobile you gave.</p><div class="ref-acts"><button class="btn light" type="button" data-copy-ref>Copy number</button><a class="btn light" href="'+PFA.followUrl(ref)+'">Follow it</a></div></div>';var b=PFA.q('[data-copy-ref]',host);if(b)b.onclick=function(){PFA.copy(ref)}};
 
 function menu(open){var m=PFA.q('#mobileMenu');if(!m)return;m.classList.toggle('open',open);document.body.classList.toggle('locked',open);var b=PFA.q('[data-menu-open]');if(b)b.setAttribute('aria-expanded',open?'true':'false')}
 function search(open){var s=PFA.q('#searchOverlay');if(!s)return;s.classList.toggle('open',open);document.body.classList.toggle('locked',open);if(open){setTimeout(function(){var i=PFA.q('#globalSearch');if(i)i.focus()},20)}}

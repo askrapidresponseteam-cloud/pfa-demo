@@ -205,19 +205,37 @@
     if (first && state.step > 0) first.setAttribute('tabindex', '-1'), first.focus();
   }
 
-  function done(ref) {
+  /* The number comes from PFA's server, so the page waits for it; if the
+     send fails the application is still in hand and can be sent again. */
+  function done(pending) {
     var r = ROUTES.filter(function (x) { return x.id === state.route; })[0];
     root.innerHTML = '<div class="gtl-done">' +
-      '<p class="kicker">Application received</p>' +
-      '<h3>' + esc(ref) + '</h3>' +
-      '<p>You applied for <strong>' + esc(r ? r.name : 'training') + '</strong>. Someone from the nearest unit calls you; keep this number for follow-up.</p>' +
-      '<div class="gtl-done-acts">' +
-        '<button class="btn light" type="button" data-copy>Copy reference</button>' +
-        (champion && champion.cleared ? '' : '<a class="btn light" href="champion.html">Run the Gauntlet</a>') +
-        '<a class="btn light" href="network.html">Find your unit</a>' +
-      '</div></div>';
-    var c = P.q('[data-copy]', root);
-    if (c) c.onclick = function () { P.copy(ref); };
+      '<p class="kicker">Sending your application</p>' +
+      '<h3>One moment\u2026</h3>' +
+      '<p>PFA is issuing your reference number.</p></div>';
+    pending.then(function (ref) {
+      root.innerHTML = '<div class="gtl-done">' +
+        '<p class="kicker">Application received</p>' +
+        '<h3>' + esc(ref) + '</h3>' +
+        '<p>You applied for <strong>' + esc(r ? r.name : 'training') + '</strong>. Someone from the nearest unit calls you; keep this number. ' +
+        'You can follow it any time from Help \u2192 Follow one you raised, with the email or mobile you gave.</p>' +
+        '<div class="gtl-done-acts">' +
+          '<button class="btn light" type="button" data-copy>Copy reference</button>' +
+          '<a class="btn light" href="' + P.followUrl(ref) + '">Follow it</a>' +
+          (champion && champion.cleared ? '' : '<a class="btn light" href="champion.html">Run the Gauntlet</a>') +
+          '<a class="btn light" href="network.html">Find your unit</a>' +
+        '</div></div>';
+      var c = P.q('[data-copy]', root);
+      if (c) c.onclick = function () { P.copy(ref); };
+    }, function (err) {
+      root.innerHTML = '<div class="gtl-done">' +
+        '<p class="kicker">Not sent</p>' +
+        '<h3>PFA did not get it.</h3>' +
+        '<p>' + esc(err && err.message || 'Could not reach PFA.') + ' Your answers are still here.</p>' +
+        '<div class="gtl-done-acts"><button class="btn dark" type="button" data-retry>Try again</button></div></div>';
+      var t = P.q('[data-retry]', root);
+      if (t) t.onclick = function () { done(pending.retry ? pending.retry() : pending); };
+    });
   }
 
   root.addEventListener('click', function (e) {

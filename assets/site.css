@@ -768,3 +768,33 @@ h1,h2,h3,h4,h5,h6,strong,b,th,dt,legend,summary,optgroup{font-weight:500}
    card needs the same, or it reads as an empty form field rather than a label. */
 .unit-card .tag{align-self:flex-start;margin-top:12px}
 .tag.warn{border-color:#E5D3A1;background:#FFF8E8;color:#8A6A16}
+
+/* Reference boxes and the follow-up tracker ------------------------------ */
+.ref-box .ref-kicker,.track .ref-kicker{margin:0 0 6px;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--blue)}
+.ref-box strong{font-family:var(--font-display);font-weight:500}
+.ref-box .ref-follow{color:#4F5A64}
+.ref-box .ref-acts{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.ref-box .ref-acts .btn{min-height:42px;padding:0 16px}
+.ref-box.is-sending strong{color:var(--muted);font-size:20px}
+.ref-box.is-error{background:#FFF4F2;border-color:#E3B9B5}
+.ref-box.is-error strong{color:var(--danger);font-size:20px}
+.ref-box.is-error .btn{margin-top:14px}
+.follow-recent{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 4px;font-size:12px;color:var(--muted)}
+.follow-recent .chip{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;min-height:34px}
+.track{border:1px solid var(--line);background:#fff}
+.track-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid var(--line)}
+.track-head strong{display:block;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:20px;font-weight:400;letter-spacing:0}
+.track-status{padding:7px 12px;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;background:#EEF1F3;color:#5C6771}
+.track.is-new .track-status{background:#EEF4FF;color:var(--blue)}
+.track.is-progress .track-status{background:#FFF3D6;color:var(--amber)}
+.track.is-closed .track-status{background:#E9F6EF;color:var(--green)}
+.track-steps{list-style:none;margin:0;padding:18px 22px 6px}
+.track-steps li{position:relative;display:flex;gap:14px;padding:0 0 18px}
+.track-steps li:before{content:"";position:absolute;left:5px;top:14px;bottom:-4px;width:1px;background:var(--line)}
+.track-steps li:last-child:before{display:none}
+.track-dot{flex:0 0 11px;width:11px;height:11px;margin-top:4px;border-radius:50%;background:#fff;border:2px solid #AAB3BA;box-sizing:border-box}
+.track-steps li:last-child .track-dot{border-color:var(--blue);background:var(--blue)}
+.track.is-closed .track-steps li:last-child .track-dot{border-color:var(--green);background:var(--green)}
+.track-steps b{display:block;font-weight:500;font-size:14px}
+.track-steps time{display:block;margin-top:2px;font-size:12px;color:var(--muted);font-family:"JetBrains Mono",ui-monospace,monospace}
+.track-next{margin:0;padding:16px 22px 20px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.6;color:#4F5A64}

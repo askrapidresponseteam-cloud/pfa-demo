@@ -45,4 +45,23 @@ function statedCounts(){
 [term,state].forEach(function(e){if(e)e.addEventListener('input',function(){limit=18;render()})});if(more)more.onclick=function(){limit+=18;render()};var nearBtn=P.q('#nearestUnit');if(nearBtn)nearBtn.onclick=function(){var status=P.q('#nearStatus');P.location(status,function(pos){near={lat:pos.coords.latitude,lng:pos.coords.longitude};render()})};
 P.qa('[data-help-tab]').forEach(function(b){b.onclick=function(){P.qa('[data-help-tab]').forEach(function(x){x.classList.remove('active')});P.qa('[data-help-panel]').forEach(function(x){x.classList.remove('active')});b.classList.add('active');var p=P.q('#'+b.dataset.helpTab);if(p)p.classList.add('active')}});
 P.qa('form[data-help-form]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();if(!P.validate(f))return;var ref=P.saveSubmission(f.dataset.helpForm,P.formData(f));var out=P.q('.form-success',f.parentElement)||P.q('#helpSuccess');if(out){out.classList.add('show');P.renderRef(out,ref,'Received. A named person can now follow this record.')}f.reset()})});
-var follow=P.q('#followForm');if(follow)follow.addEventListener('submit',function(e){e.preventDefault();var ref=P.q('#followRef').value.trim(),out=P.q('#followResult');if(!ref){P.toast('Enter your reference number');return}var all=P.store('pfa_submissions')||[],item=all.find(function(x){return x.ref.toLowerCase()===ref.toLowerCase()});out.innerHTML=item?'<div class="ref-box"><strong>'+P.escape(item.ref)+'</strong><p>Status: '+P.escape(item.status)+'. Received and held on record.</p></div>':'<div class="notice amber">We could not find that reference. Check the number or contact the Help Desk below.</div>'});render()})();
+var follow=P.q('#followForm');if(follow){var STATUS_CLASS={new:'is-new','in-progress':'is-progress',handled:'is-closed',spam:'is-closed'};
+var fmtWhen=function(iso){if(!iso)return '';var d=new Date(iso);return isNaN(d.getTime())?'':d.toLocaleString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})};
+var showFollow=function(html){P.q('#followResult').innerHTML=html};
+var lookup=function(){var ref=P.q('#followRef').value.trim().toUpperCase().replace(/\s+/g,''),contact=P.q('#followContact').value.trim();
+if(!ref){P.toast('Enter your reference number');P.q('#followRef').focus();return}
+P.q('#followRef').value=ref;showFollow('<div class="notice">Checking with PFA\u2026</div>');
+fetch('/api/pfa-submissions?reference='+encodeURIComponent(ref)+'&contact='+encodeURIComponent(contact)).then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,j:j}})},function(){return {ok:false,j:{error:'Could not reach PFA. Check the connection, then try again.'}}})
+.then(function(x){var j=x.j||{};if(!x.ok||!j.ok){var amber=j.code==='CONTACT_NEEDED'||j.code==='CONTACT_MISMATCH';if(j.code==='CONTACT_NEEDED')P.q('#followContact').focus();showFollow('<div class="notice amber">'+P.escape(j.error||'That could not be checked right now.')+'</div>');return}
+showFollow('<div class="track '+(STATUS_CLASS[j.status]||'is-new')+'"><div class="track-head"><div><p class="ref-kicker">'+P.escape(j.kindLabel||'Submission')+'</p><strong>'+P.escape(j.reference)+'</strong></div><span class="track-status">'+P.escape(j.statusLabel)+'</span></div>'+
+'<ol class="track-steps">'+(j.timeline||[]).map(function(t){return '<li><span class="track-dot"></span><div><b>'+P.escape(t.label)+'</b><time>'+P.escape(fmtWhen(t.at))+'</time></div></li>'}).join('')+'</ol>'+
+'<p class="track-next">'+P.escape(j.next||'')+'</p></div>')})};
+follow.addEventListener('submit',function(e){e.preventDefault();lookup()});
+/* A number just issued on this device, or linked from an email, is offered back so nobody retypes it. */
+var openFromHash=function(){var m=/[#&]follow=([^&]+)/.exec(location.hash);if(!m)return;try{P.q('#followRef').value=decodeURIComponent(m[1]).toUpperCase()}catch(_){}
+var tab=P.q('[data-help-tab="followPanel"]');if(tab)tab.click();var hd=P.q('#helpdesk');if(hd)setTimeout(function(){hd.scrollIntoView({block:'start'})},50);showFollow('');P.q('#followContact').focus()};
+openFromHash();window.addEventListener('hashchange',openFromHash);
+var recent=(P.store('pfa_submissions')||[]).filter(function(x){return x&&x.ref}).slice(0,4),recentHost=P.q('#followRecent');
+if(recentHost&&recent.length){recentHost.hidden=false;recentHost.innerHTML='<span>Numbers issued on this device:</span>'+recent.map(function(x){return '<button class="chip" type="button" data-recent-ref="'+P.escape(x.ref)+'">'+P.escape(x.ref)+'</button>'}).join('');
+recentHost.addEventListener('click',function(e){var b=e.target.closest('[data-recent-ref]');if(!b)return;P.q('#followRef').value=b.dataset.recentRef;P.q('#followContact').focus()})}}
+render()})();
