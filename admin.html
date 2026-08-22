@@ -1,134 +1,308 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta content="v1.35 (2026-08-22)" name="pfa-build"/>
-<link rel="preload" href="/assets/fonts/Archia-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/ClashDisplay-Variable.woff2" as="font" type="font/woff2" crossorigin><link rel="preconnect" href="https://cdn.shopify.com"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta content="v1.49 (2026-08-23)" name="pfa-build"/>
+<link rel="preload" href="/assets/fonts/Archia-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/ClashDisplay-Variable.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin | PFA</title>
 <link href="media/pfa-emblem.png" rel="icon">
 <link href="assets/site.css" rel="stylesheet">
-<link href="assets/header-footer.css" rel="stylesheet">
 <style>
-  /* The portal is staff-facing, so it carries the mark and the type of the
-     site but not its navigation - a member's route through PFA is not an
-     administrator's. Everything below is drawn from the same variables the
-     public pages use, so a change to the palette or the type reaches here too. */
-  body{background:var(--soft,#f4f7f9)}
-
-  .admin-head{
-    position:sticky;top:0;z-index:20;
-    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;
-    height:var(--header);padding:0 clamp(20px,3vw,34px);
-    background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);
-    backdrop-filter:blur(16px);
+  /* ======================================================================
+     The portal carries the mark, the type and the palette of the public site
+     - Clash Display for what is big, Archia for what is read, the site's blue,
+     its hairlines and its square corners - but not its navigation, because a
+     member's route through PFA is not an administrator's. Every colour below
+     is a variable the public pages already define, so a change to the palette
+     reaches here too. JetBrains Mono (already shipped for the card artwork)
+     sets anything that is a number, a date or a reference, so columns of them
+     line up and can be read at a glance.
+     ====================================================================== */
+  :root{
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --rail:236px;
+    --sky:var(--blue2);
+    --grey:#9AA7B2;
+    --tint-blue:#EAF0FF;--tint-amber:#FFF3D6;--tint-coral:#FDEEE6;--tint-green:#E9F6EF;--tint-grey:#EEF1F3;
   }
-  .admin-head .brand{display:flex;align-items:center;gap:14px;min-width:0}
-  .admin-head .brand img{width:104px;height:auto;display:block}
-  .admin-head .brand span{
-    padding-left:14px;border-left:1px solid var(--line);
-    font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);
-  }
-  .admin-head .who{
-    justify-self:end;display:flex;align-items:center;gap:12px;
-    font-size:11px;color:var(--muted);white-space:nowrap;
-  }
+  html{scroll-behavior:auto}
+  body{background:#fff}
+  [hidden]{display:none !important}
 
-  .admin-wrap{max-width:var(--max,1440px);margin:0 auto;padding:26px clamp(20px,3vw,34px) 90px}
-  .admin-panel{background:#fff;border:1px solid var(--line);padding:clamp(18px,2.4vw,26px)}
-
-  /* The side toggle on the cards is the site's tab control; the portal uses
-     the same one rather than inventing a second. */
-  .admin-tabs{display:flex;width:max-content;max-width:100%;flex-wrap:wrap;
-    border:1px solid #CAD2D8;margin-bottom:22px}
-  .admin-tabs button{
-    min-height:40px;padding:0 16px;border:0;border-right:1px solid #CAD2D8;background:#fff;
-    font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
-  }
-  .admin-tabs button:last-child{border-right:0}
-  .admin-tabs button[aria-selected="true"]{background:var(--ink);color:#fff}
-
-  /* Uppercase micro-type in Clash Display closes its word spaces up - the tab
-     read "VERIFY ACARD". Same correction the public pages carry, applied to the
-     portal's own controls. */
-  .admin-tabs button,
-  .admin-head .brand span,
-  th,
-  .pill,
-  .rowbtn,
-  .metric span,
-  .metric-head{word-spacing:.085em}
-
-  .admin-search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-  .admin-search input{flex:1 1 320px;min-width:0}
-
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  th{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:600}
-  td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
-  tbody tr:hover{background:var(--soft,#f4f7f9)}
-
-  .pill{display:inline-block;padding:4px 10px;font-size:9px;font-weight:600;
-    letter-spacing:.12em;text-transform:uppercase}
-  .pill.valid{background:#e9f6ef;color:#1f7a52}
-  .pill.expired{background:#fdecea;color:#b3261e}
-  .pill.unknown{background:var(--soft,#eef1f3);color:#5c6771}
-
-  .admin-msg{margin:14px 0 0;font-size:13px;color:var(--muted);display:block !important;min-height:1.2em;line-height:1.5}
-  .admin-msg.error,.admin-msg.is-error{color:var(--danger);display:block !important}
-  .admin-empty{padding:42px 0;text-align:center;color:var(--muted)}
-  .admin-who{color:var(--muted);font-size:11px}
-  .admin-more{margin-top:16px}
-
-  /* Sign in: the mark and a headline, exactly as a page of the site would
-     open. The logo already says who we are, so there is no eyebrow. */
-  .signin{max-width:430px;margin:9vh auto;background:#fff;border:1px solid var(--line);
-    padding:clamp(24px,3vw,34px)}
+  /* ---- sign in ------------------------------------------------------- */
+  .signin{max-width:430px;margin:9vh auto;background:#fff;border:1px solid var(--line);padding:clamp(24px,3vw,34px)}
   .signin img{width:132px;height:auto;display:block;margin-bottom:22px}
   .signin h1{font-size:clamp(26px,3vw,34px);margin:0 0 8px;letter-spacing:-.02em}
   .signin p.lead-sm{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 18px}
   .signin label{margin-top:14px}
   .signin .btn{margin-top:20px;width:100%}
 
-  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-  .metric{border:1px solid var(--line);padding:16px}
-  .metric b{display:block;font-size:30px;line-height:1;letter-spacing:-.03em}
-  .metric span{display:block;margin-top:7px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .metric.alert b{color:#b3261e}
-  .metric-head{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
-  .notice{border-left:3px solid var(--blue);background:var(--soft-blue);padding:18px 20px}
-  .notice p{margin:10px 0 0;font-size:13px;line-height:1.55;color:#4F5A64}
-  .fields{margin:6px 0 0;font-size:12px;color:var(--muted)}
-  .fields b{color:var(--ink);font-weight:600}
-  .rowbtn{min-height:32px;padding:0 10px;border:1px solid #CAD2D8;background:#fff;font-size:9px;
-    letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-right:6px}
+  /* ---- shell: rail + stage --------------------------------------------- */
+  .shell{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);min-height:100svh}
+  .rail{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;
+    background:#fff;border-right:1px solid var(--line);padding:22px 18px 18px;overflow:auto}
+  .rail-brand{display:flex;align-items:center;gap:12px;padding:2px 6px 22px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .rail-brand img{width:108px;height:auto}
+  .rail-brand span{padding-left:12px;border-left:1px solid var(--line);font-size:9px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);word-spacing:.085em}
+  .rail-group{margin:0 0 6px;padding:14px 8px 6px;font-size:9px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:#8A949D;word-spacing:.085em}
+  .rail-link{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    min-height:40px;padding:0 10px;border:0;background:transparent;text-align:left;
+    font-size:13.5px;font-weight:400;color:#3F4A54;position:relative}
+  .rail-link:hover{background:var(--soft);color:var(--ink)}
+  .rail-link[aria-current="page"]{background:var(--ink);color:#fff;font-weight:500}
+  .rail-link[aria-current="page"]:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+  .rail-link .count{font-family:var(--mono);font-size:11px;padding:3px 7px;background:var(--tint-amber);color:var(--amber)}
+  .rail-link[aria-current="page"] .count{background:rgba(255,255,255,.16);color:#fff}
+  .rail-link .count:empty{display:none}
+  .rail-foot{margin-top:auto;padding:16px 8px 0;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+  .rail-foot .who{display:block;margin-bottom:12px;word-break:break-all;font-family:var(--mono);font-size:11px}
+  .rail-foot .acts{display:flex;gap:8px;flex-wrap:wrap}
+  .rail-foot .btn,.rail-foot a.btn{min-height:36px;padding:0 12px;font-size:9px}
+
+  .stage{padding:0 0 80px}
+  main.stage{padding-top:0}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+    padding:22px clamp(20px,3vw,36px) 18px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .topbar h1{font-size:clamp(26px,2.6vw,36px);line-height:1;letter-spacing:-.04em;font-weight:500;margin:0}
+  .topbar p{margin:7px 0 0;font-size:13px;color:var(--muted);max-width:70ch;line-height:1.5}
+  .topbar .tb-side{display:flex;align-items:center;gap:10px;flex-shrink:0;padding-bottom:3px}
+  .stamp{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+  .btn.sm{min-height:38px;padding:0 14px;font-size:9px}
+  .btn.ghost{border-color:#CBD3D9}
+  .btn:focus-visible,.rail-link:focus-visible,.seg button:focus-visible,.rowbtn:focus-visible,.kind-row:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+  .page{padding:26px clamp(20px,3vw,36px) 0;max-width:1360px}
+
+  /* ---- overview ------------------------------------------------------ */
+  .ov-top{display:grid;grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr);gap:14px;margin-bottom:14px}
+  .today{position:relative;isolation:isolate;overflow:hidden;color:#fff;min-height:400px;padding:28px 28px 22px;display:flex;flex-direction:column;container-type:inline-size;
+    background:radial-gradient(circle at 86% 12%,rgba(255,255,255,.22),transparent 24%),radial-gradient(circle at 15% 88%,rgba(22,182,255,.5),transparent 28%),linear-gradient(145deg,#0649DC 0%,#0653EE 48%,#0A85F6 100%)}
+  .today:before{content:attr(data-word);position:absolute;right:-.06em;top:-.02em;font-family:var(--font-display);font-size:min(260px,22vw);font-size:clamp(96px,35cqw,260px);line-height:.8;font-weight:500;letter-spacing:-.09em;color:rgba(255,255,255,.075);z-index:-1;pointer-events:none}
+  .today .kicker{margin:0;color:rgba(255,255,255,.74)}
+  .today-main{margin:auto 0;padding:22px 0}
+  .today-main b{display:block;font-family:var(--font-display);font-size:clamp(88px,9vw,140px);line-height:.82;letter-spacing:-.07em;font-weight:500;font-variant-numeric:tabular-nums}
+  .today-main span{display:block;margin-top:14px;font-size:14px;color:rgba(255,255,255,.78);max-width:34ch;line-height:1.5}
+  .today-links{border-top:1px solid rgba(255,255,255,.32)}
+  .today-links button{width:100%;min-height:50px;border:0;border-bottom:1px solid rgba(255,255,255,.23);background:transparent;color:#fff;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:13.5px;font-weight:500;text-align:left;padding:0;transition:padding .2s,background .2s}
+  .today-links button:hover{padding-left:10px;background:rgba(255,255,255,.08)}
+  .today-links button em{font-style:normal;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.8)}
+  .today-links .quiet{min-height:50px;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.8)}
+
+  .tile{border:1px solid var(--line);background:#fff;padding:20px 22px 18px;min-width:0;display:flex;flex-direction:column}
+  .tile-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:12px}
+  .tile-head h3{font-size:15px;letter-spacing:-.01em;font-weight:500;margin:0}
+  .tile-head .meta{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#7B858E;white-space:nowrap;word-spacing:.085em}
+  .tile-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 26px;font-size:12px;color:var(--muted)}
+  .tile-foot b{font-family:var(--font-display);font-size:20px;letter-spacing:-.03em;font-weight:500;color:var(--ink);margin-left:8px;vertical-align:-2px}
+  .tile-foot b.warn{color:var(--amber)}
+  .tile-foot b.bad{color:var(--danger)}
+
+  .chart{position:relative;min-height:190px;flex:1}
+  .chart svg{position:absolute;inset:0;display:block;width:100%;height:100%;overflow:visible}
+  .chart .ax{font-family:var(--mono);font-size:10px;fill:#8A949D}
+  .chart .ax.r{text-anchor:end}
+  .chart .base{stroke:rgba(14,17,22,.22);stroke-width:1}
+  .chart .grid{stroke:rgba(14,17,22,.07);stroke-width:1;stroke-dasharray:2 4}
+  .chart .line{fill:none;stroke:var(--blue);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .chart .fill{fill:url(#g-blue);opacity:.9}
+  .chart .dot{fill:#fff;stroke:var(--blue);stroke-width:2}
+  .chart .col{fill:var(--ink);transition:fill .15s}
+  .chart .col.hi{fill:var(--blue)}
+  .chart .col.zero{fill:rgba(14,17,22,.12)}
+  .chart .hit{fill:transparent;cursor:crosshair}
+  .chart .hit:hover{fill:rgba(6,83,238,.05)}
+  .chart .cross{stroke:var(--blue);stroke-width:1;stroke-dasharray:3 3;opacity:0;pointer-events:none}
+  .chart-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:13px;color:var(--muted);padding:20px;line-height:1.5}
+  .chart-empty b{display:block;font-family:var(--font-display);font-size:20px;letter-spacing:-.03em;color:var(--ink);font-weight:500;margin-bottom:4px}
+  #tip{position:fixed;z-index:200;pointer-events:none;background:var(--ink);color:#fff;padding:9px 11px;font-size:12px;line-height:1.4;opacity:0;transform:translate(-50%,-115%);transition:opacity .12s;white-space:nowrap;max-width:260px}
+  #tip b{display:block;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.7);font-weight:400;margin-bottom:2px}
+  #tip.show{opacity:1}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);margin-bottom:14px;background:#fff}
+  .stat{min-height:138px;padding:20px 22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;gap:14px;cursor:pointer;text-align:left;background:#fff;font:inherit;color:inherit;transition:background .18s}
+  .stat:hover{background:var(--soft)}
+  .stat strong{font-family:var(--font-display);font-size:clamp(34px,3.6vw,54px);line-height:.9;letter-spacing:-.05em;font-weight:500;font-variant-numeric:tabular-nums}
+  .stat strong small{font-size:.55em;letter-spacing:-.02em;color:var(--muted);margin-left:4px;font-weight:400}
+  .stat .l{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#6C7780;word-spacing:.085em}
+  .stat .sub{font-size:12px;color:var(--muted);line-height:1.45}
+  .stat .sub b{font-weight:500;color:var(--ink)}
+  .stat .sub b.warn{color:var(--amber)}
+  .stat .sub b.bad{color:var(--danger)}
+  .stat .sub b.good{color:var(--green)}
+
+  .ov-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px}
+  .ov-grid.two{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)}
+
+  /* horizontal bars: pure HTML so each row can be a real button into its queue */
+  .kinds{display:flex;flex-direction:column;gap:6px}
+  .kind-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(56px,.85fr) 30px;align-items:center;gap:12px;min-height:30px;border:0;background:transparent;padding:0;text-align:left;font:inherit;color:inherit;cursor:pointer}
+  .kind-row:hover .kind-label{color:var(--blue)}
+  .kind-row[disabled]{cursor:default}
+  .kind-label{font-size:12.5px;color:#3F4A54;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kind-bar{height:10px;background:var(--tint-grey);position:relative;overflow:hidden}
+  .kind-bar i{position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);background:var(--blue);transform-origin:left;transition:width .6s cubic-bezier(.22,.61,.36,1)}
+  .kind-row.hot .kind-bar i{background:var(--amber)}
+  .kind-val{font-family:var(--mono);font-size:12px;text-align:right;color:var(--ink)}
+  .kind-row.none .kind-val{color:#B3BCC4}
+  .kinds-clear{margin:10px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;line-height:1.55;color:var(--muted)}
+  .kinds-clear b{font-weight:500;color:#3F4A54}
+
+  .donut-wrap{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+  .donut{position:relative}
+  .donut .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
+  .donut .c b{display:block;font-family:var(--font-display);font-size:24px;letter-spacing:-.04em;font-weight:500}
+  .donut .c span{display:block;margin-top:5px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .legend{display:flex;flex-direction:column;gap:9px;font-size:12.5px}
+  .legend div{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:10px;align-items:start}
+  .legend i{width:10px;height:10px;display:block;margin-top:4px}
+  .legend span{color:#3F4A54;line-height:1.3}
+  .legend em{font-style:normal;font-family:var(--mono);font-size:12px;padding-top:1px}
+  .legend small{display:block;color:var(--muted);font-family:var(--mono);font-size:10px;margin-top:2px}
+
+  .renewals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .renewals div{border:1px solid var(--line);padding:12px 12px 10px}
+  .renewals b{display:block;font-family:var(--font-display);font-size:24px;letter-spacing:-.04em;font-weight:500;line-height:1}
+  .renewals span{display:block;margin-top:6px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+  .pipe{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line)}
+  .pipe div{padding:16px 16px 14px;border-right:1px solid var(--line);position:relative}
+  .pipe div:last-child{border-right:0}
+  .pipe b{display:block;font-family:var(--font-display);font-size:34px;letter-spacing:-.05em;font-weight:500;line-height:.9}
+  .pipe b.warn{color:var(--amber)}
+  .pipe span{display:block;margin-top:8px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .pipe div:after{content:"\2192";position:absolute;right:-8px;top:18px;width:16px;height:16px;background:#fff;font-size:13px;color:#AAB3BA;text-align:center;line-height:16px;z-index:1}
+  .pipe div:last-child:after{display:none}
+  .pipe-side{display:flex;gap:8px 22px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted)}
+  .pipe-side b{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:400;margin-left:6px}
+
+  .outcomes{display:flex;height:10px;margin-top:14px;background:var(--tint-grey);overflow:hidden}
+  .outcomes i{display:block;height:100%}
+  .outcomes-key{display:flex;gap:8px 20px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
+  .outcomes-key span:before{content:"";display:inline-block;width:8px;height:8px;margin-right:7px;background:var(--c)}
+  .outcomes-key b{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--ink);margin-left:5px}
+
+  .msg{margin:14px 0 0;font-size:13px;color:var(--muted);min-height:1.2em;line-height:1.5}
+  .msg.is-error{color:var(--danger)}
+  .msg:empty{display:none}
+
+  /* first paint: the same rise the public pages use */
+  .page.fresh .ov-top>*,.page.fresh .stat-grid,.page.fresh .ov-grid>*{opacity:0;animation:pfa-rise .6s cubic-bezier(.22,.61,.36,1) forwards}
+  .page.fresh .ov-top>:nth-child(2){animation-delay:.06s}
+  .page.fresh .stat-grid{animation-delay:.12s}
+  .page.fresh .ov-grid>:nth-child(1){animation-delay:.18s}
+  .page.fresh .ov-grid>:nth-child(2){animation-delay:.24s}
+  .page.fresh .ov-grid>:nth-child(3){animation-delay:.3s}
+
+  /* ---- registers ----------------------------------------------------- */
+  .toolbar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .toolbar-row input[type=search]{flex:1 1 300px;min-width:0;min-height:44px;font-family:var(--mono);font-size:13px}
+  .toolbar-row input[type=search]::placeholder{font-family:var(--font-body);font-size:13px}
+  .toolbar-row select{width:auto;min-height:44px;padding-right:34px;font-size:13px}
+  .seg{display:flex;border:1px solid #CBD3D9;width:max-content;max-width:100%;overflow:auto;scrollbar-width:none}
+  .seg button{min-height:42px;padding:0 14px;border:0;border-right:1px solid #CBD3D9;background:#fff;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;word-spacing:.085em}
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .seg button b{font-family:var(--mono);font-size:11px;margin-left:7px;font-weight:400;color:var(--muted)}
+  .seg button[aria-pressed="true"] b{color:rgba(255,255,255,.7)}
+
+  .table-wrap{border:1px solid var(--line);background:#fff;overflow:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{position:sticky;top:0;background:#fff;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:500;word-spacing:.085em;border-bottom:1px solid rgba(14,17,22,.2)}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:var(--soft)}
+  td.mono,.mono{font-family:var(--mono);font-size:12px;white-space:nowrap}
+  td.amt{font-family:var(--mono);font-size:13px;white-space:nowrap;text-align:right}
+  th.amt{text-align:right}
+  td .sub{display:block;margin-top:3px;font-size:11.5px;color:var(--muted);font-family:var(--font-body);white-space:normal}
+  td .sub a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:5px 9px 5px 8px;font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;word-spacing:.085em;background:var(--tint-grey);color:#5C6771}
+  .pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill.good{background:var(--tint-green);color:var(--green)}
+  .pill.warn{background:var(--tint-amber);color:var(--amber)}
+  .pill.bad{background:var(--tint-coral);color:var(--danger)}
+  .pill.info{background:var(--tint-blue);color:var(--blue)}
+  .rowbtn{min-height:32px;padding:0 10px;border:1px solid #CBD3D9;background:#fff;font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin:0 6px 6px 0;word-spacing:.085em}
   .rowbtn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-  [hidden]{display:none !important}
-.circle-row{border:1px solid #CAD2D8;background:#fff;padding:14px 16px;margin-bottom:10px}
-  .circle-row-head{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:11px;color:#5B6167;margin-bottom:8px;align-items:center}
-  .circle-row-text{margin:0 0 10px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
-  .circle-row-actions{display:flex;gap:8px;flex-wrap:wrap}
-  .circle-danger{color:#8C2B1D;border-color:#D8B6AF}
-  .circle-replies{margin-top:12px;border-top:1px dashed #CAD2D8;padding-top:12px}
-  .circle-reply{padding:8px 0 12px;border-bottom:1px solid #E7EBEE;font-size:12px}
-  .circle-reply p{margin:6px 0 8px;white-space:pre-wrap;word-break:break-word}
-  .circle-chip{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;border:1px solid #CAD2D8}
-  .circle-chip.good{border-color:#9DBFA5;color:#1F5C2E}
-  .circle-chip.warn{border-color:#D8C08A;color:#7A5A12}
-  .circle-chip.bad{border-color:#D8B6AF;color:#8C2B1D}
-  .admin-note{font-size:12px;line-height:1.6;color:#5B6167;margin:0 0 14px;max-width:70ch}
-  .import-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:16px}
+  .rowbtn.danger:hover{background:var(--danger);border-color:var(--danger)}
+  .fields{margin:5px 0 0;font-size:11.5px;color:var(--muted);white-space:normal;font-family:var(--font-body);max-width:56ch}
+  .fields b{color:var(--ink);font-weight:500}
+  .empty{padding:54px 20px;text-align:center;color:var(--muted);font-size:14px;line-height:1.5}
+  .empty b{display:block;font-family:var(--font-display);font-size:22px;letter-spacing:-.03em;color:var(--ink);font-weight:500;margin-bottom:6px}
+  .more{margin-top:14px}
+
+  /* ---- notices, import, circle, verify --------------------------------- */
+  .notice{border-left:3px solid var(--blue);background:var(--soft-blue);padding:16px 20px;margin-bottom:16px;font-size:13px;line-height:1.55;color:#4F5A64}
+  .notice strong{color:var(--ink);font-weight:500}
+  .notice a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+  .note{font-size:13px;line-height:1.6;color:#5B6167;margin:0 0 16px;max-width:72ch}
+  #importFile{flex:1 1 320px;width:auto;min-height:44px;font-size:12px;padding-top:10px}
+  .import-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:16px}
   .import-map-row{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#5B6167}
-  .import-map-row select{min-height:40px;border:1px solid #CAD2D8;background:#fff;padding:0 10px;font-size:13px}
-  .import-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
-  .import-summary div{border:1px solid #CAD2D8;background:#fff;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
-  .import-summary strong{font-size:26px;line-height:1}
-  .import-summary span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5B6167}
-  .import-summary .bad strong{color:#8C2B1D}
-  .import-summary .warn strong{color:#7A5A12}
-  .import-rows{border:1px solid #CAD2D8;background:#fff;max-height:420px;overflow:auto}
-  .import-row{display:grid;grid-template-columns:80px 180px 1fr;gap:12px;padding:9px 14px;border-bottom:1px solid #E7EBEE;font-size:12px}
-  .import-row.bad{background:rgba(140,43,29,.05)}
-  .import-row.warn{background:rgba(122,90,18,.05)}
-  #importFile{min-height:40px;font-size:12px}
-  </style>
+  .import-map-row select{min-height:42px;font-size:13px}
+  .import-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);margin:16px 0}
+  .import-summary div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+  .import-summary strong{font-family:var(--font-display);font-size:32px;line-height:.9;letter-spacing:-.05em;font-weight:500}
+  .import-summary span{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .import-summary .bad strong{color:var(--danger)}
+  .import-summary .warn strong{color:var(--amber)}
+  .import-rows{border:1px solid var(--line);background:#fff;max-height:420px;overflow:auto}
+  .import-row{display:grid;grid-template-columns:80px 180px 1fr;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px}
+  .import-row span:first-child{font-family:var(--mono)}
+  .import-row.bad{background:rgba(180,35,24,.05)}
+  .import-row.warn{background:rgba(166,106,0,.06)}
+
+  .circle-row{border:1px solid var(--line);background:#fff;padding:16px 18px;margin-bottom:10px}
+  .circle-row-head{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:11.5px;color:#5B6167;margin-bottom:8px;align-items:center}
+  .circle-row-head strong{color:var(--ink);font-weight:500}
+  .circle-row-text{margin:0 0 12px;font-size:13.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+  .circle-row-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .circle-row-actions .btn{min-height:36px;padding:0 12px;font-size:9px}
+  .circle-danger{color:var(--danger);border-color:#E3B9B5}
+  .circle-danger:hover{background:var(--danger);border-color:var(--danger);color:#fff}
+  .circle-replies{margin-top:12px;border-top:1px dashed #CBD3D9;padding-top:12px}
+  .circle-reply{padding:8px 0 12px;border-bottom:1px solid var(--line);font-size:12.5px}
+  .circle-reply p{margin:6px 0 8px;white-space:pre-wrap;word-break:break-word}
+
+  .verify-card{border:1px solid var(--line);background:#fff;max-width:520px}
+  .verify-card .vc-top{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .verify-card .vc-top b{font-family:var(--mono);font-size:14px;font-weight:400}
+  .verify-card dl{margin:0;padding:8px 20px 14px;display:grid;grid-template-columns:120px 1fr;gap:8px 14px;font-size:13px}
+  .verify-card dt{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+  .verify-card dd{margin:0}
+
+  /* ---- responsive ------------------------------------------------------ */
+  @media(max-width:1180px){
+    .ov-grid{grid-template-columns:1fr 1fr}
+    .stat-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:980px){
+    .shell{grid-template-columns:1fr}
+    .rail{position:static;height:auto;padding:14px 16px 0;border-right:0;border-bottom:1px solid var(--line)}
+    .rail-brand{padding-bottom:14px;margin-bottom:8px}
+    .rail nav{display:flex;gap:2px;overflow:auto;scrollbar-width:none;padding-bottom:10px}
+    .rail-group{display:none}
+    .rail-link{width:auto;min-height:38px;padding:0 12px;white-space:nowrap}
+    .rail-link[aria-current="page"]:before{display:none}
+    .rail-foot{display:none}
+    .topbar{top:0}
+    .ov-top{grid-template-columns:1fr}
+    .today{min-height:300px}
+  }
+  @media(max-width:640px){
+    .ov-grid,.ov-grid.two,.stat-grid{grid-template-columns:1fr}
+    .donut-wrap{grid-template-columns:130px 1fr}
+    .pipe{grid-template-columns:1fr}
+    .pipe div{border-right:0;border-bottom:1px solid var(--line)}
+    .pipe div:last-child{border-bottom:0}
+    .pipe div:after{display:none}
+    .topbar{flex-direction:column;align-items:flex-start}
+    .today-main b{font-size:72px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .page.fresh .ov-top>*,.page.fresh .stat-grid,.page.fresh .ov-grid>*{animation:none;opacity:1}
+    .kind-bar i{transition:none}
+  }
+</style>
 </head>
 <body>
 
@@ -142,127 +316,188 @@
   <div class="field"><label for="adminPassword">Password</label>
     <input autocomplete="current-password" id="adminPassword" type="password"></div>
   <button class="btn dark" id="adminSignIn" type="button">Sign in</button>
-  <p aria-live="polite" class="admin-msg" id="signInMsg"></p>
+  <p aria-live="polite" class="msg" id="signInMsg"></p>
 </section>
 
-<!-- Panel ------------------------------------------------------------------>
-<header class="admin-head" hidden id="adminHead">
-  <a class="brand" href="index.html">
-    <img alt="People for Animals" src="media/pfa-logo.png">
-    <span>Admin</span>
-  </a>
-  <span></span>
-  <div class="who">
-    <span id="adminWho"></span>
-    <button class="btn light" id="adminSignOut" type="button">Sign out</button>
-  </div>
-</header>
-
-<div class="admin-wrap" hidden id="panel">
-
-
-  <div class="admin-panel">
-    <div class="admin-tabs" role="tablist">
-      <button aria-selected="true" data-tab="overview" role="tab" type="button">Overview</button>
-      <button aria-selected="false" data-tab="submissions" role="tab" type="button">Submissions</button>
-      <button aria-selected="false" data-tab="members" role="tab" type="button">Members</button>
-      <button aria-selected="false" data-tab="circle" role="tab" type="button">Circle</button>
-      <button aria-selected="false" data-tab="import" role="tab" type="button">Import</button>
-      <button aria-selected="false" data-tab="caretakers" role="tab" type="button">Caretakers</button>
-      <button aria-selected="false" data-tab="payments" role="tab" type="button">Payments</button>
-      <button aria-selected="false" data-tab="store" role="tab" type="button">Store</button>
-      <button aria-selected="false" data-tab="verify" role="tab" type="button">Verify a card</button>
-    </div>
-
-    <!-- Overview -->
-    <div data-panel="overview">
-      <div class="metrics" id="metricCards"><div class="admin-empty">Loading&hellip;</div></div>
-      <h2 class="metric-head">Waiting, by category</h2>
-      <div id="kindHost"></div>
-      <p class="admin-msg" id="metricsMsg"></p>
-    </div>
-
-    <!-- Store (orders are mirrored from Shopify by webhook / Admin API lookup; see the Store register) -->
-    <div data-panel="store" hidden>
-      <div class="notice">
-        <strong>Store orders mirrored from Paws &amp; Tails.</strong>
-        <p>Every PFA store order is recorded here the moment the seller confirms payment, then updated as it is shipped,
-        delivered, cancelled or refunded. Money, refunds and shipping labels stay with the seller &mdash;
-        <a href="https://sg37v1-ta.myshopify.com/admin/orders" rel="noopener" target="_blank">open Shopify</a> for those.</p>
+<!-- Shell ------------------------------------------------------------------>
+<div class="shell" hidden id="shell">
+  <aside class="rail">
+    <a class="rail-brand" href="index.html" title="Open the public site">
+      <img alt="People for Animals" src="media/pfa-logo.png">
+      <span>Admin</span>
+    </a>
+    <nav aria-label="Admin sections">
+      <p class="rail-group">Today</p>
+      <button class="rail-link" data-tab="overview" type="button" aria-current="page">Overview</button>
+      <p class="rail-group">Inbox</p>
+      <button class="rail-link" data-tab="submissions" type="button">Submissions <span class="count" id="navWaiting"></span></button>
+      <button class="rail-link" data-tab="circle" type="button">The Circle</button>
+      <p class="rail-group">Registers</p>
+      <button class="rail-link" data-tab="members" type="button">Members</button>
+      <button class="rail-link" data-tab="caretakers" type="button">Caretaker cards</button>
+      <button class="rail-link" data-tab="payments" type="button">Payments</button>
+      <button class="rail-link" data-tab="store" type="button">Store orders <span class="count" id="navToShip"></span></button>
+      <p class="rail-group">Tools</p>
+      <button class="rail-link" data-tab="import" type="button">Import register</button>
+      <button class="rail-link" data-tab="verify" type="button">Verify a card</button>
+    </nav>
+    <div class="rail-foot">
+      <span class="who" id="adminWho"></span>
+      <div class="acts">
+        <button class="btn light" id="adminSignOut" type="button">Sign out</button>
+        <a class="btn light" href="index.html">View site</a>
       </div>
     </div>
+  </aside>
 
-    <!-- Registers -->
-    <div data-panel="records" hidden>
-      <div class="admin-search">
-        <input id="adminQuery" placeholder="Card number, or mobile number for members" type="search">
-        <button class="btn dark" id="adminSearch" type="button">Search</button>
-        <button class="btn light" id="adminClear" type="button">Show all</button>
+  <main class="stage" id="stage">
+    <header class="topbar">
+      <div>
+        <h1 id="pageTitle">Overview</h1>
+        <p id="pageHint">What is waiting, what arrived, and what it was worth.</p>
       </div>
-      <div class="admin-search" hidden id="subFilters">
-        <select class="filter-select" id="filterKind"><option value="">Every category</option></select>
-        <select class="filter-select" id="filterStatus">
-          <option value="new">Waiting</option>
-          <option value="in-progress">In progress</option>
-          <option value="handled">Handled</option>
-          <option value="spam">Spam</option>
-          <option value="">Any status</option>
-        </select>
+      <div class="tb-side">
+        <span class="stamp" id="pageStamp"></span>
+        <button class="btn ghost sm" id="pageRefresh" type="button">Refresh</button>
       </div>
-      <div id="tableHost"><div class="admin-empty">Loading&hellip;</div></div>
-      <button class="btn light admin-more" hidden id="adminMore" type="button">Load more</button>
-      <p aria-live="polite" class="admin-msg" id="recordsMsg"></p>
+    </header>
+
+    <!-- Overview -------------------------------------------------------->
+    <div class="page fresh" data-panel="overview">
+      <div class="ov-top">
+        <section class="today" data-word="TODAY" aria-label="Waiting on us">
+          <p class="kicker">Waiting on us</p>
+          <div class="today-main"><b id="ovWaiting">&ndash;</b><span id="ovWaitingNote">Counting what has come in&hellip;</span></div>
+          <div class="today-links" id="ovQueues"></div>
+        </section>
+        <section class="tile">
+          <div class="tile-head"><h3>Arrivals</h3><span class="meta">Submissions per day &middot; 30 days</span></div>
+          <div class="chart" id="chartArrivals"></div>
+          <div class="tile-foot">
+            <span>This week <b id="ovWeek">&ndash;</b></span>
+            <span>Being handled <b id="ovProgress">&ndash;</b></span>
+            <span>Handled, all time <b id="ovHandled">&ndash;</b></span>
+          </div>
+        </section>
+      </div>
+
+      <div class="stat-grid" id="ovStats"></div>
+
+      <div class="ov-grid">
+        <section class="tile">
+          <div class="tile-head"><h3>Waiting, by category</h3><span class="meta">Open a queue</span></div>
+          <div class="kinds" id="chartKinds"></div>
+        </section>
+        <section class="tile">
+          <div class="tile-head"><h3>Money in</h3><span class="meta">By purpose &middot; 30 days</span></div>
+          <div id="chartMoney"></div>
+        </section>
+        <section class="tile">
+          <div class="tile-head"><h3>New members</h3><span class="meta">By month &middot; 12 months</span></div>
+          <div class="chart" id="chartJoined"></div>
+          <div class="renewals" id="ovRenewals"></div>
+        </section>
+      </div>
+
+      <div class="ov-grid two">
+        <section class="tile">
+          <div class="tile-head"><h3>Payments received</h3><span class="meta">&#8377; per day &middot; 30 days</span></div>
+          <div class="chart" id="chartPayDay"></div>
+          <div id="ovOutcomes"></div>
+        </section>
+        <section class="tile">
+          <div class="tile-head"><h3>Store orders</h3><span class="meta">Paws &amp; Tails pipeline</span></div>
+          <div id="chartStore"></div>
+        </section>
+      </div>
+      <p aria-live="polite" class="msg" id="metricsMsg"></p>
     </div>
 
-    <!-- Verification -->
-    <div class="admin-panel" data-panel="import" hidden>
-    <div class="admin-head"><h2>Import the membership register</h2></div>
-    <p class="admin-note">
-      Upload the office spreadsheet (.xlsx, .xls or .csv). Nothing is saved
-      until you have seen what the import would do and pressed Import.
-      Running the same sheet twice updates people rather than duplicating them.
-    </p>
-    <div class="admin-search">
-      <input accept=".xlsx,.xls,.csv" id="importFile" type="file">
-      <button class="btn light" id="importCheck" type="button" disabled>Check the sheet</button>
-      <button class="btn dark" id="importGo" type="button" disabled>Import for real</button>
+    <!-- Registers ------------------------------------------------------->
+    <div class="page" data-panel="records" hidden>
+      <div class="notice" id="storeNotice" hidden>
+        <strong>Mirrored from Paws &amp; Tails.</strong> Every store order is recorded here the moment the seller confirms
+        payment, then updated as it is shipped, delivered, cancelled or refunded. Money, refunds and shipping labels stay
+        with the seller &mdash; <a href="https://sg37v1-ta.myshopify.com/admin/orders" rel="noopener" target="_blank">open Shopify</a> for those.
+      </div>
+      <div class="toolbar-row" id="searchRow">
+        <input id="adminQuery" placeholder="Card number, or mobile number for members" type="search" aria-label="Search this register">
+        <button class="btn dark sm" id="adminSearch" type="button">Search</button>
+        <button class="btn light sm" id="adminClear" type="button">Show all</button>
+      </div>
+      <div class="toolbar-row" hidden id="subFilters">
+        <div class="seg" id="statusSeg" role="group" aria-label="Status">
+          <button type="button" data-status="new" aria-pressed="true">Waiting<b id="segNew"></b></button>
+          <button type="button" data-status="in-progress" aria-pressed="false">In progress<b id="segProgress"></b></button>
+          <button type="button" data-status="handled" aria-pressed="false">Handled<b id="segHandled"></b></button>
+          <button type="button" data-status="spam" aria-pressed="false">Spam<b id="segSpam"></b></button>
+          <button type="button" data-status="" aria-pressed="false">Any</button>
+        </div>
+        <select id="filterKind" aria-label="Category"><option value="">Every category</option></select>
+      </div>
+      <div class="toolbar-row" hidden id="payFilters">
+        <div class="seg" id="paySeg" role="group" aria-label="Payment status">
+          <button type="button" data-status="" aria-pressed="true">All</button>
+          <button type="button" data-status="success" aria-pressed="false">Paid</button>
+          <button type="button" data-status="failed" aria-pressed="false">Failed</button>
+          <button type="button" data-status="verification_failed" aria-pressed="false">Unverified</button>
+          <button type="button" data-status="aborted" aria-pressed="false">Abandoned</button>
+          <button type="button" data-status="initiated" aria-pressed="false">Started</button>
+        </div>
+      </div>
+      <div id="tableHost"><div class="empty">Loading&hellip;</div></div>
+      <button class="btn light more" hidden id="adminMore" type="button">Load more</button>
+      <p aria-live="polite" class="msg" id="recordsMsg"></p>
     </div>
-    <div id="importMap" hidden>
-      <p class="admin-note">Which column holds what? The obvious ones are matched for you.</p>
-      <div class="import-map" id="importMapFields"></div>
-    </div>
-    <p class="admin-msg" id="importMsg"></p>
-    <div id="importSummary"></div>
-    <div id="importRows"></div>
-  </div>
 
-  <div class="admin-panel" data-panel="circle" hidden>
-    <div class="admin-head">
-      <h2>The Circle</h2>
-      <div class="admin-search">
+    <!-- Import ---------------------------------------------------------->
+    <div class="page" data-panel="import" hidden>
+      <p class="note">
+        Upload the office spreadsheet (.xlsx, .xls or .csv). Nothing is saved until you have seen what the import
+        would do and pressed <strong>Import for real</strong>. Running the same sheet twice updates people rather than
+        duplicating them. The file is read here in the browser; only the mapped columns are sent, and only to PFA.
+      </p>
+      <div class="toolbar-row">
+        <input accept=".xlsx,.xls,.csv" id="importFile" type="file" aria-label="Spreadsheet">
+        <button class="btn light sm" id="importCheck" type="button" disabled>Check the sheet</button>
+        <button class="btn dark sm" id="importGo" type="button" disabled>Import for real</button>
+      </div>
+      <div id="importMap" hidden>
+        <p class="note">Which column holds what? The obvious ones are matched for you.</p>
+        <div class="import-map" id="importMapFields"></div>
+      </div>
+      <p aria-live="polite" class="msg" id="importMsg"></p>
+      <div id="importSummary"></div>
+      <div id="importRows"></div>
+    </div>
+
+    <!-- Circle ---------------------------------------------------------->
+    <div class="page" data-panel="circle" hidden>
+      <div class="toolbar-row">
         <select id="circleScope" aria-label="What to moderate">
           <option value="posts">Posts</option>
           <option value="profiles">Members</option>
         </select>
-        <input id="circleQuery" placeholder="Search text, name or member number" type="search">
-        <button class="btn light" id="circleRefresh" type="button">Refresh</button>
+        <input id="circleQuery" placeholder="Search text, name or member number" type="search" aria-label="Search the Circle">
+        <button class="btn light sm" id="circleRefresh" type="button">Refresh</button>
       </div>
+      <p aria-live="polite" class="msg" id="circleMsg"></p>
+      <div id="circleList"><div class="empty">Loading&hellip;</div></div>
     </div>
-    <p class="admin-msg" id="circleMsg"></p>
-    <div id="circleList"><div class="admin-empty">Open this tab to load the latest posts.</div></div>
-  </div>
 
-  <div data-panel="verify" hidden>
-      <div class="admin-search">
-        <input id="verifyId" placeholder="PFA-MBR-XXXXXXXX or PFA-CCT-XXXXXXXX" type="search">
-        <button class="btn dark" id="verifyGo" type="button">Check</button>
+    <!-- Verify ---------------------------------------------------------->
+    <div class="page" data-panel="verify" hidden>
+      <div class="toolbar-row">
+        <input id="verifyId" placeholder="PFA-MBR-XXXXXXXX or PFA-CCT-XXXXXXXX" type="search" aria-label="Card number">
+        <button class="btn dark sm" id="verifyGo" type="button">Check</button>
       </div>
       <div id="verifyOut"></div>
-      <p class="admin-msg">This is the same check anyone can run at <code>/api/verify-card</code>. It reports only
+      <p class="note" style="margin-top:16px">This is the same check anyone can run at <code>/api/verify-card</code>. It reports only
         the holder's name, the card type and whether it is in date &mdash; never the record behind it.</p>
     </div>
-  </div>
+  </main>
 </div>
+<div id="tip" role="tooltip"></div>
 
 <script src="assets/firebase-config.js"></script>
 <script>
@@ -303,10 +538,7 @@
    an `admin: true` claim, which is the same claim firestore.rules checks, so
    the panel and the database agree about who is an administrator.
 
-   The web config below is not a secret - it identifies the project to the
-   Firebase SDK and is safe in page source. What protects the data is the
-   claim, the security rules and the server checking the token. */
-/* Sign-in talks to Google's Identity Toolkit REST API directly rather than
+   Sign-in talks to Google's Identity Toolkit REST API directly rather than
    loading the Firebase JS SDK from www.gstatic.com. Same accounts, same ID
    tokens (the server still verifies them with the admin SDK) - but nothing
    can leave the page inert because a CDN module failed to load, and it does
@@ -411,13 +643,27 @@ async function signOut() {
 }
 
 const $ = (id) => document.getElementById(id);
-const state = { tab: 'submissions', cursor: null, rows: [] };
+const state = { tab: 'overview', register: 'submissions', cursor: null, rows: [], subStatus: 'new', payStatus: '', metrics: null };
 
 async function call(path) {
   const user = auth.currentUser;
   if (!user) throw new Error('Not signed in.');
   const token = await user.getIdToken();
   const response = await fetch(path, { headers: { Authorization: 'Bearer ' + token } });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || 'That request failed.');
+  return data;
+}
+
+async function post(path, body) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not signed in.');
+  const token = await user.getIdToken();
+  const response = await fetch(path, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.message || 'That request failed.');
   return data;
@@ -442,10 +688,10 @@ $('adminSignIn').addEventListener('click', async () => {
   } catch (error) {
     const code = String(error && error.code || '');
     const why = {
-      'auth/operation-not-allowed': 'Email/password sign-in is not enabled yet. Firebase console → Authentication → Sign-in method → Email/Password → Enable.',
-      'auth/unauthorized-domain': 'This domain is not authorised in Firebase. Authentication → Settings → Authorized domains → add ' + location.hostname + '.',
-      'auth/user-not-found': 'No staff account exists for that email. Create it in Firebase → Authentication → Users.',
-      'auth/invalid-credential': 'That email and password did not match (or the account does not exist yet in Firebase → Authentication → Users).',
+      'auth/operation-not-allowed': 'Email/password sign-in is not enabled yet. Firebase console \u2192 Authentication \u2192 Sign-in method \u2192 Email/Password \u2192 Enable.',
+      'auth/unauthorized-domain': 'This domain is not authorised in Firebase. Authentication \u2192 Settings \u2192 Authorized domains \u2192 add ' + location.hostname + '.',
+      'auth/user-not-found': 'No staff account exists for that email. Create it in Firebase \u2192 Authentication \u2192 Users.',
+      'auth/invalid-credential': 'That email and password did not match (or the account does not exist yet in Firebase \u2192 Authentication \u2192 Users).',
       'auth/wrong-password': 'That password did not match.',
       'auth/invalid-email': 'That does not look like an email address.',
       'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.',
@@ -466,8 +712,7 @@ $('adminSignOut').addEventListener('click', () => signOut(auth));
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    $('panel').hidden = true;
-    $('adminHead').hidden = true;
+    $('shell').hidden = true;
     $('signIn').hidden = false;
     return;
   }
@@ -475,9 +720,8 @@ onAuthStateChanged(auth, async (user) => {
     const session = await call('/api/admin/records?type=session');
     $('adminWho').textContent = session.admin.email || session.admin.uid;
     $('signIn').hidden = true;
-    $('adminHead').hidden = false;
-    $('panel').hidden = false;
-    loadMetrics();
+    $('shell').hidden = false;
+    show('overview');
   } catch (error) {
     // Signed in, but not an administrator.
     $('signInMsg').textContent =
@@ -487,74 +731,359 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-/* ---- tabs ------------------------------------------------------------- */
-document.querySelectorAll('[data-tab]').forEach((button) => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('[data-tab]').forEach((b) =>
-      b.setAttribute('aria-selected', String(b === button)));
-    const tab = button.dataset.tab;
-    const isRegister = ['submissions', 'members', 'caretakers', 'payments', 'store'].includes(tab);
-    document.querySelector('[data-panel="overview"]').hidden = tab !== 'overview';
-    document.querySelector('[data-panel="store"]').hidden = tab !== 'store';
-    document.querySelector('[data-panel="verify"]').hidden = tab !== 'verify';
-    document.querySelector('[data-panel="records"]').hidden = !isRegister;
-    document.querySelector('[data-panel="circle"]').hidden = tab !== 'circle';
-    document.querySelector('[data-panel="import"]').hidden = tab !== 'import';
-    $('subFilters').hidden = tab !== 'submissions';
-    $('adminQuery').placeholder = tab === 'submissions'
-      ? 'Reference, e.g. PFA-C-2026-0001'
-      : (tab === 'store' ? 'PFA order number, e.g. PFA-ST-1191' : 'Card number, or mobile number for members');
-    if (tab === 'overview') return loadMetrics();
-    if (tab === 'circle') return loadCircle();
-    if (isRegister) { state.tab = tab; load(true); }
-  });
-});
+/* ---- navigation ------------------------------------------------------- */
+const PAGES = {
+  overview:    ['Overview', 'What is waiting, what arrived, and what it was worth.'],
+  submissions: ['Submissions', 'Everything sent through the site\u2019s forms. Take it, finish it, or mark it spam.'],
+  circle:      ['The Circle', 'Posts and members of the Patron community.'],
+  members:     ['Members', 'The Patron register. Search by member number or mobile.'],
+  caretakers:  ['Caretaker cards', 'Community caretaker cards that have been issued.'],
+  payments:    ['Payments', 'Card payments through CCAvenue: memberships, donations and caretaker postage.'],
+  store:       ['Store orders', 'Paws & Tails orders, mirrored from Shopify.'],
+  import:      ['Import the membership register', 'Bring the office spreadsheet into the live register, safely.'],
+  verify:      ['Verify a card', 'Check any member or caretaker card number.']
+};
+const REGISTERS = ['submissions', 'members', 'caretakers', 'payments', 'store'];
 
+function show(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.rail-link').forEach((b) => {
+    if (b.dataset.tab === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  const isRegister = REGISTERS.includes(tab);
+  document.querySelectorAll('[data-panel]').forEach((p) => {
+    p.hidden = p.dataset.panel !== (isRegister ? 'records' : tab);
+  });
+  $('pageTitle').textContent = PAGES[tab][0];
+  $('pageHint').textContent = PAGES[tab][1];
+  $('pageStamp').textContent = '';
+  $('pageRefresh').hidden = tab === 'import' || tab === 'verify';
+  $('stage').scrollTop = 0;
+  window.scrollTo({ top: 0 });
+
+  if (tab === 'overview') return loadMetrics();
+  if (tab === 'circle') return loadCircle();
+  if (isRegister) {
+    state.register = tab;
+    $('subFilters').hidden = tab !== 'submissions';
+    $('payFilters').hidden = tab !== 'payments';
+    $('storeNotice').hidden = tab !== 'store';
+    $('searchRow').hidden = tab === 'payments';
+    $('adminQuery').placeholder = {
+      submissions: 'Reference, e.g. PFA-C-2026-0001',
+      store: 'PFA order number, e.g. PFA-ST-1191',
+      members: 'Member number, or a mobile number',
+      caretakers: 'Card number, e.g. PFA-CCT-ABCD2345',
+      payments: 'Filter by status with the buttons below'
+    }[tab];
+    $('adminQuery').value = '';
+    load(true);
+  }
+}
+
+document.querySelectorAll('.rail-link').forEach((button) => {
+  button.addEventListener('click', () => show(button.dataset.tab));
+});
+$('pageRefresh').addEventListener('click', () => {
+  if (state.tab === 'overview') return loadMetrics();
+  if (state.tab === 'circle') return loadCircle();
+  if (REGISTERS.includes(state.tab)) load(true);
+});
+</script>
+<script>
 /* ---- overview --------------------------------------------------------- */
+/* The charts are drawn here, as SVG, with nothing loaded from a CDN. A
+   blocked script is what took sign-in down once; the dashboard is not going
+   to be left blank by the same thing. Each is a few dozen lines because each
+   draws exactly one thing. */
+
 const KINDS = {};
+const tip = $('tip');
+const fmt = {
+  int: (n) => Number(n || 0).toLocaleString('en-IN'),
+  inr: (n) => '\u20B9' + Math.round(Number(n) || 0).toLocaleString('en-IN'),
+  inrShort(n) {
+    n = Number(n) || 0;
+    if (n >= 1e7) return '\u20B9' + (n / 1e7).toFixed(2).replace(/\.?0+$/, '') + ' cr';
+    if (n >= 1e5) return '\u20B9' + (n / 1e5).toFixed(2).replace(/\.?0+$/, '') + ' L';
+    if (n >= 1000) return '\u20B9' + (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    return '\u20B9' + Math.round(n);
+  },
+  day: (key) => new Date(key + 'T00:00:00Z').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'UTC' }),
+  month: (key) => new Date(key + '-01T00:00:00Z').toLocaleDateString('en-IN', { month: 'short', timeZone: 'UTC' }),
+  monthLong: (key) => new Date(key + '-01T00:00:00Z').toLocaleDateString('en-IN', { month: 'long', year: 'numeric', timeZone: 'UTC' }),
+  time: (iso) => new Date(iso).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+};
+const esc = (t) => String(t == null ? '' : t)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+function tipShow(event, html) { tip.innerHTML = html; tip.classList.add('show'); tipMove(event); }
+function tipMove(event) { tip.style.left = event.clientX + 'px'; tip.style.top = (event.clientY - 10) + 'px'; }
+function tipHide() { tip.classList.remove('show'); }
+function bindTips(host) {
+  host.querySelectorAll('[data-tip]').forEach((el) => {
+    el.addEventListener('pointerenter', (e) => tipShow(e, el.dataset.tip));
+    el.addEventListener('pointermove', tipMove);
+    el.addEventListener('pointerleave', tipHide);
+  });
+}
+/* The SVG is drawn in pixels at the size its box actually is, so text stays
+   the size it was set at and nothing is stretched. */
+function chartSize(host) {
+  const W = Math.max(280, Math.round(host.clientWidth) || 640);
+  const H = Math.max(170, Math.min(420, Math.round(host.clientHeight) || 190));
+  return { W, H };
+}
+function emptyChart(title, text) {
+  return `<div class="chart-empty"><div><b>${esc(title)}</b>${esc(text)}</div></div>`;
+}
+
+/* A line over a soft fill. Straight segments, because a curve would invent
+   values between the days. */
+function areaChart(host, buckets, key, opts) {
+  const vals = buckets.map((b) => Number(b[key]) || 0);
+  if (!vals.some((v) => v > 0)) { host.innerHTML = emptyChart(opts.emptyTitle, opts.emptyText); return; }
+  const { W, H } = chartSize(host);
+  const L = 6, R = 6, T = 16, B = 26;
+  const n = vals.length, max = Math.max(...vals);
+  const x = (i) => L + i * (W - L - R) / (n - 1);
+  const y = (v) => T + (H - T - B) * (1 - v / max);
+  const pts = vals.map((v, i) => [x(i), y(v)]);
+  const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const area = line + ` L${x(n - 1).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
+  const ticks = [0, Math.round((n - 1) / 3), Math.round(2 * (n - 1) / 3), n - 1];
+  const step = (W - L - R) / (n - 1);
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.label)}">
+    <defs><linearGradient id="g-blue" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0653EE" stop-opacity=".22"/><stop offset="1" stop-color="#0653EE" stop-opacity="0"/></linearGradient></defs>
+    <line class="grid" x1="${L}" x2="${W - R}" y1="${y(max).toFixed(1)}" y2="${y(max).toFixed(1)}"/>
+    <text class="ax" x="${L}" y="${(y(max) - 5).toFixed(1)}">${opts.format(max)}</text>
+    <path class="fill" d="${area}"/>
+    <path class="line" d="${line}"/>
+    <line class="base" x1="${L}" x2="${W - R}" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}"/>
+    ${ticks.map((i, k) => `<text class="ax${k === ticks.length - 1 ? ' r' : ''}" x="${x(i).toFixed(1)}" y="${H - 8}"${k > 0 && k < ticks.length - 1 ? ' text-anchor="middle"' : ''}>${esc(fmt.day(buckets[i].day))}</text>`).join('')}
+    <line class="cross" id="${host.id}-cross" y1="${T}" y2="${y(0).toFixed(1)}" x1="0" x2="0"/>
+    <circle class="dot" id="${host.id}-dot" r="4" cx="0" cy="0" opacity="0"/>
+    ${vals.map((v, i) => `<rect class="hit" x="${(x(i) - step / 2).toFixed(1)}" y="${T}" width="${step.toFixed(1)}" height="${(H - T - B).toFixed(1)}" data-i="${i}" data-tip="<b>${esc(fmt.day(buckets[i].day))}</b>${esc(opts.format(v))} ${esc(opts.unit(v))}"/>`).join('')}
+  </svg>`;
+  const cross = host.querySelector('.cross'), dot = host.querySelector('.dot');
+  host.querySelectorAll('.hit').forEach((r) => {
+    r.addEventListener('pointerenter', () => {
+      const i = Number(r.dataset.i);
+      cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.style.opacity = 1;
+      dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(vals[i])); dot.setAttribute('opacity', 1);
+    });
+    r.addEventListener('pointerleave', () => { cross.style.opacity = 0; dot.setAttribute('opacity', 0); });
+  });
+  bindTips(host);
+}
+
+/* Columns, one per period. The most recent one is blue. */
+function columnChart(host, items, opts) {
+  const vals = items.map((it) => Number(it.value) || 0);
+  if (!vals.some((v) => v > 0)) { host.innerHTML = emptyChart(opts.emptyTitle, opts.emptyText); return; }
+  const { W, H } = chartSize(host);
+  const L = 6, R = 6, T = 16, B = 26;
+  const n = vals.length, max = Math.max(...vals);
+  const slot = (W - L - R) / n, gap = Math.min(8, slot * .28), bw = slot - gap;
+  const y = (v) => T + (H - T - B) * (1 - v / max);
+  const every = n > 16 ? Math.ceil(n / 8) : 1;
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.label)}">
+    <line class="grid" x1="${L}" x2="${W - R}" y1="${y(max).toFixed(1)}" y2="${y(max).toFixed(1)}"/>
+    <text class="ax" x="${L}" y="${(y(max) - 5).toFixed(1)}">${opts.format(max)}</text>
+    ${vals.map((v, i) => {
+      const x0 = L + i * slot + gap / 2;
+      const h = Math.max(v > 0 ? 2 : 1.5, y(0) - y(v));
+      return `<rect class="col${i === n - 1 ? ' hi' : ''}${v ? '' : ' zero'}" x="${x0.toFixed(1)}" y="${(y(0) - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" data-tip="<b>${esc(items[i].tip || items[i].label)}</b>${esc(opts.format(v))} ${esc(opts.unit(v))}"/>`;
+    }).join('')}
+    <line class="base" x1="${L}" x2="${W - R}" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}"/>
+    ${items.map((it, i) => ((i % every === 0 && n - 1 - i >= every / 2) || i === n - 1) ? `<text class="ax" text-anchor="${i === n - 1 ? 'end' : (i === 0 ? 'start' : 'middle')}" x="${(i === n - 1 ? W - R : (i === 0 ? L : L + i * slot + slot / 2)).toFixed(1)}" y="${H - 8}">${esc(it.label)}</text>` : '').join('')}
+  </svg>`;
+  bindTips(host);
+}
+
+/* A ring, parts clockwise from the top, with the total in the middle. */
+function donutChart(host, parts, centre, caption) {
+  const total = parts.reduce((s, p) => s + (Number(p.value) || 0), 0);
+  const size = 150, r = 60, c = 2 * Math.PI * r, stroke = 16;
+  let offset = 0;
+  const arcs = total ? parts.filter((p) => p.value > 0).map((p) => {
+    const len = c * p.value / total;
+    const el = `<circle r="${r}" cx="${size / 2}" cy="${size / 2}" fill="none" stroke="${p.color}" stroke-width="${stroke}" stroke-dasharray="${len.toFixed(2)} ${(c - len).toFixed(2)}" stroke-dashoffset="${(-offset).toFixed(2)}" transform="rotate(-90 ${size / 2} ${size / 2})" data-tip="<b>${esc(p.label)}</b>${esc(p.tip)}"/>`;
+    offset += len;
+    return el;
+  }).join('') : `<circle r="${r}" cx="${size / 2}" cy="${size / 2}" fill="none" stroke="#EEF1F3" stroke-width="${stroke}"/>`;
+  host.innerHTML = `<div class="donut-wrap">
+    <div class="donut"><svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="${esc(caption)}">${arcs}</svg>
+      <div class="c"><b>${esc(centre)}</b><span>${esc(caption)}</span></div></div>
+    <div class="legend">${parts.map((p) => `<div><i style="background:${p.color}"></i><span>${esc(p.label)}${p.count !== undefined ? `<small>${fmt.int(p.count)} ${p.count === 1 ? 'payment' : 'payments'}</small>` : ''}</span><em>${esc(p.shown)}</em></div>`).join('')}</div>
+  </div>`;
+  bindTips(host);
+}
+
+function stat(tab, value, label, sub, opts = {}) {
+  return `<button class="stat" type="button" data-go="${tab}">
+    <strong>${value}${opts.small ? `<small>${esc(opts.small)}</small>` : ''}</strong>
+    <div><span class="l">${esc(label)}</span><div class="sub">${sub}</div></div></button>`;
+}
 
 async function loadMetrics() {
   $('metricsMsg').textContent = '';
-  $('metricCards').innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+  $('metricsMsg').classList.remove('is-error');
+  $('pageStamp').textContent = 'Loading\u2026';
   try {
     const data = await call('/api/admin/metrics');
-    const c = data.cards;
-    const money = data.revenue30d || { inr: 0, usd: 0, count: 0 };
-    $('metricCards').innerHTML = [
-      card(c.submissionsWaiting, 'Waiting on us', c.submissionsWaiting > 0),
-      card(c.submissionsLast7, 'Arrived this week'),
-      card(c.submissionsTotal, 'Submissions, all time'),
-      card(c.members, 'Members'),
-      card(c.caretakers, 'Caretaker cards'),
-      card('\u20B9' + money.inr.toLocaleString('en-IN'), 'Card payments, 30 days'),
-      card(c.storeOrders || 0, 'Store orders'),
-      card(c.storeOrdersAwaitingShipment || 0, 'Paid, awaiting shipment', (c.storeOrdersAwaitingShipment || 0) > 0)
-    ].join('');
-
-    const rows = Object.keys(data.byKind)
-      .map((k) => Object.assign({ kind: k }, data.byKind[k]))
-      .sort((a, b) => b.waiting - a.waiting);
-    rows.forEach((row) => { KINDS[row.kind] = row.label; });
-    fillKindFilter();
-    $('kindHost').innerHTML = '<table><tbody>' + rows.map((row) => `
-      <tr><td>${escapeHtml(row.label)}</td>
-      <td class="num" style="width:90px">${row.waiting}</td>
-      <td style="width:130px">${row.waiting
-        ? `<button class="rowbtn" data-open-kind="${row.kind}" type="button">Open</button>` : ''}</td></tr>`).join('')
-      + '</tbody></table>';
-
-    if (money.capped) $('metricsMsg').textContent =
-      'Payment totals are summed over the most recent 500 records.';
-    if (data.note) $('metricsMsg').textContent += (money.capped ? ' ' : '') + data.note;
+    state.metrics = data;
+    renderMetrics(data);
   } catch (error) {
-    $('metricCards').innerHTML = '';
+    $('pageStamp').textContent = '';
     $('metricsMsg').textContent = error.message;
     $('metricsMsg').classList.add('is-error');
   }
 }
 
-function card(value, label, alert) {
-  return `<div class="metric${alert ? ' alert' : ''}"><b>${escapeHtml(value)}</b><span>${escapeHtml(label)}</span></div>`;
+let resizeTimer = 0;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { if (state.tab === 'overview' && state.metrics) renderMetrics(state.metrics); }, 160);
+});
+
+function renderMetrics(data) {
+  {
+    const c = data.cards || {};
+    const subs = data.submissions || { byStatus: {}, arrivals: [] };
+    const pay = data.payments || { byDay: [], byType: {}, outcomes30d: {} };
+    const money = data.revenue30d || { inr: 0, usd: 0, count: 0 };
+    const mem = data.members || { total: c.members || 0, expired: 0, current: c.members || 0, expiring: {}, joinedByMonth: [] };
+    const care = data.caretakers || { total: c.caretakers || 0, printed: 0, unprinted: 0, expired: 0 };
+    const store = data.store || { byStatus: {}, revenue30d: 0 };
+    const waiting = Number(c.submissionsWaiting) || 0;
+
+    /* the stage ---------------------------------------------------------- */
+    const kinds = Object.keys(data.byKind || {})
+      .map((k) => Object.assign({ kind: k }, data.byKind[k]))
+      .sort((a, b) => b.waiting - a.waiting);
+    kinds.forEach((row) => { KINDS[row.kind] = row.label; });
+    fillKindFilter();
+    countUp($('ovWaiting'), waiting);
+    const hot = kinds.filter((k) => k.waiting > 0);
+    $('ovWaitingNote').textContent = waiting === 0
+      ? 'Nothing is waiting. Every submission has been taken up.'
+      : `${waiting === 1 ? 'submission needs' : 'submissions need'} a first reply, across ${hot.length} ${hot.length === 1 ? 'category' : 'categories'}. ${fmt.int(c.submissionsLast7)} arrived this week.`;
+    $('ovQueues').innerHTML = hot.length
+      ? hot.slice(0, 4).map((k) => `<button type="button" data-open-kind="${esc(k.kind)}"><span>${esc(k.label)}</span><em>${fmt.int(k.waiting)} \u2192</em></button>`).join('')
+      : '<div class="quiet">The inbox is clear.</div>';
+    $('navWaiting').textContent = waiting ? fmt.int(waiting) : '';
+    $('navToShip').textContent = c.storeOrdersAwaitingShipment ? fmt.int(c.storeOrdersAwaitingShipment) : '';
+
+    /* arrivals ----------------------------------------------------------- */
+    areaChart($('chartArrivals'), subs.arrivals || [], 'count', {
+      label: 'Submissions per day over the last 30 days',
+      format: fmt.int, unit: (v) => v === 1 ? 'submission' : 'submissions',
+      emptyTitle: 'No arrivals in 30 days', emptyText: 'The day something is sent through a form, it appears here.'
+    });
+    $('ovWeek').textContent = fmt.int(c.submissionsLast7);
+    $('ovProgress').textContent = fmt.int(subs.byStatus['in-progress']);
+    $('ovHandled').textContent = fmt.int(subs.byStatus.handled);
+    $('segNew').textContent = fmt.int(subs.byStatus.new);
+    $('segProgress').textContent = fmt.int(subs.byStatus['in-progress']);
+    $('segHandled').textContent = fmt.int(subs.byStatus.handled);
+    $('segSpam').textContent = fmt.int(subs.byStatus.spam);
+
+    /* the four registers -------------------------------------------------- */
+    const due30 = Number(mem.expiring && mem.expiring.in30) || 0;
+    $('ovStats').innerHTML = [
+      stat('members', fmt.int(mem.total), 'Members',
+        mem.total ? `<b class="good">${fmt.int(mem.current)}</b> current${mem.expired ? ` \u00b7 <b class="bad">${fmt.int(mem.expired)}</b> lapsed` : ''}${due30 ? ` \u00b7 <b class="warn">${fmt.int(due30)}</b> due in 30 days` : ''}` : 'Nobody on the register yet.'),
+      stat('caretakers', fmt.int(care.total), 'Caretaker cards',
+        care.total ? `<b class="good">${fmt.int(care.printed)}</b> printed${care.unprinted ? ` \u00b7 <b class="warn">${fmt.int(care.unprinted)}</b> to print` : ''}${care.expired ? ` \u00b7 <b class="bad">${fmt.int(care.expired)}</b> expired` : ''}` : 'No cards issued yet.'),
+      stat('payments', fmt.inrShort(money.inr), 'Card payments, 30 days',
+        money.count ? `<b>${fmt.int(money.count)}</b> paid \u00b7 <b>${fmt.inr(money.inr)}</b>${money.usd ? ` \u00b7 plus <b>$${fmt.int(money.usd)}</b> in USD` : ''}` : 'No payments in the last 30 days.'),
+      stat('store', fmt.int(c.storeOrders), 'Store orders',
+        c.storeOrders ? `${c.storeOrdersAwaitingShipment ? `<b class="warn">${fmt.int(c.storeOrdersAwaitingShipment)}</b> paid, to ship \u00b7 ` : ''}<b>${fmt.inrShort(store.revenue30d)}</b> in 30 days` : 'No orders yet.')
+    ].join('');
+
+    /* waiting by category -------------------------------------------------- */
+    const maxKind = Math.max(1, ...kinds.map((k) => k.waiting));
+    const clear = kinds.filter((k) => !k.waiting);
+    $('chartKinds').innerHTML = (hot.length ? hot.map((k) => `
+      <button class="kind-row${k.waiting >= 5 ? ' hot' : ''}" type="button" data-open-kind="${esc(k.kind)}">
+        <span class="kind-label">${esc(k.label)}</span>
+        <span class="kind-bar"><i style="--w:${(100 * k.waiting / maxKind).toFixed(1)}%"></i></span>
+        <span class="kind-val">${fmt.int(k.waiting)}</span>
+      </button>`).join('') : '<div class="chart" style="min-height:150px;flex:0 0 auto">' + emptyChart('Every queue is clear', 'New submissions will appear here by category.') + '</div>')
+      + (clear.length && hot.length ? `<p class="kinds-clear"><b>Nothing waiting</b> in ${esc(clear.map((k) => k.label.toLowerCase()).join(', '))}.</p>` : '');
+
+    /* money by purpose ------------------------------------------------------ */
+    const purpose = { membership: 'Memberships', donate: 'Donations', caretaker: 'Caretaker postage', send: 'Food sent to shelters' };
+    const colours = ['#0653EE', '#16B6FF', '#0E1116', '#9AA7B2'];
+    const types = Object.keys(pay.byType || {}).map((t, i) => ({
+      label: purpose[t] || t, value: Number(pay.byType[t].inr) || 0, count: pay.byType[t].count || 0,
+      color: colours[i % colours.length], shown: fmt.inrShort(pay.byType[t].inr), tip: fmt.inr(pay.byType[t].inr)
+    })).sort((a, b) => b.value - a.value);
+    if (money.inr > 0) donutChart($('chartMoney'), types, fmt.inrShort(money.inr), '30 days');
+    else $('chartMoney').innerHTML = '<div class="chart" style="min-height:150px">' + emptyChart('Nothing paid yet', 'Memberships, donations and caretaker postage will be split here.') + '</div>';
+
+    /* new members by month ------------------------------------------------- */
+    columnChart($('chartJoined'), (mem.joinedByMonth || []).map((m) => ({ label: fmt.month(m.month), tip: fmt.monthLong(m.month), value: m.count })), {
+      label: 'New members by month over the last 12 months',
+      format: fmt.int, unit: (v) => v === 1 ? 'member' : 'members',
+      emptyTitle: 'No new members in 12 months', emptyText: 'Paid memberships and imported rows both count.'
+    });
+    const ex = mem.expiring || {};
+    $('ovRenewals').innerHTML = [[30, ex.in30], [60, ex.in60], [90, ex.in90]].map(([d, n]) =>
+      `<div><b${Number(n) ? ' style="color:var(--amber)"' : ''}>${fmt.int(n)}</b><span>due in ${d} days</span></div>`).join('');
+
+    /* payments per day + outcomes ------------------------------------------ */
+    columnChart($('chartPayDay'), (pay.byDay || []).map((b) => ({ label: fmt.day(b.day), tip: fmt.day(b.day), value: b.amount })), {
+      label: 'Rupees received per day over the last 30 days',
+      format: fmt.inrShort, unit: () => '',
+      emptyTitle: 'No card payments in 30 days', emptyText: 'Each day\u2019s successful CCAvenue payments add up here.'
+    });
+    const o = pay.outcomes30d || {};
+    const attempts = ['success', 'failed', 'abandoned', 'pending'].reduce((s, k) => s + (Number(o[k]) || 0), 0);
+    const oc = { success: ['Paid', 'var(--green)'], failed: ['Failed', 'var(--danger)'], abandoned: ['Abandoned', 'var(--amber)'], pending: ['Started', 'var(--grey)'] };
+    $('ovOutcomes').innerHTML = attempts ? `
+      <div class="outcomes">${Object.keys(oc).map((k) => `<i style="width:${(100 * (Number(o[k]) || 0) / attempts).toFixed(1)}%;background:${oc[k][1]}" data-tip="<b>${oc[k][0]}</b>${fmt.int(o[k])} of ${fmt.int(attempts)} attempts"></i>`).join('')}</div>
+      <div class="outcomes-key">${Object.keys(oc).map((k) => `<span style="--c:${oc[k][1]}">${oc[k][0]}<b>${fmt.int(o[k])}</b></span>`).join('')}
+        <span style="--c:transparent;margin-left:auto">Completed<b>${Math.round(100 * (Number(o.success) || 0) / attempts)}%</b></span></div>` : '';
+    bindTips($('ovOutcomes'));
+
+    /* store pipeline ----------------------------------------------------------- */
+    const s = store.byStatus || {};
+    $('chartStore').innerHTML = `
+      <div class="pipe">
+        <div data-tip="<b>Awaiting payment</b>Checkout started, not yet paid"><b>${fmt.int(s.AWAITING_PAYMENT)}</b><span>Awaiting payment</span></div>
+        <div data-tip="<b>Paid</b>Confirmed by the seller, not yet shipped"><b class="${Number(s.CONFIRMED) ? 'warn' : ''}">${fmt.int(s.CONFIRMED)}</b><span>Paid, to ship</span></div>
+        <div data-tip="<b>Shipped</b>Courier has it, or delivered"><b>${fmt.int(s.FULFILLED)}</b><span>Shipped</span></div>
+      </div>
+      <div class="pipe-side">
+        <span>Cancelled<b>${fmt.int(s.CANCELLED)}</b></span>
+        <span>Refunded<b>${fmt.int(s.REFUND_RECORDED)}</b></span>
+        <span>Payment failed<b>${fmt.int(s.PAYMENT_FAILED)}</b></span>
+        <span style="margin-left:auto">30 days<b>${fmt.inr(store.revenue30d)}</b></span>
+      </div>`;
+    bindTips($('chartStore'));
+
+    /* footnotes ----------------------------------------------------------- */
+    const notes = [];
+    if (money.capped) notes.push('Payment totals cover the most recent 1,000 transactions.');
+    if (subs.arrivalsCapped) notes.push('The arrivals chart covers the most recent 1,000 submissions.');
+    $('metricsMsg').textContent = notes.join(' ');
+    $('pageStamp').textContent = 'Updated ' + fmt.time(data.generatedAt || Date.now());
+    setTimeout(() => document.querySelector('[data-panel="overview"]').classList.remove('fresh'), 1200);
+  }
+}
+
+/* The big number counts up on first load; a reload just sets it. */
+function countUp(el, target) {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || el.dataset.done || target === 0) { el.textContent = fmt.int(target); el.dataset.done = '1'; return; }
+  const start = performance.now(), dur = 700;
+  (function frame(now) {
+    const t = Math.min(1, (now - start) / dur), eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = fmt.int(Math.round(target * eased));
+    if (t < 1) requestAnimationFrame(frame); else el.dataset.done = '1';
+  }(start));
 }
 
 function fillKindFilter() {
@@ -567,26 +1096,26 @@ function fillKindFilter() {
   });
 }
 
-/* Jump from the overview straight into that category's queue. */
+/* From the overview straight into a register or a category's queue. */
 document.addEventListener('click', (event) => {
+  const go = event.target.closest('[data-go]');
+  if (go) return show(go.dataset.go);
   const target = event.target.closest('[data-open-kind]');
   if (!target) return;
-  document.querySelector('[data-tab="submissions"]').click();
+  state.subStatus = 'new';
+  show('submissions');
   $('filterKind').value = target.dataset.openKind;
-  $('filterStatus').value = 'new';
+  setSeg('statusSeg', 'new');
   load(true);
 });
-
+</script>
+<script>
 /* ---- registers -------------------------------------------------------- */
 /* Older records are shown in Title Case even where they were stored as typed. */
 function personName(value) {
   return window.PFA_RULES ? window.PFA_RULES.nameCase(value || '') : String(value == null ? '' : value);
 }
-function escapeHtml(value) {
-  const node = document.createElement('div');
-  node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
-}
+function escapeHtml(value) { return esc(value); }
 
 function date(value) {
   if (!value) return '\u2014';
@@ -595,62 +1124,83 @@ function date(value) {
     : parsed.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
+function pill(kind, label) { return `<span class="pill ${kind}">${esc(label)}</span>`; }
+const PILLS = {
+  submission: { new: ['warn', 'Waiting'], 'in-progress': ['info', 'In progress'], handled: ['good', 'Handled'], spam: ['', 'Spam'] },
+  payment: {
+    success: ['good', 'Paid'], failed: ['bad', 'Failed'], verification_failed: ['bad', 'Unverified'],
+    aborted: ['warn', 'Abandoned'], cancelled: ['warn', 'Cancelled'], initiated: ['info', 'Started'], pending: ['info', 'Pending'], awaited: ['info', 'Pending']
+  },
+  store: {
+    AWAITING_PAYMENT: ['info', 'Awaiting payment'], CONFIRMED: ['warn', 'Paid, to ship'], FULFILLED: ['good', 'Shipped'],
+    REFUND_RECORDED: ['bad', 'Refunded'], CANCELLED: ['bad', 'Cancelled'], PAYMENT_FAILED: ['bad', 'Payment failed']
+  },
+  card: { valid: ['good', 'Valid'], expired: ['bad', 'Expired'], unknown: ['', 'Unknown'] }
+};
+function statusPill(group, value) {
+  const m = PILLS[group][value] || ['', value || '\u2014'];
+  return pill(m[0], m[1]);
+}
+
 function summarise(fields) {
   const keys = Object.keys(fields || {}).slice(0, 3);
   if (!keys.length) return '';
   return '<div class="fields">' + keys.map((k) =>
-    `<b>${escapeHtml(k)}:</b> ${escapeHtml(String(fields[k]).slice(0, 90))}`).join(' &middot; ') + '</div>';
+    `<b>${esc(k)}:</b> ${esc(String(fields[k]).slice(0, 90))}`).join(' &middot; ') + '</div>';
 }
 
+const EMPTY = {
+  submissions: ['Nothing in this queue', 'Change the status or category filter, or search by reference.'],
+  members: ['No members to show', 'Search by member number or mobile, or import the office register.'],
+  caretakers: ['No caretaker cards yet', 'Cards appear here as they are issued.'],
+  payments: ['No payments to show', 'Card payments arrive here the moment CCAvenue confirms them.'],
+  store: ['No store orders yet', 'Orders are mirrored from Shopify when the seller confirms payment.']
+};
+
 function table(rows) {
-  if (!rows.length) return '<div class="admin-empty">Nothing to show.</div>';
-  const t = state.tab;
+  const t = state.register;
+  if (!rows.length) return `<div class="table-wrap"><div class="empty"><b>${esc(EMPTY[t][0])}</b>${esc(EMPTY[t][1])}</div></div>`;
+  const wrap = (inner) => `<div class="table-wrap"><table>${inner}</table></div>`;
 
   if (t === 'submissions') {
-    return `<table><thead><tr>
-      <th>Reference</th><th>Category</th><th>Received</th><th>Status</th><th>Action</th>
-    </tr></thead><tbody>` + rows.map((row) => `
+    return wrap(`<thead><tr><th>Reference</th><th>Category</th><th>Received</th><th>Status</th><th>Action</th></tr></thead><tbody>` + rows.map((row) => `
       <tr>
-        <td class="num">${escapeHtml(row.reference)}${summarise(row.fields)}</td>
-        <td>${escapeHtml(row.kindLabel)}<br><span class="admin-who">${escapeHtml(row.page)}</span></td>
-        <td class="num">${date(row.createdAt)}</td>
-        <td><span class="pill ${row.status === 'handled' ? 'valid' : (row.status === 'spam' ? 'unknown' : 'expired')}">${escapeHtml(row.status)}</span></td>
+        <td class="mono">${esc(row.reference)}${summarise(row.fields)}</td>
+        <td>${esc(row.kindLabel)}<span class="sub">${esc(row.page)}</span></td>
+        <td class="mono">${date(row.createdAt)}</td>
+        <td>${statusPill('submission', row.status)}</td>
         <td>
-          <button class="rowbtn" data-set-status="in-progress" data-ref="${escapeHtml(row.reference)}" type="button">Taking it</button>
-          <button class="rowbtn" data-set-status="handled" data-ref="${escapeHtml(row.reference)}" type="button">Done</button>
-          <button class="rowbtn" data-set-status="spam" data-ref="${escapeHtml(row.reference)}" type="button">Spam</button>
+          ${row.status !== 'in-progress' ? `<button class="rowbtn" data-set-status="in-progress" data-ref="${esc(row.reference)}" type="button">Taking it</button>` : ''}
+          ${row.status !== 'handled' ? `<button class="rowbtn" data-set-status="handled" data-ref="${esc(row.reference)}" type="button">Done</button>` : ''}
+          ${row.status !== 'spam' ? `<button class="rowbtn danger" data-set-status="spam" data-ref="${esc(row.reference)}" type="button">Spam</button>` : ''}
+          ${row.status === 'spam' || row.status === 'handled' ? `<button class="rowbtn" data-set-status="new" data-ref="${esc(row.reference)}" type="button">Reopen</button>` : ''}
         </td>
-      </tr>`).join('') + '</tbody></table>';
+      </tr>`).join('') + '</tbody>');
   }
 
   if (t === 'store') {
-    const pill = (s) => ({ CONFIRMED: 'valid', FULFILLED: 'valid', REFUND_RECORDED: 'expired', CANCELLED: 'expired', PAYMENT_FAILED: 'expired' })[s] || 'unknown';
-    const label = (s) => ({ AWAITING_PAYMENT: 'Awaiting payment', CONFIRMED: 'Paid', FULFILLED: 'Shipped', REFUND_RECORDED: 'Refunded', CANCELLED: 'Cancelled', PAYMENT_FAILED: 'Payment failed' })[s] || s;
-    return `<table><thead><tr>
-      <th>PFA order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Shipping</th><th>Placed</th>
-    </tr></thead><tbody>` + rows.map((row) => `
+    return wrap(`<thead><tr><th>PFA order</th><th>Customer</th><th>Items</th><th class="amt">Total</th><th>Status</th><th>Shipping</th><th>Placed</th></tr></thead><tbody>` + rows.map((row) => `
       <tr>
-        <td class="num">${escapeHtml(row.pfaOrderId)}<br><span class="admin-who">Shopify #${escapeHtml(row.orderNumber)} · <a href="https://sg37v1-ta.myshopify.com/admin/orders/${escapeHtml(row.shopifyOrderId)}" target="_blank" rel="noopener">open</a></span></td>
-        <td>${escapeHtml(personName(row.name))}<br><span class="admin-who">${escapeHtml(row.email)}</span></td>
-        <td>${escapeHtml(row.items)}</td>
-        <td class="num">\u20B9${Number(row.total).toLocaleString('en-IN')}${row.refundedTotal ? `<br><span class="admin-who">refunded \u20B9${Number(row.refundedTotal).toLocaleString('en-IN')}</span>` : ''}</td>
-        <td><span class="pill ${pill(row.status)}">${escapeHtml(label(row.status))}</span></td>
-        <td>${row.tracking ? (row.trackingUrl ? `<a href="${escapeHtml(row.trackingUrl)}" target="_blank" rel="noopener">${escapeHtml(row.tracking)}</a>` : escapeHtml(row.tracking)) : '<span class="admin-who">not yet shipped</span>'}</td>
-        <td class="num">${date(row.createdAt)}</td>
-      </tr>`).join('') + '</tbody></table>';
+        <td class="mono">${esc(row.pfaOrderId)}<span class="sub">Shopify #${esc(row.orderNumber)} \u00b7 <a href="https://sg37v1-ta.myshopify.com/admin/orders/${esc(row.shopifyOrderId)}" target="_blank" rel="noopener">open</a></span></td>
+        <td>${esc(personName(row.name))}<span class="sub">${esc(row.email)}</span></td>
+        <td>${esc(row.items)}</td>
+        <td class="amt">${fmt.inr(row.total)}${row.refundedTotal ? `<span class="sub">refunded ${fmt.inr(row.refundedTotal)}</span>` : ''}</td>
+        <td>${statusPill('store', row.status)}</td>
+        <td>${row.tracking ? (row.trackingUrl ? `<a class="mono" href="${esc(row.trackingUrl)}" target="_blank" rel="noopener">${esc(row.tracking)}</a>` : `<span class="mono">${esc(row.tracking)}</span>`) : '<span class="sub">not yet shipped</span>'}</td>
+        <td class="mono">${date(row.createdAt)}</td>
+      </tr>`).join('') + '</tbody>');
   }
 
   if (t === 'payments') {
-    return `<table><thead><tr>
-      <th>Order</th><th>For</th><th>Who</th><th>Amount</th><th>Status</th>
-    </tr></thead><tbody>` + rows.map((row) => `
+    return wrap(`<thead><tr><th>Order</th><th>For</th><th>Who</th><th class="amt">Amount</th><th>Status</th><th>When</th></tr></thead><tbody>` + rows.map((row) => `
       <tr>
-        <td class="num">${escapeHtml(row.orderId)}<br><span class="admin-who">${escapeHtml(row.paymentMode)}</span></td>
-        <td>${escapeHtml(row.type)}</td>
-        <td>${escapeHtml(personName(row.name))}<br><span class="admin-who">${escapeHtml(row.email || row.mobile)}</span></td>
-        <td class="num">${row.currency === 'USD' ? '$' : '\u20B9'}${row.amount.toLocaleString('en-IN')}</td>
-        <td><span class="pill ${row.status === 'paid' ? 'valid' : 'unknown'}">${escapeHtml(row.status)}</span></td>
-      </tr>`).join('') + '</tbody></table>';
+        <td class="mono">${esc(row.orderId)}${row.paymentMode ? `<span class="sub">${esc(row.paymentMode)}${row.trackingId ? ' \u00b7 ' + esc(row.trackingId) : ''}</span>` : ''}</td>
+        <td>${esc({ membership: 'Membership', donate: 'Donation', caretaker: 'Caretaker postage', send: 'Food for a shelter' }[row.type] || row.type)}</td>
+        <td>${esc(personName(row.name))}<span class="sub">${esc(row.email || row.mobile)}</span></td>
+        <td class="amt">${row.currency === 'USD' ? '$' + fmt.int(row.amount) : fmt.inr(row.amount)}</td>
+        <td>${statusPill('payment', row.status)}</td>
+        <td class="mono">${date(row.createdAt)}</td>
+      </tr>`).join('') + '</tbody>');
   }
 
   const members = t === 'members';
@@ -659,40 +1209,33 @@ function table(rows) {
     : ['Card number', 'Name', 'Issued', 'Valid until', 'Printed', 'State'];
   const body = rows.map((row) => members ? `
     <tr>
-      <td class="num">${escapeHtml(row.cardId)}</td>
-      <td>${escapeHtml(personName(row.name))}</td>
-      <td>${escapeHtml(row.email)}<br><span class="admin-who">${escapeHtml(row.mobile)}</span></td>
-      <td class="num">${date(row.memberSince)}</td>
-      <td class="num">${date(row.validUntil)}</td>
-      <td><span class="pill ${row.state}">${row.state}</span></td>
+      <td class="mono">${esc(row.cardId)}</td>
+      <td>${esc(personName(row.name))}${row.source ? `<span class="sub">${esc(row.source)}</span>` : ''}</td>
+      <td>${esc(row.email)}<span class="sub mono">${esc(row.mobile)}</span></td>
+      <td class="mono">${date(row.memberSince)}</td>
+      <td class="mono">${date(row.validUntil)}</td>
+      <td>${statusPill('card', row.state)}</td>
     </tr>` : `
     <tr>
-      <td class="num">${escapeHtml(row.cardId)}</td>
-      <td>${escapeHtml(personName(row.name))}</td>
-      <td class="num">${date(row.issuedAt)}</td>
-      <td class="num">${date(row.validUntil)}</td>
-      <td>${row.printed ? 'Yes' : 'No'}</td>
-      <td><span class="pill ${row.state}">${row.state}</span></td>
+      <td class="mono">${esc(row.cardId)}</td>
+      <td>${esc(personName(row.name))}</td>
+      <td class="mono">${date(row.issuedAt)}</td>
+      <td class="mono">${date(row.validUntil)}</td>
+      <td>${row.printed ? pill('good', 'Printed') : pill('warn', 'To print')}</td>
+      <td>${statusPill('card', row.state)}</td>
     </tr>`).join('');
-  return `<table><thead><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table>`;
+  return wrap(`<thead><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody>`);
 }
 
-/* Marking a submission is the one write the panel makes. */
+/* Marking a submission is the one write the registers make. */
 document.addEventListener('click', async (event) => {
   const button = event.target.closest('[data-set-status]');
   if (!button) return;
   button.disabled = true;
   try {
-    const user = auth.currentUser;
-    const token = await user.getIdToken();
-    const response = await fetch('/api/admin/submission-status', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-      body: JSON.stringify({ reference: button.dataset.ref, status: button.dataset.setStatus })
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'That could not be saved.');
+    await post('/api/admin/submission-status', { reference: button.dataset.ref, status: button.dataset.setStatus });
     load(true);
+    if (state.metrics) loadMetricsQuietly();
   } catch (error) {
     $('recordsMsg').textContent = error.message;
     $('recordsMsg').classList.add('is-error');
@@ -700,17 +1243,47 @@ document.addEventListener('click', async (event) => {
   }
 });
 
+/* Keep the rail badge and segment counts honest after a status change,
+   without redrawing the overview the administrator is not looking at. */
+async function loadMetricsQuietly() {
+  try {
+    const data = await call('/api/admin/metrics');
+    state.metrics = data;
+    const waiting = Number(data.cards && data.cards.submissionsWaiting) || 0;
+    $('navWaiting').textContent = waiting ? fmt.int(waiting) : '';
+    const by = (data.submissions && data.submissions.byStatus) || {};
+    $('segNew').textContent = fmt.int(by.new);
+    $('segProgress').textContent = fmt.int(by['in-progress']);
+    $('segHandled').textContent = fmt.int(by.handled);
+    $('segSpam').textContent = fmt.int(by.spam);
+  } catch (error) { /* the next visit to the overview will catch up */ }
+}
+
+function setSeg(id, value) {
+  document.querySelectorAll('#' + id + ' button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.status === value)));
+}
+$('statusSeg').addEventListener('click', (event) => {
+  const b = event.target.closest('button'); if (!b) return;
+  state.subStatus = b.dataset.status; setSeg('statusSeg', state.subStatus); load(true);
+});
+$('paySeg').addEventListener('click', (event) => {
+  const b = event.target.closest('button'); if (!b) return;
+  state.payStatus = b.dataset.status; setSeg('paySeg', state.payStatus); load(true);
+});
+
 async function load(reset) {
-  if (reset) { state.cursor = null; state.rows = []; $('tableHost').innerHTML = '<div class="admin-empty">Loading&hellip;</div>'; }
+  if (reset) { state.cursor = null; state.rows = []; $('tableHost').innerHTML = '<div class="table-wrap"><div class="empty">Loading&hellip;</div></div>'; }
   $('recordsMsg').textContent = '';
   $('recordsMsg').classList.remove('is-error');
+  $('pageStamp').textContent = '';
   const term = $('adminQuery').value.trim();
-  const params = new URLSearchParams({ type: state.tab, limit: '25' });
+  const params = new URLSearchParams({ type: state.register, limit: '25' });
   if (term) params.set('q', term);
-  if (state.tab === 'submissions') {
+  if (state.register === 'submissions') {
     if ($('filterKind').value) params.set('kind', $('filterKind').value);
-    if ($('filterStatus').value) params.set('status', $('filterStatus').value);
+    if (state.subStatus) params.set('status', state.subStatus);
   }
+  if (state.register === 'payments' && state.payStatus) params.set('status', state.payStatus);
   if (state.cursor && !term) params.set('cursor', state.cursor);
 
   try {
@@ -719,6 +1292,7 @@ async function load(reset) {
     state.cursor = data.cursor || null;
     $('tableHost').innerHTML = table(state.rows);
     $('adminMore').hidden = Boolean(data.done) || !state.cursor || Boolean(term);
+    $('pageStamp').textContent = state.rows.length ? `${fmt.int(state.rows.length)} shown${data.done || term ? '' : ' \u00b7 more below'}` : '';
     if (data.message) $('recordsMsg').textContent = data.message;
   } catch (error) {
     $('tableHost').innerHTML = '';
@@ -732,50 +1306,33 @@ $('adminQuery').addEventListener('keydown', (event) => { if (event.key === 'Ente
 $('adminClear').addEventListener('click', () => { $('adminQuery').value = ''; load(true); });
 $('adminMore').addEventListener('click', () => load(false));
 $('filterKind').addEventListener('change', () => load(true));
-$('filterStatus').addEventListener('change', () => load(true));
 
 /* ---- verification ----------------------------------------------------- */
 $('verifyGo').addEventListener('click', async () => {
   const id = $('verifyId').value.trim().toUpperCase();
-  $('verifyOut').innerHTML = '<div class="admin-empty">Checking&hellip;</div>';
+  if (!id) { $('verifyId').focus(); return; }
+  $('verifyOut').innerHTML = '<div class="empty">Checking&hellip;</div>';
   try {
     const response = await fetch('/api/verify-card?id=' + encodeURIComponent(id));
     const data = await response.json();
     if (!data.found) {
-      $('verifyOut').innerHTML = `<div class="admin-empty">${escapeHtml(data.message || 'No live card carries that number.')}</div>`;
+      $('verifyOut').innerHTML = `<div class="verify-card"><div class="empty"><b>No live card</b>${esc(data.message || 'No live card carries that number.')}</div></div>`;
       return;
     }
-    $('verifyOut').innerHTML = `<table><tbody>
-      <tr><th>Card</th><td class="num">${escapeHtml(data.cardId)}</td></tr>
-      <tr><th>Type</th><td>${escapeHtml(data.cardType)}</td></tr>
-      <tr><th>Holder</th><td>${escapeHtml(personName(data.name))}</td></tr>
-      <tr><th>Valid until</th><td class="num">${date(data.validUntil)}</td></tr>
-      <tr><th>State</th><td><span class="pill ${data.status}">${escapeHtml(data.status)}</span></td></tr>
-    </tbody></table>`;
+    $('verifyOut').innerHTML = `<div class="verify-card">
+      <div class="vc-top"><b>${esc(data.cardId)}</b>${statusPill('card', data.status)}</div>
+      <dl>
+        <dt>Type</dt><dd>${esc(data.cardType)}</dd>
+        <dt>Holder</dt><dd>${esc(personName(data.name))}</dd>
+        <dt>Valid until</dt><dd class="mono">${date(data.validUntil)}</dd>
+      </dl></div>`;
   } catch (error) {
-    $('verifyOut').innerHTML = '<div class="admin-empty">That could not be checked.</div>';
+    $('verifyOut').innerHTML = '<div class="verify-card"><div class="empty"><b>Could not check</b>The verification service did not answer. Try again.</div></div>';
   }
 });
 $('verifyId').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('verifyGo').click(); });
 
 /* ---- the circle ------------------------------------------------------- */
-
-async function post(path, body) {
-  const user = auth.currentUser;
-  if (!user) throw new Error('Not signed in.');
-  const token = await user.getIdToken();
-  const response = await fetch(path, {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.message || 'That request failed.');
-  return data;
-}
-
-const esc = (t) => String(t == null ? '' : t)
-  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const when = (ms) => ms ? new Date(ms).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '';
 
 function loadCircle() {
@@ -784,20 +1341,21 @@ function loadCircle() {
 
 async function loadCirclePosts() {
   $('circleMsg').textContent = '';
-  $('circleList').innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+  $('circleList').innerHTML = '<div class="empty">Loading&hellip;</div>';
   try {
     const q = $('circleQuery').value.trim();
     const data = await call('/api/admin/circle?action=posts&limit=60' + (q ? '&q=' + encodeURIComponent(q) : ''));
     const posts = data.posts || [];
+    $('pageStamp').textContent = posts.length ? `${fmt.int(posts.length)} posts` : '';
     if (!posts.length) {
-      $('circleList').innerHTML = '<div class="admin-empty">' + (q ? 'Nothing matches that search.' : 'No posts yet.') + '</div>';
+      $('circleList').innerHTML = `<div class="empty"><b>${q ? 'Nothing matches' : 'No posts yet'}</b>${q ? 'Try a name, a member number or a word from the post.' : 'Posts appear here as members write them.'}</div>`;
       return;
     }
     $('circleList').innerHTML = posts.map((p) => `
       <div class="circle-row" data-post="${esc(p.id)}">
         <div class="circle-row-head">
-          <span>${when(p.at)}</span>
-          <span><strong>${esc(p.authorName || 'Unnamed')}</strong> &middot; ${esc(p.authorId)}</span>
+          <span class="mono">${when(p.at)}</span>
+          <span><strong>${esc(p.authorName || 'Unnamed')}</strong> &middot; <span class="mono">${esc(p.authorId)}</span></span>
           <span>${esc(p.circleId)} &middot; ${esc(p.kind)}${p.closed ? ' &middot; closed' : ''}</span>
         </div>
         <p class="circle-row-text">${esc(p.text)}</p>
@@ -815,25 +1373,25 @@ async function loadCirclePosts() {
 
 async function loadCircleProfiles() {
   $('circleMsg').textContent = '';
-  $('circleList').innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+  $('circleList').innerHTML = '<div class="empty">Loading&hellip;</div>';
   try {
     const q = $('circleQuery').value.trim();
     const data = await call('/api/admin/circle?action=profiles' + (q ? '&q=' + encodeURIComponent(q) : ''));
     const profiles = data.profiles || [];
+    $('pageStamp').textContent = profiles.length ? `${fmt.int(profiles.length)} members` : '';
     if (!profiles.length) {
-      $('circleList').innerHTML = '<div class="admin-empty">' + (q ? 'Nothing matches that search.' : 'Nobody has joined the Circle yet.') + '</div>';
+      $('circleList').innerHTML = `<div class="empty"><b>${q ? 'Nothing matches' : 'Nobody has joined yet'}</b>${q ? 'Try a name or a member number.' : 'Members appear here once they set up a Circle profile.'}</div>`;
       return;
     }
     const chip = (p) =>
-      p.standing === 'active' ? '<span class="circle-chip good">Active</span>' :
-      p.standing === 'grace'  ? '<span class="circle-chip warn">Grace &middot; ' + p.graceDaysLeft + 'd left</span>' :
-      p.standing === 'ended'  ? '<span class="circle-chip bad">Ended</span>' :
-                                '<span class="circle-chip">No record</span>';
+      p.standing === 'active' ? pill('good', 'Active') :
+      p.standing === 'grace'  ? pill('warn', 'Grace \u00b7 ' + p.graceDaysLeft + 'd left') :
+      p.standing === 'ended'  ? pill('bad', 'Ended') : pill('', 'No record');
     $('circleList').innerHTML = profiles.map((p) => `
       <div class="circle-row">
         <div class="circle-row-head">
           <span><strong>${esc(personName(p.name) || 'Unnamed')}</strong> &middot; ${esc(p.handle || '')}</span>
-          <span>${esc(p.id)}</span>
+          <span class="mono">${esc(p.id)}</span>
           <span>${esc([p.city, p.state].filter(Boolean).join(', '))}</span>
           ${chip(p)}
         </div>
@@ -858,15 +1416,15 @@ $('circleList').addEventListener('click', async (event) => {
       const box = row.querySelector('.circle-replies');
       if (!box.hidden) { box.hidden = true; return; }
       box.hidden = false;
-      box.innerHTML = '<div class="admin-empty">Loading&hellip;</div>';
+      box.innerHTML = '<div class="empty">Loading&hellip;</div>';
       const data = await call('/api/admin/circle?action=replies&post=' + encodeURIComponent(b.dataset.replies));
       const replies = data.replies || [];
       box.innerHTML = replies.length ? replies.map((r) => `
         <div class="circle-reply">
-          <span>${when(r.at)} &middot; <strong>${esc(r.authorName || r.authorId)}</strong></span>
+          <span class="mono">${when(r.at)}</span> &middot; <strong>${esc(r.authorName || r.authorId)}</strong>
           <p>${esc(r.text)}</p>
           <button class="btn light circle-danger" data-del-reply="${esc(r.id)}" data-of="${esc(b.dataset.replies)}" type="button">Delete reply</button>
-        </div>`).join('') : '<div class="admin-empty">No replies.</div>';
+        </div>`).join('') : '<div class="empty">No replies.</div>';
       return;
     }
     if (b.dataset.delPost) {
@@ -982,12 +1540,21 @@ function mappedRows() {
 $('importFile').addEventListener('change', async () => {
   const file = $('importFile').files[0];
   $('importMsg').textContent = '';
+  $('importMsg').classList.remove('is-error');
   $('importSummary').innerHTML = '';
   $('importRows').innerHTML = '';
   $('importGo').disabled = true;
   if (!file) return;
   try {
-    const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs');
+    $('importMsg').textContent = 'Reading the sheet\u2026';
+    /* The spreadsheet parser is the one thing fetched from outside, and only
+       when a file is chosen. If it cannot be reached, the message says so. */
+    let XLSX;
+    try {
+      XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs');
+    } catch (loadError) {
+      throw new Error('The spreadsheet reader could not be downloaded (cdn.sheetjs.com). Check the connection or any blocker, then choose the file again.');
+    }
     const buf = await file.arrayBuffer();
     const wb = XLSX.read(buf, { cellDates: true });
 
@@ -1046,6 +1613,7 @@ $('importFile').addEventListener('change', async () => {
       '. Nothing has been saved.';
   } catch (error) {
     $('importMsg').textContent = 'Could not read that file: ' + error.message;
+    $('importMsg').classList.add('is-error');
   }
 });
 
@@ -1056,12 +1624,12 @@ function summaryCard(s, dry) {
     <div><strong>${s.duplicate}</strong><span>repeated in the sheet</span></div>
     <div class="${s.error ? 'bad' : ''}"><strong>${s.error}</strong><span>rows with a problem</span></div>
     <div class="${s.noEmail ? 'warn' : ''}"><strong>${s.noEmail}</strong><span>no email, cannot sign in</span></div>
-  </div>${dry ? '<p class="admin-note">Nothing has been saved yet.</p>' : ''}`;
+  </div>${dry ? '<p class="note">Nothing has been saved yet.</p>' : ''}`;
 }
 
 function rowTable(results) {
   const notable = results.filter((r) => r.status === 'error' || r.status === 'duplicate' || !r.canSignIn);
-  if (!notable.length) return '<p class="admin-note">Every row is clean.</p>';
+  if (!notable.length) return '<p class="note">Every row is clean.</p>';
   return '<div class="import-rows">' + notable.slice(0, 200).map((r) => `
     <div class="import-row ${r.status === 'error' ? 'bad' : r.status === 'duplicate' ? 'warn' : ''}">
       <span>Row ${r.line}</span>
@@ -1098,7 +1666,7 @@ $('importCheck').addEventListener('click', async () => {
   try {
     const s = await runImport(true);
     if (s) $('importGo').disabled = (s.create + s.update) === 0;
-  } catch (error) { $('importMsg').textContent = error.message; }
+  } catch (error) { $('importMsg').textContent = error.message; $('importMsg').classList.add('is-error'); }
 });
 
 $('importGo').addEventListener('click', async () => {
@@ -1106,7 +1674,7 @@ $('importGo').addEventListener('click', async () => {
   try {
     $('importGo').disabled = true;
     await runImport(false);
-  } catch (error) { $('importMsg').textContent = error.message; }
+  } catch (error) { $('importMsg').textContent = error.message; $('importMsg').classList.add('is-error'); }
 });
 </script>
 </body></html>
