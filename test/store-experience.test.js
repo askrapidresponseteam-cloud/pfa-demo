@@ -51,3 +51,12 @@ test('store typography matches the PFA visual system', () => {
   // Archia has a single weight, so nothing may be synthesised into a fake bold.
   assert.match(styles, /font-synthesis-weight:none/);
 });
+
+test('store checkout is switched on and can reach the seller', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const store = fs.readFileSync(path.join(__dirname, '..', 'store.html'), 'utf8');
+  const config = fs.readFileSync(path.join(__dirname, '..', 'assets', 'commerce-config.js'), 'utf8');
+  assert.match(store, /<script src="assets\/commerce-config\.js"><\/script>/);
+  assert.match(config, /liveOrders:\s*true/);
+});

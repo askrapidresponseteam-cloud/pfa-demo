@@ -1,3 +1,22 @@
+## v1.39 — 22 Aug 2026
+
+- **Fix: "Fill PIN, city and state from my location" always failed** in checkout because it called `/api/location-lookup`, which did not exist. Added `lib/routes/location-lookup.js` (BigDataCloud → OpenStreetMap → India Post fallback, India only).
+- **Store checkout enabled.** `store.html` gated live orders behind `window.PFA_COMMERCE.liveOrders`, which nothing ever set, so "Pay securely" always stopped with "not connected in this build". New `assets/commerce-config.js` turns it on; set `liveOrders:false` to pause the store.
+
+## v1.38 — 22 Aug 2026
+
+- **Real product pages: `/products/<handle>`.** Until now a product only existed as a quick-view modal with no URL, so site search, shared links, bookmarks and Google all dead-ended at a 404. Each product now has a server-rendered page (same single Vercel function: `lib/routes/product-page.js` + `product.html` template) with proper title/description, Open Graph image and price for WhatsApp previews, JSON-LD for Google, gallery, variant pills, stock, quantity, Add to bag / Buy now (shared bag with the store), prescription notice, a mono "product label" panel, description and related products. Search index (913 entries) now links there; store card titles and the quick-view modal link to it; `store.html?bag=1` / `?checkout=1` / `?category=` let the page hand back to the store.
+- **Fix: 404 page rendered unstyled** under nested paths — asset and nav paths are now absolute.
+
+## v1.37 — 22 Aug 2026
+
+- **Single Vercel function.** All 23 API handlers moved to `lib/routes/`; `api/index.js` routes every `/api/*` request via a rewrite in `vercel.json`. Fits Vercel Hobby's 12-function limit. Public URLs unchanged.
+- **Shopify order webhooks** (`/api/webhooks/*`): HMAC-verified receiver for orders/create, orders/paid, orders/fulfilled, fulfillments/update, orders/cancelled, refunds/create. Orders mirrored to Firestore `storeOrders`, matched to the shopper via the `PFA checkout reference` cart attribute.
+- **Live order status.** `/api/pfa-order-status` now reads real data (`?token=` for the store page, `?id=PFA-ST-…` for tracking). `track-order.html` reads the API instead of localStorage.
+- **Catalogue Admin API mode** (optional, `PFA_SHOPIFY_ADMIN_TOKEN`): cursor pagination, stock levels.
+- Cron reduced to daily (Hobby limit). Email worker can be triggered manually.
+- New: `HANDBOOK.md` (operations, lessons, runbooks), `.claude/skills/pfa-website/SKILL.md`, 13 webhook tests (116 total).
+
 # PFA Website Changelog
 
 Every release gets: a version, a date, what changed, and why.

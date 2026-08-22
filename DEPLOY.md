@@ -1,5 +1,7 @@
 # Deploy (Hobby plan, single function)
 
+See HANDBOOK.md for the full runbook; this is the short version.
+
 This tree is complete and self-contained. `api/` holds ONE Vercel function (`api/index.js`, reached via the rewrite in `vercel.json`)
 that routes every `/api/*` URL to `lib/routes/`. Public URLs are unchanged.
 

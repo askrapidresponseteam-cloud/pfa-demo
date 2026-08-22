@@ -1,8 +1,23 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/index?__route=:path*" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index?__route=:path*"
+    },
+    {
+      "source": "/products/:handle",
+      "destination": "/api/index?__route=product-page&handle=:handle"
+    }
   ],
   "crons": [
-    { "path": "/api/caretaker/email-worker", "schedule": "0 3 * * *" }
-  ]
+    {
+      "path": "/api/caretaker/email-worker",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "product.html"
+    }
+  }
 }
