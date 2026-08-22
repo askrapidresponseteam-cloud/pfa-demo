@@ -64,6 +64,8 @@ service cloud.firestore {
     match /caretakerShipments/{id}    { allow read, write: if isAdmin(); }
     match /caretakerPublic/{id}       { allow read, write: if isAdmin(); }
     match /caretakerMobileIndex/{id}  { allow read, write: if false; }
+    match /storeOrders/{id}           { allow read, write: if isAdmin(); }
+    match /storeWebhookEvents/{id}    { allow read, write: if false; }
     match /caretakerIdentityIndex/{id}{ allow read, write: if false; }
     match /caretakerEmails/{id}       { allow read, write: if false; }
     match /caretakerAudit/{id}        { allow read, write: if isAdmin(); }

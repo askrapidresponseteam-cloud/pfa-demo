@@ -28,7 +28,13 @@ const ROUTES = {
   'pfa-orders': './pfa-orders.js',
   'pfa-submissions': './pfa-submissions.js',
   'photo/remove-background': './photo/remove-background.js',
-  'verify-card': './verify-card.js'
+  'verify-card': './verify-card.js',
+  'webhooks/order-created': './webhooks/shopify.js',
+  'webhooks/order-paid': './webhooks/shopify.js',
+  'webhooks/order-fulfilled': './webhooks/shopify.js',
+  'webhooks/fulfillment-updated': './webhooks/shopify.js',
+  'webhooks/order-cancelled': './webhooks/shopify.js',
+  'webhooks/refund-created': './webhooks/shopify.js'
 };
 
 // Static requires so Vercel's file tracer bundles every handler.
@@ -55,7 +61,13 @@ const LOADERS = {
   'pfa-orders': () => require('../lib/routes/pfa-orders.js'),
   'pfa-submissions': () => require('../lib/routes/pfa-submissions.js'),
   'photo/remove-background': () => require('../lib/routes/photo/remove-background.js'),
-  'verify-card': () => require('../lib/routes/verify-card.js')
+  'verify-card': () => require('../lib/routes/verify-card.js'),
+  'webhooks/order-created': () => require('../lib/routes/webhooks/shopify.js'),
+  'webhooks/order-paid': () => require('../lib/routes/webhooks/shopify.js'),
+  'webhooks/order-fulfilled': () => require('../lib/routes/webhooks/shopify.js'),
+  'webhooks/fulfillment-updated': () => require('../lib/routes/webhooks/shopify.js'),
+  'webhooks/order-cancelled': () => require('../lib/routes/webhooks/shopify.js'),
+  'webhooks/refund-created': () => require('../lib/routes/webhooks/shopify.js')
 };
 
 function routeKey(request) {
