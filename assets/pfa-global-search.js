@@ -284,9 +284,26 @@
       if (!suggestion) return;
       input.value = suggestion.getAttribute('data-pfa-search'); render(box, input.value); input.focus();
     });
+    // The 470 KB product index is only fetched the first time search is opened.
+    var indexLoading = null;
+    function ensureIndex() {
+      if (window.PFA_PRODUCT_SEARCH_INDEX || indexLoading) return indexLoading || Promise.resolve();
+      indexLoading = new Promise(function (resolve) {
+        var script = document.createElement('script');
+        script.src = '/assets/pfa-product-search-index.js';
+        script.async = true;
+        script.onload = script.onerror = function () { resolve(); };
+        document.head.appendChild(script);
+      });
+      return indexLoading;
+    }
     document.querySelectorAll('[data-search-open]').forEach(function (button) {
-      button.addEventListener('click', function () { setTimeout(function () { buildIndex(); render(box, input.value); }, 20); });
+      button.addEventListener('click', function () {
+        ensureIndex().then(function () { buildIndex(); render(box, input.value); });
+      });
+      button.addEventListener('pointerenter', function () { ensureIndex(); }, { once: true });
     });
+    input.addEventListener('focus', function () { ensureIndex().then(function () { buildIndex(); render(box, input.value); }); }, { once: true });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire, { once: true });

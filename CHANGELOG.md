@@ -1,3 +1,7 @@
+## v1.42 — 22 Aug 2026
+
+- **Page weight cut by ~95%.** `index.html` 4.1 MB → 57 KB (19 base64 JPEGs extracted to `media/home/*.webp`, lazy-loaded, 1.4 MB total, browser-cacheable). `store.html` 2.1 MB → 119 KB (the embedded 913-product snapshot replaced by a 24-product first-paint preview; the live catalogue loads as before). The 470 KB product search index is no longer loaded on every page — it is fetched the first time someone opens search.
+
 ## v1.41 — 22 Aug 2026
 
 - **Checkout works without a Storefront token.** If `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` is absent, `/api/pfa-orders` hands the shopper to Shopify via a cart permalink (`/cart/<variant>:<qty>?attributes[PFA checkout reference]=…`). Address is typed on Shopify's page but order matching for webhooks still works. With the token present, the address-prefilled Storefront cart is used as before. Response reports `checkoutMode` and `addressPrefilled`.

@@ -1,6 +1,6 @@
 # PFA Website — Operations Handbook
 
-_Current version: v1.41 (22 Aug 2026). Update this line with every release._
+_Current version: v1.42 (22 Aug 2026). Update this line with every release._
 
 Read this first. It is the one document that explains how the site is built,
 how it is deployed, what went wrong on 22 Aug 2026 and why, and exactly what
@@ -269,6 +269,7 @@ New collections added 22 Aug: `storeOrders` (admin-readable),
 | Checkout shows "Store partner payment is not connected" | `assets/commerce-config.js` has `liveOrders:false` or isn't loaded by `store.html` |
 | Store page says "payment not verified" forever | Webhooks not registered, or order has no `PFA checkout reference` attribute — check `npx vercel logs --prod` |
 | `Cannot find module '../../../lib/…'` | Import depth wrong; files under `lib/routes/<dir>/` need `../../` to reach `lib/` |
+| Home/store page slow to load | Check `curl -s -o /dev/null -w '%{size_download}' …/` — must stay under ~150 KB. Never embed base64 images or full catalogues in HTML (v1.42 lesson). |
 | Deploy says "more than 12 functions" | Someone added a file under `api/` — move it to `lib/routes/` |
 | `/products/<handle>` returns "template is missing" | `vercel.json` → `functions.api/index.js.includeFiles` must include `product.html` |
 
