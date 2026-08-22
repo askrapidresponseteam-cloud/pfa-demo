@@ -21,8 +21,8 @@ function reply() {
 }
 
 function load() {
-  delete require.cache[require.resolve('../api/photo/remove-background.js')];
-  return require('../api/photo/remove-background.js');
+  delete require.cache[require.resolve('../lib/routes/photo/remove-background.js')];
+  return require('../lib/routes/photo/remove-background.js');
 }
 
 function withEnv(vars, run) {

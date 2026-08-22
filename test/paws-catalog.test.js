@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const catalog = require('../api/paws-catalog.js')._private;
+const catalog = require('../lib/routes/paws-catalog.js')._private;
 
 function product(overrides) {
   return Object.assign({

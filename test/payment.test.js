@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { createMemberId, createPfaOrderId } = require('../lib/pfa-ccavenue-flow');
 const { parsePaymentRequest, parseType } = require('../lib/payment');
-const { amountMatches } = require('../api/payment/response')._private;
+const { amountMatches } = require('../lib/routes/payment/response')._private;
 
 const customer = { name: 'Asha Kumar', mobile: '9876543210', email: 'asha@example.com' };
 

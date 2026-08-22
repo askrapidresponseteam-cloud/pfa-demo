@@ -3,7 +3,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { computeMembershipValidity } = require('../lib/firebase');
-const { publicRecord } = require('../api/member-status.js')._private;
+const { publicRecord } = require('../lib/routes/member-status.js')._private;
 
 const NOW = new Date('2026-08-20T00:00:00.000Z');
 
