@@ -182,3 +182,34 @@ test('catalog admin-mode cursor parsing reads the rel="next" page_info', () => {
   assert.equal(nextPageInfo(link), 'def');
   assert.equal(nextPageInfo('<https://x/products.json?page_info=zzz>; rel="previous"'), '');
 });
+
+test('before the webhook arrives, the status endpoint finds the paid order via the Admin API and persists it', async () => {
+  process.env.PFA_SHOPIFY_ADMIN_TOKEN = 'shpat_test';
+  const calls = [];
+  const realFetch = global.fetch;
+  global.fetch = async (url, opts) => {
+    calls.push({ url: String(url), token: opts.headers['X-Shopify-Access-Token'] });
+    return { ok: true, json: async () => ({ orders: [{ ...created, financial_status: 'paid' }, { ...created, id: 99, note_attributes: [] }] }) };
+  };
+  try {
+    const first = await run(status, statusRequest({ token: TOKEN }));
+    assert.equal(first.body.verified, true);
+    assert.equal(first.body.pfaOrderId, 'PFA-ST-1191');
+    assert.equal(calls.length, 1);
+    assert.match(calls[0].url, /\/admin\/api\/2026-07\/orders\.json\?status=any/);
+    assert.equal(calls[0].token, 'shpat_test');
+    const second = await run(status, statusRequest({ token: TOKEN }));
+    assert.equal(second.body.verified, true);
+    assert.equal(calls.length, 1, 'persisted: no second Admin call');
+  } finally {
+    global.fetch = realFetch;
+    delete process.env.PFA_SHOPIFY_ADMIN_TOKEN;
+  }
+});
+
+test('without an Admin token the status endpoint simply waits for the webhook', async () => {
+  delete process.env.PFA_SHOPIFY_ADMIN_TOKEN;
+  const r = await run(status, statusRequest({ token: 'unknown-token' }));
+  assert.equal(r.body.verified, false);
+  assert.equal(r.body.status, 'AWAITING_PAYMENT');
+});

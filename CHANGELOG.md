@@ -1,3 +1,8 @@
+## v1.43 — 22 Aug 2026
+
+- **PFA confirmation without the webhook secret.** While the store page polls after payment, `/api/pfa-order-status` now also queries Shopify's Admin API (`read_orders`, needs `PFA_SHOPIFY_ADMIN_TOKEN`) for a recent order carrying the `PFA checkout reference`, persists it through the same path as a webhook, and returns it. The shopper sees "Order placed — PFA-ST-<n>" on the PFA page within seconds of paying. Webhooks stay the primary path once registered.
+- The seller's payment popup is closed automatically and the PFA tab brought forward when the order is confirmed, so the shopper lands on PFA's confirmation, not the seller's thank-you page.
+
 ## v1.42 — 22 Aug 2026
 
 - **Page weight cut by ~95%.** `index.html` 4.1 MB → 57 KB (19 base64 JPEGs extracted to `media/home/*.webp`, lazy-loaded, 1.4 MB total, browser-cacheable). `store.html` 2.1 MB → 119 KB (the embedded 913-product snapshot replaced by a 24-product first-paint preview; the live catalogue loads as before). The 470 KB product search index is no longer loaded on every page — it is fetched the first time someone opens search.

@@ -1,6 +1,6 @@
 # PFA Website — Operations Handbook
 
-_Current version: v1.42 (22 Aug 2026). Update this line with every release._
+_Current version: v1.43 (22 Aug 2026). Update this line with every release._
 
 Read this first. It is the one document that explains how the site is built,
 how it is deployed, what went wrong on 22 Aug 2026 and why, and exactly what
@@ -150,7 +150,7 @@ Check what's set: `npx vercel env ls`
 | `PFA_SHOPIFY_STORE_DOMAIN` | store checkout, webhooks | `sg37v1-ta.myshopify.com` — **add** |
 | `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | store checkout (address prefilled) | Optional since v1.41: without it checkout falls back to a cart permalink. The seller's **public** storefront token is visible in pawsandtails24.com page source (`storefrontAccessToken`); using it is fine but tell the vendor. |
 | `PFA_SHOPIFY_WEBHOOK_SECRET` | webhooks | **waiting on vendor** |
-| `PFA_SHOPIFY_ADMIN_TOKEN` | catalogue stock levels | optional; the `shpat_…` value |
+| `PFA_SHOPIFY_ADMIN_TOKEN` | order confirmation fallback (Admin `read_orders`) + catalogue stock levels | **set it** — the `shpat_…` value from the vendor PDF. Without it, PFA confirmation waits for the webhook. |
 | `PFA_ADMIN_TOKEN` | email worker manual trigger | set if you want §6 |
 
 After adding variables: `npx vercel --prod --force` (env changes need a redeploy).
@@ -200,8 +200,9 @@ curl -s "https://pfa-full-website.vercel.app/api/pfa-order-status?id=PFA-ST-<ord
 2. `store.html` polls `GET /api/pfa-order-status?token=…` every 2 s.
 3. Shopify fires `orders/create` → `lib/store-orders.js` stores it in Firestore
    `storeOrders/{shopifyOrderId}` and links the token → status `CONFIRMED`.
-4. Poll returns `verified:true`, `pfaOrderId: PFA-ST-<order number>` → confirmation screen.
-5. Fulfilled / delivered / cancelled / refund webhooks update the same record;
+4. If no webhook record exists yet and `PFA_SHOPIFY_ADMIN_TOKEN` is set, the status endpoint asks Shopify's Admin API for recent orders with that reference and persists the match (v1.43).
+5. Poll returns `verified:true`, `pfaOrderId: PFA-ST-<order number>` → confirmation screen.
+6. Fulfilled / delivered / cancelled / refund webhooks update the same record;
    `track-order.html` reads it via `?id=PFA-ST-…`.
 
 Status values: `AWAITING_PAYMENT → CONFIRMED → FULFILLED`, terminal

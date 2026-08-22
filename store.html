@@ -2261,6 +2261,7 @@ select.live-variant:focus,
   async function submitPfaOrder(draft) {
     var button = P.q('#placePfaOrder', checkoutView);
     var paymentWindow = null;
+    activePaymentWindow = null;
     if (previewMode()) {
       showCheckoutError('Store partner payment is not connected in this build. No payment was taken and no order was created. Your cart is saved until the Paws & Tails checkout and verified callback are configured.');
       return;
@@ -2270,6 +2271,7 @@ select.live-variant:focus,
       button.textContent = 'Preparing secure payment…';
     }
     paymentWindow = window.open('about:blank', 'pfaSecurePayment');
+    activePaymentWindow = paymentWindow;
     if (paymentWindow) {
       paymentWindow.document.title = 'Preparing secure payment';
       paymentWindow.document.body.innerHTML = '<div style="min-height:90vh;display:grid;place-items:center;font-family:Arial,sans-serif;color:#0e1216"><div style="text-align:center"><strong style="display:block;font-size:20px">Preparing secure payment</strong><span style="display:block;margin-top:10px;color:#66727c;font-size:14px">Please wait a moment.</span></div></div>';
@@ -2384,7 +2386,12 @@ select.live-variant:focus,
     poll();
   }
 
+  var activePaymentWindow = null;
   function finalizePaidOrder(order, draft) {
+    // The seller's thank-you page is not the one we want the shopper to read.
+    try { if (activePaymentWindow && !activePaymentWindow.closed) activePaymentWindow.close(); } catch (error) {}
+    activePaymentWindow = null;
+    try { window.focus(); } catch (error) {}
     if (!isVerifiedStoreOrder(order)) {
       showCheckoutError('The partner payment has not been verified. No order was created.');
       return;
