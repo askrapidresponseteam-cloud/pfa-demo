@@ -29,7 +29,9 @@ Read `HANDBOOK.md` at the repo root for the full picture. The non-negotiables:
 - Ship changes as a **complete repo zip**, not as scripts that move files.
   A migration script was run twice on 22 Aug and broke every import.
 - The maintainer swaps folders; `.git` may not survive. Recovery is in HANDBOOK §4.
-- Commands the maintainer runs use `npx vercel` / `npx firebase-tools` (no globals).
+- Deploys happen by `git push origin main` (Vercel Git integration). Never instruct
+  `npx vercel --prod`; it deploys the local disk, which has shipped broken folders.
+- Commands the maintainer runs use `npx` for firebase-tools (no globals).
 
 ## Secrets
 - Never paste tokens into code, docs, commit messages, or chat. All secrets are

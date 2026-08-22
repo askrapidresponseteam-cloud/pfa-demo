@@ -60,6 +60,7 @@ in `api/index.js`. The function count stays 1.
 | `.env.example` vanished from git | Vercel CLI appended `.env*` to `.gitignore` when it wrote `.env.local` | `.gitignore` ignores `.env` and `.env.*` but explicitly un-ignores `.env.example`. |
 | Site search linked to `/products/<handle>.html`, which never existed; 404 page rendered unstyled | Products only lived in a quick-view modal with no URL; 404.html used relative asset paths | Every product has a real page at `/products/<handle>` (v1.38). All product links must use that path. 404.html uses absolute paths. |
 | "Store partner payment is not connected in this build" at checkout | `window.PFA_COMMERCE.liveOrders` kill switch existed but nothing set it | `assets/commerce-config.js` sets it `true`. Set `false` only to pause the store. |
+| Whole site 404 after a CLI deploy | `npx vercel --prod` uploaded a 5-file skeleton folder | Deploy only via `git push`; Instant Rollback to recover; then `vercel promote` the good build |
 | Vendor PDF contained a live Admin API token | Vendor sent credentials in documentation | Credentials go only in Vercel env vars. Ask vendor to rotate the token after go-live. |
 
 **Golden rule:** after any deploy, run
@@ -70,6 +71,32 @@ regardless of what the dashboard says. The dashboard does not run the tests.
 ---
 
 ## 3. Deploying
+
+**Deploy by `git push` only.** The Vercel project is connected to GitHub and
+builds `main` automatically. Do not run `npx vercel --prod` from the Desktop
+folder: it uploads whatever is on disk, and twice on 22 Aug that was a
+half-assembled folder, which put a 404 site into production.
+
+```bash
+cd ~/Desktop/PFA_Full_Website
+npm test                          # MUST be all pass
+git add -A && git commit -m "describe the change"
+git push origin main              # Vercel builds and promotes this
+# wait ~1 min, then:
+curl -s https://pfa-full-website.vercel.app/api/payment/health
+```
+
+**If you ever use Instant Rollback**, Vercel pins production and stops
+promoting new pushes until you clear it: dashboard → yellow banner →
+*re-enable auto-assigning custom domains*, or from the terminal
+`npx vercel promote <newest-deployment-url> --yes`.
+
+**Replacing the folder from a zip** (only if you must): `rm -rf` the old folder
+first, unzip the full zip, then `git init` + `git remote add` + `git fetch` +
+`git reset --soft origin/main` (see §4). Never `unzip -o` a handful of files
+into a folder that may not exist — that creates a skeleton.
+
+### Old instructions (kept for reference)
 
 ```bash
 cd ~/Desktop/PFA_Full_Website
