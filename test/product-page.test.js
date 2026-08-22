@@ -34,6 +34,24 @@ test('a known handle renders a full page with real meta, JSON-LD and the product
   assert.match(r.headers['Cache-Control'], /s-maxage=600/);
 });
 
+test('PUBLIC_SITE_URL is used only when it is a real origin', async () => {
+  /* `vercel env pull` writes "[SENSITIVE]" for protected variables; that must
+     never reach a canonical tag. A genuine origin, with or without a trailing
+     slash, must win over the request host. */
+  try {
+    process.env.PUBLIC_SITE_URL = '[SENSITIVE]';
+    let r = await run('/api/index?__route=product-page&handle=himalaya-liv-52-forte');
+    assert.match(r.body, /rel="canonical" href="https:\/\/pfa\.test\/products\/himalaya-liv-52-forte"/);
+    assert.ok(!r.body.includes('[SENSITIVE]'), 'a placeholder must not be rendered');
+
+    process.env.PUBLIC_SITE_URL = 'https://peopleforanimalsindia.org/';
+    r = await run('/api/index?__route=product-page&handle=himalaya-liv-52-forte');
+    assert.match(r.body, /rel="canonical" href="https:\/\/peopleforanimalsindia\.org\/products\/himalaya-liv-52-forte"/);
+  } finally {
+    delete process.env.PUBLIC_SITE_URL;
+  }
+});
+
 test('embedded JSON cannot break out of the script tag', async () => {
   const r = await run('/api/index?__route=product-page&handle=other-liver-tonic');
   assert.equal(r.statusCode, 200);

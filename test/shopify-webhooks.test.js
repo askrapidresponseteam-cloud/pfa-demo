@@ -207,6 +207,31 @@ test('before the webhook arrives, the status endpoint finds the paid order via t
   }
 });
 
+test('a cached Admin-API miss does not outlive resetForTests', async () => {
+  /* The lookup caches a miss for 8 s so a polling store page cannot hammer
+     Shopify. Between tests that cache has to go, or one test's "not found"
+     answers the next test's "found". */
+  process.env.PFA_SHOPIFY_ADMIN_TOKEN = 'shpat_test';
+  const realFetch = global.fetch;
+  let orders = [];
+  global.fetch = async () => ({ ok: true, json: async () => ({ orders }) });
+  try {
+    const miss = await run(status, statusRequest({ token: TOKEN }));
+    assert.equal(miss.body.verified, false);
+
+    orders = [{ ...created, financial_status: 'paid' }];
+    const stillMiss = await run(status, statusRequest({ token: TOKEN }));
+    assert.equal(stillMiss.body.verified, false, 'within the TTL the miss is served from cache');
+
+    ORDERS.resetForTests();
+    const hit = await run(status, statusRequest({ token: TOKEN }));
+    assert.equal(hit.body.verified, true, 'after a reset the lookup runs again');
+  } finally {
+    global.fetch = realFetch;
+    delete process.env.PFA_SHOPIFY_ADMIN_TOKEN;
+  }
+});
+
 test('without an Admin token the status endpoint simply waits for the webhook', async () => {
   delete process.env.PFA_SHOPIFY_ADMIN_TOKEN;
   const r = await run(status, statusRequest({ token: 'unknown-token' }));
