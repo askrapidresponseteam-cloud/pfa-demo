@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta content="v1.35 (2026-08-22)" name="pfa-build"/>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preload" href="/assets/fonts/Archia-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/ClashDisplay-Variable.woff2" as="font" type="font/woff2" crossorigin><link rel="preconnect" href="https://cdn.shopify.com"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin | PFA</title>
 <link href="media/pfa-emblem.png" rel="icon">
@@ -185,16 +185,13 @@
       <p class="admin-msg" id="metricsMsg"></p>
     </div>
 
-    <!-- Store -->
+    <!-- Store (orders are mirrored from Shopify by webhook / Admin API lookup; see the Store register) -->
     <div data-panel="store" hidden>
       <div class="notice">
-        <strong>Store orders are held in Shopify, not in this database.</strong>
-        <p>Checkout runs through the Shopify Storefront API, so the order, the customer and the
-        fulfilment status all live in the Shopify admin &mdash; this panel would only be showing a
-        stale copy. Open Shopify for orders, refunds and shipping.</p>
-        <p><a class="btn dark" href="https://sg37v1-ta.myshopify.com/admin/orders" rel="noopener" target="_blank">Open Shopify orders</a></p>
-        <p class="admin-msg">Card payments &mdash; membership and caretaker printing &mdash; go through
-        CCAvenue and <em>are</em> here, under Payments.</p>
+        <strong>Store orders mirrored from Paws &amp; Tails.</strong>
+        <p>Every PFA store order is recorded here the moment the seller confirms payment, then updated as it is shipped,
+        delivered, cancelled or refunded. Money, refunds and shipping labels stay with the seller &mdash;
+        <a href="https://sg37v1-ta.myshopify.com/admin/orders" rel="noopener" target="_blank">open Shopify</a> for those.</p>
       </div>
     </div>
 
@@ -382,7 +379,7 @@ document.querySelectorAll('[data-tab]').forEach((button) => {
     document.querySelectorAll('[data-tab]').forEach((b) =>
       b.setAttribute('aria-selected', String(b === button)));
     const tab = button.dataset.tab;
-    const isRegister = ['submissions', 'members', 'caretakers', 'payments'].includes(tab);
+    const isRegister = ['submissions', 'members', 'caretakers', 'payments', 'store'].includes(tab);
     document.querySelector('[data-panel="overview"]').hidden = tab !== 'overview';
     document.querySelector('[data-panel="store"]').hidden = tab !== 'store';
     document.querySelector('[data-panel="verify"]').hidden = tab !== 'verify';
@@ -392,7 +389,7 @@ document.querySelectorAll('[data-tab]').forEach((button) => {
     $('subFilters').hidden = tab !== 'submissions';
     $('adminQuery').placeholder = tab === 'submissions'
       ? 'Reference, e.g. PFA-C-2026-0001'
-      : 'Card number, or mobile number for members';
+      : (tab === 'store' ? 'PFA order number, e.g. PFA-ST-1191' : 'Card number, or mobile number for members');
     if (tab === 'overview') return loadMetrics();
     if (tab === 'circle') return loadCircle();
     if (isRegister) { state.tab = tab; load(true); }
@@ -415,7 +412,9 @@ async function loadMetrics() {
       card(c.submissionsTotal, 'Submissions, all time'),
       card(c.members, 'Members'),
       card(c.caretakers, 'Caretaker cards'),
-      card('\u20B9' + money.inr.toLocaleString('en-IN'), 'Card payments, 30 days')
+      card('\u20B9' + money.inr.toLocaleString('en-IN'), 'Card payments, 30 days'),
+      card(c.storeOrders || 0, 'Store orders'),
+      card(c.storeOrdersAwaitingShipment || 0, 'Paid, awaiting shipment', (c.storeOrdersAwaitingShipment || 0) > 0)
     ].join('');
 
     const rows = Object.keys(data.byKind)
@@ -507,6 +506,23 @@ function table(rows) {
           <button class="rowbtn" data-set-status="handled" data-ref="${escapeHtml(row.reference)}" type="button">Done</button>
           <button class="rowbtn" data-set-status="spam" data-ref="${escapeHtml(row.reference)}" type="button">Spam</button>
         </td>
+      </tr>`).join('') + '</tbody></table>';
+  }
+
+  if (t === 'store') {
+    const pill = (s) => ({ CONFIRMED: 'valid', FULFILLED: 'valid', REFUND_RECORDED: 'expired', CANCELLED: 'expired', PAYMENT_FAILED: 'expired' })[s] || 'unknown';
+    const label = (s) => ({ AWAITING_PAYMENT: 'Awaiting payment', CONFIRMED: 'Paid', FULFILLED: 'Shipped', REFUND_RECORDED: 'Refunded', CANCELLED: 'Cancelled', PAYMENT_FAILED: 'Payment failed' })[s] || s;
+    return `<table><thead><tr>
+      <th>PFA order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Shipping</th><th>Placed</th>
+    </tr></thead><tbody>` + rows.map((row) => `
+      <tr>
+        <td class="num">${escapeHtml(row.pfaOrderId)}<br><span class="admin-who">Shopify #${escapeHtml(row.orderNumber)} · <a href="https://sg37v1-ta.myshopify.com/admin/orders/${escapeHtml(row.shopifyOrderId)}" target="_blank" rel="noopener">open</a></span></td>
+        <td>${escapeHtml(personName(row.name))}<br><span class="admin-who">${escapeHtml(row.email)}</span></td>
+        <td>${escapeHtml(row.items)}</td>
+        <td class="num">\u20B9${Number(row.total).toLocaleString('en-IN')}${row.refundedTotal ? `<br><span class="admin-who">refunded \u20B9${Number(row.refundedTotal).toLocaleString('en-IN')}</span>` : ''}</td>
+        <td><span class="pill ${pill(row.status)}">${escapeHtml(label(row.status))}</span></td>
+        <td>${row.tracking ? (row.trackingUrl ? `<a href="${escapeHtml(row.trackingUrl)}" target="_blank" rel="noopener">${escapeHtml(row.tracking)}</a>` : escapeHtml(row.tracking)) : '<span class="admin-who">not yet shipped</span>'}</td>
+        <td class="num">${date(row.createdAt)}</td>
       </tr>`).join('') + '</tbody></table>';
   }
 

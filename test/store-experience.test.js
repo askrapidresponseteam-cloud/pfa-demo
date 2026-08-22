@@ -21,7 +21,7 @@ test('store keeps the approved proposition and excludes rejected copy', () => {
 });
 
 test('store uses live products and accessible commerce controls', () => {
-  assert.match(store, /API_URL\s*=\s*'\/api\/paws-catalog'/);
+  assert.match(store, /API_URL\s*=\s*'\/api\/paws-catalog(\?view=list)?'/);
   assert.match(store, /ORDER_API_URL\s*=\s*'\/api\/pfa-orders'/);
   assert.match(store, /id="productCategory"/);
   assert.match(store, /id="productAnimal"/);

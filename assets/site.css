@@ -731,9 +731,9 @@ h1,h2,h3,h4,h5,h6,strong,b,th,dt,legend,summary,optgroup{font-weight:500}
    rather than being fetched from Google at render time - a card that is being
    drawn to a canvas for download cannot wait on a third-party font, and a
    missing face would silently substitute and change every measurement. */
-@font-face{font-family:"Archivo";src:url("fonts/Archivo-Variable.woff2") format("woff2");font-weight:500 900;font-style:normal;font-display:block}
-@font-face{font-family:"Archivo Black";src:url("fonts/ArchivoBlack-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:block}
-@font-face{font-family:"JetBrains Mono";src:url("fonts/JetBrainsMono-Regular.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:block}
+@font-face{font-family:"Archivo";src:url("fonts/Archivo-Variable.woff2") format("woff2");font-weight:500 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Archivo Black";src:url("fonts/ArchivoBlack-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("fonts/JetBrainsMono-Regular.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap}
 
 /* The background-removal toggle in the photograph control. */
 .pe-cutout{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:13px;color:var(--ink);cursor:pointer}

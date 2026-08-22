@@ -1,6 +1,6 @@
 # PFA Website — Operations Handbook
 
-_Current version: v1.43 (22 Aug 2026). Update this line with every release._
+_Current version: v1.45 (22 Aug 2026). Update this line with every release._
 
 Read this first. It is the one document that explains how the site is built,
 how it is deployed, what went wrong on 22 Aug 2026 and why, and exactly what
@@ -69,6 +69,52 @@ JSON = the API is alive. Vercel's "page could not be found" = routing is broken,
 regardless of what the dashboard says. The dashboard does not run the tests.
 
 ---
+
+
+## 2b. Go-live: what depends on what
+
+The public site and the admin portal are independent. You can open the site to
+the public today; the admin can follow.
+
+### Public site (ready now)
+| Feature | Needs | State |
+| --- | --- | --- |
+| All content pages | nothing | live |
+| Donate / Give / Membership payments | CCAvenue env vars | live (health `ok:true`) |
+| Store browse, product pages, search | nothing | live |
+| Store checkout → seller payment | `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | live |
+| Order confirmation + tracking | `PFA_SHOPIFY_ADMIN_TOKEN` (now) or webhook secret (later) | live |
+| Forms (help desk, caretaker, etc.) | Firebase service account | live — writes go server-side |
+| Member area sign-in (member.html) | `PFA_MAIL_API_KEY` (Resend) for sign-in codes, Firestore rules deployed | **check** — if mail isn't configured, members can't get codes |
+| The Circle (circle.js) | Firestore rules deployed (client reads) | **run** `npx firebase-tools deploy --only firestore:rules,firestore:indexes` |
+
+Firestore **collections are created automatically** on first write — there is
+nothing to "set up". Rules and indexes are the only deploy step, and the API
+routes work even before that because they use the admin SDK.
+
+### Admin portal (`/admin.html`) — 4 steps, ~15 minutes
+1. Firebase console → Authentication → Sign-in method → **Email/Password → Enable**.
+2. Authentication → Users → **Add user** (your email + strong password).
+3. Authentication → Settings → Authorized domains → add `pfa-full-website.vercel.app`
+   (and the custom domain when it exists).
+4. Grant the admin claim from your Mac:
+   ```bash
+   cd ~/PFA_Full_Website
+   npx vercel env pull .env.production.local --environment=production
+   set -a; source .env.production.local; set +a
+   node scripts/grant-admin.js you@peopleforanimalsindia.org
+   rm .env.production.local
+   ```
+Then sign in at `/admin.html`. Remove the legacy `PFA_ADMIN_TOKEN` /
+`PFA_ADMIN_API_KEY` env vars once Firebase login works.
+
+### What the admin sees end to end (v1.45)
+Overview counts (submissions, members, caretakers, card payments, **store
+orders**, paid-awaiting-shipment) · Submissions queue with status actions ·
+Members · Caretakers · Payments (CCAvenue) · **Store** register: every Paws &
+Tails order with PFA order number, customer, items, total, status, courier
+tracking link, and a direct link to the order in Shopify; search by
+`PFA-ST-<n>` or Shopify order id · Verify a card · The Circle · Member import.
 
 ## 3. Deploying
 
@@ -270,6 +316,7 @@ New collections added 22 Aug: `storeOrders` (admin-readable),
 | Checkout shows "Store partner payment is not connected" | `assets/commerce-config.js` has `liveOrders:false` or isn't loaded by `store.html` |
 | Store page says "payment not verified" forever | Webhooks not registered, or order has no `PFA checkout reference` attribute — check `npx vercel logs --prod` |
 | `Cannot find module '../../../lib/…'` | Import depth wrong; files under `lib/routes/<dir>/` need `../../` to reach `lib/` |
+| Images look stale after a change | `vercel.json` caches `/media/*` for a day at the browser. Rename the file (or add `?v=2`) when you replace an image in place. |
 | Home/store page slow to load | Check `curl -s -o /dev/null -w '%{size_download}' …/` — must stay under ~150 KB. Never embed base64 images or full catalogues in HTML (v1.42 lesson). |
 | Deploy says "more than 12 functions" | Someone added a file under `api/` — move it to `lib/routes/` |
 | `/products/<handle>` returns "template is missing" | `vercel.json` → `functions.api/index.js.includeFiles` must include `product.html` |

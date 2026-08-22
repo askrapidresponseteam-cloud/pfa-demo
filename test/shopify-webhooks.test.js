@@ -213,3 +213,14 @@ test('without an Admin token the status endpoint simply waits for the webhook', 
   assert.equal(r.body.verified, false);
   assert.equal(r.body.status, 'AWAITING_PAYMENT');
 });
+
+test('admin records API shapes a store order row for the panel', () => {
+  const records = require('../lib/routes/admin/records');
+  const row = records._private && records._private.storeOrderRow
+    ? records._private.storeOrderRow('7352867848367', { pfaOrderId: 'PFA-ST-1191', orderNumber: '1191', status: 'FULFILLED', total: 1650, customer: { name: 'Rahul Sharma', email: 'r@example.com' }, lineItems: [{ title: 'Liv 52', quantity: 2 }], tracking: { company: 'Delhivery', number: 'DEL1', status: 'in_transit', url: 'https://x' }, createdAt: '2026-08-22T13:01:01Z' })
+    : null;
+  assert.ok(row, 'storeOrderRow exported');
+  assert.equal(row.items, 'Liv 52 × 2');
+  assert.equal(row.tracking, 'Delhivery DEL1 (in_transit)');
+  assert.equal(row.status, 'FULFILLED');
+});

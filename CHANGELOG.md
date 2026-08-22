@@ -1,3 +1,12 @@
+## v1.45 — 22 Aug 2026
+
+- **Admin: Store orders register.** `/api/admin/records?type=store` reads the `storeOrders` mirror (newest first, cursor paging, search by `PFA-ST-<n>` or Shopify id). The Store tab in `admin.html` lists each order with customer, items, total, status, courier tracking and a link to the order in Shopify. Overview shows store-order counts.
+- Handbook §2b: go-live dependency matrix — public site vs admin portal, Firestore rules, admin sign-in steps.
+
+## v1.44 — 22 Aug 2026
+
+- **Performance pass.** 18 more heavy images converted to WebP (−5 MB across the site; `campaign-*`, `maneka-gandhi`, `home-hero` …), all below-fold images lazy-loaded on every page, text fonts preloaded and `font-display:swap` everywhere, `preconnect` to the Shopify image CDN, long-lived cache headers in `vercel.json` (fonts and hashed images immutable; media 1 day; assets 1 hour with stale-while-revalidate; HTML edge-cached 5 min). Store grid fetches `/api/paws-catalog?view=list` — 159 KB gzipped instead of 463 KB; product pages keep the full data.
+
 ## v1.43 — 22 Aug 2026
 
 - **PFA confirmation without the webhook secret.** While the store page polls after payment, `/api/pfa-order-status` now also queries Shopify's Admin API (`read_orders`, needs `PFA_SHOPIFY_ADMIN_TOKEN`) for a recent order carrying the `PFA checkout reference`, persists it through the same path as a webhook, and returns it. The shopper sees "Order placed — PFA-ST-<n>" on the PFA page within seconds of paying. Webhooks stay the primary path once registered.
