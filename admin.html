@@ -291,6 +291,23 @@
 }());
 </script>
 <script defer src="assets/field-rules.js"></script>
+<script>
+/* If the Firebase SDK (www.gstatic.com) or the panel script fails to load, say so
+   instead of leaving a dead button. Cleared by the module below once it has run. */
+(function () {
+  var msg = document.getElementById('signInMsg');
+  function show(text) { if (!msg || window.__pfaAdminReady) return; msg.textContent = text; msg.classList.add('error'); }
+  window.addEventListener('error', function (e) {
+    var el = e && e.target;
+    var isScript = el && el.tagName === 'SCRIPT';
+    if (el && el !== window && !isScript) return; // fonts/images failing are not fatal
+    var src = (e && (e.filename || (isScript && el.src))) || '';
+    show('The admin page could not start: ' + ((e && e.message) || 'a script failed to load') + (src ? ' (' + src + ')' : '') + '. If you use an ad/tracker blocker, allow www.gstatic.com for this site.');
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) { show('The admin page could not start: ' + (e && e.reason && (e.reason.message || e.reason)) + '.'); });
+  setTimeout(function () { if (!window.__pfaAdminReady) show('The sign-in script did not start within 8 seconds. The Firebase SDK from www.gstatic.com is probably blocked on this network or by a browser extension.'); }, 8000);
+}());
+</script>
 <script type="module">
 /* The panel talks to /api/admin/* with a Firebase ID token. The token carries
    an `admin: true` claim, which is the same claim firestore.rules checks, so
@@ -362,6 +379,7 @@ $('adminSignIn').addEventListener('click', async () => {
   if (event.key === 'Enter') { event.preventDefault(); $('adminSignIn').click(); }
 }));
 
+window.__pfaAdminReady = true;
 $('adminSignOut').addEventListener('click', () => signOut(auth));
 
 onAuthStateChanged(auth, async (user) => {
