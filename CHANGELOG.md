@@ -1,3 +1,10 @@
+## v1.40 — 22 Aug 2026
+
+- Checkout shows the API's real error message (e.g. "Seller checkout setup is incomplete…") instead of a generic one.
+- Location lookup trims "district" from district names.
+- `VENDOR-EMAIL.md`: the exact request to Paws & Tails for the Storefront token, Headless publishing, webhook registration + secret, token rotation.
+- Handbook: working folder is `~/PFA_Full_Website`; deploy by `git push` only; rollback recovery; patches instead of zips.
+
 ## v1.39 — 22 Aug 2026
 
 - **Fix: "Fill PIN, city and state from my location" always failed** in checkout because it called `/api/location-lookup`, which did not exist. Added `lib/routes/location-lookup.js` (BigDataCloud → OpenStreetMap → India Post fallback, India only).

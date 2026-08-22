@@ -1,6 +1,6 @@
 # PFA Website — Operations Handbook
 
-_Current version: v1.39 (22 Aug 2026). Update this line with every release._
+_Current version: v1.40 (22 Aug 2026). Update this line with every release._
 
 Read this first. It is the one document that explains how the site is built,
 how it is deployed, what went wrong on 22 Aug 2026 and why, and exactly what
@@ -71,6 +71,11 @@ regardless of what the dashboard says. The dashboard does not run the tests.
 ---
 
 ## 3. Deploying
+
+**Working folder is `~/PFA_Full_Website`** (a git clone). Not the Desktop —
+the Desktop copy was wiped twice on 22 Aug, most likely by iCloud Desktop sync.
+Changes from Claude arrive as small `.patch` files: `patch -p1 < file.patch`,
+then `npm test`, commit, push.
 
 **Deploy by `git push` only.** The Vercel project is connected to GitHub and
 builds `main` automatically. Do not run `npx vercel --prod` from the Desktop
@@ -143,7 +148,7 @@ Check what's set: `npx vercel env ls`
 | `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` | everything | set ✔ |
 | `PUBLIC_SITE_URL` | payment return URLs | should be the live domain |
 | `PFA_SHOPIFY_STORE_DOMAIN` | store checkout, webhooks | `sg37v1-ta.myshopify.com` — **add** |
-| `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | store checkout | **confirm present** |
+| `PFA_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | store checkout | **missing — confirmed 22 Aug (`SHOPIFY_STOREFRONT_NOT_CONFIGURED`). Waiting on vendor.** |
 | `PFA_SHOPIFY_WEBHOOK_SECRET` | webhooks | **waiting on vendor** |
 | `PFA_SHOPIFY_ADMIN_TOKEN` | catalogue stock levels | optional; the `shpat_…` value |
 | `PFA_ADMIN_TOKEN` | email worker manual trigger | set if you want §6 |
@@ -154,23 +159,29 @@ After adding variables: `npx vercel --prod --force` (env changes need a redeploy
 
 ## 6. Store integration — what to send Paws & Tails
 
-Copy this into an email:
+Copy this into an email (also saved as `VENDOR-EMAIL.md`):
 
-> Please register these webhooks in Shopify Admin → Settings → Notifications
-> → Webhooks (format JSON, API version 2026-07):
+> **Subject: PFA Store integration — 4 items needed to go live**
 >
-> | Topic | URL |
-> | --- | --- |
-> | orders/create | https://pfa-full-website.vercel.app/api/webhooks/order-created |
-> | orders/paid | https://pfa-full-website.vercel.app/api/webhooks/order-paid |
-> | orders/fulfilled | https://pfa-full-website.vercel.app/api/webhooks/order-fulfilled |
-> | fulfillments/update | https://pfa-full-website.vercel.app/api/webhooks/fulfillment-updated |
-> | orders/cancelled | https://pfa-full-website.vercel.app/api/webhooks/order-cancelled |
-> | refunds/create | https://pfa-full-website.vercel.app/api/webhooks/refund-created |
+> 1. **Storefront API access token.** Checkout uses Shopify's Storefront API,
+>    which needs its own token — the `shpat_` Admin token cannot be used.
+>    Shopify Admin → Sales channels → Headless → Storefront API → token with
+>    `unauthenticated_write_checkouts`, `unauthenticated_read_product_listings`,
+>    `unauthenticated_read_checkouts`.
+> 2. **Publish all products to the Headless channel.**
+> 3. **Register the six webhooks** (JSON, 2026-07) and send the **signing
+>    secret** from Settings → Notifications → Webhooks:
 >
-> We also need the **webhook signing secret** shown at the bottom of that
-> Webhooks page — our endpoint refuses unsigned requests. Please also rotate
-> the Admin API token included in the PDF once we confirm the integration works.
+>    | Topic | URL |
+>    | --- | --- |
+>    | orders/create | https://pfa-full-website.vercel.app/api/webhooks/order-created |
+>    | orders/paid | https://pfa-full-website.vercel.app/api/webhooks/order-paid |
+>    | orders/fulfilled | https://pfa-full-website.vercel.app/api/webhooks/order-fulfilled |
+>    | fulfillments/update | https://pfa-full-website.vercel.app/api/webhooks/fulfillment-updated |
+>    | orders/cancelled | https://pfa-full-website.vercel.app/api/webhooks/order-cancelled |
+>    | refunds/create | https://pfa-full-website.vercel.app/api/webhooks/refund-created |
+>
+> 4. **Rotate the Admin token** after go-live; send secrets via a secure channel, not PDFs.
 
 (Replace the domain with `peopleforanimalsindia.org` once DNS points there.)
 

@@ -2300,7 +2300,7 @@ select.live-variant:focus,
             continue;
           }
           if (!response.ok) {
-            var failure = new Error('Secure payment is temporarily unavailable. Please try again.');
+            var failure = new Error(result && result.message ? String(result.message) : 'Secure payment is temporarily unavailable. Please try again.');
             failure.code = result.code;
             throw failure;
           }
