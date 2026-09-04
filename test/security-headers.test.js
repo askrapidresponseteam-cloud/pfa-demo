@@ -129,3 +129,56 @@ test('a report-only CSP names every origin the site talks to, and nothing broade
   assert.ok(directives['connect-src'].includes('https://identitytoolkit.googleapis.com'), 'admin sign-in works');
   assert.ok(!Object.keys(directives).some((k) => k === 'content-security-policy'), 'not enforced yet');
 });
+
+/* The comment above says "every origin a page loads from is named". That was a
+   claim, not a check: nothing read the pages. This reads them, so the day the
+   policy is switched from report-only to enforced it cannot take a page's
+   images, its player or its lookups down with it - and a third party added to
+   a page fails here first, which is the point of naming them.
+
+   Only subresources are collected. A CSP does not govern where a link goes, so
+   the PayPal link on donate.html, the citations on quiz.html and the news
+   articles on cinekind.html are none of its business. */
+test('every origin a page actually loads from is named in the policy', () => {
+  const v = JSON.parse(read('vercel.json'));
+  const policy = headerMap(v.headers.find((h) => h.source === '/(.*)').headers)['Content-Security-Policy-Report-Only'];
+  const directives = Object.fromEntries(policy.split(';').map((d) => d.trim().split(/\s+/)).map(([k, ...rest]) => [k, rest]));
+
+  const permits = (directive, host) => {
+    const list = directives[directive] || directives['default-src'] || [];
+    return list.some((entry) => {
+      const value = entry.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      if (value.startsWith('*.')) return host === value.slice(2) || host.endsWith(value.slice(1));
+      return value === host;
+    });
+  };
+
+  /* kind of load -> the directive that governs it */
+  const PATTERNS = [
+    ['img-src', /<img[^>]+src=["'](https?:\/\/[^"']+)/gi],
+    ['script-src', /<script[^>]+src=["'](https?:\/\/[^"']+)/gi],
+    ['script-src', /\.src\s*=\s*['"`](https?:\/\/[^'"`]+)/gi],
+    ['style-src', /<link[^>]+rel=["']stylesheet["'][^>]+href=["'](https?:\/\/[^"']+)/gi],
+    ['connect-src', /fetch\(\s*['"`](https?:\/\/[^'"`]+)/gi],
+    ['frame-src', /<iframe[^>]+src=["'](https?:\/\/[^"']+)/gi],
+    ['form-action', /<form[^>]+action=["'](https?:\/\/[^"']+)/gi],
+    ['img-src', /url\(\s*["']?(https?:\/\/[^)"']+)/gi]
+  ];
+
+  const files = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html'))
+    .concat(fs.readdirSync(path.join(ROOT, 'assets')).filter((f) => /\.(js|css|html)$/.test(f)).map((f) => `assets/${f}`))
+    .concat(['pfa-search.js', 'pfa-forms.js', 'pfa-search.css']);
+
+  const unnamed = [];
+  for (const file of files) {
+    const source = read(file);
+    for (const [directive, pattern] of PATTERNS) {
+      for (const match of source.matchAll(pattern)) {
+        const host = match[1].replace(/^https?:\/\//, '').split('/')[0].toLowerCase();
+        if (!permits(directive, host)) unnamed.push(`${file}: ${directive} <- ${host}`);
+      }
+    }
+  }
+  assert.deepEqual([...new Set(unnamed)], [],
+    'these origins are loaded by a page but not named in the CSP, so enforcing it would break them');
+});
