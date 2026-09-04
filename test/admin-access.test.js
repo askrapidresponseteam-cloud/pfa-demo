@@ -159,6 +159,41 @@ test('inviting someone creates the account, sets the claims, and hands over a pa
   assert.equal((await run(handler, request({ method: 'POST', body: { action: 'set', email: 'nope', role: 'staff', modules: ['verify'] } }))).statusCode, 400);
 });
 
+test('giving somebody the panel is recorded, not only taking it away', async () => {
+  /* An audit log is read to find out who granted somebody access. Removal was
+     recorded and the grant was not, so it could not answer that question. */
+  const audit = require('../lib/admin-audit');
+  const written = [];
+  const real = audit.record;
+  audit.record = (who, event) => { written.push(event); return Promise.resolve(event); };
+  try {
+    const auth = fakeAuth([KARTHIK]);
+    const handler = peopleHandler(auth, ME);
+
+    await run(handler, request({ method: 'POST', body: { action: 'set', email: 'meena@pfa.org', name: 'Meena Iyer', role: 'staff', modules: ['submissions'] } }));
+    const created = written.find((e) => /access-(created|granted)/.test(e.action));
+    assert.ok(created, `a new administrator was created and nothing was recorded: ${JSON.stringify(written)}`);
+    assert.equal(created.module, 'people');
+    assert.equal(created.subject, 'meena@pfa.org');
+    assert.match(created.detail, /staff/);
+
+    /* And a change of role, which is the one an audit is most often read for. */
+    written.length = 0;
+    await run(handler, request({ method: 'POST', body: { action: 'set', email: 'meena@pfa.org', role: 'super' } }));
+    const changed = written.find((e) => e.action === 'access-changed');
+    assert.ok(changed, `an escalation to super admin was not recorded: ${JSON.stringify(written)}`);
+    assert.match(changed.detail, /super admin/);
+    assert.match(changed.detail, /was staff/, 'the record does not say what the access was before');
+
+    /* Removal was already recorded; it must stay that way. */
+    written.length = 0;
+    await run(handler, request({ method: 'POST', body: { action: 'remove', email: 'meena@pfa.org' } }));
+    assert.ok(written.some((e) => e.action === 'access-removed'), 'removal stopped being recorded');
+  } finally {
+    audit.record = real;
+  }
+});
+
 test('you cannot demote or remove yourself, and the last super admin cannot be removed', async () => {
   const auth = fakeAuth([KARTHIK, { uid: 'm1', email: 'meena@pfa.org', displayName: 'Meena', customClaims: { admin: true, role: 'staff', modules: ['verify'] }, metadata: {} }]);
   const handler = peopleHandler(auth, ME);

@@ -91,6 +91,36 @@ test.afterEach(() => {
   global.fetch = nativeFetch;
 });
 
+test('the 25 cap is per product, not per line, and one order cannot carry a thousand of them', () => {
+  /* validateLine allowed 25 of a variant and nothing stopped the same
+     variantId arriving on twenty lines, so the limit the bag advertises - and
+     that this route's own comment says it shares - was a formality. */
+  const { validatedCheckoutData, MAX_PER_VARIANT, MAX_LINES } = handler._private;
+  const base = { ...order };
+  const spread = (n, quantity) => Array.from({ length: n }, () => ({ variantId: '47369248768175', quantity }));
+
+  assert.throws(
+    () => validatedCheckoutData({ ...base, lines: spread(4, MAX_PER_VARIANT) }),
+    /quantity is invalid/,
+    'a hundred of one product went through on four lines'
+  );
+
+  /* Split across lines but within the cap, they are added into one line. */
+  const merged = validatedCheckoutData({ ...base, lines: [
+    { variantId: '47369248768175', quantity: 3 },
+    { variantId: '47369248768175', quantity: 4 },
+    { variantId: '47369248768176', quantity: 1 }
+  ] });
+  assert.equal(merged.lines.length, 2, 'the two lines for one variant were not added up');
+  assert.equal(merged.lines.find((l) => l.variantId === '47369248768175').quantity, 7);
+
+  assert.throws(
+    () => validatedCheckoutData({ ...base, lines: Array.from({ length: MAX_LINES + 1 }, (unused, i) => ({ variantId: String(47369248768175 + i), quantity: 1 })) }),
+    /too many products/,
+    'body.lines had no length at all'
+  );
+});
+
 test('builds a Storefront cart with buyer identity and a selected delivery address', () => {
   const input = handler._private.buildShopifyCartInput(order, 'pfa-checkout-test');
 
