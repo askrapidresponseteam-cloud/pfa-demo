@@ -164,6 +164,61 @@ test('Shopify redelivery of the same webhook id is a no-op', async () => {
   assert.equal(check.body.refundedTotal, 1650, 'refund counted once');
 });
 
+test('a create that arrives after the payment cannot take the order back to unpaid', async () => {
+  /* orders/create and orders/paid arrive in whichever order Shopify sends
+     them. A create generated while the payment was still pending carries
+     financial_status "pending"; arriving second it used to overwrite
+     CONFIRMED, and a shopper watching their confirmation page saw a paid
+     order say it was waiting for payment. */
+  await run(handler, webhook('order-paid', created));
+  const paid = await run(handler, webhook('order-created', { ...created, financial_status: 'pending' }));
+  assert.equal(paid.body.status, 'CONFIRMED', 'a stale create undid the payment');
+
+  const check = await run(status, statusRequest({ token: TOKEN }));
+  assert.equal(check.body.status, 'CONFIRMED');
+
+  /* It may still move an order forward: an unpaid order that is then paid. */
+  ORDERS.resetForTests();
+  await run(handler, webhook('order-created', { ...created, financial_status: 'pending' }));
+  const later = await run(handler, webhook('order-paid', created));
+  assert.equal(later.body.status, 'CONFIRMED', 'payment no longer registers');
+});
+
+test('the same refund under a second webhook id is still counted once', async () => {
+  /* refunds/create is the only handler that adds rather than recomputes, so
+     it is the only one a replay can double. Shopify's own refund id decides. */
+  await run(handler, webhook('order-created', created));
+  await run(handler, webhook('refund-created', refund, { webhookId: 'first-delivery' }));
+  await run(handler, webhook('refund-created', refund, { webhookId: 'second-delivery' }));
+  const check = await run(status, statusRequest({ id: 'PFA-ST-1191', contact: BUYER }));
+  assert.equal(check.body.refundedTotal, 1650, 'one refund was counted twice');
+
+  /* A genuinely different refund still adds. */
+  await run(handler, webhook('refund-created', { ...refund, id: 666666, transactions: [{ amount: '100.00', currency: 'INR', status: 'success' }] }));
+  const both = await run(status, statusRequest({ id: 'PFA-ST-1191', contact: BUYER }));
+  assert.equal(both.body.refundedTotal, 1750, 'a second refund was swallowed');
+});
+
+test('a delivery whose write failed is retried, not answered "duplicate"', async () => {
+  /* The marker was written before the record. A write that then failed left
+     the claim standing, so Shopify's retry was told the event was already
+     handled and a paid order nobody had been told about was lost for good.
+     The marker now says whether the work actually landed. */
+  await run(handler, webhook('order-created', created));
+
+  const store = ORDERS._private || {};
+  assert.ok(typeof store.markEventSeen === 'function', 'markEventSeen is not reachable for this test');
+
+  /* First delivery claims the id, and the work does not land. */
+  assert.equal(await store.markEventSeen('flaky-1'), false, 'the first delivery should not be a duplicate');
+  /* The retry finds a claim with no receipt on it and is let through. */
+  assert.equal(await store.markEventSeen('flaky-1'), false, 'the retry was turned away and the event was lost');
+
+  /* Once the work lands, a redelivery is a duplicate again. */
+  await store.markEventApplied('flaky-1');
+  assert.equal(await store.markEventSeen('flaky-1'), true, 'a completed event is being applied twice');
+});
+
 test('topic from X-Shopify-Topic header wins over the path', async () => {
   const response = await run(handler, webhook('order-created', cancelled, { topic: 'orders/cancelled' }));
   assert.equal(response.body.status, 'CANCELLED');
