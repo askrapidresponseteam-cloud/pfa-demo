@@ -1,2 +1,0 @@
-
-(function(){'use strict';var P=window.PFA;P.qa('form[data-reference-form]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();if(!P.validate(f))return;var ref=P.saveSubmission(f.dataset.referenceForm||'PFA-F',P.formData(f));var out=P.q('.form-success',f.parentElement)||P.q('#formSuccess');if(out){out.classList.add('show');P.renderRef(out,ref,f.dataset.success||'Received and held on record.')}f.reset()})})})();

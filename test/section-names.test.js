@@ -55,14 +55,6 @@ test('the old URL redirects rather than 404s', () => {
   }
 });
 
-test('the label and the slug agree, which they did not before', () => {
-  /* assets/site.js said title "The Wire", href "newsroom.html". */
-  const siteJs = fs.readFileSync(path.join(ROOT, 'assets', 'site.js'), 'utf8');
-  const entry = siteJs.match(/\{type:'Page',title:'([^']*)',body:'[^']*',href:'newsroom\.html'\}/);
-  assert.ok(entry, 'the site.js entry must still be there');
-  assert.equal(entry[1], 'Newsroom');
-});
-
 test('someone who remembers either old name still finds the page', () => {
   const search = fs.readFileSync(path.join(ROOT, 'pfa-search.js'), 'utf8');
   const row = search.match(/\{ t: 'Newsroom',[\s\S]*?k: '([^']*)'/);

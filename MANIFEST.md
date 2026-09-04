@@ -45,11 +45,9 @@ merchant for the store (Shopify checkout → seller's Razorpay). `lib/payment.js
 rejects any attempt to push a store item through CCAvenue.
 
 ### Client-side logic in `assets/`
-The browser-side halves of those journeys: cart and storage kernel (`site.js`),
-shared field validation (`field-rules.js`), checkout, product, order and order
-tracking, Colony Caregiver Card, journey scaffolding
-(`journey-core.js`), Firestore data layer (`circle.js`), QR, photo capture and
-cutout, geolocation.
+The browser-side halves of those journeys: shared field validation
+(`field-rules.js` with `field-validate.js`), the bag, the chrome, the Colony
+Caregiver Card, QR, photo capture and cutout.
 
 ### `_inline-extracts/`
 Several pages keep their behaviour in an inline `<script>` instead of in
@@ -81,9 +79,8 @@ not for deployment. To run or deploy, merge both trees back over each other.
 
 | File | Note |
 | --- | --- |
-| `assets/field-rules.js` | **`require()`d by `lib/payment.js`, `lib/firebase.js`, `lib/submissions.js`, `lib/caregiver.js`** *and* `<script>`-tagged by 47 pages. It is deliberately one file: the whole point is that the form and the API cannot disagree about what a valid Indian mobile number is. Do not copy it into the UI zip — keep the single copy here. |
-| `assets/site.js` | loaded by 46 pages; holds cart, storage, validation and submission helpers |
-| `assets/pfa-location.js` | loaded by 36 pages |
+| `assets/field-rules.js` | **`require()`d by `lib/payment.js`, `lib/firebase.js`, `lib/submissions.js`, `lib/submission-fields.js`, `lib/caregiver.js` and the routes** *and* `<script>`-tagged by the ten pages that take an entry. It is deliberately one file: the whole point is that the form and the API cannot disagree about what a valid Indian mobile number is. Do not copy it into the UI zip — keep the single copy here. |
+| `assets/field-validate.js` | applies those rules in the browser: keystroke filtering, the stored form on blur, length caps, and a field-specific message in whichever error element the page uses. Loaded immediately after `field-rules.js`. |
 
 Tests will not pass in isolation: `test/site-integrity.test.js`,
 `test/cta-coherence.test.js`, `test/admin-page.test.js`, `test/help-page.test.js`,

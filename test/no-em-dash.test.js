@@ -52,7 +52,8 @@ test('no page shows an em dash to a visitor', () => {
 test('the scripts that write copy into a page do not write one either', () => {
   /* The shop, the cart and the forms all build markup in JavaScript, so a
      dash added there reaches a visitor without ever appearing in a page. */
-  const files = ['pfa-search.js', 'pfa-forms.js', 'assets/bag.js', 'assets/store.js', 'assets/product.js'];
+  const files = ['pfa-search.js', 'pfa-forms.js', 'assets/bag.js', 'assets/field-validate.js',
+    'assets/caregiver-card.js', 'assets/chrome.js'];
   const offenders = [];
   for (const file of files) {
     const full = path.join(ROOT, file);

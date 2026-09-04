@@ -299,9 +299,12 @@ the seller's site.
   product, and injects into `product.html`: title/description, Open Graph
   image + price (WhatsApp previews), JSON-LD (Google), the product JSON, and
   up to 8 related products. Cached 10 min at the edge.
-- `assets/product.js` renders gallery, variants, stock, quantity, Add to bag /
-  Buy now (same bag as the store), prescription notice, the "product label"
-  panel, description, share, related.
+- `product.html` carries its own script for gallery, variants, stock, quantity,
+  Add to bag / Buy now (the same bag as the store, through `assets/bag.js`),
+  prescription notice, the "product label" panel, description, share, related.
+  There was an `assets/product.js` that did this for the other half of the
+  project; it rendered `pd-*` markup and linked to a `store.html` that does not
+  exist here, was loaded by no page, and has been removed.
 - `store.html` accepts `?bag=1`, `?checkout=1`, `?category=<id>` so the product
   page can hand back to the store.
 - `product.html` is a template: keep `<!--PFA_HEAD_START-->…<!--PFA_HEAD_END-->`
@@ -361,7 +364,6 @@ New collections added 22 Aug: `storeOrders` (admin-readable),
 | `lib/routes/location-lookup.js` | Reverse geocode for the checkout's "use my location" button |
 | `lib/routes/paws-catalog.js` | Shopify → catalogue (public or Admin API) |
 | `lib/routes/product-page.js` + `product.html` | Server-rendered `/products/<handle>` pages (rewrite in `vercel.json`; `includeFiles` ships the template with the function) |
-| `assets/product.js` | Product page client: gallery, variants, bag (shares `pfa_shopify_cart_v1` with the store) |
 | `assets/track-order.js` | Tracking page (reads API) |
 | `test/shopify-webhooks.test.js` | Full order lifecycle tests |
 | `firestore.rules` | Access rules incl. new store collections |
