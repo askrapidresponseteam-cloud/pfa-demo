@@ -488,14 +488,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 
         <div class="step" data-step="Case">
           <h3>A poisoning, and a refusal.</h3>
-          <p class="ask">A colony of eleven dogs is poisoned overnight in a district of your Zone; four are dead and a feeder has photographs. The SHO refuses to register an FIR and says it is a municipal matter. What do you do in the first 48 hours? Be concrete: who you call, what you file, what you secure.</p>
-          <div class="field"><textarea id="q1" name="q1" required maxlength="900" placeholder="Steps, in order."></textarea><p class="chars" data-count-for="q1">0 / 900</p><p class="err" hidden></p></div>
+          <p class="ask" id="q1Ask">A colony of eleven dogs is poisoned overnight in a district of your Zone; four are dead and a feeder has photographs. The SHO refuses to register an FIR and says it is a municipal matter. What do you do in the first 48 hours? Be concrete: who you call, what you file, what you secure.</p>
+          <div class="field"><textarea id="q1" name="q1" required maxlength="900" aria-labelledby="q1Ask" placeholder="Steps, in order."></textarea><p class="chars" data-count-for="q1">0 / 900</p><p class="err" hidden></p></div>
         </div>
 
         <div class="step" data-step="Zone plan">
           <h3>Your first ninety days.</h3>
-          <p class="ask">Name the districts in your Zone where PFA has no first responder today, as far as you know, and say how you would get one in place in each within ninety days. Names, not principles.</p>
-          <div class="field"><textarea id="q2" name="q2" required maxlength="900" placeholder="District, who, how."></textarea><p class="chars" data-count-for="q2">0 / 900</p><p class="err" hidden></p></div>
+          <p class="ask" id="q2Ask">Name the districts in your Zone where PFA has no first responder today, as far as you know, and say how you would get one in place in each within ninety days. Names, not principles.</p>
+          <div class="field"><textarea id="q2" name="q2" required maxlength="900" aria-labelledby="q2Ask" placeholder="District, who, how."></textarea><p class="chars" data-count-for="q2">0 / 900</p><p class="err" hidden></p></div>
           <div class="field"><label for="link">Anything that shows your work <small>(optional: a news link, a case, a page)</small></label><input id="link" name="link" type="url" inputmode="url" placeholder="https://"><p class="err" hidden></p></div>
           <label class="check"><input type="checkbox" id="consent"> <span>What I have written is true. PFA may contact me about this application and check what I have said with the Unit I named.</span></label>
           <p class="err" id="consentErr" hidden></p>
