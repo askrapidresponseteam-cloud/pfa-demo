@@ -121,3 +121,56 @@ test('a provider failure is reported plainly and never leaks its body', async ()
     } finally { global.fetch = realFetch; }
   });
 });
+
+/* ---- what a paid endpoint has to refuse -------------------------------- */
+
+/* A JPEG, a PNG and a WebP by their first bytes, and one blob that is none of
+   them. The route reads the bytes rather than the data URL's claim. */
+const JPEG = Buffer.from([0xFF, 0xD8, 0xFF, 0xE0, 0, 0x10, 0x4A, 0x46]).toString('base64');
+const NOT_AN_IMAGE = Buffer.from('MZ\u0090\u0000\u0003 this is not a photograph at all').toString('base64');
+
+test('a payload that is not a photograph never reaches the provider', async () => {
+  await withEnv({ PHOTO_CUTOUT_ENDPOINT: ENDPOINT, PHOTO_CUTOUT_KEY: 'k' }, async () => {
+    const handler = load();
+    handler._private.resetForTests();
+    const calls = [];
+    const nativeFetch = global.fetch;
+    global.fetch = async (...args) => { calls.push(args); throw new Error('the provider must not be called'); };
+    try {
+      const res = reply();
+      await handler({ method: 'POST', body: { image: 'data:image/png;base64,' + NOT_AN_IMAGE }, headers: {} }, res);
+      assert.equal(res.out.status, 415, 'anything is a photograph if nobody looks at the bytes');
+      assert.equal(calls.length, 0, 'a paid call was made for a payload that is not an image');
+      assert.doesNotMatch(JSON.stringify(res.out.body), /MZ|not a photograph/, 'the payload came back in the answer');
+    } finally { global.fetch = nativeFetch; }
+  });
+});
+
+test('one connection cannot spend the photograph budget in a loop', async () => {
+  await withEnv({ PHOTO_CUTOUT_ENDPOINT: ENDPOINT, PHOTO_CUTOUT_KEY: 'k' }, async () => {
+    const handler = load();
+    handler._private.resetForTests();
+    const nativeFetch = global.fetch;
+    let paid = 0;
+    global.fetch = async () => {
+      paid += 1;
+      return { ok: true, status: 200, arrayBuffer: async () => Buffer.from([0x89, 0x50, 0x4E, 0x47]) };
+    };
+    try {
+      const request = () => ({ method: 'POST', body: { image: 'data:image/jpeg;base64,' + JPEG }, headers: { 'x-forwarded-for': '203.0.113.20' } });
+      let refused = 0;
+      for (let i = 0; i < handler._private.LIMIT + 3; i += 1) {
+        const res = reply();
+        await handler(request(), res);
+        if (res.out.status === 429) refused += 1;
+      }
+      assert.ok(refused >= 2, 'the endpoint took every request without ever braking');
+      assert.equal(paid, handler._private.LIMIT, 'more calls were paid for than the limit allows');
+
+      /* Another visitor is not punished for the first one's loop. */
+      const other = reply();
+      await handler({ method: 'POST', body: { image: 'data:image/jpeg;base64,' + JPEG }, headers: { 'x-forwarded-for': '203.0.113.21' } }, other);
+      assert.notEqual(other.out.status, 429);
+    } finally { global.fetch = nativeFetch; handler._private.resetForTests(); }
+  });
+});
