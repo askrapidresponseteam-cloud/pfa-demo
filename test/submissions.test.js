@@ -172,6 +172,35 @@ test('repeated lookups from one connection are slowed down', async () => {
   S.resetForTests();
 });
 
+test('sending is braked too, on its own counter', async () => {
+  S.resetForTests();
+  /* Looking a reference up and sending a form must not share a counter: a
+     person refreshing the status of the report they just filed would then find
+     that the refreshing had used up their ability to file another. */
+  for (let i = 0; i < 40; i += 1) S.rateLimited('203.0.113.11', NOW + i);
+  assert.equal(S.writeLimited('203.0.113.11', NOW + 41), false, 'lookups must not close the sending path');
+
+  for (let i = 0; i < S.WRITE_LIMIT; i += 1) {
+    assert.equal(S.writeLimited('203.0.113.12', NOW + i), false, `send ${i + 1} was refused`);
+  }
+  assert.equal(S.writeLimited('203.0.113.12', NOW + 99), true, 'a flood is not braked');
+  assert.equal(S.writeLimited('203.0.113.13', NOW + 99), false, 'another connection is unaffected');
+  assert.equal(S.writeLimited('203.0.113.12', NOW + 16 * 60 * 1000), false, 'and the window passes');
+
+  /* And the route actually applies it, rather than merely exporting it. */
+  const db = fakeDb();
+  const handler = handlerWith(db);
+  const body = { kind: 'PFA-C', data: { summary: 'Kittens abandoned near the market', contact: 'asha@example.com' } };
+  let refused = null;
+  for (let i = 0; i < S.WRITE_LIMIT + 2 && !refused; i += 1) {
+    const res = await run(handler, request({ body, headers: { 'x-forwarded-for': '203.0.113.14' } }));
+    if (res.statusCode === 429) refused = res;
+  }
+  assert.ok(refused, 'the endpoint took every request without ever braking');
+  assert.match(refused.body.error, /call 112/, 'a person in a hurry is told what to do instead');
+  S.resetForTests();
+});
+
 test('an acknowledgement goes to the email given, and never delays or fails the submission', async () => {
   const sent = [];
   const db = fakeDb();

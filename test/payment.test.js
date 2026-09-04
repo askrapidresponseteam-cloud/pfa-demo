@@ -19,6 +19,27 @@ test('donation is parsed with server-validated amount and donor metadata', () =>
   assert.equal(parsed.merchantValues.merchant_param3, 'donate');
 });
 
+test('the PAN a donor gives for their 80G certificate reaches the receipt', () => {
+  /* It was typed, checked in the page, posted, and dropped: parseDonation
+     never read it, so payment/response.js put an empty PAN on every receipt
+     and the "including for your 80G certificate" line never appeared. */
+  const parsed = parsePaymentRequest({
+    type: 'donate', amount: '365', ...customer, address: '16 MG Road, Udupi', terms: 'yes', pan: 'abcde1234f'
+  });
+  assert.equal(parsed.customer.pan, 'ABCDE1234F', 'the PAN is kept, upper case, as it is printed');
+  assert.equal(Object.keys(parsed.merchantValues).some((k) => /pan/i.test(k)), false,
+    'a donor tax number has no business going to CCAvenue');
+
+  assert.throws(
+    () => parsePaymentRequest({ type: 'donate', amount: '365', ...customer, address: '16 MG Road, Udupi', terms: 'yes', pan: 'NOTAPAN' }),
+    /five letters, four digits/
+  );
+
+  /* Optional: leaving it blank is not an error. */
+  const without = parsePaymentRequest({ type: 'donate', amount: '365', ...customer, address: '16 MG Road, Udupi', terms: 'yes' });
+  assert.equal(without.customer.pan, '');
+});
+
 test('Give/Send amount is recomputed from the fixed catalog', () => {
   const parsed = parsePaymentRequest({
     type: 'send', ...customer, state: 'Karnataka', district: 'Udupi', locality: 'Koteshwara', terms: 'yes',
