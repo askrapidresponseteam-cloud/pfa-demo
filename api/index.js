@@ -111,7 +111,11 @@ function routeKey(request) {
 
 module.exports = async function handler(request, response) {
   const key = routeKey(request);
-  const load = LOADERS[key];
+  // hasOwnProperty, not LOADERS[key]: a plain object answers for every name on
+  // Object.prototype, so /api/constructor and /api/__proto__ used to find a
+  // "handler" that was not one and throw, where every other unknown route
+  // returns the JSON 404 below.
+  const load = Object.prototype.hasOwnProperty.call(LOADERS, key) ? LOADERS[key] : null;
   if (!load) {
     response.statusCode = 404;
     response.setHeader('Content-Type', 'application/json; charset=utf-8');
