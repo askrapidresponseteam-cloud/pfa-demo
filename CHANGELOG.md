@@ -1,3 +1,17 @@
+## v1.267
+
+- **A cart line walks to its product page.** The drawer always held each
+  line's handle in BY_ID and never spent it: tapping an item in the cart
+  went nowhere. The tile and the name now link through /products/<handle> -
+  the same server-rendered door the grid cards have used all along - while
+  the quantity steppers stay outside both links, so a minus tap can never
+  navigate. The tile's link is decoration for the pointer and sits out of
+  the tab order, since the name beside it is the same door with a proper
+  label; a line whose product has no handle stays plain rather than linking
+  nowhere. product.html and quiz.html rebuilt, as their contracts require.
+
+Tests: 782 passing.
+
 ## v1.266
 
 - **The door's contrast repaired with the site's own proven numbers.**

@@ -399,3 +399,19 @@ test('All and Everything clear the shelf and the brand; Dogs, Cats and the categ
     'the all chips reset the narrowing that has no button of its own');
   assert.ok(!/q = ''/.test(body), 'typed searches are never cleared for the visitor');
 });
+
+test('a cart line walks to its product page, and the steppers never do', () => {
+  /* The drawer always held each line's handle in BY_ID and never spent it:
+     tapping an item in the cart went nowhere (asked 4 Sep 2026). The tile
+     and the name now link through /products/<handle>, the same door the
+     grid cards use; the quantity buttons stay outside both links, so a
+     minus tap can never navigate. */
+  const shop2 = fs.readFileSync(`${__dirname}/../pfa-shop.html`, 'utf8');
+  const at = shop2.indexOf("var door = x.handle ?");
+  const line = shop2.slice(at, shop2.indexOf("line__right", at));
+  assert.match(line, /'\/products\/' \+ encodeURIComponent\(x\.handle\)/, 'the same door the grid uses');
+  assert.match(line, /line__name">' \+ \(door \? '<a href="' \+ door \+ '">'/, 'the name is the labelled link');
+  assert.match(line, /tabindex="-1" aria-hidden="true"/, 'the tile link stays out of the tab order');
+  const steppers = shop2.slice(shop2.indexOf('line__right', shop2.indexOf('var door')), shop2.indexOf('</li>', shop2.indexOf('var door')));
+  assert.ok(!/href=/.test(steppers), 'nothing in the stepper column navigates');
+});

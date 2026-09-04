@@ -56,7 +56,7 @@
 }
 </style>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.266">
+<meta name="pfa-build" content="v1.267">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shop · People for Animals</title>
 <meta name="description" content="Food, meds and gear for the animal you adopted. Everything listed is checked so the food is vegetarian, and every order funds rescue, treatment and lifelong care.">
@@ -1726,9 +1726,17 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
       '<ul>' + ids.map(function(id){
         var x = BY_ID[id];
         if (!x) return '';
+        /* The tile and the name walk to the product page, the same
+           /products/<handle> door the grid cards use - the drawer always
+           held the handle in BY_ID and never spent it (asked 4 Sep 2026).
+           The steppers stay outside the links, so quantity taps never
+           navigate; the tile's link is decoration for the pointer and
+           hidden from the tab order, since the name beside it is the same
+           door with a proper label. A line without a handle stays plain. */
+        var door = x.handle ? '/products/' + encodeURIComponent(x.handle) : '';
         return '<li class="line">' +
-          '<div class="line__tile">' + tile(x, 120) + '</div>' +
-          '<div><div class="line__name">' + esc(x.n) + '</div><div class="line__sub">' + esc(x.s) + '</div></div>' +
+          '<div class="line__tile">' + (door ? '<a href="' + door + '" tabindex="-1" aria-hidden="true" style="display:block;height:100%">' + tile(x, 120) + '</a>' : tile(x, 120)) + '</div>' +
+          '<div><div class="line__name">' + (door ? '<a href="' + door + '">' + esc(x.n) + '</a>' : esc(x.n)) + '</div><div class="line__sub">' + esc(x.s) + '</div></div>' +
           '<div class="line__right"><span style="font-size:13px">' + money(x.p * cart[id]) + '</span>' +
             '<span class="mini"><button data-dec="' + id + '" aria-label="Remove one">\u2212</button>' +
             '<span>' + cart[id] + '</span>' +
