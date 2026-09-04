@@ -70,7 +70,7 @@ async function seeded() {
   const db = fakeDb();
   const intake = createIntake({ getDb: () => db, deliver: async () => ({}), isConfigured: () => false, now: () => NOW - 3600000 });
   await run(intake, request({ body: { kind: 'PFA-C', data: { summary: 'Dog chained on a terrace with no water', name: 'asha kumar', contact: 'asha@example.com' } } }));
-  await run(intake, request({ body: { kind: 'PFA-Q', data: { question: 'Do you take in injured birds at the Delhi unit?', contact: '9876543210' } } }));
+  await run(intake, request({ body: { kind: 'PFA-Q', data: { question: 'Do you take in injured birds at the Delhi unit?', topic: 'Something else', name: 'ravi menon', contact: '9876543210' } } }));
   return db;
 }
 

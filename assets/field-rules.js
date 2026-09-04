@@ -505,6 +505,35 @@
         return null;
       }
     },
+    /* Free text with no minimum: a note at the end of a form, an answer to an
+       application question, an aside. longText demands ten characters because
+       a rescue report that short is not a report; "Yes, twice." is a whole
+       answer to "have you done this before" and refusing it would be absurd. */
+    note: {
+      filter: stripMarkup,
+      normalise: squashLines,
+      max: 2000,
+      check: function (v) {
+        if (v.length > 2000) return 'Keep this under 2000 characters.';
+        if (!LETTER.test(v)) return 'Use words here, not just numbers or symbols.';
+        return null;
+      }
+    },
+    /* A small count someone estimates: how many animals they feed. Digits
+       only, and bounded, so "abcd" and 99999999 are both refused. */
+    count: {
+      filter: function (v) { return digitsOnly(v).slice(0, 4); },
+      normalise: digitsOnly,
+      max: 4,
+      check: function (v) {
+        if (!/^\d+$/.test(v)) return 'Use digits only, for example 12.';
+        if (Number(v) > 9999) return 'Enter a number below 10000.';
+        return null;
+      }
+    },
+    /* A value chosen from a list rather than typed. The list itself is not
+       here: it belongs to the form, and is passed to checkField as `options`
+       so the browser and the API judge a choice against the same set. */
     choice: {
       filter: function (v) { return v; },
       normalise: squash,
@@ -588,7 +617,29 @@
 
     /* The emergency handover form: written under pressure, so these accept a
        fragment ("10 minutes ago") rather than demanding a sentence. */
-    caseEvent: 'shortText', caseTime: 'shortValue'
+    caseEvent: 'shortText', caseTime: 'shortValue',
+
+    /* ---- the rest of what the public forms actually post ----------------
+       Every key below was read off the pages themselves. A key that is not
+       in this map reaches the API checked for length and nothing else, which
+       is how a cruelty report's own account of what happened, the place it
+       happened and the person it names all used to arrive unexamined. */
+
+    /* report.html */
+    what: 'longText', location: 'locality', accused: 'shortValue', when: 'shortValue',
+    /* get-involved.html, events.html, wall.html, product.html */
+    notes: 'note', animals: 'count',
+    /* careers.html: the application's own answers */
+    background: 'note', unit: 'shortValue', zone: 'shortValue', roleId: 'shortValue',
+    timeToApply: 'shortValue',
+    'Q1 Poisoning and FIR refusal': 'note',
+    'Q2 First ninety days': 'note',
+
+    /* Chosen from a list, never typed. The allowed set travels with the
+       check: see lib/submission-fields.js for the server's copy and the test
+       that holds it to what the pages offer. */
+    animal: 'choice', urgency: 'choice', topic: 'choice', wall: 'choice',
+    travel: 'choice', pfaMember: 'choice', type: 'choice'
   };
 
   function ruleFor(fieldName, type) {
@@ -622,6 +673,16 @@
       if (typed && rule) return rule.check(typed) || 'Check this entry.';
       if (typed) return null;
       return opts.required ? (opts.emptyMessage || 'This is needed.') : null;
+    }
+    /* A value chosen from a list is judged against the list, not against a
+       rule for typed text: "Cow or buffalo" is a perfectly good answer and no
+       place-name rule would have it. Anything outside the list is refused,
+       which is what stops a bypassed form posting its own options. */
+    if (opts.options && opts.options.length) {
+      for (var i = 0; i < opts.options.length; i++) {
+        if (String(opts.options[i]) === String(value)) return null;
+      }
+      return opts.optionMessage || 'Choose one of the options offered.';
     }
     if (!rule) {
       return String(value).length > 2000 ? 'Keep this under 2000 characters.' : null;

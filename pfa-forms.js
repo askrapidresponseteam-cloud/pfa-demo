@@ -87,8 +87,11 @@
         if (timer) clearTimeout(timer);
         var payload = result.payload || {};
         if (!result.ok) {
-          /* The server names the field it refused, so say which one. */
-          var first = Array.isArray(payload.errors) && payload.errors[0];
+          /* The server names the field it refused, so say which one. It sends
+             them as `fields` (see test/submissions.test.js, which pins that
+             name); this read `errors`, so every refusal reached the person as
+             the generic "check the form" line and never said which box. */
+          var first = Array.isArray(payload.fields) && payload.fields[0];
           throw new Error(first && first.message ? first.message
             : payload.error || 'That could not be sent. Please check the form and try again.');
         }
