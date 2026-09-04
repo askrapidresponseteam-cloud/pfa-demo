@@ -439,6 +439,18 @@
         return MEMBER_ID.test(v) ? null : 'Check the Patron number, for example PFA-MBR-4K7M2QX9.';
       }
     },
+    /* A PAN, for a donation receipt: five letters, four digits, a letter.
+       donate.html checked this shape in the page and the API did not check it
+       at all, so the one place it mattered - what gets printed on an 80G
+       receipt - was guarded only by the browser. */
+    pan: {
+      filter: function (v) { return String(v == null ? '' : v).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10); },
+      normalise: function (v) { return squash(v).toUpperCase().replace(/[^A-Z0-9]/g, ''); },
+      max: 10,
+      check: function (v) {
+        return /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(v) ? null : 'A PAN is five letters, four digits and a letter, like ABCDE1234F.';
+      }
+    },
     handle: {
       filter: function (v) { return String(v == null ? '' : v).toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20); },
       normalise: function (v) { return String(v == null ? '' : v).toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20); },
@@ -639,7 +651,23 @@
        check: see lib/submission-fields.js for the server's copy and the test
        that holds it to what the pages offer. */
     animal: 'choice', urgency: 'choice', topic: 'choice', wall: 'choice',
-    travel: 'choice', pfaMember: 'choice', type: 'choice'
+    travel: 'choice', pfaMember: 'choice', type: 'choice',
+
+    /* ---- controls the pages identify by id rather than by name ----------
+       get-involved.html and events.html prefix theirs, pfa-shop.html's
+       checkout uses co*, and every follow-up box is fRef/fContact. Without
+       these the browser had no rule to apply to a volunteer's name, an event
+       town or a delivery PIN, so nothing was filtered as it was typed. */
+    volName: 'personName', volCity: 'place', volWhen: 'shortValue', volNotes: 'note',
+    evName: 'personName', evCity: 'place', evPlace: 'locality', evNotes: 'note',
+    coName: 'personName', coCity: 'place', coPin: 'pin',
+    fRef: 'reference', fContact: 'contact',
+    cId: 'cardId',
+
+    /* wall.html's note, and donate.html's own boxes */
+    note: 'note', pan: 'pan',
+    other: 'amount', usdOther: 'amount',
+    fDist: 'place', fVill: 'locality', fPin: 'pin'
   };
 
   function ruleFor(fieldName, type) {
