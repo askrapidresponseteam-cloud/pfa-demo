@@ -14,6 +14,15 @@
    Curated rows in pfa-search.js win on duplicate URLs. Zero dependencies. */
 'use strict';
 var fs = require('fs'), path = require('path');
+/* The pages a stranger may be shown, and the paths that are never a result.
+   Taken from scripts/build-search-index.js rather than written again here:
+   that file already carries the list, and the comment above it records why -
+   this index had walked into admin.html and put four rows in search, one of
+   them quoting the signed-in panel's own headings back at a stranger.
+   pfa-search.js filters those rows out at runtime, but the file this writes is
+   served at /search-index.json and anyone may read it, so the panel's headings
+   must not be in it in the first place. */
+var SHARED = require('./scripts/build-search-index.js');
 var dir = path.resolve(process.argv[2] || '.');
 var rows = [];
 
@@ -35,7 +44,12 @@ function keywords(t, n) {
   return Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, n).join(' ');
 }
 var seen = {};
-function add(r) { if (r.u && r.t && !seen[r.u]) { seen[r.u] = 1; rows.push(r); } }
+function add(r) {
+  if (!r.u || !r.t || seen[r.u]) return;
+  if (SHARED.isPrivatePath(r.u)) return;
+  seen[r.u] = 1;
+  rows.push(r);
+}
 
 /* ---- laws.html: one row per question ------------------------------------- */
 (function () {
@@ -65,7 +79,9 @@ function add(r) { if (r.u && r.t && !seen[r.u]) { seen[r.u] = 1; rows.push(r); }
    section itself.                                                          */
 
 var SECTION = { laws: 'Laws', units: 'Places', events: 'Places', donate: 'Do something', 'pfa-shop': 'Shop', founder: 'About', index: 'Explore' };
-fs.readdirSync(dir).filter(function (f) { return /\.html$/i.test(f) && !/^(search|submission-collage)\.html$/.test(f); }).sort().forEach(function (file) {
+fs.readdirSync(dir).filter(function (f) {
+  return /\.html$/i.test(f) && !SHARED.EXCLUDE.has(f) && !SHARED.isPrivatePath(f);
+}).sort().forEach(function (file) {
   var html = clean(read(file)), base = file.replace(/\.html$/i, ''), section = SECTION[base] || 'Explore';
   var title = text((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [, base])[1]).replace(/\s*[|·]\s*People for Animals$/i, '');
   var desc = attr((html.match(/<meta[^>]+name=["']description["'][^>]*>/i) || [''])[0], 'content');

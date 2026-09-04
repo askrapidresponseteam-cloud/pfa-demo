@@ -76,6 +76,30 @@ test('the search index and sitemap cover every public page', () => {
   assert.match(robots, /Sitemap: https:\/\/peopleforanimalsindia\.org\/sitemap\.xml/);
 });
 
+test('the index the browser downloads carries nothing behind a sign-in', () => {
+  /* search-index.json is served at its own URL and anyone may read it. It is
+     built by build-index.js, which filtered only search.html and
+     submission-collage.html - so a rebuild put admin.html back in, headings and
+     all. pfa-search.js drops those rows when it renders, but that only keeps
+     them out of the results, not out of the file. The builder now shares
+     scripts/build-search-index.js's EXCLUDE and PRIVATE. */
+  const shared = require('../scripts/build-search-index.js');
+  const rows = JSON.parse(fs.readFileSync(path.join(ROOT, 'search-index.json'), 'utf8'));
+  assert.ok(Array.isArray(rows) && rows.length > 100, 'the shipped index is empty or the wrong shape');
+
+  const leaked = rows.filter((r) => shared.isPrivatePath(r.u));
+  assert.deepEqual(leaked.map((r) => r.u), [], 'these are behind a sign-in and are in a public file');
+
+  const excluded = rows.filter((r) => shared.EXCLUDE.has(String(r.u).split('#')[0]));
+  assert.deepEqual(excluded.map((r) => r.u), [], 'these pages are excluded from search and were indexed anyway');
+
+  /* And the builder itself, so the file cannot simply be cleaned by hand while
+     the next rebuild puts it back. */
+  const builder = fs.readFileSync(path.join(ROOT, 'build-index.js'), 'utf8');
+  assert.match(builder, /isPrivatePath/, 'build-index.js does not consult the private-path list');
+  assert.match(builder, /SHARED\.EXCLUDE/, 'build-index.js does not consult the excluded-page list');
+});
+
 test('the word for the card is the same everywhere a person meets it', () => {
   /* This test was itself a casualty. The card was renamed by blind text
      replacement, which turned 'Colony caregiver' in the renderer into
