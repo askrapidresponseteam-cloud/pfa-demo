@@ -150,6 +150,22 @@ test('the name forms people actually have still go through', () => {
   assert.equal(stored('राजेश कुमार'), 'राजेश कुमार');
 });
 
+test('a field that asks for a city and a state accepts the comma between them', () => {
+  /* careers.html's box is labelled "City and State you are based in" and shows
+     "Lucknow, Uttar Pradesh" as the example. The comma was not in the place
+     rule's character set, so an applicant who typed what the page asked for
+     had it deleted as they typed and, on a direct post, was refused with
+     "Use letters only". */
+  assert.equal(R.checkField('city', 'Lucknow, Uttar Pradesh', { required: true }), null);
+  assert.equal(R.normaliseField('city', 'lucknow, uttar pradesh'), 'Lucknow, Uttar Pradesh');
+  assert.equal(R.filterField('city', 'Lucknow, Uttar Pradesh'), 'Lucknow, Uttar Pradesh');
+
+  /* and it is still tidied, not merely tolerated */
+  assert.equal(R.normaliseField('city', 'Bengaluru,,,'), 'Bengaluru');
+  assert.equal(R.normaliseField('city', ',Bengaluru'), 'Bengaluru');
+  assert.equal(R.checkField('city', 'Sector 12', { required: true }), 'A place name cannot contain numbers.');
+});
+
 test('place names get the same treatment as names', () => {
   const stored = (v) => R.checkField('city', v, { required: true }) ? null : R.normaliseField('city', v);
 

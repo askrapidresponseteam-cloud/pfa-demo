@@ -163,11 +163,11 @@
      dropped from the ends, with the exception of a closing bracket that has an
      opening one to answer to (Jammu (J&K)). */
   function tidyPlace(value) {
-    var s = squash(value).replace(/([.'&()-])\1+/g, '$1');
+    var s = squash(value).replace(/([,.'&()-])\1+/g, '$1');
     var before;
     do {
       before = s;
-      s = s.replace(re("^[ .'&()\\-]+"), '').replace(re("[ .'&(\\-]+$"), '');
+      s = s.replace(re("^[ ,.'&()\\-]+"), '').replace(re("[ ,.'&(\\-]+$"), '');
       if (s.charAt(s.length - 1) === ')' && s.indexOf('(') < 0) s = s.slice(0, -1);
     } while (s !== before);
     return squash(s);
@@ -238,9 +238,14 @@
   }
 
   /* A town, district or state: like a name, but ampersands and brackets do
-     occur (Dadra & Nagar Haveli). Still no digits. */
-  var PLACE_OK = re('^[' + L + '][' + L + " .'&()\\-]*$");
-  var PLACE_CHARS = re('[^' + L + " .'&()\\-]", 'g');
+     occur (Dadra & Nagar Haveli). A comma occurs too, because several fields
+     ask for more than one - careers.html's is labelled "City and State you are
+     based in" and shows "Lucknow, Uttar Pradesh" as the example. The comma was
+     not in this set, so an applicant who typed what the page asked for was
+     refused, in the browser by having it silently deleted and at the API with
+     "Use letters only". Still no digits. */
+  var PLACE_OK = re('^[' + L + '][' + L + " ,.'&()\\-]*$");
+  var PLACE_CHARS = re('[^' + L + " ,.'&()\\-]", 'g');
 
   /* A street address: letters and digits with the punctuation that appears
      in one. Must contain letters, so "12345678" is not an address. */

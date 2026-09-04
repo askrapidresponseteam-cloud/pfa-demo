@@ -104,7 +104,17 @@
     if (el) return { el: el, box: box, how: 'hidden' };
     el = box.querySelector('.error');
     if (el) return { el: el, box: box, how: 'class' };
-    return null;
+    /* Some .field wrappers carry no message element at all - donate.html's
+       village and PIN boxes among them - so a verdict was reached, aria-invalid
+       was set, and the person was told nothing. One is made, in the class the
+       sheet already styles (.field.is-bad .error { display: block }), so the
+       message has somewhere to appear. Only inside a .field: anywhere else
+       there is no rule to show it and the element would sit there invisible. */
+    if (!box.classList || !box.classList.contains('field')) return null;
+    el = document.createElement('span');
+    el.className = 'error';
+    box.appendChild(el);
+    return { el: el, box: box, how: 'class' };
   }
 
   function say(field, message) {
@@ -187,8 +197,14 @@
          prefix off; the filter keeps what stays behind to ten digits. */
       var cap = rule === R.rules.mobile ? 15 : rule.max;
       var current = Number(field.getAttribute('maxlength') || 0);
-      /* Only ever tighten: a page that already asks for less knows why. */
-      if (!current || current > cap) field.setAttribute('maxlength', String(cap));
+      /* Tighten anything too loose - and widen a mobile box, the one case
+         where a page asking for less is wrong. donate.html's carry
+         maxlength="10", so the browser cut a pasted "+91 98765 43210" down to
+         "+91 98765 " before the filter ever saw it, and the number that
+         survived was 9198765. */
+      if (!current || current > cap || (rule === R.rules.mobile && current < cap)) {
+        field.setAttribute('maxlength', String(cap));
+      }
     }
     if (!field.getAttribute('inputmode')) {
       if (rule === R.rules.mobile || rule === R.rules.pin || rule === R.rules.otp

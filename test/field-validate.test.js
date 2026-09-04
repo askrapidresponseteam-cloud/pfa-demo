@@ -186,6 +186,38 @@ test('the length the record holds is written onto the box, and never loosened', 
   assert.equal(page.$('#mobile').getAttribute('maxlength'), '15');
 });
 
+test('a mobile box is widened, not only tightened, so a pasted country code survives', async () => {
+  /* donate.html's mobile boxes carry maxlength="10". The browser cut a pasted
+     "+91 98765 43210" down to "+91 98765 " before the filter ever saw it, and
+     the number that survived was 9198765. The rule layer needs fifteen
+     characters of room to take the prefix off. */
+  const page = boot(`<form id="f">
+    <div class="field"><input id="gMobile" name="mobile" type="tel" maxlength="10"><span class="error">Add a mobile.</span></div>
+    <div class="field"><input id="pincode" name="pincode" maxlength="6"><span class="error">Add a PIN.</span></div>
+  </form>`);
+  await page.ready();
+  assert.equal(page.$('#gMobile').getAttribute('maxlength'), '15');
+  assert.equal(page.type('#gMobile', '+91 98765 43210').value, '9876543210');
+  /* Everything else is only ever tightened: a page asking for less knows why. */
+  assert.equal(page.$('#pincode').getAttribute('maxlength'), '6');
+});
+
+test('a verdict always has somewhere to appear', async () => {
+  /* Some .field wrappers carry no message element at all - donate.html's
+     village and PIN boxes among them - so a verdict was reached, aria-invalid
+     was set, and the person was told nothing at all. */
+  const page = boot('<form id="f"><div class="field"><label for="fPin">PIN</label><input id="fPin" name="pin"></div></form>');
+  await page.ready();
+  page.type('#fPin', '012345');
+  page.leave('#fPin');
+  assert.equal(page.$('#fPin').getAttribute('aria-invalid'), 'true');
+  assert.equal(page.shown('#fPin'), 'A PIN code does not start with 0.', 'the message had nowhere to go');
+
+  page.type('#fPin', '576222');
+  page.leave('#fPin');
+  assert.equal(page.shown('#fPin'), '');
+});
+
 test('a box the page renders later is primed as it arrives', async () => {
   const page = boot(HIDDEN_CONVENTION);
   const extra = page.document.createElement('div');
