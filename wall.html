@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+
+.formstatus{margin:10px 0 0;font-size:13px;line-height:1.5}
+.formstatus[hidden]{display:none}
+.formstatus[data-state="bad"]{color:#b3261e}
+.formstatus[data-state="good"]{color:#1a7f4b}
+.field .opt{color:var(--muted);font-weight:400}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>The Wall | People for Animals</title>
+<meta name="description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+
+/* ---------- filter bar, same component as the shop ---------- */
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:220px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);margin-left:auto;padding-left:12px;white-space:nowrap}
+
+/* ---------- legs ---------- */
+.legs{padding:0 var(--gutter) var(--band)}
+.leg{margin-top:var(--band)}
+.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel > *{position:relative;z-index:1}
+.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+
+/* ---------- date rows ---------- */
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:150px minmax(0,1.5fr) minmax(0,.9fr) 104px auto;gap:20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.row.hidden{display:none}
+.row .d{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.row .v{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.row .c{font-size:13px;color:var(--muted);line-height:1.35}
+.row .b{display:flex}
+.row .b em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);padding:5px 9px;white-space:nowrap}
+.row .b em.soft{border-color:var(--line);color:var(--muted)}
+.row .a{display:flex;gap:20px;justify-content:flex-end}
+.row .a a{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:2px;white-space:nowrap}
+.row .a span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.leg.hidden{display:none}
+.empty{padding:64px 0;text-align:center;font-size:13px;color:var(--muted)}
+
+/* ---------- closing band ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band--bone{background:var(--bone)}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,48px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+.toast{position:fixed;left:16px;bottom:20px;z-index:75;background:var(--ink);color:#fff;font-size:12px;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .row{grid-template-columns:132px minmax(0,1.4fr) minmax(0,.9fr) auto;gap:16px}
+  .row .b{grid-column:2 / 4;margin-top:-6px}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .legs{padding-left:16px;padding-right:16px}
+  .row{grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0}
+  .row .d{grid-column:1;grid-row:1}
+  .row .b{grid-column:2;grid-row:1;justify-content:flex-end;margin-top:0}
+  .row .v{grid-column:1 / -1;grid-row:2;margin-top:4px}
+  .row .c{grid-column:1 / -1;grid-row:3}
+  .row .a{grid-column:1 / -1;grid-row:4;justify-content:flex-start;gap:24px;margin-top:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- the wall ---------- */
+.wall-hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+.wall-hero .actions{margin-top:36px}
+.wall-hero .btn--ghost{background:transparent;border-color:#fff;color:#fff}
+.wall-hero .btn--ghost:hover{background:#fff;color:var(--ink)}
+.subnav{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;border-bottom:1px solid var(--line);padding:0 var(--gutter)}
+.subnav div{display:flex;align-items:center;gap:28px;height:50px;overflow-x:auto;scrollbar-width:none}
+.subnav div::-webkit-scrollbar{display:none}
+/* An anchor arrival on this page must clear three bars, not two: the
+   announcement, the site header, and the wall's own sticky subnav (50px and
+   its rule). Without this, "Browse the wall" opened the section with LONG
+   FORM's title halfway under the subnav - arrived, but beheaded. Same
+   convention as cinekind, laws and get-involved, one bar deeper. */
+section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 63px)}
+.subnav a{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;padding:4px 0;border-bottom:1px solid transparent}
+.subnav a:hover{border-bottom-color:var(--ink)}
+.subnav a.end{margin-left:auto}
+.wall{padding:var(--band) var(--gutter)}
+.wall--stone{background:var(--stone)}
+.wall__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px;margin-bottom:40px}
+.wall__head h2{font-size:clamp(26px,3.2vw,48px)}
+.wall__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.wall__grid.is-long{grid-template-columns:repeat(3,minmax(0,1fr))}
+.wall__grid:empty{display:none}
+.tile{display:block;background:#fff;border:1px solid var(--line)}
+.tile .frame{aspect-ratio:16/9;background:var(--stone)}
+.wall__grid:not(.is-long) .tile .frame{aspect-ratio:9/16}
+.tile .cap{padding:14px 16px;font-size:13px;line-height:1.4}
+.tile .cap span{display:block;color:var(--muted);margin-top:4px}
+.wall__empty{border:1px dashed #c9c7c3;padding:clamp(40px,6vw,88px) clamp(20px,4vw,56px);text-align:center;max-width:100%}
+.wall__empty h3{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;font-size:clamp(22px,2.4vw,34px);line-height:1.1}
+.wall__empty p{margin:18px auto 0;max-width:56ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.wall__empty .btn{margin-top:30px}
+.submit{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(40px,6vw,96px);align-items:start}
+.steps{display:grid;gap:0;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:26px 0;border-bottom:1px solid var(--line)}
+.step span{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--muted);padding-top:3px}
+.step p{margin:0;font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.step p+p{margin-top:8px;font-size:14px;font-weight:400;line-height:1.6;color:var(--muted)}
+.form{display:grid;gap:22px}
+.field{display:grid;gap:8px}
+.field label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;padding:14px 14px;font-size:14px;font-family:inherit;outline:none;color:var(--ink);border-radius:0;-webkit-appearance:none;appearance:none}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ink)}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:40px}
+.field .hint{font-size:12px;color:var(--muted)}
+.field .error{display:none;font-size:12px;color:#b3261e}
+.field.is-bad input,.field.is-bad select{border-color:#b3261e}
+.field.is-bad .error{display:block}
+.consent{display:grid;grid-template-columns:18px 1fr;gap:12px;align-items:start;font-size:13px;line-height:1.55;color:var(--muted)}
+.consent input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--ink)}
+.consent.is-bad{color:#b3261e}
+.form .actions{margin-top:6px}
+.form-success{display:none;border:1px solid var(--ink);padding:24px;font-size:14px;line-height:1.6}
+.form-success.show{display:block}
+.wall-foot{padding:0 var(--gutter) 40px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 32px}
+@media (max-width:1000px){.wall__grid{grid-template-columns:repeat(3,minmax(0,1fr))}.wall__grid.is-long{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.submit{grid-template-columns:1fr}.wall__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wall__grid.is-long{grid-template-columns:1fr}}
+
+/* ---------- theatre: edge to edge player ---------- */
+.tile{position:relative;cursor:pointer;text-align:left;width:100%;padding:0;border:1px solid var(--line);background:#fff;font:inherit;color:inherit}
+.tile .frame{position:relative;overflow:hidden;background:var(--deep)}
+.tile .frame img,.tile .frame video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.tile:hover .frame img,.tile:hover .frame video{transform:scale(1.03)}
+.tile:hover{opacity:1}
+.tile .frame::after{content:"Play in theatre";position:absolute;left:14px;bottom:12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.tile:hover .frame::after,.tile:focus-visible .frame::after{opacity:1;transform:none}
+.tile .idx{position:absolute;right:14px;top:12px;font-size:10px;font-weight:700;letter-spacing:.14em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.wall__head .theatre-link{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:2px;white-space:nowrap}
+
+.theatre{position:fixed;inset:0;z-index:90;background:var(--deep);color:#fff;display:none;flex-direction:column;
+  font-family:var(--body);text-transform:uppercase;letter-spacing:.06em;font-size:12px;
+  --th-pad:clamp(16px,1.6vw,28px);--th-strip:clamp(96px,17vh,190px)}
+.theatre.open{display:flex}
+.theatre a,.theatre button{text-transform:inherit;letter-spacing:inherit}
+.theatre button{background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit}
+.theatre .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+.th-top{position:absolute;left:0;right:0;top:0;z-index:3;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:var(--th-pad);pointer-events:none;
+  transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .35s}
+.th-top.away{transform:translateY(-100%);opacity:0}
+.th-top.away > *{pointer-events:none}
+.th-top > *{pointer-events:auto}
+.th-top .l{display:flex;gap:clamp(20px,3vw,64px);align-items:center;color:rgba(255,255,255,.85)}
+.th-top .mark{font-family:var(--display);font-size:clamp(20px,2.2vw,30px);letter-spacing:.04em;line-height:1;text-align:center}
+.th-top .r{display:flex;justify-content:flex-end;align-items:center;gap:clamp(20px,2.4vw,40px)}
+.th-top .sound{margin-left:clamp(20px,3vw,64px)}
+.th-top .sound b{font-weight:400;opacity:.35;margin-left:8px}
+.th-top .sound b.on{opacity:1;border-bottom:1px solid currentColor;padding-bottom:1px}
+.th-top .close{font-weight:700;letter-spacing:.14em}
+
+.th-stage{position:relative;flex:1 1 auto;min-height:0;background:#000;overflow:hidden;cursor:pointer}
+.th-stage video,.th-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+/* Native frame by default: nothing is ever clipped. Fill is the visitor's
+   choice (the Frame control, or Z), remembered across visits; short films
+   are always native - a vertical film cover-cropped to a landscape screen
+   would lose most of itself. */
+.th-stage video{object-fit:contain}
+.theatre.is-fill:not(.is-short) .th-stage video{object-fit:cover}
+/* A bare embed carries no controls of its own, so it can be covered the way
+   a file is: sized past the stage on whichever axis falls short of 16:9 and
+   centred, the spill clipped by the stage. The film fills the screen - in
+   the theatre and in full screen - instead of sitting letterboxed. */
+/* A bare embed has no object-fit, so the box itself does the fitting:
+   native = the largest 16:9 box the stage holds (letterboxed past 16:9),
+   fill = past the stage on the short axis, spill clipped, as before. */
+.theatre.is-long .th-stage iframe.bare{left:50%;top:50%;width:min(100vw,177.78vh);height:min(100vh,56.25vw);transform:translate(-50%,-50%)}
+.theatre.is-long.is-fill .th-stage iframe.bare{width:max(100vw,177.78vh);height:max(100vh,56.25vw)}
+.theatre.is-short .fit{display:none}
+.theatre.is-short .th-strip button{aspect-ratio:9/16}
+.theatre.is-short .th-top .mark::after{content:" · Short"}
+.theatre.is-long .th-top .mark::after{content:" · Long"}
+.th-top .mark::after{font-family:var(--body);font-size:11px;letter-spacing:.14em;vertical-align:middle;margin-left:4px;opacity:.7}
+.th-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent 18%,transparent 80%,rgba(0,0,0,.45))}
+.th-caption{position:absolute;z-index:2;right:var(--th-pad);bottom:calc(var(--th-bottom,0px) + 12px);display:flex;gap:clamp(24px,5vw,120px);align-items:baseline;pointer-events:none;white-space:nowrap}
+.th-caption .t{letter-spacing:.06em}
+.th-caption .t em{font-style:normal;margin-right:14px}
+
+.th-strip{flex:0 0 auto;display:flex;gap:6px;padding:10px var(--th-pad) 0;height:calc(var(--th-strip) + 10px);overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;transition:height .18s ease}
+.th-strip::-webkit-scrollbar{display:none}
+.th-strip button{position:relative;flex:0 0 auto;height:100%;aspect-ratio:16/9;background:#000;overflow:hidden;opacity:.5;transition:opacity .25s;border:1px solid transparent}
+.th-strip button img,.th-strip button video{width:100%;height:100%;object-fit:cover;display:block}
+.th-strip button.is-now{opacity:1;border-color:rgba(255,255,255,.6)}
+.th-strip button:hover{opacity:1}
+.th-strip button:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+.th-strip button span{position:absolute;left:10px;bottom:8px;font-size:10px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+
+.th-rule{flex:0 0 auto;position:relative;height:56px;margin:14px var(--th-pad) 0;cursor:pointer}
+.th-rule svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.th-rule line{stroke:rgba(255,255,255,.5)}
+.th-rule text{fill:rgba(255,255,255,.55);font-size:11px;font-family:var(--body);letter-spacing:.06em}
+.th-rule .head{stroke:#fff;stroke-width:2}
+.th-rule .played{stroke:#fff;stroke-width:1}
+.th-rule .at{fill:#fff;font-size:11px;font-variant-numeric:tabular-nums}
+
+.th-foot{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:12px var(--th-pad) var(--th-pad)}
+.th-foot .l{display:flex;gap:clamp(18px,2.4vw,36px)}
+.th-foot a{border-bottom:1px solid currentColor;padding-bottom:2px}
+.th-foot .r{color:rgba(255,255,255,.85);text-align:right}
+
+@media (max-width:860px){
+  .th-top{grid-template-columns:1fr auto}
+  .th-top .mark{grid-column:1;grid-row:1;justify-self:start}
+  .th-top .r{grid-column:2;grid-row:1}
+  .th-top .l{grid-column:1 / -1;grid-row:2;margin-top:10px;font-size:11px}
+  .th-state{right:16px;top:auto;bottom:56px}
+  .th-caption{left:var(--th-pad);right:auto;flex-direction:column;gap:2px;white-space:normal}
+  .th-note{left:auto;right:var(--th-pad)}
+  .th-rule{display:none}
+  .th-foot .r{display:none}
+}
+
+/* the strip, ruler and foot sit over the stage and step out of the way while the mouse is on the film */
+.th-bottom{position:absolute;left:0;right:0;bottom:0;z-index:4;display:flex;flex-direction:column;
+  background:linear-gradient(to top,rgba(10,10,10,.96) 70%,rgba(10,10,10,0));transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .35s}
+.th-bottom.away{transform:translateY(100%);opacity:0;pointer-events:none}
+.th-stage{position:absolute;inset:0}
+/* ---------- player controls, overlays and states ---------- */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.th-controls{display:grid;gap:6px;padding:10px var(--th-pad) 0}
+.th-seek{position:relative;height:22px;display:flex;align-items:center;cursor:pointer}
+.th-seek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.22)}
+.th-seek__buf,.th-seek__fill{position:absolute;left:0;height:3px;width:0;pointer-events:none}
+.th-seek__buf{background:rgba(255,255,255,.4)}
+.th-seek__fill{background:#fff}
+.th-seek__knob{position:absolute;left:0;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#fff;transform:scale(0);transition:transform .15s;pointer-events:none}
+.th-seek:hover .th-seek__knob,.th-seek:focus-within .th-seek__knob,.th-seek.is-drag .th-seek__knob{transform:scale(1)}
+.th-seek input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.th-seek input:focus-visible ~ .th-seek__knob{outline:2px solid #fff;outline-offset:3px}
+.th-seek__tip{position:absolute;top:calc(100% + 5px);transform:translateX(-50%);padding:4px 8px;background:#fff;color:#0a0a0a;font-size:11px;pointer-events:none;z-index:2}
+/* While the pointer is on the timeline, everything below the bar is pushed
+   down off the screen and the top bar and caption step away, so the film has
+   the whole screen with just the bar floating over it, and the time chip has
+   clear ground under the bar with nothing for it to cover. Transforms only:
+   the bar itself never moves under the pointer, so the state cannot flicker.
+   When the whole block hides, the pushed items snap back without animating -
+   the block is already faded, so nothing is seen moving twice. */
+.th-row,.th-strip,.th-rule,.th-foot{transition:transform .38s cubic-bezier(.2,.7,.2,1),opacity .3s}
+.th-bottom.is-scrub :is(.th-row,.th-strip,.th-rule,.th-foot){transform:translateY(110vh);opacity:0;pointer-events:none}
+.th-bottom.away :is(.th-row,.th-strip,.th-rule,.th-foot){transition:none}
+.th-bottom.is-scrub{background:linear-gradient(to top,rgba(10,10,10,.92) 0,rgba(10,10,10,.5) 64px,rgba(10,10,10,0) 150px)}
+.theatre.is-scrub .th-top{transform:translateY(-100%);opacity:0}
+.theatre.is-scrub .th-top > *{pointer-events:none}
+.th-caption{transition:opacity .25s}
+.theatre.is-scrub .th-caption{opacity:0}
+.th-seek__tip[hidden]{display:none}
+.th-row{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap}
+.th-row .l,.th-row .r{display:flex;align-items:center;gap:clamp(8px,1.2vw,18px)}
+.th-row button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:32px;min-height:32px;padding:0 4px;opacity:.85;transition:opacity .15s}
+.th-row button:hover,.th-row button:focus-visible{opacity:1}
+.th-row button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.th-row svg{width:22px;height:22px;fill:currentColor;display:block}
+.th-row button[aria-pressed="true"]{border-bottom:1px solid currentColor}
+#thPlay .i-pause,#thPlay.is-playing .i-play{display:none}
+#thPlay.is-playing .i-pause{display:block}
+#thFull .i-off,#thFull[aria-pressed="true"] .i-on{display:none}
+#thFull[aria-pressed="true"] .i-off{display:block}
+.th-time{color:rgba(255,255,255,.85);white-space:nowrap}
+.th-time .sep{margin:0 6px;opacity:.5}
+.th-menu{position:relative}
+.th-menu__list{position:absolute;right:0;bottom:calc(100% + 10px);z-index:5;display:grid;min-width:132px;background:#0a0a0a;border:1px solid rgba(255,255,255,.3)}
+.th-menu__list[hidden]{display:none}
+.theatre .th-menu__list button{display:block;width:100%;padding:10px 14px;text-align:left;opacity:.85}
+.theatre .th-menu__list button:hover,.theatre .th-menu__list button:focus-visible{opacity:1;background:rgba(255,255,255,.1)}
+.theatre .th-menu__list button[aria-checked="true"]{background:#fff;color:#0a0a0a;opacity:1}
+.th-spin{position:absolute;left:50%;top:50%;z-index:2;width:48px;height:48px;margin:-24px 0 0 -24px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:thspin .8s linear infinite;pointer-events:none}
+.th-spin[hidden]{display:none}
+@keyframes thspin{to{transform:rotate(360deg)}}
+.th-flash{position:absolute;top:50%;z-index:2;transform:translateY(-50%);padding:12px 18px;font-size:14px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.4);pointer-events:none;animation:thflash .8s ease-out both}
+.th-flash[data-side="left"]{left:12%}
+.th-flash[data-side="right"]{right:12%}
+.th-flash[data-side="centre"]{left:50%;transform:translate(-50%,-50%)}
+.th-flash[hidden]{display:none}
+@keyframes thflash{0%{opacity:0;transform:translateY(-50%) scale(.9)}20%{opacity:1;transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-50%) scale(1)}}
+.th-flash[data-side="centre"]{animation-name:thflashc}
+@keyframes thflashc{0%{opacity:0;transform:translate(-50%,-50%) scale(.9)}20%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+.th-card{position:absolute;inset:0;z-index:3;display:grid;place-items:center;padding:24px;background:rgba(10,10,10,.74);text-align:center}
+.th-card[hidden]{display:none}
+.th-card .eyebrow{color:rgba(255,255,255,.6);margin:0 0 10px}
+.th-card h3{font-family:var(--display);font-weight:400;font-size:clamp(22px,3vw,40px);line-height:1.1;text-transform:none;letter-spacing:.01em;margin:0 0 10px;max-width:22ch}
+.th-card p{margin:0 0 22px;color:rgba(255,255,255,.75)}
+.th-card .acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.theatre .th-card .acts button{padding:12px 18px;border:1px solid rgba(255,255,255,.7);font-weight:700;letter-spacing:.12em}
+.theatre .th-card .acts button.primary{background:#fff;color:#0a0a0a;border-color:#fff}
+.theatre .th-card .acts button:hover,.theatre .th-card .acts button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.th-help{position:absolute;inset:0;z-index:6;display:grid;place-items:center;padding:24px;overflow:auto;background:rgba(10,10,10,.94);text-transform:none;letter-spacing:0}
+.th-help[hidden]{display:none}
+.th-help .eyebrow{text-align:center;margin:0 0 18px;color:rgba(255,255,255,.6)}
+.th-help dl{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;margin:0 0 22px;max-width:460px;font-size:13px;line-height:1.5}
+.th-help dt{text-align:right;white-space:nowrap}
+.th-help dd{margin:0;color:rgba(255,255,255,.8)}
+.th-help kbd{display:inline-block;min-width:22px;padding:2px 6px;border:1px solid rgba(255,255,255,.45);border-radius:4px;font:inherit;font-size:11px;text-align:center}
+.theatre .th-help > div > button{display:block;margin:0 auto;padding:10px 18px;border:1px solid rgba(255,255,255,.7);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+/* The shield sits over an embed this page drives through its API: clicks
+   pause and play here as they do on a file, and the pointer - and the drawn
+   cursor - never enter the frame. It is never put over an embed the API
+   could not reach, whose own controls are then the only controls. */
+.th-shield{position:absolute;inset:0;z-index:1}
+.th-shield[hidden]{display:none}
+.tile .prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.3)}
+.tile .prog i{display:block;height:100%;background:#fff}
+@media (max-width:860px){
+  .th-row .r #thShare,.th-row .r #thHelpBtn{display:none}
+  .th-row .l .th-time{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){
+  .th-spin{animation-duration:1.6s}
+  .th-flash{animation:none}
+}
+.th-caption,.th-note{transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+@media (hover:none){.th-bottom.away{transform:none;opacity:1;pointer-events:auto}}
+body.theatre-lock{overflow:hidden}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/wall">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Wall">
+  <meta property="og:description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/wall">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="The Wall">
+  <meta name="twitter:description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"The Wall","item":"https://peopleforanimalsindia.org/wall"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="#top" data-nav="wall.html" class="current" aria-current="page">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+  <section class="hero wall-hero" id="top">
+    <div class="hero__in">
+      <p class="eyebrow">A community film wall, reviewed, then published</p>
+      <h1 class="display">The&nbsp;Wall</h1>
+      <p class="lede">Films, talks and thirty-second takes sent in by supporters, volunteers and units: awareness, the law in plain words, and how a case was actually handled. It is not a place to post cruelty. Share yours from Instagram, Facebook, YouTube or Vimeo. Every piece is read by an editor before it goes up.</p>
+      <div class="actions">
+        <a class="btn btn--light" href="#submit">Share your video</a>
+        <a class="btn btn--ghost" href="#longform">Browse the wall</a>
+      </div>
+      <div class="meta">
+        <span>Submissions read within 48 hours</span>
+        <span>Instagram, Facebook, YouTube, Vimeo</span>
+      </div>
+    </div>
+  </section>
+
+  <nav class="subnav" aria-label="Sections of the wall">
+    <div>
+      <a href="#longform">Long form</a>
+      <a href="#shortform">Short form</a>
+      <a href="#theatre-long" data-theatre-open="long">Theatre</a>
+      <a class="end" href="#submit">Share a video</a>
+    </div>
+  </nav>
+
+  <section class="wall" id="longform">
+    <div class="wall__head">
+      <h2 class="display">Long form</h2>
+      <p class="eyebrow">Talks, testimonials and documentary cuts over three minutes</p>
+      <a class="theatre-link" href="#theatre-long" data-theatre-open="long">Watch in theatre</a>
+    </div>
+    <div class="wall__grid is-long" data-wall="long"></div>
+    <div class="wall__empty" data-wall-empty="long">
+      <h3>Nothing on this wall yet.</h3>
+      <p>The long form wall opens with its first approved piece. If you have filmed a rescue, a talk, a clinic day or a conversation that runs past three minutes, it belongs here.</p>
+      <a class="btn" href="#submit">Send the first one</a>
+    </div>
+  </section>
+
+  <section class="wall wall--stone" id="shortform">
+    <div class="wall__head">
+      <h2 class="display">Short form</h2>
+      <p class="eyebrow">Reels and stories under a minute</p>
+      <a class="theatre-link" href="#theatre-short" data-theatre-open="short">Watch in theatre</a>
+    </div>
+    <div class="wall__grid" data-wall="short"></div>
+    <div class="wall__empty" data-wall-empty="short">
+      <h3>This wall is empty too.</h3>
+      <p>A minute is enough. A feeding round, a release, a bandage change, a street dog who now has a name. Short pieces are the ones people actually finish.</p>
+      <a class="btn" href="#submit">Send a short one</a>
+    </div>
+  </section>
+
+  <section class="wall" id="submit">
+    <div class="wall__head">
+      <h2 class="display">Send us yours</h2>
+      <p class="eyebrow">Paste a public link, we do the rest</p>
+    </div>
+    <div class="submit">
+      <div class="steps">
+        <div class="step"><span>01</span><div><p>Paste the link</p><p>Copy the address of your reel, post or video. The post has to be public, or the wall cannot reach it.</p></div></div>
+        <div class="step"><span>02</span><div><p>An editor watches it</p><p>Someone at PFA watches every submission. Nothing that identifies a rescue address, nothing about a live case, and no footage of an animal being hurt. If you have that, it is evidence: <a href="report.html">report it</a> instead, where it stays private and reaches a named person.</p></div></div>
+        <div class="step"><span>03</span><div><p>It goes up on the wall</p><p>Approved pieces publish under your name with a link back to the original post. Ask us to take it down at any time and it comes down.</p></div></div>
+      </div>
+      <div>
+        <form class="form" id="wallForm" novalidate>
+          <div class="field">
+            <label for="wallUrl">Link to your video</label>
+            <input id="wallUrl" name="link" type="url" required placeholder="https://www.instagram.com/reel/">
+            <span class="error">Paste the full link to a public post.</span>
+            <span class="hint">Instagram, Facebook, YouTube or Vimeo. Awareness, the law, or how a case was handled, not footage of an animal being hurt.</span>
+          </div>
+          <div class="field">
+            <label for="wallWhich">Which wall</label>
+            <select id="wallWhich" name="wall" required>
+              <option value="long">Long form, over three minutes</option>
+              <option value="short">Short form, under a minute</option>
+            </select>
+            <span class="error">Choose a wall.</span>
+          </div>
+          <div class="field">
+            <label for="wallName">Name to publish it under</label>
+            <input id="wallName" name="name" type="text" required placeholder="Asha K.">
+            <span class="error">Add the name to credit.</span>
+          </div>
+          <div class="field">
+            <label for="wallContact">Email or phone</label>
+            <input id="wallContact" name="contact" type="text" required placeholder="So an editor can reach you">
+            <span class="error">Add a contact.</span>
+          </div>
+          <div class="field">
+            <label for="wallNote">Anything we should know</label>
+            <textarea id="wallNote" name="note" placeholder="Where it was filmed, who is in it, whether an animal in it is now safe."></textarea>
+          </div>
+          <label class="consent" for="wallConsent">
+            <input id="wallConsent" name="consent" type="checkbox" required>
+            <span>I filmed this or have the right to share it, and I am happy for People for Animals to publish it on the wall with credit.</span>
+          </label>
+          <div class="actions">
+            <button class="btn" type="submit">Send for review</button>
+          </div>
+        </form>
+        <p class="formstatus" id="wallStatus" data-form-status hidden></p>
+        <div class="form-success" id="wallSuccess">Sent. Your reference is <strong data-reference></strong>. Keep it: an editor at PFA picks it up from here and will use the contact you gave.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wall-foot">
+    <p class="eyebrow">People for Animals</p>
+    <p class="eyebrow">Ask us to remove yours at any time</p>
+  </div>
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<div class="theatre" id="theatre" data-cursor="light" role="dialog" aria-modal="true" aria-label="Theatre" hidden>
+  <div class="th-top">
+    <div class="l">
+      <span class="num" id="thClock">00:00:00</span>
+      <button type="button" class="sound" id="thSound" aria-label="Sound" aria-pressed="false">Sound:<b id="thOff" class="on">Off</b><b id="thOn">On</b></button>
+      <button type="button" class="sound fit" id="thFit" aria-label="Frame" aria-pressed="false">Frame:<b id="thFitNative" class="on">Native</b><b id="thFitFill">Fill</b></button>
+    </div>
+    <div class="mark">The Wall</div>
+    <div class="r">
+      <button type="button" class="close" id="thClose">Close</button>
+    </div>
+  </div>
+  <div class="th-stage" id="thStage">
+    <video id="thVideo" playsinline muted preload="auto"></video>
+    <div class="th-shield" id="thShield" aria-hidden="true" hidden></div>
+    <div class="th-spin" id="thSpin" role="status" aria-label="Loading" hidden></div>
+    <div class="th-flash num" id="thFlash" hidden></div>
+    <div class="th-card" id="thCard" hidden>
+      <div>
+        <p class="eyebrow" id="thCardEyebrow"></p>
+        <h3 id="thCardTitle"></h3>
+        <p id="thCardText"></p>
+        <div class="acts" id="thCardActs"></div>
+      </div>
+    </div>
+    <div class="th-help" id="thHelp" hidden>
+      <div>
+        <p class="eyebrow">Keyboard</p>
+        <dl>
+          <dt><kbd>Space</kbd> <kbd>K</kbd></dt><dd>Play or pause</dd>
+          <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>J</kbd> <kbd>L</kbd></dt><dd>Back or forward ten seconds</dd>
+          <dt><kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> <kbd>P</kbd> <kbd>N</kbd></dt><dd>Previous or next film</dd>
+          <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Volume</dd>
+          <dt><kbd>M</kbd></dt><dd>Mute</dd>
+          <dt><kbd>0</kbd>–<kbd>9</kbd></dt><dd>Jump to that tenth of the film</dd>
+          <dt><kbd>&lt;</kbd> <kbd>&gt;</kbd></dt><dd>Slower or faster</dd>
+          <dt><kbd>F</kbd></dt><dd>Full screen</dd>
+          <dt><kbd>A</kbd></dt><dd>Autoplay on or off</dd>
+          <dt><kbd>Z</kbd></dt><dd>Native or filled frame</dd>
+          <dt><kbd>?</kbd></dt><dd>This list</dd>
+          <dt><kbd>Esc</kbd></dt><dd>Close</dd>
+        </dl>
+        <button type="button" id="thHelpClose">Close</button>
+      </div>
+    </div>
+    <div class="th-caption"><span class="t"><em class="num" id="thIdx">01</em><span id="thTitle"></span></span></div>
+  </div>
+  <div class="th-bottom" id="thBottom">
+  <div class="th-controls" id="thControls" role="group" aria-label="Player controls">
+    <div class="th-seek" id="thSeekWrap">
+      <i class="th-seek__buf" id="thBuf"></i><i class="th-seek__fill" id="thFill"></i><i class="th-seek__knob" id="thKnob"></i>
+      <input type="range" id="thSeek" min="0" max="1000" value="0" step="1" aria-label="Seek" aria-valuetext="00:00:00">
+      <span class="th-seek__tip num" id="thTip" hidden></span>
+    </div>
+    <div class="th-row">
+      <div class="l">
+        <button type="button" id="thPrev" title="Previous film (Shift+←)" aria-label="Previous film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+        <button type="button" id="thPlay" title="Play (K)" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg></button>
+        <button type="button" id="thNext" title="Next film (Shift+→)" aria-label="Next film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z"/></svg></button>
+        <button type="button" id="thBack" title="Back 10 seconds (J)" aria-label="Back ten seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/><text x="8.6" y="15.2" font-size="6.5" font-weight="700" font-family="sans-serif">10</text></svg></button>
+        <button type="button" id="thFwd" title="Forward 10 seconds (L)" aria-label="Forward ten seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2l5 4-5 4V7a5 5 0 1 0 5 5h2a7 7 0 1 1-7-7z"/><text x="8.6" y="15.2" font-size="6.5" font-weight="700" font-family="sans-serif">10</text></svg></button>
+        <span class="th-time num"><span id="thT">00:00:00</span><span class="sep">/</span><span id="thD">00:00:00</span></span>
+      </div>
+      <div class="r">
+        <button type="button" id="thAuto" title="Autoplay the next film (A)" aria-pressed="true">Autoplay</button>
+        <div class="th-menu" id="thRate">
+          <button type="button" id="thRateBtn" title="Playback speed" aria-haspopup="menu" aria-expanded="false"><span class="num" id="thRateNow">1×</span></button>
+          <div class="th-menu__list" id="thRateMenu" role="menu" hidden></div>
+        </div>
+        <button type="button" id="thShare" title="Copy a link to this moment">Copy link</button>
+        <button type="button" id="thHelpBtn" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts">?</button>
+        <button type="button" id="thFull" title="Full screen (F)" aria-label="Full screen" aria-pressed="false"><svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z"/></svg><svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4v6H4V8h4V4zm4 0h2v4h4v2h-6zM4 14h6v6H8v-4H4zm10 0h6v2h-4v4h-2z"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="th-strip" id="thStrip" aria-label="All films"></div>
+  <div class="th-rule" id="thRule"><svg id="thRuleSvg" aria-hidden="true"></svg></div>
+  <div class="th-foot">
+    <div class="l"><a href="#longform" data-theatre-close>Long form</a><a href="#shortform" data-theatre-close>Short form</a><a href="#submit" data-theatre-close>Share a video</a></div>
+    <div class="r">People for Animals · Community film wall</div>
+  </div>
+  </div>
+  <div class="sr" id="thLive" aria-live="polite"></div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="pfa-forms.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------- submission form: validated here, sent to /api/pfa-submissions ---------- */
+  (function form(){
+    var f = $('#wallForm'); if (!f) return;
+    var HOSTS = /(instagram\.com|facebook\.com|fb\.watch|youtube\.com|youtu\.be|vimeo\.com)/i;
+    function bad(el, on){ var w = el.closest('.field') || el.closest('.consent'); if (w) w.classList.toggle('is-bad', on); return on; }
+    f.addEventListener('submit', function(e){
+      e.preventDefault();
+      var url = $('#wallUrl'), name = $('#wallName'), contact = $('#wallContact'), consent = $('#wallConsent'), which = $('#wallWhich');
+      var errs = 0;
+      var ok = false; try { ok = HOSTS.test(new URL(url.value).hostname); } catch(err){ ok = false; }
+      errs += bad(url, !ok) ? 1 : 0;
+      errs += bad(which, !which.value) ? 1 : 0;
+      errs += bad(name, !name.value.trim()) ? 1 : 0;
+      errs += bad(contact, !contact.value.trim()) ? 1 : 0;
+      errs += bad(consent, !consent.checked) ? 1 : 0;
+      if (errs){ var first = f.querySelector('.is-bad input, .is-bad select'); if (first) first.focus(); return; }
+
+      /* This used to hide the form and show the success panel without sending
+         anything: someone submitting a rescue video was told it had arrived
+         when nothing was recorded. The panel now waits for a reference. */
+      if (!window.PFAForms){
+        var offline = $('#wallStatus');
+        if (offline){ offline.hidden = false; offline.setAttribute('data-state','bad');
+          offline.textContent = 'This form cannot be sent right now. Please reload the page.'; }
+        return;
+      }
+      var button = f.querySelector('[type="submit"]');
+      var label = button ? button.textContent : '';
+      if (button){ button.disabled = true; button.textContent = 'Sending\u2026'; }
+      var status = $('#wallStatus');
+      if (status){ status.hidden = true; status.textContent = ''; }
+
+      var digits = contact.value.replace(/\D/g, '');
+      var data = {
+        url: url.value.trim(),
+        /* which wall it is for: long or short. This travelled as "title",
+           which read in the panel as the film being called "long". */
+        wall: which.value === 'short' ? 'Short form, under a minute' : 'Long form, over three minutes',
+        name: name.value.trim(),
+        notes: 'Consent given for PFA to show this on The Wall.'
+      };
+      if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact.value.trim())) data.email = contact.value.trim();
+      else if (/^[6-9]\d{9}$/.test(digits)) data.mobile = digits;
+      else { bad(contact, true); contact.focus();
+             if (button){ button.disabled = false; button.textContent = label; }
+             return; }
+
+      window.PFAForms.submit('PFA-S', data)
+        .then(function(reference){
+          f.hidden = true;
+          var ok = $('#wallSuccess');
+          ok.classList.add('show');
+          var ref = ok.querySelector('[data-reference]');
+          if (ref) ref.textContent = reference;
+        })
+        .catch(function(error){
+          if (button){ button.disabled = false; button.textContent = label; }
+          if (status){ status.hidden = false; status.setAttribute('data-state','bad'); status.textContent = error.message; }
+        });
+    });
+    f.addEventListener('input', function(e){ var t = e.target; if (t && t.closest) bad(t, false); });
+  })();
+
+  /* ---------- the wall's films: replace these placeholders with approved submissions ----------
+     src  : direct mp4 link plays in the site's own player (timecodes, ruler, autoplay to next)
+     yt   : YouTube id, embeds YouTube's player instead   vimeo : Vimeo id, embeds Vimeo's player
+     start: optional, seconds into the film to open at (the ?t= on a shared YouTube link)
+     wall : 'long' or 'short'   poster : optional still; without one the first frame is used  */
+  var WALL = [
+    /* Added 30 Aug 2026. The tile uses YouTube's own thumbnail; the theatre
+       opens it at 1:02:33, the point the shared link carried. */
+    {wall:'long', title:'The brutal truth about dog cruelty in India', credit:'The House of Motions \u00b7 with Maneka Gandhi', yt:'BVbpSc_EXlI', start:3753},
+    {wall:'long', title:'Big Buck Bunny', credit:'Placeholder film', src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', poster:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg'},
+    {wall:'long', title:'Elephants Dream', credit:'Placeholder film', src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', poster:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg'},
+    {wall:'long', title:'Sintel', credit:'Placeholder film', src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', poster:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg'},
+    {wall:'short', title:'For Bigger Blazes', credit:'Placeholder clip', src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', poster:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg'},
+    {wall:'short', title:'For Bigger Escapes', credit:'Placeholder clip', src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', poster:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg'},
+    {wall:'short', title:'For Bigger Joyrides', credit:'Placeholder clip', src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', poster:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg'}
+  ];
+
+  /* ---------- tiles on the two walls, and the theatre they open ----------
+     One player for three kinds of source: a file the site plays itself, a
+     YouTube embed through its player API, a Vimeo embed through its player
+     API. Every control on the screen works for all three - that is the whole
+     bar to be on the screen. Picture in picture failed it and is gone: no
+     page may reach the video inside YouTube's or Vimeo's frame, so the
+     button could only ever serve the placeholder files, and on the films the
+     wall is actually for it sat dead (reported 31 Aug 2026) or vanished,
+     which reads as broken either way. The iframes still declare
+     allow="picture-in-picture" on purpose: the browser's own media menu can
+     float an embedded film, and that door is the browser's, not this
+     page's. An embed whose API script is blocked still plays as a plain
+     embed; the readouts that need the API simply stay out of the way. */
+  (function wallAndTheatre(){
+    var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+    var tc = function(sec){ sec = Math.max(0, Math.floor(sec || 0)); return pad(Math.floor(sec / 3600)) + ':' + pad(Math.floor(sec / 60) % 60) + ':' + pad(sec % 60); };
+    var SKIP = 10;                                 /* seconds, for the skip buttons and keys */
+    var RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
+    var NEXT_IN = 5;                               /* seconds on the "up next" card */
+
+    /* ---- remembered positions: continue watching ----
+       Keyed by the source, not the index, so re-ordering the wall never
+       resumes the wrong film. A position inside the first few seconds or the
+       last few is not worth keeping. */
+    var PROG_KEY = 'pfa:wall:progress';
+    function keyOf(it){ return it.yt ? 'yt:' + it.yt : it.vimeo ? 'vimeo:' + it.vimeo : 'src:' + (it.src || ''); }
+    function readProg(){ try { var p = JSON.parse(localStorage.getItem(PROG_KEY) || '{}'); return p && typeof p === 'object' ? p : {}; } catch (e) { return {}; } }
+    function writeProg(p){ try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+    function saveProg(it, t, d){
+      if (!it) return;
+      var p = readProg(), k = keyOf(it);
+      if (!(d > 0) || t < 5 || t > d - 8) delete p[k]; else p[k] = { t: Math.floor(t), d: Math.floor(d), at: Date.now() };
+      writeProg(p);
+      paintProgress();
+    }
+    function savedFor(it){ var p = readProg()[keyOf(it)]; return p && p.t > 0 ? p : null; }
+
+    function thumb(item){
+      if (item.poster) return '<img src="' + item.poster + '" alt="" loading="lazy">';
+      if (item.yt) return '<img src="https://i.ytimg.com/vi/' + item.yt + '/hqdefault.jpg" alt="" loading="lazy">';
+      if (item.src) return '<video src="' + item.src + '#t=1" muted playsinline preload="metadata"></video>';
+      return '';
+    }
+    function esc(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    ['long','short'].forEach(function(w){
+      var grid = document.querySelector('[data-wall="' + w + '"]'), empty = document.querySelector('[data-wall-empty="' + w + '"]');
+      var items = WALL.map(function(it, i){ it.n = i; return it; }).filter(function(it){ return it.wall === w; });
+      if (!grid || !items.length) return;
+      grid.innerHTML = items.map(function(it){
+        return '<button type="button" class="tile" data-play="' + it.n + '" data-key="' + esc(keyOf(it)) + '"><div class="frame">' + thumb(it) + '<span class="idx num">' + pad(it.n + 1) + '</span><span class="prog" hidden><i></i></span></div><div class="cap">' + esc(it.title) + '<span>' + esc(it.credit) + '</span></div></button>';
+      }).join('');
+      if (empty) empty.hidden = true;
+    });
+    /* A thin line along the foot of a tile says how far into it you got. */
+    function paintProgress(){
+      var p = readProg();
+      Array.prototype.forEach.call(document.querySelectorAll('.tile[data-key]'), function(tile){
+        var s = p[tile.getAttribute('data-key')], bar = tile.querySelector('.prog');
+        if (!bar) return;
+        if (s && s.d > 0){ bar.hidden = false; bar.firstChild.style.width = Math.round(100 * s.t / s.d) + '%'; }
+        else bar.hidden = true;
+      });
+    }
+    paintProgress();
+
+    var th = $('#theatre'); if (!th || !WALL.length) return;
+    var video = $('#thVideo'), stage = $('#thStage'), strip = $('#thStrip'), rule = $('#thRuleSvg');
+    var muted = true, volume = 1, rate = 1, autoplay = true, cur = -1, iframe = null, wasOpen = false, lastFocus = null;
+    var LIST = WALL, WHICH = 'long';
+    try { autoplay = localStorage.getItem('pfa:wall:autoplay') !== 'off'; } catch (e) {}
+    /* Number(null) is 0, so an unset key must not be read as "silence". */
+    try {
+      var v0raw = localStorage.getItem('pfa:wall:volume');
+      if (v0raw !== null){ var v0 = Number(v0raw); if (v0 >= 0 && v0 <= 1) volume = v0; }
+    } catch (e) {}
+
+    function live(msg){ var l = $('#thLive'); if (l){ l.textContent = ''; setTimeout(function(){ l.textContent = msg; }, 20); } }
+    var toastT = null;
+    function say(msg){
+      var t = $('#toast'); if (!t) return;
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+    }
+
+    /* each wall has its own theatre: the long form pieces, or the short ones */
+    function setList(which){
+      WHICH = which;
+      LIST = WALL.filter(function(it){ return it.wall === which; });
+      if (!LIST.length) LIST = WALL;
+      th.classList.toggle('is-short', which === 'short');
+      th.classList.toggle('is-long', which !== 'short');
+      strip.innerHTML = LIST.map(function(it, i){
+        return '<button type="button" data-go="' + i + '" aria-label="' + esc(it.title) + '">' + thumb(it) + '<span class="num">' + pad(i + 1) + '</span></button>';
+      }).join('');
+    }
+    setList('long');
+
+    /* the clock, top left, in the visitor's zone */
+    var zone = (function(){ try { return new Date().toLocaleTimeString('en', {timeZoneName:'short'}).split(' ').pop(); } catch(e){ return ''; } })();
+    setInterval(function(){ if (!wasOpen) return; var d = new Date(); $('#thClock').textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + (zone ? ' ' + zone : ''); }, 500);
+
+    /* ---- the player behind the controls ----
+       `yt` is the handle on an embedded player - YouTube or Vimeo - once its
+       API has answered: ready, the player object, and the time and duration
+       it last reported, so clock() can read them without waiting on a
+       promise. Null while a file is on the stage. */
+    var yt = null;
+    var P = {
+      ext: function(){ return yt && yt.ready ? yt : null; },
+      isFile: function(){ return !iframe; },
+      playing: function(){
+        var e = P.ext(); if (e) return !!e.playing;
+        if (iframe) return false;
+        return !video.paused && !video.ended;
+      },
+      play: function(){
+        var e = P.ext();
+        if (e){ try { e.kind === 'vimeo' ? e.player.play().catch(function(){}) : e.player.playVideo(); } catch (err) {} return; }
+        if (iframe) return;
+        var p = video.play(); if (p && p.catch) p.catch(function(){ paintPlay(); });
+      },
+      pause: function(){
+        var e = P.ext();
+        if (e){ try { e.kind === 'vimeo' ? e.player.pause().catch(function(){}) : e.player.pauseVideo(); } catch (err) {} return; }
+        if (iframe) return;
+        video.pause();
+      },
+      seek: function(t){
+        var c = clock(); if (!c.known) return;
+        t = Math.max(0, Math.min(c.d, t));
+        var e = P.ext();
+        if (e){ e.t = t; try { e.kind === 'vimeo' ? e.player.setCurrentTime(t).catch(function(){}) : e.player.seekTo(t, true); } catch (err) {} tick(); return; }
+        if (iframe) return;
+        try { video.currentTime = t; } catch (err) {}
+        tick();
+      },
+      setRate: function(r){
+        rate = r;
+        var e = P.ext();
+        if (e){ try { var out = e.player.setPlaybackRate(r); if (out && out.catch) out.catch(function(){ say('This film cannot change speed.'); }); } catch (err) {} }
+        else if (!iframe) video.playbackRate = r;
+        $('#thRateNow').textContent = String(r).replace(/\.0$/, '') + '\u00d7';
+        Array.prototype.forEach.call($('#thRateMenu').children, function(b){ b.setAttribute('aria-checked', String(Number(b.getAttribute('data-rate')) === r)); });
+      },
+      setMute: function(on){
+        muted = on; video.muted = on;
+        var e = P.ext();
+        if (e){ try { if (e.kind === 'vimeo') e.player.setVolume(on ? 0 : volume).catch(function(){}); else if (on) e.player.mute(); else { e.player.unMute(); e.player.setVolume(Math.round(volume * 100)); } } catch (err) {} }
+        else if (iframe) load(cur, { keepTime: true });   /* an embed the API could not reach: reload with the flag */
+      },
+      setVolume: function(v){
+        volume = Math.max(0, Math.min(1, v));
+        video.volume = volume;
+        try { localStorage.setItem('pfa:wall:volume', String(volume)); } catch (e) {}
+        var e = P.ext();
+        if (e){ try { if (e.kind === 'vimeo') e.player.setVolume(muted ? 0 : volume).catch(function(){}); else e.player.setVolume(Math.round(volume * 100)); } catch (err) {} }
+        if (volume > 0 && muted) setSound(true); else if (volume === 0 && !muted) setSound(false);
+      }
+    };
+
+    /* One volume control on the whole screen: the Sound Off/On toggle in the
+       top bar, where it always was. M is its key, the up and down arrows
+       trim the level, and a driven YouTube embed opens bare below so its own
+       volume never sits beside this one. */
+    function setSound(on){
+      P.setMute(!on);
+      $('#thOff').classList.toggle('on', !on); $('#thOn').classList.toggle('on', on);
+      $('#thSound').setAttribute('aria-pressed', String(on));
+      live(on ? 'Sound on' : 'Sound off');
+    }
+    function paintPlay(){
+      var on = P.playing();
+      var b = $('#thPlay'); b.classList.toggle('is-playing', on); b.setAttribute('aria-label', on ? 'Pause' : 'Play'); b.title = (on ? 'Pause' : 'Play') + ' (K)';
+      th.classList.toggle('is-playing', on);
+      sync();
+      if (typeof navigator !== 'undefined' && navigator.mediaSession) try { navigator.mediaSession.playbackState = on ? 'playing' : 'paused'; } catch (e) {}
+    }
+
+    /* The ruler is the programme: one segment per film, in the order of the
+       strip above it, each divided into eighths of that film's running time.
+       The white line is where you are; the film's number gains its length once
+       the player has said what it is, and the time rides on the line. Pressing
+       anywhere on it goes to that moment of that film. The same for a file the
+       site plays and for an embedded film: the player APIs report time for
+       those, so this is no longer a strip that only moves for one of them. */
+    function ruleLabel(i){
+      var it = LIST[i];
+      return pad(i + 1) + (it && it.dur ? ' \u00b7 ' + tc(it.dur).replace(/^00:/, '') : '');
+    }
+    function drawRule(){
+      var w = rule.clientWidth || 800, h = 56, n = LIST.length, seg = w / n;
+      var out = '';
+      for (var i = 0; i < n; i++){
+        var x = i * seg;
+        out += '<text id="thLab' + i + '" x="' + (x + 2) + '" y="12">' + ruleLabel(i) + '</text>';
+        out += '<line x1="' + x + '" y1="20" x2="' + x + '" y2="' + h + '"/>';
+        for (var k = 1; k < 8; k++){ var xx = x + seg * k / 8; out += '<line x1="' + xx + '" y1="' + (k === 4 ? 36 : 44) + '" x2="' + xx + '" y2="' + h + '"/>'; }
+      }
+      out += '<line class="played" id="thPlayed" x1="0" y1="' + h + '" x2="0" y2="' + h + '"/>';
+      out += '<line class="head" id="thHead" x1="0" y1="16" x2="0" y2="' + h + '"/>';
+      rule.innerHTML = out;
+    }
+
+    /* One clock for whichever source is on the stage. */
+    function clock(){
+      if (yt && yt.ready){
+        /* YouTube answers synchronously, so it is asked; Vimeo answers in
+           promises, so its last report is used. */
+        var yd = Number(yt.d) || 0, yt_ = Number(yt.t) || 0;
+        if (yt.kind !== 'vimeo' && yt.player && typeof yt.player.getDuration === 'function'){
+          try { yd = Number(yt.player.getDuration()) || yd; yt_ = Number(yt.player.getCurrentTime()) || 0; } catch (e) {}
+        }
+        return { d: yd, t: yt_, known: yd > 0 };
+      }
+      if (iframe) return { d: 0, t: 0, known: false };
+      return { d: video.duration || 0, t: video.currentTime || 0, known: (video.duration || 0) > 0 };
+    }
+
+    /* How much of a file is buffered ahead of the head, as a fraction. An
+       embed does not say. */
+    function bufferedTo(){
+      if (iframe || !video.buffered || !video.buffered.length || !(video.duration > 0)) return 0;
+      var t = video.currentTime || 0, end = 0;
+      for (var i = 0; i < video.buffered.length; i++){
+        if (video.buffered.start(i) <= t + 0.5 && video.buffered.end(i) > end) end = video.buffered.end(i);
+      }
+      return Math.min(1, end / video.duration);
+    }
+
+    var dragging = false;
+    function tick(){
+      var c = clock(), d = c.d, t = c.t, p = d ? t / d : 0;
+      /* Each figure once: the time readout in the controls row is the one
+         place the clock is written, and the seek bar is the one drawing of
+         progress within the film. The ruler's line carries position across
+         the whole programme; it repeats no numbers. A film with no duration
+         yet - not loaded, unreachable, or an embed whose player has not
+         answered - has nothing to say and nothing to seek: the readout is
+         away and the bar is still and disabled. */
+      $('#thT').textContent = tc(t);
+      $('#thD').textContent = tc(d);
+      $('#thT').parentNode.hidden = !c.known;
+      /* While the person is dragging the bar, it is theirs; the film's own
+         time does not pull it back. */
+      var seek = $('#thSeek');
+      if (!dragging){
+        seek.value = Math.round(p * 1000);
+        seek.setAttribute('aria-valuetext', tc(t) + ' of ' + tc(d));
+        $('#thFill').style.width = (p * 100) + '%';
+        $('#thKnob').style.left = (p * 100) + '%';
+      }
+      $('#thBuf').style.width = (bufferedTo() * 100) + '%';
+      seek.disabled = !c.known;
+      if (c.known && LIST[cur] && !LIST[cur].dur){
+        LIST[cur].dur = d;
+        var lab = $('#thLab' + cur); if (lab) lab.textContent = ruleLabel(cur);
+      }
+      var w = rule.clientWidth || 800, seg = w / LIST.length, x = cur * seg + seg * p;
+      var head = $('#thHead'), played = $('#thPlayed');
+      if (head){ head.setAttribute('x1', x); head.setAttribute('x2', x); }
+      if (played){ played.setAttribute('x1', cur * seg); played.setAttribute('x2', x); }
+      if (typeof setPositionState === 'function') setPositionState(c);
+    }
+
+    /* YouTube's player API, for the films that are YouTube embeds. Without it
+       an embed is a black box: no time, no duration, no way to seek, no word
+       when it ends. With it the ruler, the readouts and autoplay-to-next work
+       for a YouTube film exactly as for a file. Loaded once, on first need;
+       if the script is blocked the film still plays as a plain embed. */
+    var ytApi = null, vimeoApi = null;
+    function loadYtApi(){
+      if (window.YT && window.YT.Player) return Promise.resolve(true);
+      if (ytApi) return ytApi;
+      ytApi = new Promise(function(resolve){
+        var prev = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = function(){ if (prev) try { prev(); } catch (e) {} resolve(!!(window.YT && window.YT.Player)); };
+        var sc = document.createElement('script'); sc.src = 'https://www.youtube.com/iframe_api'; sc.async = true;
+        sc.onerror = function(){ resolve(false); };
+        document.head.appendChild(sc);
+        setTimeout(function(){ resolve(!!(window.YT && window.YT.Player)); }, 8000);
+      });
+      return ytApi;
+    }
+    function attachYt(frame, filmIndex){
+      loadYtApi().then(function(ok){
+        if (!ok || frame !== iframe || filmIndex !== cur) return;
+        var handle = { kind: 'youtube', ready: false, player: null, t: 0, d: 0, playing: false };
+        handle.player = new window.YT.Player(frame, {
+          events: {
+            onReady: function(){
+              if (frame !== iframe) return;
+              /* The API lost the race: this embed opened with YouTube's own
+                 controls, and driving it now would stand this page's bar and
+                 buttons beside YouTube's - two of everything. Reopen the same
+                 film bare at the same moment instead; from here on, and for
+                 every film after, one set of controls is on the screen. */
+              if (!frame._bare && LIST[cur] && LIST[cur].yt){
+                var t = 0;
+                try { t = Math.floor(Number(handle.player.getCurrentTime()) || 0); } catch (e) {}
+                load(cur, t > 0 ? { startAt: t } : {});
+                return;
+              }
+              handle.ready = true;
+              /* A bare embed is fully this page's: the shield takes the
+                 clicks, so the film pauses and plays like a file and the
+                 pointer never leaves the page. */
+              if (frame._bare) $('#thShield').hidden = false;
+              try { if (muted) handle.player.mute(); else { handle.player.unMute(); handle.player.setVolume(Math.round(volume * 100)); } } catch (e) {}
+              try { if (rate !== 1) handle.player.setPlaybackRate(rate); } catch (e) {}
+              poll(); paintPlay(); tick();
+            },
+            onStateChange: function(e){
+              if (frame !== iframe) return;
+              var S = window.YT.PlayerState;
+              handle.playing = e.data === S.PLAYING;
+              $('#thSpin').hidden = e.data !== S.BUFFERING;
+              if (e.data === S.ENDED) onEnded();
+              else paintPlay();
+              poll(); tick();
+            },
+            onError: function(){ if (frame === iframe) showError(); }
+          }
+        });
+        function poll(){
+          try { handle.d = Number(handle.player.getDuration()) || 0; handle.t = Number(handle.player.getCurrentTime()) || 0; } catch (e) {}
+        }
+        handle.poll = poll;
+        yt = handle;
+      });
+    }
+    /* Vimeo's player API, so a Vimeo film is not the one kind that cannot be
+       seeked, timed or followed by the next. Same shape of handle as YouTube. */
+    function loadVimeoApi(){
+      if (window.Vimeo && window.Vimeo.Player) return Promise.resolve(true);
+      if (vimeoApi) return vimeoApi;
+      vimeoApi = new Promise(function(resolve){
+        var sc = document.createElement('script'); sc.src = 'https://player.vimeo.com/api/player.js'; sc.async = true;
+        sc.onload = function(){ resolve(!!(window.Vimeo && window.Vimeo.Player)); };
+        sc.onerror = function(){ resolve(false); };
+        document.head.appendChild(sc);
+        setTimeout(function(){ resolve(!!(window.Vimeo && window.Vimeo.Player)); }, 8000);
+      });
+      return vimeoApi;
+    }
+    function attachVimeo(frame, filmIndex){
+      loadVimeoApi().then(function(ok){
+        if (!ok || frame !== iframe || filmIndex !== cur) return;
+        var handle = { kind: 'vimeo', ready: false, player: null, t: 0, d: 0, playing: false };
+        var pl;
+        try { pl = new window.Vimeo.Player(frame); } catch (e) { return; }
+        handle.player = pl;
+        var mine = function(){ return frame === iframe; };
+        pl.on('loaded', function(){ if (!mine()) return; handle.ready = true; pl.getDuration().then(function(d){ handle.d = Number(d) || 0; tick(); }).catch(function(){}); pl.setVolume(muted ? 0 : volume).catch(function(){}); if (rate !== 1) pl.setPlaybackRate(rate).catch(function(){}); paintPlay(); tick(); });
+        pl.on('timeupdate', function(e){ if (!mine()) return; handle.ready = true; handle.t = Number(e.seconds) || 0; handle.d = Number(e.duration) || handle.d; tick(); });
+        pl.on('play', function(){ if (!mine()) return; handle.playing = true; $('#thSpin').hidden = true; paintPlay(); });
+        pl.on('pause', function(){ if (!mine()) return; handle.playing = false; paintPlay(); });
+        pl.on('bufferstart', function(){ if (mine()) $('#thSpin').hidden = false; });
+        pl.on('bufferend', function(){ if (mine()) $('#thSpin').hidden = true; });
+        pl.on('ended', function(){ if (mine()) onEnded(); });
+        pl.on('error', function(){ if (mine()) showError(); });
+        yt = handle;
+      });
+    }
+    setInterval(function(){
+      if (!wasOpen || !yt || !yt.ready) return;
+      if (yt.poll) yt.poll();
+      tick();
+      if (yt.playing && LIST[cur]) saveProgThrottled(yt.t, yt.d);
+    }, 250);
+
+    var lastSaved = 0;
+    function saveProgThrottled(t, d){
+      var now = Date.now();
+      if (now - lastSaved < 4000) return;
+      lastSaved = now; saveProg(LIST[cur], t, d);
+    }
+
+    /* ---- cards over the stage: up next, the end, an error ---- */
+    var nextTimer = null, nextLeft = 0;
+    function card(o){
+      var box = $('#thCard');
+      clearInterval(nextTimer);
+      if (!o){ box.hidden = true; paintPlay(); return; }
+      $('#thCardEyebrow').textContent = o.eyebrow || '';
+      $('#thCardTitle').textContent = o.title || '';
+      $('#thCardText').textContent = o.text || '';
+      var acts = $('#thCardActs'); acts.innerHTML = '';
+      (o.actions || []).forEach(function(a){
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = a.label; if (a.primary) b.className = 'primary';
+        b.addEventListener('click', function(){ card(null); a.run(); });
+        acts.appendChild(b);
+      });
+      box.hidden = false; sync();
+      var first = acts.querySelector('button'); if (first) first.focus();
+      paintPlay();
+    }
+    function onEnded(){
+      if (yt) yt.playing = false;
+      saveProg(LIST[cur], 0, 0);          /* finished: nothing to resume */
+      paintPlay();
+      var next = LIST[(cur + 1) % LIST.length];
+      if (autoplay && LIST.length > 1){
+        nextLeft = NEXT_IN;
+        var text = function(){ return 'Playing in ' + nextLeft + ' second' + (nextLeft === 1 ? '' : 's') + '.'; };
+        card({ eyebrow: 'Up next \u00b7 ' + pad(((cur + 1) % LIST.length) + 1), title: next.title, text: text(), actions: [
+          { label: 'Play now', primary: true, run: function(){ load(cur + 1); } },
+          { label: 'Cancel', run: function(){ live('Autoplay cancelled'); } },
+          { label: 'Replay', run: function(){ load(cur, { startAt: 0 }); } }
+        ] });
+        nextTimer = setInterval(function(){
+          nextLeft -= 1;
+          $('#thCardText').textContent = text();
+          if (nextLeft <= 0){ card(null); load(cur + 1); }
+        }, 1000);
+        live('Up next: ' + next.title);
+      } else {
+        card({ eyebrow: 'The end', title: LIST[cur].title, text: LIST.length > 1 ? 'Autoplay is off.' : '', actions: [
+          { label: 'Replay', primary: true, run: function(){ load(cur, { startAt: 0 }); } }
+        ].concat(LIST.length > 1 ? [{ label: 'Next film', run: function(){ load(cur + 1); } }] : []) });
+      }
+    }
+    function showError(){
+      $('#thSpin').hidden = true;
+      if (yt) yt.playing = false;
+      live('This film could not be loaded');
+      card({ eyebrow: 'Not available', title: 'This film could not be loaded.', text: 'The link may have moved, or the connection dropped. Nothing else on the wall is affected.', actions: [
+        { label: 'Try again', primary: true, run: function(){ load(cur, { keepTime: true }); } }
+      ].concat(LIST.length > 1 ? [{ label: 'Next film', run: function(){ load(cur + 1); } }] : []) });
+    }
+
+    /* A short mark in the middle of the stage: the seek that just happened,
+       the speed, the volume. Gone on its own. */
+    var flashT = null;
+    function flash(text, side){
+      var f = $('#thFlash'); f.textContent = text; f.setAttribute('data-side', side || 'centre'); f.hidden = false;
+      clearTimeout(flashT); flashT = setTimeout(function(){ f.hidden = true; }, 800);
+    }
+    function skip(delta){
+      var c = clock(); if (!c.known) return;
+      P.seek(c.t + delta);
+      flash((delta < 0 ? '\u2212' : '+') + Math.abs(delta) + 's', delta < 0 ? 'left' : 'right');
+      live((delta < 0 ? 'Back ' : 'Forward ') + Math.abs(delta) + ' seconds');
+    }
+
+    /* The address of the film on the stage, and of the moment on it, so a
+       link can be copied and a link can be opened. #theatre-long?f=3&t=95 is
+       film 3 of the long wall at 1:35. Written with replaceState: changing
+       film must not leave a history entry per film behind the Back button. */
+    function writeHash(){
+      try { history.replaceState(null, '', location.pathname + location.search + '#theatre-' + WHICH + '?f=' + (cur + 1)); } catch (e) {}
+    }
+    function parseHash(h){
+      var m = /^#theatre(?:-(long|short))?(?:\?(.*))?$/.exec(h || '');
+      if (!m) return null;
+      var q = {}; (m[2] || '').split('&').forEach(function(kv){ var p = kv.split('='); if (p[0]) q[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || ''); });
+      return { which: m[1] || 'long', f: Math.max(0, (parseInt(q.f, 10) || 1) - 1), t: Math.max(0, Math.floor(Number(q.t) || 0)) };
+    }
+    function shareLink(){
+      var c = clock();
+      return location.origin + location.pathname + '#theatre-' + WHICH + '?f=' + (cur + 1) + (c.known && c.t > 3 ? '&t=' + Math.floor(c.t) : '');
+    }
+
+    /* Lock-screen and hardware keys: the film's name where the phone shows
+       what is playing, and the buttons there drive this player. */
+    function setMediaSession(it){
+      if (typeof navigator === 'undefined' || !navigator.mediaSession) return;
+      try {
+        navigator.mediaSession.metadata = new window.MediaMetadata({ title: it.title, artist: it.credit || 'The Wall', album: 'People for Animals \u00b7 The Wall',
+          artwork: it.poster ? [{ src: it.poster }] : it.yt ? [{ src: 'https://i.ytimg.com/vi/' + it.yt + '/hqdefault.jpg' }] : [] });
+        var set = function(a, fn){ try { navigator.mediaSession.setActionHandler(a, fn); } catch (e) {} };
+        set('play', function(){ P.play(); }); set('pause', function(){ P.pause(); });
+        set('previoustrack', function(){ load(cur - 1); }); set('nexttrack', function(){ load(cur + 1); });
+        set('seekbackward', function(d){ skip(-((d && d.seekOffset) || SKIP)); }); set('seekforward', function(d){ skip((d && d.seekOffset) || SKIP); });
+        set('seekto', function(d){ if (d && typeof d.seekTime === 'number') P.seek(d.seekTime); });
+      } catch (e) {}
+    }
+    function setPositionState(c){
+      if (typeof navigator === 'undefined' || !navigator.mediaSession || !navigator.mediaSession.setPositionState || !c.known) return;
+      try { navigator.mediaSession.setPositionState({ duration: c.d, position: Math.min(c.t, c.d), playbackRate: rate }); } catch (e) {}
+    }
+
+    function load(i, opts){
+      opts = opts || {};
+      i = (i + LIST.length) % LIST.length;
+      var it = LIST[i];
+      var t = opts.keepTime && i === cur ? clock().t : (typeof opts.startAt === 'number' ? opts.startAt : -1);
+      if (cur !== i && cur >= 0 && LIST[cur]) { var was = clock(); if (was.known) saveProg(LIST[cur], was.t, was.d); }
+      cur = i;
+      yt = null;
+      card(null);
+      $('#thSpin').hidden = true;
+      $('#thShield').hidden = true;
+      if (iframe){ iframe.remove(); iframe = null; }
+      $('#thIdx').textContent = pad(i + 1);
+      $('#thTitle').textContent = it.title + (it.credit ? ' | ' + it.credit : '');
+      Array.prototype.forEach.call(strip.children, function(b, k){ b.classList.toggle('is-now', k === i); });
+      var now = strip.children[i]; if (now && now.scrollIntoView) try { now.scrollIntoView({block:'nearest', inline:'center'}); } catch (e) {}
+      writeHash();
+      setMediaSession(it);
+
+      /* Where to start: the moment asked for, or where this person left off. */
+      var saved = t < 0 ? savedFor(it) : null;
+      var startAt = t >= 0 ? t : saved ? saved.t : Number(it.start) || 0;
+      if (saved && t < 0) say('Resuming from ' + tc(saved.t).replace(/^00:/, ''));
+
+      if (it.src){
+        video.hidden = false; video.src = it.src; if (it.poster) video.poster = it.poster; else video.removeAttribute('poster');
+        video.classList.toggle('contain', !!it.fit);
+        video.muted = muted; video.volume = volume; video.playbackRate = rate;
+        video.load();
+        $('#thSpin').hidden = false;                 /* until it can play, or fails */
+        var applyStart = function(){ if (startAt > 0) try { video.currentTime = startAt; } catch (e) {} };
+        if (video.readyState >= 1) applyStart(); else video.addEventListener('loadedmetadata', applyStart, { once: true });
+        var p = video.play();
+        if (p && p.then) p.then(paintPlay).catch(function(){ paintPlay(); });
+      } else {
+        video.pause(); video.removeAttribute('src'); video.hidden = true;
+        iframe = document.createElement('iframe');
+        iframe.allow = 'autoplay; fullscreen; picture-in-picture'; iframe.setAttribute('allowfullscreen', '');
+        iframe.title = it.title;
+        /* start: the ?t= a shared link carries, or the remembered position,
+           or the film's own start. Whole seconds only. */
+        var at = Math.max(0, Math.floor(startAt || 0));
+        var origin = '';
+        try { origin = /^https?:$/.test(location.protocol) ? '&origin=' + encodeURIComponent(location.origin) : ''; } catch (e) {}
+        /* A YouTube embed is opened bare (controls=0) when its API is already
+           here to drive it, so this page's controls are the only controls on
+           the screen: no second volume, no second bar. When the API script
+           has not arrived (first open, or blocked), the embed keeps its own
+           controls, because a bare embed nobody can drive is a locked door.
+           fs=0 always: full screen is this page's button. */
+        var driven = !!(window.YT && window.YT.Player);
+        iframe._bare = it.yt ? driven : false;
+        if (iframe._bare) iframe.className = 'bare';
+        iframe.src = it.yt ? 'https://www.youtube.com/embed/' + it.yt + '?autoplay=1&mute=' + (muted ? 1 : 0) + '&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&fs=0&iv_load_policy=3' + (driven ? '&controls=0&disablekb=1' : '') + origin + (at ? '&start=' + at : '')
+                   : 'https://player.vimeo.com/video/' + it.vimeo + '?autoplay=1&muted=' + (muted ? 1 : 0) + '&dnt=1&api=1' + (at ? '#t=' + at + 's' : '');
+        stage.insertBefore(iframe, stage.firstChild);
+        /* Until the player answers, the readouts are hidden by tick(): an
+           embed that has not reported a duration has nothing to show. */
+        if (it.yt) attachYt(iframe, i); else if (it.vimeo) attachVimeo(iframe, i);
+      }
+      paintPlay();
+      tick();
+      live('Now playing: ' + it.title);
+    }
+
+    /* ---- the chrome: top bar, and the bottom block of strip, ruler and
+       controls ----
+       Where the pointer is decides. Over the film - anywhere off the control
+       surfaces - the whole chrome steps away at once and the film has the
+       screen; brought down to the strip and controls, or up to the clock and
+       Close, it returns. No waiting on a timer either way. The chrome also
+       stays while the film is paused, while a card, the menu or the help
+       sheet is up, while a control holds focus, and for a moment after any
+       key. A tap on a touch screen brings it back rather than pausing. */
+    var bottom = $('#thBottom'), top = document.querySelector('.th-top');
+    var pointerZone = true, keysUntil = 0, syncT = null;
+    function bottomH(){ return bottom.offsetHeight; }
+    function chromeNeeded(){
+      if (!wasOpen) return true;
+      if (!P.playing()) return true;
+      if (!$('#thCard').hidden || !$('#thHelp').hidden || !$('#thRateMenu').hidden) return true;
+      /* Focus pins the chrome only when it is a keyboard's focus. open()
+         stands focus on Close for the keyboard hand; counting that focus
+         unconditionally meant a mouse hand could hover the film all night
+         and the chrome never stepped away. :focus-visible tells the two
+         apart; where it cannot be asked, the pointer decides and the
+         keyboard hand is still covered by the moment after any key. */
+      var focused = document.activeElement, kbd = false;
+      try { kbd = !!(focused && focused.matches && focused.matches(':focus-visible')); } catch (e) { kbd = false; }
+      if (kbd && (bottom.contains(focused) || top.contains(focused))) return true;
+      if (Date.now() < keysUntil) return true;
+      return pointerZone;
+    }
+    function setBottom(on){
+      bottom.classList.toggle('away', !on);
+      top.classList.toggle('away', !on);
+      th.classList.toggle('is-idle', !on);
+      th.style.setProperty('--th-bottom', on ? bottomH() + 'px' : '0px');
+    }
+    function sync(){ setBottom(chromeNeeded()); armRest(); }
+    /* While the film has the screen and the hand is still, the pointer rests
+       too - the way every theatre hides it - and the smallest movement wakes
+       it. It never rests while the chrome is up: a visible control row with
+       an invisible pointer is a trap. */
+    var restT = null;
+    function restCursor(on){ if (window.PFA_CHROME && PFA_CHROME.restCursor) PFA_CHROME.restCursor(on); }
+    function armRest(){
+      clearTimeout(restT); restCursor(false);
+      if (wasOpen && !chromeNeeded()) restT = setTimeout(function(){ restCursor(true); }, 2400);
+    }
+    function wake(){
+      keysUntil = Date.now() + 2500;
+      sync();
+      clearTimeout(syncT); syncT = setTimeout(sync, 2600);
+    }
+    function inChromeZone(e){
+      var r = th.getBoundingClientRect();
+      if (e.clientY <= r.top + Math.max(top.offsetHeight, 72) + 16) return true;
+      if (e.clientY >= r.bottom - Math.max(bottomH(), 160) - 24) return true;
+      var t = e.target;
+      return !!(t && t.closest && (t.closest('.th-bottom') || t.closest('.th-top')));
+    }
+    function setScrub(on){
+      bottom.classList.toggle('is-scrub', on);
+      th.classList.toggle('is-scrub', on);
+    }
+    th.addEventListener('pointermove', function(e){
+      if (e.pointerType === 'touch') return;
+      var zone = inChromeZone(e);
+      /* Off the control surfaces the scrub state has no meaning, and letting
+         it linger would animate the pushed items back under a block that is
+         itself hiding. Cleared first, silently, under the fading block. */
+      if (!zone) setScrub(false);
+      if (zone !== pointerZone){ pointerZone = zone; sync(); }
+      else armRest();
+    });
+    th.addEventListener('pointerleave', function(e){ if (e.pointerType === 'touch') return; pointerZone = false; sync(); });
+    bottom.addEventListener('focusin', function(){ setScrub(false); sync(); });
+    bottom.addEventListener('focusout', function(){ setTimeout(sync, 10); });
+
+    /* Touch: one tap shows or puts away the chrome; a double tap in the
+       middle pauses or plays; a double tap on the left or right third skips
+       ten seconds. Play and pause also live on the buttons a tap reveals. */
+    var lastTap = 0, tapT = null, touchedAt = 0;
+    stage.addEventListener('pointerup', function(e){
+      if (e.pointerType !== 'touch') return;
+      touchedAt = Date.now();
+      if (!onFilm(e.target) && !(iframe && e.target === iframe)) return;
+      var now = Date.now(), r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+      if (now - lastTap < 320){
+        clearTimeout(tapT); lastTap = 0;
+        if (x < 0.33) skip(-SKIP); else if (x > 0.67) skip(SKIP); else toggle();
+        return;
+      }
+      lastTap = now;
+      clearTimeout(tapT);
+      tapT = setTimeout(function(){
+        pointerZone = bottom.classList.contains('away');
+        sync();
+      }, 330);
+    });
+
+    /* The API script is warmed the moment a hand moves toward a tile, so by
+       the time the theatre opens, even the first embed can open bare. A
+       visitor who never goes near the wall never loads it. */
+    function warmOnce(e){
+      if (!e.target.closest || !e.target.closest('[data-play],[data-theatre-open],[data-go]')) return;
+      loadYtApi();
+      document.removeEventListener('pointerover', warmOnce);
+      document.removeEventListener('focusin', warmOnce);
+    }
+    document.addEventListener('pointerover', warmOnce);
+    document.addEventListener('focusin', warmOnce);
+
+    function open(i, which, startAt){
+      lastFocus = document.activeElement;
+      loadYtApi();                    /* and again here: a deep link skips the hover */
+      setList(which || 'long');
+      th.hidden = false; th.classList.add('open'); document.body.classList.add('theatre-lock'); wasOpen = true;
+      drawRule(); paintAuto();
+      load(i || 0, typeof startAt === 'number' && startAt > 0 ? { startAt: startAt } : {});
+      pointerZone = true; sync();
+      if (window.PFA_CHROME && PFA_CHROME.recolourCursor) PFA_CHROME.recolourCursor();
+      $('#thClose').focus();
+    }
+    function close(){
+      var was = clock(); if (was.known && LIST[cur]) saveProg(LIST[cur], was.t, was.d);
+      card(null); $('#thHelp').hidden = true;
+      if (fsElement()) try { fullscreen(); } catch (e) {}
+      setScrub(false);
+      clearTimeout(restT); restCursor(false);
+      th.classList.remove('open'); th.hidden = true; document.body.classList.remove('theatre-lock'); wasOpen = false;
+      video.pause(); if (iframe){ iframe.remove(); iframe = null; } yt = null;
+      if (/^#theatre/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+      if (window.PFA_CHROME && PFA_CHROME.recolourCursor) PFA_CHROME.recolourCursor();
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function toggle(){
+      if (iframe && !P.ext()) return;
+      if (P.playing()) P.pause(); else P.play();
+    }
+    function paintAuto(){ var b = $('#thAuto'); b.setAttribute('aria-pressed', String(autoplay)); b.textContent = 'Autoplay' + (autoplay ? '' : ' off'); }
+    function setAuto(on){ autoplay = on; try { localStorage.setItem('pfa:wall:autoplay', on ? 'on' : 'off'); } catch (e) {} paintAuto(); live(on ? 'Autoplay on' : 'Autoplay off'); }
+
+    function fsElement(){ return document.fullscreenElement || document.webkitFullscreenElement || null; }
+    function fullscreen(){
+      if (fsElement()){
+        var out = document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen ? document.webkitExitFullscreen() : null;
+        if (out && out.catch) out.catch(function(){});
+        return;
+      }
+      /* The theatre element first; the whole document if that is refused;
+         on an iPhone, a file's own full screen, which is the only one iOS
+         has. Only when all three are refused is anything said. */
+      var steps = [
+        function(){ var f = th.requestFullscreen || th.webkitRequestFullscreen; return f && f.call(th, { navigationUI: 'hide' }); },
+        function(){ var d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen; return f && f.call(d); },
+        function(){ if (!iframe && video.webkitEnterFullscreen){ video.webkitEnterFullscreen(); return Promise.resolve(); } return null; }
+      ];
+      (function attempt(k){
+        if (k >= steps.length){ say('Full screen is not available here.'); return; }
+        var out;
+        try { out = steps[k](); } catch (e) { out = null; }
+        if (out === null || out === undefined || out === false){ attempt(k + 1); return; }
+        if (out.catch) out.catch(function(){ attempt(k + 1); });
+      })(0);
+    }
+    function onFsChange(){
+      var on = !!fsElement();
+      $('#thFull').setAttribute('aria-pressed', String(on)); $('#thFull').setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+      drawRule(); tick();
+    }
+    document.addEventListener('fullscreenchange', onFsChange);
+    document.addEventListener('webkitfullscreenchange', onFsChange);
+
+    /* ---- rates menu ---- */
+    var menu = $('#thRateMenu');
+    menu.innerHTML = RATES.map(function(r){ return '<button type="button" role="menuitemradio" data-rate="' + r + '" aria-checked="' + (r === 1) + '">' + String(r) + '\u00d7</button>'; }).join('');
+    function menuOpen(on){ menu.hidden = !on; $('#thRateBtn').setAttribute('aria-expanded', String(on)); if (on){ var c = menu.querySelector('[aria-checked="true"]') || menu.firstChild; if (c) c.focus(); } }
+    $('#thRateBtn').addEventListener('click', function(){ menuOpen(menu.hidden); });
+    menu.addEventListener('click', function(e){ var b = e.target.closest('[data-rate]'); if (!b) return; P.setRate(Number(b.getAttribute('data-rate'))); menuOpen(false); $('#thRateBtn').focus(); flash($('#thRateNow').textContent); });
+    document.addEventListener('click', function(e){ if (!menu.hidden && !e.target.closest('#thRate')) menuOpen(false); });
+    function stepRate(dir){ var i = RATES.indexOf(rate); i = Math.max(0, Math.min(RATES.length - 1, i + dir)); P.setRate(RATES[i]); flash($('#thRateNow').textContent); }
+
+    /* ---- the controls ---- */
+    document.addEventListener('click', function(e){
+      var t = e.target.closest('[data-play]'); if (t){ var n = +t.getAttribute('data-play'), w = WALL[n].wall; open(WALL.filter(function(it){ return it.wall === w; }).indexOf(WALL[n]), w); return; }
+      var o = e.target.closest('[data-theatre-open]'); if (o){ e.preventDefault(); open(0, o.getAttribute('data-theatre-open') || 'long'); return; }
+      var g = e.target.closest('[data-go]'); if (g){ load(+g.getAttribute('data-go')); return; }
+      var c = e.target.closest('[data-theatre-close]'); if (c){ close(); return; }
+    });
+    $('#thClose').addEventListener('click', close);
+    $('#thSound').addEventListener('click', function(){ setSound(muted); });
+
+    /* Native frame or filled frame. Native is the default: the whole picture,
+       letterboxed where the screen is not 16:9. Fill crops to cover, the old
+       behaviour, for anyone who prefers no bars. Remembered across visits. */
+    var FRAME_KEY = 'pfa:theatre:frame';
+    var filled = false;
+    try { filled = localStorage.getItem(FRAME_KEY) === 'fill'; } catch (e) {}
+    function setFrame(fill){
+      filled = Boolean(fill);
+      th.classList.toggle('is-fill', filled);
+      $('#thFitNative').classList.toggle('on', !filled);
+      $('#thFitFill').classList.toggle('on', filled);
+      $('#thFit').setAttribute('aria-pressed', String(filled));
+      try { localStorage.setItem(FRAME_KEY, filled ? 'fill' : 'native'); } catch (e) {}
+    }
+    setFrame(filled);
+    $('#thFit').addEventListener('click', function(){ setFrame(!filled); flash(filled ? 'Filled frame' : 'Native frame'); });
+    $('#thPlay').addEventListener('click', toggle);
+    $('#thPrev').addEventListener('click', function(){ load(cur - 1); });
+    $('#thNext').addEventListener('click', function(){ load(cur + 1); });
+    $('#thBack').addEventListener('click', function(){ skip(-SKIP); });
+    $('#thFwd').addEventListener('click', function(){ skip(SKIP); });
+    $('#thAuto').addEventListener('click', function(){ setAuto(!autoplay); });
+    $('#thFull').addEventListener('click', fullscreen);
+    $('#thHelpBtn').addEventListener('click', function(){ $('#thHelp').hidden = false; $('#thHelpClose').focus(); });
+    $('#thHelpClose').addEventListener('click', function(){ $('#thHelp').hidden = true; $('#thHelpBtn').focus(); });
+    $('#thShare').addEventListener('click', function(){
+      var url = shareLink();
+      var done = function(){ say('Link copied'); live('Link copied'); };
+      var fallback = function(){ try { window.prompt('Copy this link', url); } catch (e) {} };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, fallback); else fallback();
+    });
+    var seekBar = $('#thSeek'), seekWrap = $('#thSeekWrap');
+    function seekPreview(frac){
+      $('#thFill').style.width = (frac * 100) + '%'; $('#thKnob').style.left = (frac * 100) + '%';
+      seekBar.setAttribute('aria-valuetext', tc(frac * clock().d));
+    }
+    seekBar.addEventListener('input', function(){ dragging = true; seekWrap.classList.add('is-drag'); seekPreview(Number(seekBar.value) / 1000); });
+    seekBar.addEventListener('change', function(){ dragging = false; seekWrap.classList.remove('is-drag'); P.seek(Number(seekBar.value) / 1000 * clock().d); });
+    /* Arrow keys on the bar are the bar's, not the page's: a nudge on it moves
+       one thousandth, which for a long film is a second or two. */
+    seekBar.addEventListener('keydown', function(e){
+      var c = clock(); if (!c.known) return;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'){ e.preventDefault(); e.stopPropagation(); skip(e.key === 'ArrowLeft' ? -SKIP : SKIP); }
+      if (e.key === 'Home'){ e.preventDefault(); e.stopPropagation(); P.seek(0); }
+      if (e.key === 'End'){ e.preventDefault(); e.stopPropagation(); P.seek(c.d); }
+    });
+    seekWrap.addEventListener('pointermove', function(e){
+      var c = clock(), tip = $('#thTip'); if (!c.known || e.pointerType === 'touch'){ tip.hidden = true; return; }
+      var r = seekWrap.getBoundingClientRect(), f = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      tip.textContent = tc(f * c.d); tip.style.left = (f * 100) + '%'; tip.hidden = false;
+      setScrub(true);
+    });
+    seekWrap.addEventListener('pointerleave', function(){ $('#thTip').hidden = true; setScrub(false); });
+
+    function onFilm(t){ return t === video || t === stage || t === $('#thShield'); }
+    stage.addEventListener('click', function(e){
+      if (Date.now() - touchedAt < 600) return;   /* a touch: handled above */
+      if (onFilm(e.target)) toggle();
+    });
+    stage.addEventListener('dblclick', function(e){ if (onFilm(e.target)) fullscreen(); });
+    $('#thRule').addEventListener('click', function(e){
+      var r = rule.getBoundingClientRect(), f = (e.clientX - r.left) / r.width * LIST.length, i = Math.floor(f);
+      if (i !== cur){ load(i, { startAt: 0 }); return; }
+      var c = clock();
+      if (!c.known) return;
+      P.seek((f - i) * c.d);
+    });
+
+    video.addEventListener('play', function(){ $('#thSpin').hidden = true; paintPlay(); });
+    video.addEventListener('playing', function(){ $('#thSpin').hidden = true; paintPlay(); });
+    video.addEventListener('pause', function(){ paintPlay(); if (!video.ended && video.duration) saveProg(LIST[cur], video.currentTime, video.duration); });
+    video.addEventListener('waiting', function(){ if (!iframe) $('#thSpin').hidden = false; });
+    video.addEventListener('stalled', function(){ if (!iframe && !video.paused) $('#thSpin').hidden = false; });
+    video.addEventListener('canplay', function(){ $('#thSpin').hidden = true; });
+    video.addEventListener('timeupdate', function(){ tick(); if (!video.paused && video.duration) saveProgThrottled(video.currentTime, video.duration); });
+    video.addEventListener('progress', tick);
+    video.addEventListener('loadedmetadata', tick);
+    video.addEventListener('durationchange', tick);
+    video.addEventListener('volumechange', function(){ if (!iframe && video.muted !== muted){ setSound(!video.muted); } });
+    video.addEventListener('ratechange', function(){ if (!iframe && video.playbackRate !== rate && video.playbackRate > 0){ rate = video.playbackRate; $('#thRateNow').textContent = String(rate) + '\u00d7'; } });
+    video.addEventListener('ended', onEnded);
+    video.addEventListener('error', function(){ if (!iframe && video.getAttribute('src')) showError(); });
+    window.addEventListener('resize', function(){ if (wasOpen){ drawRule(); tick(); sync(); } });
+    window.addEventListener('pagehide', function(){ if (wasOpen){ var c = clock(); if (c.known && LIST[cur]) saveProg(LIST[cur], c.t, c.d); } });
+
+    /* Tab stays inside the theatre while it is open: it is a dialog, and the
+       page under it is not there to be reached. */
+    function focusables(){
+      return Array.prototype.filter.call(th.querySelectorAll('button,a[href],input,[tabindex]:not([tabindex="-1"])'), function(el){
+        return !el.disabled && !el.hidden && el.offsetParent !== null && !el.closest('[hidden]');
+      });
+    }
+    document.addEventListener('keydown', function(e){
+      if (!wasOpen) return;
+      var tgt = e.target && e.target.closest ? e.target : document.body;
+      var inField = /^(input|textarea|select)$/i.test(tgt.tagName || '') && tgt.type !== 'range';
+      if (e.key === 'Tab'){
+        var list = focusables(); if (!list.length) return;
+        var i = list.indexOf(document.activeElement);
+        if (e.shiftKey && (i <= 0)){ e.preventDefault(); list[list.length - 1].focus(); }
+        else if (!e.shiftKey && (i === -1 || i === list.length - 1)){ e.preventDefault(); list[0].focus(); }
+        return;
+      }
+      if (e.key === 'Escape'){
+        if (!$('#thHelp').hidden){ $('#thHelp').hidden = true; $('#thHelpBtn').focus(); return; }
+        if (!menu.hidden){ menuOpen(false); return; }
+        if (fsElement()){ fullscreen(); return; }
+        close(); return;
+      }
+      if (inField) return;
+      var k = e.key, lower = k.toLowerCase();
+      if (k === ' ' || lower === 'k'){ if (tgt.closest('button,a') && k === ' ') return; e.preventDefault(); toggle(); }
+      else if (k === 'ArrowRight' || lower === 'l'){ e.preventDefault(); if (e.shiftKey) load(cur + 1); else skip(SKIP); }
+      else if (k === 'ArrowLeft' || lower === 'j'){ e.preventDefault(); if (e.shiftKey) load(cur - 1); else skip(-SKIP); }
+      else if (lower === 'n'){ load(cur + 1); }
+      else if (lower === 'p'){ load(cur - 1); }
+      else if (k === 'ArrowUp'){ e.preventDefault(); P.setVolume(volume + 0.1); flash('Volume ' + Math.round(volume * 100) + '%'); }
+      else if (k === 'ArrowDown'){ e.preventDefault(); P.setVolume(volume - 0.1); flash('Volume ' + Math.round(volume * 100) + '%'); }
+      else if (lower === 'm'){ setSound(muted); flash(muted ? 'Sound off' : 'Sound on'); }
+      else if (lower === 'f'){ fullscreen(); }
+      else if (lower === 'a'){ setAuto(!autoplay); flash(autoplay ? 'Autoplay on' : 'Autoplay off'); }
+      else if (lower === 'z'){ setFrame(!filled); flash(filled ? 'Filled frame' : 'Native frame'); }
+      else if (k === '?'){ $('#thHelp').hidden = !$('#thHelp').hidden; if (!$('#thHelp').hidden) $('#thHelpClose').focus(); }
+      else if (k === '>' || k === '.'){ stepRate(1); }
+      else if (k === '<' || k === ','){ stepRate(-1); }
+      else if (/^[0-9]$/.test(k)){ var c = clock(); if (c.known){ P.seek(c.d * Number(k) / 10); flash(k + '0%'); } }
+      else if (k === 'Home'){ P.seek(0); }
+      else if (k === 'End'){ var ce = clock(); if (ce.known) P.seek(ce.d); }
+      wake();
+    });
+
+    /* Both hashes are named in full. #theatre-long used to be matched only by
+       the /^#theatre/ fallback, so nothing in the file said the word out loud
+       and the link audit reported the two links pointing at it as dead. The
+       fallback stays for a bare #theatre. A link can also name the film and
+       the moment: #theatre-long?f=3&t=95. */
+    var deep = parseHash(location.hash);
+    if (location.hash === '#theatre-short') open(0, 'short');
+    else if (location.hash === '#theatre-long') open(0, 'long');
+    else if (deep) open(deep.f, deep.which, deep.t);
+    else if (/^#theatre/.test(location.hash)) open(0, 'long');
+    window.addEventListener('hashchange', function(){
+      var d = parseHash(location.hash);
+      if (d && !wasOpen) open(d.f, d.which, d.t);
+    });
+
+    /* For the tests, and for anything else on the page that wants to drive
+       the theatre rather than click through it. */
+    window.PFA_THEATRE = { open: open, close: close, load: load, toggle: toggle, skip: skip, player: P, clock: clock, parseHash: parseHash, shareLink: shareLink, list: function(){ return LIST; }, current: function(){ return cur; }, isOpen: function(){ return wasOpen; }, autoplay: function(){ return autoplay; }, saved: savedFor, keyOf: keyOf };
+  })();
+})();
+</script>
+</body>
+</html>

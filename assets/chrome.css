@@ -1,0 +1,342 @@
+/* ======================================================================
+   PFA site chrome: announcement bar, fixed header, footer.
+
+   This is the ONLY place these rules live. Every page links this file
+   before its own <style>, so page CSS can still override a rule if it
+   must, but nothing needs to copy any of this.
+
+   Tokens used here (--ink, --deep, --gutter) are defined in each page's
+   :root; custom properties resolve at compute time, so the order of
+   <link> and <style> does not matter for them.
+
+   Layout model:
+     .announce     fixed, top:0,        height measured into --ann
+     header.site   fixed, top:--ann,    height measured into --nav
+     first section reserves calc(var(--ann) + var(--nav) + ...) itself.
+   assets/chrome.js does the measuring and the announcement close.
+   ====================================================================== */
+
+/* ---------- announcement bar ---------- */
+.announce{position:fixed;left:0;right:0;top:0;z-index:60;min-height:34px;background:var(--deep,#0a0a0a);color:#fff;display:flex;align-items:center;justify-content:center;padding:0 48px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.announce p{margin:0;text-align:center}
+.announce button{position:absolute;right:20px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:12px;line-height:1;padding:4px;transition:color .25s}
+.announce button:hover{color:#fff}
+.announce[hidden]{display:none}
+
+/* ---------- header ---------- */
+header.site{position:fixed;left:0;right:0;top:var(--ann,34px);z-index:50;padding:0 var(--gutter);background:rgba(255,255,255,.96);backdrop-filter:blur(10px);color:var(--ink,#111);border-bottom:1px solid rgba(17,17,17,.08)}
+header.site nav{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px;height:78px;padding:0;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.navgroup{display:flex;align-items:center;gap:24px;white-space:nowrap}
+.navgroup.right{justify-content:flex-end}
+.navgroup a{letter-spacing:inherit;padding-bottom:2px;border-bottom:1px solid transparent;transition:border-color .25s}
+.navgroup a:hover{border-bottom-color:currentColor}
+.navgroup a.current{border-bottom-color:currentColor}
+
+.wordmark{display:block;justify-self:center;padding:0;background:none}
+.wordmark img{height:46px;width:auto;display:block;filter:none;
+  /* The mark alights: it drops the last few pixels into place as the page
+     paints, rather than simply being there. One pass, and nothing left running
+     afterwards. The paw tracks under Shop are this header's only continuous
+     motion and a second one beside them would be noise, not life.
+
+     The file itself is untouched. This moves the <img>, not the artwork.
+
+     fill-mode backwards rather than both: backwards holds the opening frame
+     before the animation starts, so there is no flash of the settled mark, but
+     it does not persist the closing frame afterwards. `both` would, and a
+     persisted animated transform outranks a declaration, so the hover below
+     would silently stop working. */
+  animation:pfa-alight .5s cubic-bezier(.2,.7,.3,1) backwards}
+@keyframes pfa-alight{
+  from{opacity:0;transform:translateY(-7px)}
+  to{opacity:1;transform:translateY(0)}
+}
+/* It is the way home, so it answers the pointer: a small lift, the same
+   gesture as the arrival, reversed. */
+@media (hover:hover) and (pointer:fine){
+  .wordmark img{transition:transform .22s ease}
+  .wordmark:hover img,
+  .wordmark:focus-visible img{transform:translateY(-2px)}
+}
+/* Stands still for anyone who asked for less movement, in both directions. */
+@media (prefers-reduced-motion:reduce){
+  .wordmark img{animation:none;transition:none}
+  .wordmark:hover img,
+  .wordmark:focus-visible img{transform:none}
+}
+
+/* Cart control; only shop pages render it. Kept here so the shop pages
+   do not need a second header stylesheet. */
+.navcart{background:none;border:none;cursor:pointer;font:inherit;font-size:11px;letter-spacing:inherit;padding:0;display:flex;align-items:center;gap:6px;color:inherit}
+.navcart .dot{display:none;min-width:20px;height:20px;border-radius:10px;border:1px solid currentColor;font-size:10px;font-weight:700;letter-spacing:0}
+.navcart[data-count]:not([data-count="0"]) .dot{display:grid;place-items:center}
+
+/* ---------- Donate: the strongest call to action ---------- */
+/* A flex box with a fixed height, not inline-block: inline-block sits the
+   label on the text baseline, which reads as "sunk" beside the nav links
+   and shifts with the page's own line-height. Flex centres it outright. */
+.donate{position:relative;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate;
+  box-sizing:border-box;height:38px;padding:0 26px;border:1px solid currentColor;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-indent:.14em;text-transform:uppercase;line-height:1;white-space:nowrap;vertical-align:middle;
+  transition:background .3s,color .3s,border-color .3s,transform .3s ease,box-shadow .3s ease}
+.donate:hover{opacity:1;transform:translateY(-1px)}
+.donate::after{content:"";position:absolute;top:0;bottom:0;left:-150%;width:55%;
+  transform:skewX(-18deg);pointer-events:none;animation:sweep 9s ease-in-out infinite}
+@keyframes sweep{0%,80%{left:-150%}92%,100%{left:150%}}
+@keyframes halo-on-light{0%,100%{box-shadow:0 0 0 0 rgba(17,17,17,.20)}60%{box-shadow:0 0 0 10px rgba(17,17,17,0)}}
+header.site .donate{background:var(--ink,#111);border-color:var(--ink,#111);color:#fff;animation:halo-on-light 4.4s ease-in-out infinite}
+header.site .donate::after{background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent)}
+header.site .donate:hover{box-shadow:0 0 0 7px rgba(17,17,17,.12)}
+
+/* ---------- breakpoints: one set, every page ---------- */
+/* Between 861px and 1100px the six left-hand items, the mark and the right
+   group together want more room than the gutters leave. The nav tightens -
+   smaller face, less tracking, tighter gaps, a slightly smaller mark - which
+   at most widths in that band is enough for the three tracks to stay even and
+   the mark to stay on the centre line. The side tracks also drop back to a
+   bare 1fr here: its min-content floor is what keeps a link from ever running
+   underneath the logo. Where the content still will not fit, the mark gives
+   up the centre rather than the nav giving up its space. The bound is 1280px
+   because that is where the untightened nav's own content (489px left group,
+   254px right, 135px mark) finally fits an even third of the measure; below
+   it, minmax(0,1fr) can only centre the mark by running the left group
+   underneath it. */
+@media (max-width:1280px){
+  header.site nav{grid-template-columns:1fr auto 1fr;gap:16px;font-size:10px;letter-spacing:.04em}
+  .navgroup{gap:14px}
+  .wordmark img{height:40px}
+  header.site .donate{padding:0 18px;letter-spacing:.1em;text-indent:.1em}
+}
+/* 940px, not 860px: the tightened three-track nav needs an 850px content box
+   (370px left group, 117px mark, 331px right, two 16px gaps) and the 4vw
+   gutters do not leave that until about 923px. Below the bound the left group
+   stands down and the mark moves to the corner, which is the state that has
+   always carried narrow screens. */
+@media (max-width:940px){
+  .navgroup.left{display:none}
+  header.site nav{grid-template-columns:auto minmax(0,1fr);gap:20px}
+  .wordmark{justify-self:start}
+}
+@media (max-width:720px){
+  .navgroup.right a.hide-sm{display:none}
+}
+@media (max-width:560px){
+  .announce{font-size:10px;padding:6px 34px 6px 10px;letter-spacing:0}
+  .wordmark img{height:38px}
+  .donate{height:34px;padding:0 18px;letter-spacing:.08em;text-indent:.08em}
+}
+@media (prefers-reduced-motion:reduce){
+  .donate,.donate::after{animation:none!important;transition:none!important}
+}
+
+/* ======================================================================
+   site footer: identical on every page
+   ====================================================================== */
+/* ---------- Shop: a small animal walks past ----------
+   Two paw prints on one tile, offset the way real tracks are, tiled, then walked
+   by moving the tile. One pseudo-element, one inline SVG, no request.
+
+   The tracks sit under the word at rest, faintly, so the invitation is there
+   before anyone hovers. Hovering brings them up and sets them walking.
+
+   The fill is a literal ink value, not currentColor: an SVG used as a CSS
+   background is a separate document and currentColor never reaches it. The
+   header is white on every page, so a constant is right here.
+
+   Hooked on data-nav rather than href, because on the shop page the link becomes
+   #top and an href rule would silently stop matching there. */
+header.site nav a[data-nav="pfa-shop.html"]{ position: relative; }
+header.site nav a[data-nav="pfa-shop.html"]::after{
+  /* bottom was -11px against the old 13px mixed-case nav; the theme's 11px
+     caps shrank the anchor the strip hangs from, and the tracks rose into
+     the current-page underline - the crop of 2 Sep, a paw cut by the line.
+     Four pixels lower restores the air the animals always had; the header
+     row is 78px, so the hairline at its foot stays far below them. */
+  content:"";position:absolute;left:-3px;right:-3px;bottom:-15px;height:13px;
+  /* set below, cleared further on the page you are already on */
+  background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2026%2013%22%3E%3Cg%20fill%3D%22%2316b6ff%22%3E%3Cellipse%20cx%3D%225%22%20cy%3D%229.4%22%20rx%3D%222.2%22%20ry%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%222.4%22%20cy%3D%226.2%22%20r%3D%220.95%22%2F%3E%3Ccircle%20cx%3D%225%22%20cy%3D%225.4%22%20r%3D%220.95%22%2F%3E%3Ccircle%20cx%3D%227.6%22%20cy%3D%226.5%22%20r%3D%220.95%22%2F%3E%3Cellipse%20cx%3D%2218%22%20cy%3D%224.6%22%20rx%3D%222.2%22%20ry%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2215.4%22%20cy%3D%221.4%22%20r%3D%220.95%22%2F%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%220.6%22%20r%3D%220.95%22%2F%3E%3Ccircle%20cx%3D%2220.6%22%20cy%3D%221.7%22%20r%3D%220.95%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 0 50% / 26px 13px repeat-x;
+  /* Full strength, so the tracks are the colour they are set to. This sat at
+     .32, which on white turned #16b6ff into roughly #b4e8ff: a pale wash
+     rather than the brand blue. */
+  opacity:1;
+  /* The animal walks on its own. The trot used to run only under the cursor,
+     which meant anyone who never hovered the link never saw it at all. Now
+     stopping is the interaction: rest the pointer on Shop and it halts, as
+     though it noticed you. */
+  animation:pfa-trot 1.15s linear infinite;
+  pointer-events:none}
+/* On the shop itself the link is marked current, which draws a rule directly
+   under the word. The tracks sat on top of that rule and read as one muddled
+   mark, so they drop clear of it here. They also stop: the animal was walking
+   you to the shop and you are standing in it. This covers the product pages
+   too, which carry the same current marker. */
+header.site nav a[data-nav="pfa-shop.html"].current::after{
+  bottom:-17px;
+  animation-play-state:paused}
+
+/* play-state rather than animation:none, so it halts mid-stride where it is
+   instead of snapping back to the first frame. */
+@media (hover: hover) and (pointer: fine) {
+  header.site nav a[data-nav="pfa-shop.html"]:hover::after,
+  header.site nav a[data-nav="pfa-shop.html"]:focus-visible::after{
+    animation-play-state:paused}
+}
+@keyframes pfa-trot{ to{ background-position-x:26px; } }
+/* someone who has asked for less movement keeps the tracks, standing still.
+   This has to clear the default now: the walk is no longer something only a
+   hover starts, so cancelling it on hover alone would leave it running for
+   exactly the people who asked it not to. */
+@media (prefers-reduced-motion: reduce) {
+  header.site nav a[data-nav="pfa-shop.html"]::after{ animation:none }
+}
+
+.pfa-footer{
+  --ff-bg:#0a0a0a;--ff-fg:#fff;--ff-muted:#8f8f8f;--ff-line:#282828;
+  --ff-body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ff-display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --ff-pad:clamp(72px,8vw,128px);
+  --ff-gutter:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  width:100%;padding:var(--ff-pad) var(--ff-gutter) 36px;
+  background:var(--ff-bg);color:var(--ff-fg);font-family:var(--ff-body);
+  display:flex;flex-direction:column;box-sizing:border-box}
+.pfa-footer *{box-sizing:border-box}
+.pfa-footer__base p{margin:0}
+.pfa-footer a{color:inherit;text-decoration:none}
+.pfa-footer a:hover{opacity:.6}
+.pfa-footer ul{margin:0;padding:0;list-style:none;display:grid;gap:12px;font-size:13px}
+/* Three equal columns inside a centred block. Two earlier attempts were both
+   wrong: at 1fr across the full width they kept the rhythm of the four columns
+   there used to be and the right of the footer read as empty. Sized to their
+   own content they centre properly, but only if the gap is large enough to be
+   read as deliberate: at a normal desktop width this puts about 300px between
+   one column and the next, against margins of roughly the same order. */
+.pfa-footer__links{display:grid;grid-template-columns:repeat(3,minmax(0,max-content));
+  justify-content:center;gap:clamp(80px,17vw,200px)}
+.pfa-footer__label{margin:0 0 20px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ff-muted)}
+/* ---------- visit tally ----------
+   An odometer: each digit is a 0-9 strip that slides to the right number, so a
+   change rolls rather than blinks. Pure transform, no library, and it degrades
+   to a plain readable number if transforms are unavailable. */
+.pfa-tally{margin:clamp(30px,3.4vw,46px) 0 0;text-align:center}
+.pfa-tally__label{margin:0 0 11px;font-size:10px;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.42)}
+/* The wheels wear the body face, not the display face, and it is not a
+   style call: Marcellus carries only old-style figures (its GSUB has frac
+   and liga, no lnum or tnum), so its zero is an x-height ring 0.806em wide
+   - odd and clipped in a 0.62em tile - while 3 and 4 trail descenders below
+   the baseline. The tabular-nums below was a silent no-op against it. An
+   odometer is an instrument; Helvetica's lining, near-tabular digits are
+   what these tile proportions were tuned for all along. */
+.pfa-tally__odo{display:inline-flex;align-items:stretch;gap:4px;
+  font-family:var(--ff-body);font-weight:400;line-height:1;
+  font-size:clamp(19px,2.4vw,32px);font-variant-numeric:tabular-nums}
+.pfa-tally__d{position:relative;overflow:hidden;width:.62em;height:1.16em;
+  border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);
+  border-radius:2px}
+/* the light that runs across the digits as they settle */
+.pfa-tally__d::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 42%,transparent 58%,rgba(0,0,0,.28))}
+.pfa-tally__strip{display:flex;flex-direction:column;align-items:center;
+  transition:transform 1.05s cubic-bezier(.2,.85,.2,1)}
+.pfa-tally__strip span{display:flex;align-items:center;justify-content:center;
+  height:1.16em;width:100%;color:#fff}
+.pfa-tally__sep{align-self:flex-end;padding:0 1px .18em;color:rgba(255,255,255,.35);
+  font-size:.72em;border:0;background:none}
+/* the digit that just changed gets a brief lift */
+.pfa-tally__d.is-hot{border-color:rgba(255,255,255,.5)}
+.pfa-tally__d.is-hot .pfa-tally__strip span{text-shadow:0 0 18px rgba(255,255,255,.45)}
+@media (prefers-reduced-motion: reduce){
+  .pfa-tally__strip{transition:none}
+  .pfa-tally__d.is-hot .pfa-tally__strip span{text-shadow:none}
+}
+
+.pfa-footer__mark{margin:clamp(76px,8vw,124px) 0 0;font-family:var(--ff-display);font-weight:400;text-transform:uppercase;font-size:clamp(18px,7.6vw,124px);line-height:1;letter-spacing:.01em;text-align:center;white-space:nowrap}
+/* The registered office, set as a letterhead line under the wordmark rather
+   than as a fourth column: the three above are sized to their own content and
+   centred, so a fourth would pull them off centre and undo the spacing worked
+   out there. <address> is italic by default, which the rest of the footer is
+   not. */
+/* No measure cap. The address is 62 characters and this used to read 52ch,
+   which fitted everything except the last word, so "India" sat alone on a
+   line of its own. The three lines are short and centred, so there is nothing
+   for a cap to protect against; on a narrow phone the address still wraps,
+   which is unavoidable and reads fine. */
+.pfa-footer__where{margin:clamp(16px,1.8vw,24px) auto 0;
+  font-style:normal;text-align:center;font-size:12px;letter-spacing:.02em;line-height:1.8;color:var(--ff-muted)}
+/* The lines stack on their own, being block-level in the markup: this rule is
+   spacing, not layout, so a stale cached copy of this file cannot run the
+   address, the numbers and the mailbox together into one paragraph. */
+.pfa-footer__where div + div{margin-top:3px}
+.pfa-footer__where a{white-space:nowrap}
+/* Three columns, not space-between. With space-between the middle item only
+   lands in the centre when the two either side happen to be the same width,
+   and “People for Animals © 2026” is far shorter than the charity line, so
+   the social links sat left of centre. 1fr auto 1fr pins the middle to the
+   centre of the page whatever the other two say. */
+.pfa-footer__base{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  gap:12px 24px;margin-top:clamp(48px,5vw,72px);padding-top:clamp(28px,3vw,40px);
+  border-top:1px solid var(--ff-line);font-size:11px;letter-spacing:.06em;color:var(--ff-muted)}
+.pfa-footer__base > :last-child{text-align:right}
+.pfa-footer__social{display:flex;flex-wrap:wrap;align-items:center;gap:6px 24px;text-transform:uppercase;letter-spacing:.14em}
+.pfa-footer__social a{color:var(--ff-muted);transition:color .2s}
+.pfa-footer__social a:hover{color:var(--ff-fg);opacity:1}
+@media (max-width:860px){
+  .pfa-footer__links{grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch;gap:38px 24px}
+}
+@media (max-width:720px){
+  /* stacked and left aligned on narrow screens, as before */
+  .pfa-footer__base{grid-template-columns:1fr;justify-items:start;gap:10px}
+  .pfa-footer__base > :last-child{text-align:left}
+}
+@media (max-width:420px){
+  .pfa-footer__links{grid-template-columns:1fr;justify-content:stretch;gap:32px}
+}
+
+/* ======================================================================
+   hand-drawn cursor: the native pointer is hidden and redrawn by
+   assets/chrome.js, which also creates this layer. Only on devices that
+   hover, and never for people who asked for reduced motion.
+   ====================================================================== */
+/* The system cursor is hidden only while the drawn one is live: html.pfa-cursor
+   is set by the same code that draws it, in the same tick. A device without
+   hover, a page whose script failed, stalled or was blocked, never gets the
+   class - and keeps the system cursor. There is no moment, on any page or any
+   screen size, with no cursor at all. Content inside a cross-origin frame
+   draws its own; the Wall covers its driven embeds with a shield so the
+   pointer never enters them, and everywhere else the chevron steps aside at a
+   frame's edge (assets/chrome.js). */
+html.pfa-cursor, html.pfa-cursor *{cursor:none!important}
+/* Except under a modal. The top layer - a <dialog> shown modally, and its
+   backdrop - paints above every z-index there is, including the cursor
+   layer's, so the chevron sits underneath the panel: invisible on it, a
+   ghost through the backdrop, while cursor:none still holds. That is a
+   cursor that fails exactly where the visitor is working (the shop's
+   tracker, 2 Sep 2026). The contract is visibility, not the costume: while
+   any modal is open this hands the system pointer back, and chrome.js
+   stands the chevron down on the same beat. A browser too old for :has
+   drops this rule - and is too old for showModal, so it never has a modal
+   to fail under. */
+@supports not selector(:popover-open){
+html.pfa-cursor:has(dialog:modal), html.pfa-cursor:has(dialog:modal) *{cursor:revert!important}
+}
+/* As a popover the layer inherits the UA's popover dress - centred,
+   fit-content, bordered, canvas-coloured. Undressed here so it is exactly
+   the full-viewport, transparent, untouchable sheet it always was. */
+.cursor-layer{margin:0;border:0;padding:0;width:auto;height:auto;background:transparent;overflow:visible}
+.cursor-layer::backdrop{display:none}
+.cursor-layer{position:fixed;inset:0;z-index:2147483647;pointer-events:none}
+.cursor-layer svg{position:absolute;left:0;top:0;opacity:0;overflow:visible;will-change:transform;transform-origin:0 0;transition:opacity .2s ease}
+/* One stroke over a wider casing of the opposite colour: the OS-cursor
+   construction. Which way round follows the surface - assets/chrome.js reads
+   what is actually painted under the pointer and, on a dark one, sets these
+   two properties the other way about, so the chevron is black on white and
+   white on black everywhere without any page saying so.
+   The values here are the light-surface state and the fallback at the same
+   time: a page where the reading cannot be taken keeps a legible pointer
+   rather than half a switched one. Painted, never blended - a difference
+   blend recoloured the letters under the chevron and read as though it were
+   behind them. The last .on-dark page rules, dead since the class
+   stopped being applied, were swept in v1.247; the data-cursor hints are
+   read by the script. */
+#cursorCase{stroke:var(--cursor-case,#f2f0ec)}
+#cursorPath{stroke:var(--cursor-ink,var(--ink,#111))}

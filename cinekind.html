@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+
+.formstatus{margin:10px 0 0;font-size:13px;line-height:1.5}
+.formstatus[hidden]{display:none}
+.formstatus[data-state="bad"]{color:#b3261e}
+.formstatus[data-state="good"]{color:#1a7f4b}
+.field .opt{color:var(--muted);font-weight:400}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>CineKind Awards 2026 | People for Animals</title>
+<meta name="description" content="CineKind is a collaborative initiative by the Film Federation of India and People for Animals. The national award for films that choose kindness.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg,video{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+.btn--ghost{background:transparent;border-color:#fff;color:#fff}
+.btn--ghost:hover{background:#fff;color:var(--ink)}
+
+.shot{position:relative;overflow:hidden;background:var(--stone)}
+.shot img,.shot video{width:100%;height:100%;object-fit:cover}
+.cap{margin:14px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(420px,64svh,700px);overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 20px;max-width:58ch}
+.hero h1{font-size:clamp(28px,4.4vw,64px);max-width:18ch}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;letter-spacing:.02em;color:rgba(255,255,255,.85)}
+.hero .note{margin:14px 0 0;font-size:12px;color:rgba(255,255,255,.55)}
+.hero .cta{margin-top:36px}
+
+/* ---------- bands ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band--stone{background:var(--stone)}
+.band--bone{background:var(--bone)}
+.band--deep{background:var(--deep);color:#fff}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,50px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:56ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.band--deep .band__head p{color:rgba(255,255,255,.72)}
+.band--deep .eyebrow{color:rgba(255,255,255,.5)}
+section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 8px)}
+
+/* ---------- two column feature ---------- */
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,72px);align-items:center}
+.feature .shot{aspect-ratio:4/5}
+.feature__body h2{font-size:clamp(26px,3.2vw,50px);margin-top:14px;max-width:14ch}
+.feature__body p{margin:22px 0 0;max-width:44ch;font-size:14px;line-height:1.65;color:var(--muted)}
+
+/* ---------- facts ---------- */
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:48px;border-top:1px solid var(--line);padding-top:28px}
+.band--deep .facts{border-color:var(--line-dark)}
+.facts p.k{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.band--deep .facts p.k{color:rgba(255,255,255,.5)}
+.facts p.v{margin:8px 0 0;font-size:15px;line-height:1.4}
+
+/* ---------- honourees ---------- */
+.people{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px);margin-top:48px}
+.person .shot{aspect-ratio:4/5}
+.person .num{margin:16px 0 0;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.person .award{margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.person h3{margin:10px 0 0;font-size:16px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.person .note{margin:6px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
+.person a.src{display:inline-block;margin-top:12px;font-size:12px;border-bottom:1px solid var(--line);padding-bottom:1px;color:var(--muted)}
+
+/* ---------- honours list ---------- */
+.roll{margin-top:44px;border-top:1px solid var(--line)}
+.roll li{display:grid;grid-template-columns:64px minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+.roll .n{font-family:var(--display);font-size:15px;letter-spacing:.04em;color:var(--muted)}
+.roll .t{font-size:15px;font-weight:700;line-height:1.35}
+.roll .w{font-size:14px;line-height:1.45}
+.roll .s{font-size:13px;line-height:1.45;color:var(--muted)}
+
+/* ---------- galleries ---------- */
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:44px}
+.gallery .shot{aspect-ratio:3/2}
+.reel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:44px}
+.reel .shot{aspect-ratio:16/10;background:#181818}
+
+/* ---------- kind set tool ---------- */
+.tool{margin-top:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,3vw,56px);align-items:start}
+.tool h3{margin:0 0 16px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;border:1px solid var(--line);background:var(--paper);padding:16px 18px;font-size:14px;line-height:1.4;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.choice:hover{border-color:var(--ink)}
+.choice[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.answer{background:var(--paper);border:1px solid var(--line);padding:clamp(22px,2.4vw,34px);min-height:240px}
+.answer .verdict{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.answer h4{margin:12px 0 0;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(22px,2.2vw,32px);line-height:1.05}
+.answer p.body{margin:18px 0 0;font-size:14px;line-height:1.65;color:var(--muted);max-width:44ch}
+.answer .fine{margin:22px 0 0;font-size:12px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;max-width:44ch}
+
+/* ---------- closing ---------- */
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.close__note{margin:28px 0 0;font-size:12px;color:rgba(255,255,255,.5)}
+.nomform{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.nomform input{flex:1 1 300px;max-width:460px;border:1px solid var(--line);background:#fff;padding:15px 16px;font-size:14px;outline:none}
+.nomform input:focus{border-color:var(--ink)}
+
+.toast{position:fixed;left:16px;bottom:20px;z-index:75;background:var(--ink);color:#fff;font-size:12px;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .people,.gallery,.reel{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px}
+  .roll li{grid-template-columns:48px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .roll .s{grid-column:2 / -1}
+}
+@media (max-width:860px){
+  .feature,.tool{grid-template-columns:1fr}
+  .feature .shot{aspect-ratio:3/2}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .roll li{grid-template-columns:44px minmax(0,1fr);gap:10px}
+  .roll .w,.roll .s{grid-column:2 / -1}
+}
+@media (max-width:560px){
+  .people,.gallery,.reel{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr;gap:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/cinekind">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CineKind Awards 2026">
+  <meta property="og:description" content="CineKind is a collaborative initiative by the Film Federation of India and People for Animals. The national award for films that choose kindness.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/cinekind">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="CineKind Awards 2026">
+  <meta name="twitter:description" content="CineKind is a collaborative initiative by the Film Federation of India and People for Animals. The national award for films that choose kindness.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"CineKind Awards 2026","item":"https://peopleforanimalsindia.org/cinekind"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>CineKind 2026 · Mumbai · 4 October · World Animal Day</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="#top" data-nav="cinekind.html" class="current" aria-current="page">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+  <section class="hero" id="top">
+    <div class="hero__in">
+      <p class="eyebrow">A collaborative initiative by the Film Federation of India and People for Animals</p>
+      <h1 class="display">The&nbsp;national award for&nbsp;films that choose kindness.</h1>
+      <div class="meta">
+        <span>Mumbai 2026</span>
+        <span>4 October</span>
+        <span>World Animal Day</span>
+      </div>
+      <p class="note">Invite-only, entry-based event.</p>
+    </div>
+  </section>
+
+  <section class="band" id="trophy">
+    <div class="feature">
+      <div class="shot">
+        <img src="https://filmfederation.in/images/events/cinekind/5.jpg" alt="CineKind National Awards 2025, Film Federation of India" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </div>
+      <div class="feature__body">
+        <p class="eyebrow">The CineKind trophy</p>
+        <h2 class="display">A&nbsp;work of&nbsp;art. A&nbsp;mark of&nbsp;kindness.</h2>
+        <p>Each trophy is a sculpture by Paresh Maity. Winners are chosen by the CineKind National Awards Committee.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--deep" id="cinekind-2025">
+    <div class="band__head">
+      <p class="eyebrow">Last year</p>
+      <h2 class="display">CineKind 2025. The&nbsp;inaugural edition.</h2>
+      <p>Film Federation of India with People for Animals. Kolkata, 20 December 2025. Ten honours for films and people who made the case for animals on a national stage.</p>
+    </div>
+    <div class="reel">
+      <div class="shot" data-shot><video src="media/cinekind-elephant.mp4" muted loop autoplay playsinline aria-hidden="true" onerror="var s=this.closest('[data-shot]'); if (s) s.remove();"></video></div>
+      <div class="shot" data-shot><video src="media/cinekind-langur.mp4" muted loop autoplay playsinline aria-hidden="true" onerror="var s=this.closest('[data-shot]'); if (s) s.remove();"></video></div>
+      <div class="shot" data-shot><video src="media/cinekind-lion.mp4" muted loop autoplay playsinline aria-hidden="true" onerror="var s=this.closest('[data-shot]'); if (s) s.remove();"></video></div>
+    </div>
+  </section>
+
+  <section class="band" id="about">
+    <div class="band__head">
+      <p class="eyebrow">About</p>
+      <h2 class="display">Cinema can move a&nbsp;country.</h2>
+      <p>CineKind asks whether it can move us toward animals too. Ten honours, given once a year, for films and people who leave the frame kinder than they found it.</p>
+      <div class="facts">
+        <div><p class="k">Presented by</p><p class="v">FFI with PFA</p></div>
+        <div><p class="k">First edition</p><p class="v">Kolkata 2025</p></div>
+        <div><p class="k">Date</p><p class="v">20 December</p></div>
+        <div><p class="k">Honours</p><p class="v">Ten</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--bone" id="winners">
+    <div class="band__head">
+      <p class="eyebrow">Roll of honour</p>
+      <h2 class="display">Selected honourees.</h2>
+      <p>Six of the ten honours from the inaugural edition. The full list follows below.</p>
+    </div>
+    <div class="people">
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/harsha.webp" alt="Dr Harsha Atmakuri with his camera" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">001</p>
+        <p class="award">CineKind Compassion</p>
+        <h3>Dr Harsha Atmakuri</h3>
+        <p class="note">Maa Ka Doodh. Courageous, truth-driven filmmaking.</p>
+        <a class="src" href="https://maakadoodh.in/" target="_blank" rel="noopener">Film source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/dolly.webp" alt="Dolly Vyas Ahuja at a screening of The Land of Ahimsa" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">002</p>
+        <p class="award">Director of Change</p>
+        <h3>Dolly Vyas Ahuja</h3>
+        <p class="note">With Aryeman Ramsay. The Land of Ahimsa.</p>
+        <a class="src" href="https://timesofindia.indiatimes.com/entertainment/events/jaipur/documentary-the-land-of-ahimsa-shows-the-importance-of-non-violence/articleshow/94121090.cms" target="_blank" rel="noopener">Film source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/rupali.webp" alt="Rupali Ganguly embracing a rescued dog" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">003</p>
+        <p class="award">Actor for Kindness</p>
+        <h3>Rupali Ganguly</h3>
+        <p class="note">Animal rescue and adoption. Compassion beyond the screen.</p>
+        <a class="src" href="https://timesofindia.indiatimes.com/tv/news/hindi/rupali-ganguly-celebrates-supreme-courts-revised-order-on-stray-dogs-writes-a-big-win-for-compassion/articleshow/123451811.cms" target="_blank" rel="noopener">Photo source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/pooja.webp" alt="Pooja Bhatt, filmmaker and animal advocate" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">004</p>
+        <p class="award">Innovation for Compassion</p>
+        <h3>Pooja Bhatt</h3>
+        <p class="note">Fish Eye Network. Animal-free filmmaking.</p>
+        <a class="src" href="https://www.filmfare.com/news/bollywood/pooja-bhatt-honoured-by-peta-for-pledging-not-to-use-animals-in-films-53921.html" target="_blank" rel="noopener">Photo source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/sandhya.webp" alt="Dr Sandhya Sekar on a forest trail" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">005</p>
+        <p class="award">Visual Storyteller</p>
+        <h3>Dr Sandhya Sekar</h3>
+        <p class="note">Mongabay India. Environmental journalism.</p>
+        <a class="src" href="https://india.mongabay.com/2025/06/sandhya-sekar-on-how-mongabay-india-took-root-interview/" target="_blank" rel="noopener">Photo source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/mohit.webp" alt="Mohit Chauhan caring for two street dogs" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">006</p>
+        <p class="award">Humane Influence</p>
+        <h3>Mohit Chauhan</h3>
+        <p class="note">A public voice for street animals. Care, vaccination and coexistence.</p>
+        <a class="src" href="https://timesofindia.indiatimes.com/entertainment/hindi/music/news/caring-for-animals-is-about-coexistence-not-cruelty-mohit-chauhan/articleshow/126368343.cms" target="_blank" rel="noopener">Photo source</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="band" id="honours">
+    <div class="band__head">
+      <p class="eyebrow">The 2025 honours</p>
+      <h2 class="display">Ten awards. Ten records.</h2>
+    </div>
+    <ol class="roll">
+      <li><span class="n">01</span><span class="t">CineKind Compassion Award</span><span class="w">Dr Harsha Atmakuri</span><span class="s">Maa Ka Doodh</span></li>
+      <li><span class="n">02</span><span class="t">Director of Change</span><span class="w">Dolly Vyas Ahuja and Aryeman Ramsay</span><span class="s">The Land of Ahimsa</span></li>
+      <li><span class="n">03</span><span class="t">Actor for Kindness</span><span class="w">Rupali Ganguly</span><span class="s">Animal protection and adoption</span></li>
+      <li><span class="n">04</span><span class="t">Cinematic Impact for Animal Welfare</span><span class="w">Nirmal Verma</span><span class="s">Keeper of the Last Herd</span></li>
+      <li><span class="n">05</span><span class="t">Kindness in Frame</span><span class="w">Nitin Vemupati and S. A. Chandrasekhar</span><span class="s">Kooran</span></li>
+      <li><span class="n">06</span><span class="t">Voice for the Voiceless</span><span class="w">Kushagra Dixit</span><span class="s">Times of India</span></li>
+      <li><span class="n">07</span><span class="t">Innovation for Compassion</span><span class="w">Pooja Bhatt</span><span class="s">Fish Eye Network</span></li>
+      <li><span class="n">08</span><span class="t">Visual Storyteller for Animals</span><span class="w">Dr Sandhya Sekar</span><span class="s">Mongabay India</span></li>
+      <li><span class="n">09</span><span class="t">Guardians of Kindness</span><span class="w">Ashish Goswami</span><span class="s">PFA Wardha</span></li>
+      <li><span class="n">10</span><span class="t">Humane Influence</span><span class="w">Mohit Chauhan</span><span class="s">Animal welfare advocacy</span></li>
+    </ol>
+  </section>
+
+  <section class="band band--stone" id="ceremony">
+    <div class="band__head">
+      <p class="eyebrow">The ceremony</p>
+      <h2 class="display">The&nbsp;first edition.</h2>
+      <p>Kolkata, 20 December 2025. Ten honours presented by the Film Federation of India with People for Animals.</p>
+    </div>
+    <div class="gallery">
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/29.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/28.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/27.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/26.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/25.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/24.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/23.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/22.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/21.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/20.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/19.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+      <div class="shot"><img src="https://filmfederation.in/images/events/cinekind/18.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.shot').remove()"></div>
+    </div>
+    <p class="cap">Ceremony photographs by the Film Federation of India, from the <a href="https://filmfederation.in/events.php" rel="noopener">CineKind Award 2025 event page</a>. Used with the Federation’s permission as co-presenter of the award.</p>
+  </section>
+
+  <section class="band" id="kindset">
+    <div class="band__head">
+      <p class="eyebrow">Before the camera rolls</p>
+      <h2 class="display">A&nbsp;kind set starts before action.</h2>
+      <p>A real animal in a directed shot needs pre-shoot permission from the Animal Welfare Board of India. CineKind puts the process in plain language, before a production learns it too late.</p>
+    </div>
+    <div class="tool">
+      <div>
+        <h3>What is in the scene?</h3>
+        <div class="choices" id="choices" role="group" aria-label="Select the closest description of the scene"></div>
+        <p style="margin:18px 0 0;font-size:12px;color:var(--muted)">Select the closest description of the scene.</p>
+      </div>
+      <div class="answer" id="answer" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="band band--deep" id="archive">
+    <div class="band__head">
+      <p class="eyebrow">CineKind 2025</p>
+      <h2 class="display">Compassion. On&nbsp;screen. In&nbsp;action.</h2>
+      <p>The inaugural awards put humane storytelling on the national film industry's record. Explore the official event archive or read the government broadcaster's report from the ceremony.</p>
+      <div class="actions">
+        <a class="btn btn--light" href="https://filmfederation.in/events.php" target="_blank" rel="noopener">Official FFI archive</a>
+        <a class="btn btn--ghost" href="https://newsonair.gov.in/cinema-can-drive-wildlife-awareness-maneka-gandhi-at-cinekind-awards/" target="_blank" rel="noopener">Ceremony report</a>
+      </div>
+      <p class="close__note">Film Federation of India with People for Animals · Inaugural edition · Kolkata</p>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="pfa-forms.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------- kind set guide ---------- */
+  var CASES = [
+    {
+      label:'A real animal, directed on set',
+      verdict:'Permission needed',
+      title:'Apply before you shoot',
+      body:'A live animal performing to direction needs pre-shoot permission from the Animal Welfare Board of India. Apply well ahead of the shoot date, name the animals and their handlers, and expect a Board representative on set. Permission obtained after filming does not cover footage already shot.'
+    },
+    {
+      label:'Computer graphics only',
+      verdict:'No permission needed',
+      title:'Nothing to file',
+      body:'A rendered animal is not a live performer, so the pre-shoot permission does not apply. Carry the declaration that no animals were used and keep your vendor documentation, in case certification asks how the shot was made.'
+    },
+    {
+      label:'Stock footage',
+      verdict:'Usually no fresh permission',
+      title:'Check the original licence',
+      body:'Footage you did not film yourself does not need a new application. Confirm it was captured lawfully, keep the licence on file, and declare its use. If the stock house cannot evidence how it was shot, treat that as a reason to drop the clip.'
+    },
+    {
+      label:'An animal in the background',
+      verdict:'Depends on direction',
+      title:'The test is whether it was handled',
+      body:'An animal that wanders through a public location on its own is incidental. The moment one is placed, fed, lured, restrained or cued for the frame, it is being directed, and permission applies. Where it is borderline, file anyway.'
+    },
+    {
+      label:'Shot outside India',
+      verdict:'Local law applies',
+      title:'Different jurisdiction, same paper trail',
+      body:'The Board governs filming within India. For a foreign shoot, follow that country\'s animal welfare law and keep the permits. Indian certification will still ask you to declare how animals were used, so bring the documentation home with you.'
+    }
+  ];
+
+  var choices = $('#choices'), answer = $('#answer'), picked = -1;
+
+  function paintChoices(){
+    choices.innerHTML = CASES.map(function(c,i){
+      return '<button class="choice" type="button" data-i="' + i + '" aria-pressed="' + (i === picked) + '">' + c.label + '</button>';
+    }).join('');
+  }
+  function paintAnswer(){
+    if (picked < 0){
+      answer.innerHTML = '<p class="verdict">Guide</p>' +
+        '<h4>Pick the closest description</h4>' +
+        '<p class="body">Productions most often get caught out by the fourth option. An animal that reads as incidental on the page is frequently directed on the day.</p>';
+      return;
+    }
+    var c = CASES[picked];
+    answer.innerHTML = '<p class="verdict">' + c.verdict + '</p>' +
+      '<h4>' + c.title + '</h4>' +
+      '<p class="body">' + c.body + '</p>' +
+      '<p class="fine">A plain-language summary, not legal advice. Confirm current requirements with the Animal Welfare Board of India before you shoot.</p>';
+  }
+  choices.addEventListener('click', function(e){
+    var b = e.target.closest('.choice');
+    if (!b) return;
+    picked = parseInt(b.getAttribute('data-i'), 10);
+    paintChoices(); paintAnswer();
+    var again = choices.querySelector('[data-i="' + picked + '"]');
+    if (again) again.focus();
+  });
+  paintChoices(); paintAnswer();
+
+  /* ---------- page chrome, shared with the other pages ---------- */
+  var toastT = null;
+  function toast(msg){
+    var t = $('#toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+  /* This used to show "Nomination received, thank you" and send nothing.
+     It now posts to /api/pfa-submissions and reports only what came back. */
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Founder | People for Animals</title>
+<meta name="description" content="Maneka Sanjay Gandhi founded People for Animals and built it into India's largest animal welfare organisation.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+/* secondary action on a light surface: the inverse of .btn. Do not use
+   .btn--light here, its hover is white text on a transparent background. */
+.btn--outline{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn--outline:hover{background:var(--ink);color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+
+/* ---------- filter bar, same component as the shop ---------- */
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:220px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);margin-left:auto;padding-left:12px;white-space:nowrap}
+
+/* ---------- legs ---------- */
+.legs{padding:0 var(--gutter) var(--band)}
+.leg{margin-top:var(--band)}
+.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel > *{position:relative;z-index:1}
+.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+
+/* ---------- date rows ---------- */
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:150px minmax(0,1.5fr) minmax(0,.9fr) 104px auto;gap:20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.row.hidden{display:none}
+.row .d{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.row .v{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.row .c{font-size:13px;color:var(--muted);line-height:1.35}
+.row .b{display:flex}
+.row .b em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);padding:5px 9px;white-space:nowrap}
+.row .b em.soft{border-color:var(--line);color:var(--muted)}
+.row .a{display:flex;gap:20px;justify-content:flex-end}
+.row .a a{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:2px;white-space:nowrap}
+.row .a span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.leg.hidden{display:none}
+.empty{padding:64px 0;text-align:center;font-size:13px;color:var(--muted)}
+
+/* ---------- closing band ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band--bone{background:var(--bone)}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,48px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+.toast{position:fixed;left:16px;bottom:20px;z-index:75;background:var(--ink);color:#fff;font-size:12px;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .row{grid-template-columns:132px minmax(0,1.4fr) minmax(0,.9fr) auto;gap:16px}
+  .row .b{grid-column:2 / 4;margin-top:-6px}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .legs{padding-left:16px;padding-right:16px}
+  .row{grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0}
+  .row .d{grid-column:1;grid-row:1}
+  .row .b{grid-column:2;grid-row:1;justify-content:flex-end;margin-top:0}
+  .row .v{grid-column:1 / -1;grid-row:2;margin-top:4px}
+  .row .c{grid-column:1 / -1;grid-row:3}
+  .row .a{grid-column:1 / -1;grid-row:4;justify-content:flex-start;gap:24px;margin-top:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+/* ---------- founder ---------- */
+/* Photo frames degrade to a labelled placeholder if a source fails, so the
+   layout never breaks and it stays obvious which picture belongs where. */
+.frame{position:relative;background:var(--stone);overflow:hidden}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.frame.is-empty::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 11px,rgba(17,17,17,.045) 11px,rgba(17,17,17,.045) 22px)}
+.frame.is-empty::after{content:attr(data-label);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.7}
+
+/* The founder photograph is a 3:2 landscape, so the hero is a dark text band with
+   the picture full-bleed beneath it rather than a tall side-by-side crop. */
+.fhero{background:var(--deep);color:#fff;position:relative;isolation:isolate;overflow:hidden;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter-lg) clamp(44px,4.6vw,76px)}
+.fhero::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(112% 90% at 88% 0%,rgba(255,255,255,.16),transparent 62%),radial-gradient(70% 70% at 0% 100%,rgba(255,255,255,.07),transparent 65%)}
+.fhero__in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,84px);align-items:end}
+.fhero .eyebrow{color:rgba(255,255,255,.55)}
+.fhero h1{font-size:clamp(38px,5.4vw,88px);margin-top:20px;max-width:9ch}
+.fhero__role{margin:0;max-width:46ch;font-size:14px;line-height:1.68;color:rgba(255,255,255,.78)}
+.pull{margin:26px 0 0;padding-top:26px;border-top:1px solid var(--line-dark)}
+.pull q{display:block;quotes:none;font-family:var(--display);font-weight:400;font-size:clamp(20px,2.1vw,31px);line-height:1.18;text-transform:uppercase;letter-spacing:.01em}
+.pull cite{display:block;margin-top:14px;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+
+/* full-bleed plate: 3:2 until it would grow taller than the screen, then it crops
+   from the top and bottom only, so nothing is lost left or right */
+.plate{margin:0;background:var(--deep)}
+.plate .frame{aspect-ratio:3/2;max-height:min(80svh,780px);width:100%}
+.plate .frame img{object-position:50% 40%}
+.plate figcaption{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;
+  padding:16px var(--gutter-lg) 0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.plate figcaption small{font-size:10px;font-weight:400;letter-spacing:.06em;text-transform:none;color:var(--muted)}
+.plate{padding-bottom:clamp(40px,4vw,64px);background:#fff}
+
+/* one hairline grid: gap shows the background through, so it reflows cleanly */
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  padding-inline:var(--gutter-lg);border-bottom:1px solid var(--line)}
+.figs div + div{border-left:1px solid var(--line)}
+/* Each figure is centred in its own column. The columns are equal, so every
+   figure sits the same distance from its dividers, and the space outside the
+   first and the last is the same by construction rather than by hand. */
+.figs div{background:#fff;padding:clamp(30px,3.2vw,50px) 22px;text-align:center}
+.figs b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(28px,3.4vw,54px);line-height:1;letter-spacing:.01em}
+.figs span{display:block;margin-top:12px;font-size:12px;line-height:1.5;color:var(--muted)}
+
+.msg{background:var(--deep);color:#fff;padding:var(--band) var(--gutter-lg)}
+.msg__in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,84px);align-items:start}
+.msg h2{font-size:clamp(27px,3.5vw,52px);max-width:13ch}
+.msg .eyebrow{color:rgba(255,255,255,.55);margin-bottom:18px}
+.msg p{margin:0 0 22px;max-width:64ch;font-size:15px;line-height:1.72;color:rgba(255,255,255,.8)}
+.msg p:last-of-type{margin-bottom:0}
+
+.aims{padding:var(--band) var(--gutter-lg) clamp(40px,4vw,64px)}
+.aims__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(30px,3.6vw,52px)}
+.aims h2{font-size:clamp(27px,3.6vw,56px);max-width:15ch}
+.aims__note{margin:0;max-width:34ch;font-size:13px;line-height:1.65;color:var(--muted)}
+.aims__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.aim{background:#fff;padding:clamp(26px,2.5vw,38px)}
+.aim b{display:block;font-family:var(--display);font-weight:400;font-size:24px;line-height:1;color:var(--muted)}
+.aim h3{margin:20px 0 12px;font-size:15px;font-weight:700;letter-spacing:.01em}
+.aim p{margin:0;font-size:13px;line-height:1.66;color:var(--muted)}
+
+.gal{padding:0 var(--gutter-lg) var(--band)}
+.gal__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:clamp(140px,15vw,215px);gap:12px}
+.gal .frame:nth-child(1){grid-column:span 2;grid-row:span 2}
+.gal .frame:nth-child(4){grid-column:span 2}
+.gal .frame:nth-child(5){grid-column:span 4}
+
+/* ---------- watch: facade tiles that open a theatre ----------
+   The embeds are not loaded with the page. Three social iframes cost megabytes
+   of third-party script and set Meta tracking cookies before anyone has asked
+   to watch, so each tile is an inert poster until it is clicked. */
+.watch{background:var(--deep);color:#fff;padding:var(--band) var(--gutter-lg)}
+.watch__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:clamp(28px,3.4vw,48px)}
+.watch .eyebrow{color:rgba(255,255,255,.55);margin-bottom:16px}
+.watch h2{font-size:clamp(27px,3.6vw,56px);max-width:14ch}
+.watch__note{margin:0;max-width:32ch;font-size:13px;line-height:1.65;color:rgba(255,255,255,.55)}
+.vgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media(max-width:1100px){.vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.vtile{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:30px;
+  aspect-ratio:4/5;padding:26px;overflow:hidden;text-align:left;cursor:pointer;
+  background:rgba(255,255,255,.04);border:1px solid var(--line-dark);color:#fff;
+  font:inherit;transition:background .25s,border-color .25s,transform .25s}
+.vtile:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55);transform:translateY(-3px)}
+.vtile__bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:50% 40%;
+  filter:grayscale(1) contrast(1.05);transform:scale(1.02);transition:transform .5s ease,filter .35s}
+.vtile__bg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(8,8,8,.34),rgba(8,8,8,.82))}
+.vtile:hover .vtile__bg{transform:scale(1.07)}
+.vtile>*:not(.vtile__bg){position:relative;z-index:1}
+.vtile__top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.vtile__no{font-family:var(--display);font-weight:400;font-size:26px;line-height:1;color:rgba(255,255,255,.5)}
+.vtile__src{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.vtile__ttl{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;
+  font-size:clamp(17px,1.5vw,23px);line-height:1.14}
+.vtile__go{display:flex;align-items:center;gap:12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+/* the play control is a real button on the tile that also carries store links,
+   so the browser's own button styling has to be cleared off it */
+button.vtile__go{background:none;border:0;padding:0;font-family:inherit;cursor:pointer;text-align:left}
+/* apps and play sit in one foot, so the tile keeps three flex children and
+   space-between places the title exactly where it sits on the other three */
+.vtile__foot{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.vtile__apps{display:flex;flex-wrap:wrap;gap:8px}
+.vapp{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;
+  border:1px solid rgba(255,255,255,.42);color:#fff;text-decoration:none;
+  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  transition:background .25s,border-color .25s,color .25s}
+.vapp svg{width:12px;height:12px;fill:currentColor;flex:0 0 auto}
+.vapp:hover,.vapp:focus-visible{background:#fff;border-color:#fff;color:var(--deep)}
+/* the film covers the page while it plays, and it can also be put into real
+   fullscreen from the player's own controls. Nothing from a tile should sit
+   over either. */
+body.th-open .vtile__apps{display:none}
+:fullscreen .vtile__apps{display:none}
+.vtile__play{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,255,255,.55);transition:background .25s,border-color .25s}
+.vtile__play svg{width:12px;height:14px;fill:#fff;margin-left:2px}
+.vtile:hover .vtile__play{background:#fff;border-color:#fff}
+.vtile:hover .vtile__play svg{fill:var(--deep)}
+
+/* theatre: the same idea as the wall's player, scoped to one clip */
+.th{position:fixed;inset:0;z-index:120;display:none;background:rgba(6,6,6,.97);
+  grid-template-rows:auto minmax(0,1fr) auto;padding:18px clamp(16px,3vw,34px) clamp(16px,3vw,30px)}
+.th.on{display:grid}
+.th{gap:14px}
+.th__bar{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.th__bar b{color:#fff;font-weight:700}
+.th__x{background:none;border:none;color:#fff;font:inherit;letter-spacing:.14em;text-transform:uppercase;
+  border-bottom:1px solid rgba(255,255,255,.5);padding:0 0 2px;cursor:pointer}
+.th__x:hover{border-bottom-color:#fff}
+.th__stage{display:grid;place-items:center;min-height:0;overflow:hidden}
+.th__box{position:relative;background:#000;border:1px solid var(--line-dark);
+  aspect-ratio:var(--ar-css, 9/16);max-width:100%;max-height:100%}
+/* the embed fills the box and is never scaled by us: the provider letterboxes
+   inside it, so the clip keeps its own proportions */
+.th__box iframe,.th__box video{display:block}
+/* the drawn cursor cannot track inside a cross-origin frame, so the real
+   pointer comes back over the picture itself */
+.th__box,.th__box iframe,.th__box video{cursor:auto!important}
+.th__box iframe,.th__box video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.th__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.th__nav{display:flex;gap:10px}
+.th__nav button{width:44px;height:44px;display:grid;place-items:center;background:none;border:1px solid rgba(255,255,255,.4);color:#fff;cursor:pointer;font-size:15px;transition:background .2s,color .2s,border-color .2s}
+.th__nav button:hover{background:#fff;border-color:#fff;color:var(--deep)}
+.th__nav button[disabled]{opacity:.3;cursor:default}
+.th__nav button[disabled]:hover{background:none;color:#fff;border-color:rgba(255,255,255,.4)}
+.th__fit{width:auto!important;padding:0 14px;font-size:10px;font-weight:700;letter-spacing:.12em}
+.th__out{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:2px}
+.th__out:hover{color:#fff;border-bottom-color:#fff;opacity:1}
+body.th-open{overflow:hidden}
+
+@media (max-width:860px){
+  .vgrid{grid-template-columns:1fr;gap:12px}
+  .vtile{aspect-ratio:auto;gap:26px;padding:22px}
+  .th{padding:14px 14px 18px}
+}
+
+.close{background:var(--stone);padding:var(--band) var(--gutter-lg);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:center}
+.close h2{font-size:clamp(26px,3.4vw,50px);max-width:14ch}
+.close p{margin:0 0 28px;max-width:48ch;font-size:14px;line-height:1.68;color:var(--muted)}
+.close .actions{display:flex;flex-wrap:wrap;gap:12px}
+
+@media (max-width:1000px){
+  .figs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .figs div:nth-child(odd){border-left:0}
+  .figs div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .aims__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:860px){
+  .fhero__in{grid-template-columns:1fr;gap:26px}
+  .plate .frame{aspect-ratio:4/3;max-height:none}
+  .msg__in,.close{grid-template-columns:1fr}
+  .gal__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gal .frame:nth-child(4),.gal .frame:nth-child(5){grid-column:span 2}
+}
+@media (max-width:620px){
+  .figs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .figs div:nth-child(odd){border-left:0}
+  .figs div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .aims__grid{grid-template-columns:1fr}
+  .gal .frame:nth-child(1){grid-column:span 2}
+}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/founder">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Founder">
+  <meta property="og:description" content="Maneka Sanjay Gandhi founded People for Animals and built it into India's largest animal welfare organisation.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/founder">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Founder">
+  <meta name="twitter:description" content="Maneka Sanjay Gandhi founded People for Animals and built it into India's largest animal welfare organisation.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Maneka Sanjay Gandhi","jobTitle":"Founder","affiliation":{"@id":"https://peopleforanimalsindia.org/#organisation"},"image":"https://peopleforanimalsindia.org/img/founder-portrait-1536.jpg"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Founder","item":"https://peopleforanimalsindia.org/founder"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="#top" data-nav="founder.html" class="current" aria-current="page">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+
+  <!-- PHOTOGRAPHS -------------------------------------------------------------
+       The portrait is self-hosted in /img (grayscale JPEG, 1536w and 960w via
+       srcset). Confirm PFA holds the rights to it and add a credit line to the
+       <figcaption> if the photographer requires one.
+       The gallery images below still point at files hosted on
+       peopleforanimalsindia.org so the page renders complete straight away.
+       Before this goes live, download each one, confirm PFA holds the rights,
+       and re-point the src at a self-hosted copy in /img alongside the portrait.
+       Hot-linking another server's assets breaks the moment they rename a file,
+       and it spends their bandwidth, not yours.
+       Every frame falls back to a labelled placeholder if its source fails, so
+       swapping sources can never leave a broken image on the page.
+       Ideal sizes: portrait 1200x1600 or larger, gallery 1600x1100 or larger.
+  -------------------------------------------------------------------------- -->
+
+  <section class="fhero" id="top" data-cursor="light">
+    <div class="fhero__in">
+      <div>
+        <p class="eyebrow">Founder</p>
+        <h1 class="display">Maneka Sanjay Gandhi</h1>
+      </div>
+      <div>
+        <p class="fhero__role">Founder and chairperson of People for Animals. She started the organisation and built it into India&rsquo;s largest animal welfare body, with hospitals, shelters, mobile clinics and members in every part of the country.</p>
+        <blockquote class="pull">
+          <q>Compassion without action is evil</q>
+          <cite>Smt. Maneka Sanjay Gandhi</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <figure class="plate">
+    <div class="frame" data-label="Portrait of Smt. Maneka Sanjay Gandhi: add photo">
+      <img src="img/founder-portrait-1536.jpg"
+           srcset="img/founder-portrait-960.jpg 960w, img/founder-portrait-1536.jpg 1536w"
+           sizes="100vw"
+           width="1536" height="1024"
+           alt="Smt. Maneka Sanjay Gandhi at her desk, a dog beside her chair"
+           onerror="this.closest('.frame').classList.add('is-empty');this.remove()">
+    </div>
+    <figcaption>Smt. Maneka Sanjay Gandhi <small>Founder and chairperson, People for Animals</small></figcaption>
+  </figure>
+
+  <section class="figs" aria-label="People for Animals in numbers">
+    <div><b>26</b><span>Animal hospitals</span></div>
+    <div><b>90+</b><span>PFA units across the country</span></div>
+    <div><b>60</b><span>Mobile units on the road</span></div>
+    <div><b>1M+</b><span>Lives touched</span></div>
+  </section>
+
+  <section class="msg" data-cursor="light">
+    <div class="msg__in">
+      <div>
+        <p class="eyebrow">In her words</p>
+        <h2 class="display">A&nbsp;circle of&nbsp;love around all life.</h2>
+      </div>
+      <div>
+        <p>Her argument starts with self-interest, not sentiment. Every species, from bees to elephants, holds up a shield around human life, and the quality of our own lives rests on theirs. Eat them, exploit them, breed one kind while wiping out another, and the damage lands back on us: as each species goes, our own world gets poorer. Her invitation is simply to join the circle of care around all living things.</p>
+        <p>People for Animals turned animal welfare in India from a quiet cause into an organised, assertive movement. Its members are lawyers, film actors, business leaders, civil servants, teachers and students. The work runs from shelters and ambulances through to fighting cases in court, training judges, police officers and bureaucrats, and publishing material that teaches people how to care for animals. Its wins have come in courtrooms, in research laboratories, and at racecourses, temples, circuses and zoos.</p>
+        <p>PFA is now counted among the strongest animal groups anywhere in the world. When the first International Animal Welfare Directory was assembled, its British publishers asked PFA to write the foreword. In 2001 the first Padma Shri awarded in this field went to a PFA member, Dr Norma Alvares.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="aims">
+    <div class="aims__head">
+      <h2 class="display">What she set out to&nbsp;build.</h2>
+      <p class="aims__note">The strategy behind the organisation, and the target it still works towards: an animal welfare centre in every district in India, of which there are now about 800.</p>
+    </div>
+    <div class="aims__grid">
+      <article class="aim">
+        <b>01</b>
+        <h3>Create infrastructure</h3>
+        <p>Build and upgrade the physical means of rescue: shelters, ambulances, mobile clinics and helplines that answer when someone finds an injured animal.</p>
+      </article>
+      <article class="aim">
+        <b>02</b>
+        <h3>Influence policy</h3>
+        <p>Work as a pressure group for legislation that protects animals and the environment, rather than waiting for it to arrive on its own.</p>
+      </article>
+      <article class="aim">
+        <b>03</b>
+        <h3>Make the law bite</h3>
+        <p>Take direct action through PFA units nationwide, so that animals are protected in practice and offenders actually face consequences.</p>
+      </article>
+      <article class="aim">
+        <b>04</b>
+        <h3>Educate and sensitise</h3>
+        <p>Animal welfare groups in schools and colleges, training for lawyers, police, the judiciary and civil servants, and published guides on animal care.</p>
+      </article>
+      <article class="aim">
+        <b>05</b>
+        <h3>Advance the movement</h3>
+        <p>Work alongside Indian and international welfare groups, fund initiatives that deserve it, and open real career paths in animal welfare.</p>
+      </article>
+      <article class="aim">
+        <b>06</b>
+        <h3>Change what we eat</h3>
+        <p>Make the health, environmental and economic case for plant-based choices, and find and promote alternatives that use no animals at all.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="gal" aria-label="The work">
+    <div class="gal__grid">
+      <div class="frame" data-label="Flagship hospital and shelter: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center1.jpg" alt="Inside the flagship People for Animals hospital and shelter" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
+      <div class="frame" data-label="Shelter: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center2.jpg" alt="Rescued animals at a People for Animals shelter" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
+      <div class="frame" data-label="Care: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center5.jpeg" alt="A rescued animal receiving care" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
+      <div class="frame" data-label="Treatment: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center6.jpeg" alt="Treatment under way at a People for Animals centre" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
+      <div class="frame" data-label="Rescue: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/gallery10.jpg" alt="A rescue in progress" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
+    </div>
+  </section>
+
+  <section class="watch" id="watch" data-cursor="light">
+    <div class="watch__head">
+      <div>
+        <p class="eyebrow">Watch</p>
+        <h2 class="display">Her, in&nbsp;motion.</h2>
+      </div>
+      <p class="watch__note">Nothing loads from Facebook or Instagram until you press play, so the page stays fast and sets no third-party cookies before you ask.</p>
+    </div>
+    <div class="vgrid" id="vgrid"></div>
+  </section>
+
+  <section class="close">
+    <div>
+      <p class="eyebrow">Carry it on</p>
+      <h2 class="display">Compassion, then action.</h2>
+    </div>
+    <div>
+      <p>The organisation she started runs on gifts from people who will never meet the animals they help. A single gift covers food, treatment and a place to sleep for an animal who had none of the three this morning.</p>
+      <div class="actions">
+        <a class="btn" href="donate.html">Donate</a>
+        <a class="btn btn--outline" href="units.html">Find your nearest unit</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<div class="th" id="th" role="dialog" aria-modal="true" aria-label="Video player" hidden>
+  <div class="th__bar">
+    <span><b id="thNo">01</b> &nbsp;/&nbsp; <span id="thTotal">03</span> &nbsp;&middot;&nbsp; <span id="thSrc"></span></span>
+    <button type="button" class="th__x" id="thX">Close</button>
+  </div>
+  <div class="th__stage"><div class="th__box" id="thBox"></div></div>
+  <div class="th__foot">
+    <div class="th__nav">
+      <button type="button" id="thPrev" aria-label="Previous video">&larr;</button>
+      <button type="button" id="thNext" aria-label="Next video">&rarr;</button>
+      <button type="button" id="thFit" class="th__fit" aria-label="Change the shape of the picture">9:16</button>
+    </div>
+    <a class="th__out" id="thOut" href="#" target="_blank" rel="noopener noreferrer">Open on the original site &rarr;</a>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------- watch: three clips, loaded only on demand ----------
+     Edit VIDEOS to change the films. `title` is what shows on the tile.
+     `ratio` is the shape of the clip: 16/9 for landscape, 9/16 for a phone
+     video, 1 for a square. If a Facebook clip turns out to be vertical, change
+     its ratio to 9/16 and the theatre reshapes around it.
+     `poster` is optional: point it at a still from the clip (e.g.
+     'img/watch-01.jpg') and the tile uses it as its background, darkened so the
+     type stays readable. Left empty, the tile is type only. */
+  (function watch(){
+    /* The titles are typed here, not read from Instagram or Facebook: neither
+       gives a caption without loading their script or holding an app token,
+       and this page promises nothing loads from them until play is pressed.
+       Change a title by changing the text below. */
+    var VIDEOS = [
+      { src:'instagram', id:'DTOAdZZEyUf',
+        url:'https://www.instagram.com/reel/DTOAdZZEyUf/',
+        title:'Sweaters and coats for dogs come with responsibility', ratio:9/16, poster:'img/watch-01.jpg', file:'' },
+      { src:'instagram', id:'DXuZ2tak7pG',
+        url:'https://www.instagram.com/reel/DXuZ2tak7pG/',
+        title:'Your dog trusts you. Don\u2019t break that trust at the grooming table.', ratio:9/16, poster:'img/watch-02.jpg', file:'' },
+      { src:'instagram', id:'DYhxVU4z64O',
+        url:'https://www.instagram.com/reel/DYhxVU4z64O/',
+        title:'Re the recent Supreme Court proceedings on community dogs', ratio:9/16, poster:'img/watch-03.jpg', file:'' },
+      { src:'instagram', id:'Dbnstj0gf7o',
+        url:'https://www.instagram.com/reel/Dbnstj0gf7o/',
+        title:'A calling to come together for animals.', ratio:9/16, poster:'img/watch-04.jpg', file:'',
+        apps:{ android:'https://play.google.com/store/apps/details?id=com.rrt.sos',
+               ios:'https://apps.apple.com/in/app/rapid-response/id6758672498' } }
+    ];
+
+    var grid = document.getElementById('vgrid');
+    if (!grid) return;
+    var th = document.getElementById('th'), box = document.getElementById('thBox');
+    var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+    var label = function(v){ return v.src === 'instagram' ? 'Instagram' : 'Facebook'; };
+
+    function embed(v, px){
+      if (v.src === 'instagram') return 'https://www.instagram.com/reel/' + v.id + '/embed/';
+      return 'https://www.facebook.com/plugins/video.php?href=' +
+             encodeURIComponent('https://www.facebook.com/watch/?v=' + v.id) +
+             '&show_text=false&autoplay=true&mute=0&width=' + Math.round(px);
+    }
+
+    /* tiles are plain buttons: no network, no scripts, nothing third-party */
+    /* Marks for the two stores, drawn rather than fetched: no third-party badge
+       image, which is the whole point of this section. */
+    var MARK = {
+      android: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5l1.8-3.1a.4.4 0 00-.7-.4l-1.8 3.2A11 11 0 0012 8c-1.7 0-3.4.4-4.9 1.2L5.3 6a.4.4 0 00-.7.4l1.8 3.1A9 9 0 002 16.6h20a9 9 0 00-4.4-7.1zM7.4 14a.9.9 0 110-1.8.9.9 0 010 1.8zm9.2 0a.9.9 0 110-1.8.9.9 0 010 1.8z"/></svg>',
+      ios:     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.7c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.7-1.3-.1-2.5.8-3.1.8-.7 0-1.6-.8-2.7-.7-1.4 0-2.7.8-3.4 2.1-1.5 2.5-.4 6.3 1 8.4.7 1 1.6 2.1 2.7 2.1 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.1 0 1.9-1 2.6-2a9 9 0 001.2-2.4c-.1 0-2.4-1-2.4-3.4zM14.5 6.2c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.7-1 1.7-.9 2.7 1 .1 2-.5 2.6-1.3z"/></svg>'
+    };
+    function appLink(href, name, mark){
+      return '<a class="vapp" href="' + href + '" target="_blank" rel="noopener noreferrer"' +
+             ' aria-label="Get the Rapid Response app for ' + name + '">' + MARK[mark] + name + '</a>';
+    }
+
+    grid.innerHTML = VIDEOS.map(function(v, i){
+      var head = '<span class="vtile__top"><span class="vtile__no">' + pad(i + 1) + '</span>' +
+                 '<span class="vtile__src">' + label(v) + '</span></span>' +
+                 '<span class="vtile__ttl display">' + v.title + '</span>';
+      var go = '<span class="vtile__play">' +
+                 '<svg viewBox="0 0 12 14" aria-hidden="true"><path d="M0 0l12 7-12 7z"/></svg>' +
+               '</span>Play';
+      if (!v.apps) return '<button type="button" class="vtile" data-i="' + i + '">' + head +
+                            '<span class="vtile__go">' + go + '</span></button>';
+      /* A tile carrying real links cannot itself be one big <button>: an <a> is
+         interactive content and is invalid inside one, and the button would eat
+         the click. So this tile is a plain container, the play control is the
+         button, and a press anywhere else still opens the film through the grid
+         handler below. tabindex allows shut() to hand focus back to it.
+         apps and play share one foot so the tile still has three flex children
+         and space-between lays it out identically to the other three. */
+      return '<div class="vtile" data-i="' + i + '" tabindex="-1">' + head +
+               '<span class="vtile__foot">' +
+                 '<span class="vtile__apps">' +
+                   appLink(v.apps.android, 'Android', 'android') +
+                   appLink(v.apps.ios, 'iPhone', 'ios') +
+                 '</span>' +
+                 '<button type="button" class="vtile__go">' + go + '</button>' +
+               '</span>' +
+             '</div>';
+    }).join('');
+
+    /* A still is laid in only once the file has actually decoded. A poster that
+       has not been saved yet is a no-op: the tile stays exactly as it is rather
+       than painting an empty darkening layer over the type. Self-hosted files
+       only. Instagram and Facebook will not hand a thumbnail to a third-party
+       page without their script or an app token, and their CDN links are signed
+       and expire, so there is nothing here to fetch from them. */
+    VIDEOS.forEach(function(v, i){
+      if (!v.poster) return;
+      var probe = new Image();
+      probe.onload = function(){
+        var tile = grid.querySelector('[data-i="' + i + '"]');
+        if (!tile) return;
+        var bg = document.createElement('span');
+        bg.className = 'vtile__bg';
+        bg.style.backgroundImage = 'url("' + v.poster + '")';
+        tile.insertBefore(bg, tile.firstChild);
+      };
+      probe.src = v.poster;
+    });
+
+    document.getElementById('thTotal').textContent = pad(VIDEOS.length);
+
+    /* Neither provider will tell a third-party page how tall its clip is, so the
+       shape is declared per clip and can be corrected here in one press. */
+    var SHAPES = [[9/16,'9:16'], [16/9,'16:9'], [1,'1:1'], [4/5,'4:5']];
+    function shapeIndex(r){
+      var best = 0, gap = Infinity;
+      SHAPES.forEach(function(sh, k){ var d = Math.abs(sh[0] - r); if (d < gap){ gap = d; best = k; } });
+      return best;
+    }
+
+    var at = -1, shape = 0, resume = 0;
+    function paint(){
+      var v = VIDEOS[at]; if (!v) return;
+      var r = SHAPES[shape][0];
+      box.style.setProperty('--ar-css', String(r));
+      document.getElementById('thFit').textContent = SHAPES[shape][1];
+      /* Size the picture to the largest rectangle of its own shape that fits the
+         stage. Done in pixels because aspect-ratio with max-width/max-height does
+         not reliably clamp on the cross axis, which let the box overflow a narrow
+         screen. Nothing here scales the clip: the box matches the clip's shape,
+         so the picture is never stretched or blown up to fill. */
+      var playing = box.querySelector('video');
+      if (playing) resume = playing.currentTime;
+      var st = document.querySelector('.th__stage').getBoundingClientRect();
+      var w = Math.max(160, Math.min(st.width, st.height * r));
+      var h = w / r;
+      box.style.width = Math.round(w) + 'px';
+      box.style.height = Math.round(h) + 'px';
+      box.innerHTML = '';
+      var px = Math.round(w);
+      if (v.file){
+        /* Same-origin file. The press on the tile is a real user gesture on this
+           page, so the browser allows sound. A cross-origin embed cannot do this:
+           the gesture does not cross the frame boundary, and Instagram exposes no
+           autoplay or unmute parameter to ask with. */
+        var el = document.createElement('video');
+        el.src = v.file;
+        if (v.poster) el.poster = v.poster;
+        el.setAttribute('aria-label', v.title);
+        el.controls = true;
+        el.playsInline = true;
+        el.muted = false;
+        el.volume = 1;
+        if (resume) el.currentTime = resume;
+        box.appendChild(el);
+        var go = el.play();
+        /* If a browser refuses sound anyway, drop to muted rather than leave a
+           still frame that reads as broken. The controls still unmute it. */
+        if (go && go.catch) go.catch(function(){ el.muted = true; el.play().catch(function(){}); });
+        return;
+      }
+      box.innerHTML = '<iframe src="' + embed(v, px) + '" title="' + v.title + '" allowfullscreen ' +
+        'allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" ' +
+        'referrerpolicy="strict-origin-when-cross-origin" scrolling="no"></iframe>';
+    }
+    function open(i){
+      var v = VIDEOS[i]; if (!v) return;
+      at = i;
+      resume = 0;
+      shape = shapeIndex(v.ratio);
+      /* show the theatre before measuring: a hidden element has no size, and
+         sizing the picture against a zero-height stage leaves it tiny */
+      th.hidden = false; th.classList.add('on');
+      paint();
+      document.getElementById('thNo').textContent = pad(i + 1);
+      document.getElementById('thSrc').textContent = label(v);
+      var out = document.getElementById('thOut');
+      out.href = v.url;
+      out.textContent = 'Open on ' + label(v) + ' \u2192';
+      document.getElementById('thPrev').disabled = (i === 0);
+      document.getElementById('thNext').disabled = (i === VIDEOS.length - 1);
+      document.body.classList.add('th-open');
+      /* the pointer is sitting still over the tile that was just clicked, and the
+         film now covers that spot; no move will arrive to hand the cursor over,
+         so do it here. The next move outside the picture brings it back. */
+      if (window.PFA_CHROME) window.PFA_CHROME.recolourCursor();
+      document.getElementById('thX').focus();
+    }
+    function shut(){
+      th.classList.remove('on'); th.hidden = true;
+      box.innerHTML = '';                       /* unload the embed and its cookies */
+      document.body.classList.remove('th-open');
+      var t = grid.querySelector('[data-i="' + at + '"]');
+      if (t) t.focus();
+      at = -1;
+    }
+    function step(d){ var n = at + d; if (n >= 0 && n < VIDEOS.length) open(n); }
+
+    grid.addEventListener('click', function(e){
+      /* the store links are real links: let them go rather than opening a film */
+      if (e.target.closest('a')) return;
+      var t = e.target.closest('[data-i]');
+      if (t) open(+t.getAttribute('data-i'));
+    });
+    document.getElementById('thX').addEventListener('click', shut);
+    document.getElementById('thFit').addEventListener('click', function(){
+      shape = (shape + 1) % SHAPES.length; paint();
+    });
+    var rs; window.addEventListener('resize', function(){
+      if (th.hidden) return;
+      clearTimeout(rs); rs = setTimeout(paint, 220);   /* re-ask for the right size */
+    });
+    document.getElementById('thPrev').addEventListener('click', function(){ step(-1); });
+    document.getElementById('thNext').addEventListener('click', function(){ step(1); });
+    th.addEventListener('click', function(e){ if (e.target === th) shut(); });
+    document.addEventListener('keydown', function(e){
+      if (th.hidden) return;
+      if (e.key === 'Escape') { shut(); return; }
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      /* a self-hosted clip uses the arrows to seek within itself: leave those */
+      if (e.target && e.target.tagName === 'VIDEO') return;
+      e.preventDefault();          /* otherwise the page behind scrolls as well */
+      step(e.key === 'ArrowLeft' ? -1 : 1);
+    });
+
+    /* Pressing play inside an Instagram embed moves focus into that frame, and a
+       key pressed there never reaches this page, so the arrows appear to stop
+       working. Take focus back the moment the pointer is over the theatre but
+       outside the picture: no click needed, and nothing is taken from the embed
+       while the person is actually pointing at it. */
+    th.addEventListener('pointermove', function(e){
+      if (e.target !== th) return;
+      var active = document.activeElement;
+      if (!active || active.tagName !== 'IFRAME') return;
+      var x = document.getElementById('thX');
+      if (x) { try { x.focus({ preventScroll: true }); } catch (err) { x.focus(); } }
+    });
+  })();
+})();
+</script>
+</body>
+</html>

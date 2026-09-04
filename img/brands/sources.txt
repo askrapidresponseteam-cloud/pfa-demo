@@ -1,0 +1,42 @@
+# One line per brand: <collection handle> <image URL>
+# scripts/fetch-brand-logos.js downloads each into this folder as
+# <handle>.<ext> (skipping any file already here), then rebuilds
+# assets/brand-logos.js. Run it on a machine with internet:
+#   npm run fetch:logos
+# These URLs are the logo images the seller shows on their own storefront
+# (pawsandtails24.com, "Shop by Brand"), which sells the same catalogue.
+# They are the seller's build assets and can move when the seller redeploys;
+# a line that fails is reported and skipped, nothing else is touched.
+# Confirm with the seller that PFA may use them, and replace any with the
+# brand's own press-kit file (transparent SVG or PNG) whenever you have one.
+farmina https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/brand1-CSpz_7Nx.png
+royal-canin https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/brand3-BP_ZEXaM.png
+acana https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/brand2-CHeodSte.png
+orijen https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/brand6-CjQAthfT.png
+drools https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/BRAND7-BJgGLg0o.jpeg
+fabled https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/brand4-DlWTZmMr.png
+orange-pet-nutrition https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/brand5-Cr0u4sMb.png
+orange-pet-nutrition-1 https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/brand5-Cr0u4sMb.png
+beaphar https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/beaphar-C8fHChl3.png
+himalaya https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/himalaya-BfLyf2Fm.png
+alembic https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/alembic-C59zbAQ3.png
+vivaldis https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/vivaldis-DdYMics_.png
+msd https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/msd-BJzdRVuQ.png
+skyec https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/skyec-BOh2QDzH.png
+indian-herbs https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/indian%20herbs-Q3zB76u7.png
+me-o https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/me-o-CoQPv6nQ.png
+vetoquinol https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/vetoquinol-CHZwR7Ci.png
+indian-immunologicals https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/Indian%20Immunologicals-DBZ9PBmG.png
+venttura https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/venttura-CrDhIr0B.png
+vvaan https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/waan-u_eTwxoN.png
+smart-heart https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/smart%20heart%20-CaS48sSh.png
+neo-kumfurt https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/neo%20kumfurt-ClHNHz4g.png
+corise https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/corise-CFg_jQeZ.png
+natural-remedies https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/natural%20remedies-qttBElS7.png
+assurem https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/assurem-B1ethOYi.png
+boehringer-ingelheim https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/bohreinger-CsLBmsK8.png
+ttk-healthcare https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/ttk%20healthcare-0ywYtC1f.png
+sihil-pharma https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/sihil-DwA4NUdS.png
+panav-biotech https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/panav%20biotec-CODnw5kM.png
+zoetis https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/zoetis-BJJ0_2Vv.png
+virbac https://cdn.shopify.com/oxygen-v2/52651/112224/230541/4279603/assets/virbac-BQsd34gq.png

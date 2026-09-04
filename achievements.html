@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>The record | People for Animals</title>
+<meta name="description" content="Thirty years of changes People for Animals has made to India’s animal law and to the systems that run it. One hundred and two entries, each naming what changed.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+
+/* ---------- the record ---------- */
+.band{padding:var(--band) var(--gutter)}
+.rband{max-width:var(--max);margin:0 auto}
+/* the three figures at the top count up once, like the tally in the footer */
+.rstat{display:flex;flex-wrap:wrap;gap:clamp(30px,5vw,88px);padding:0 0 clamp(38px,4.4vw,62px);
+  border-bottom:1px solid var(--line)}
+.rstat__i{display:grid;gap:6px}
+.rstat__n{font-family:var(--display);font-size:clamp(38px,5.4vw,74px);line-height:.94;
+  font-variant-numeric:tabular-nums}
+.rstat__l{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);line-height:1.5}
+
+.rfil{display:flex;flex-wrap:wrap;gap:8px;padding:clamp(30px,3.4vw,46px) 0 0}
+.rfil__b{border:1px solid transparent;background:none;font:inherit;cursor:pointer;
+  padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);transition:background .2s,color .2s,border-color .2s}
+.rfil__b:hover{color:var(--ink)}
+.rfil__b.is-on{background:var(--ink);border-color:var(--ink);color:#fff}
+.rfil__c{margin:16px 0 0;font-size:12px;letter-spacing:.04em;color:var(--muted)}
+
+.recs{margin:clamp(30px,3.6vw,48px) 0 0;border-top:1px solid var(--line)}
+.rec{display:flex;gap:clamp(16px,2.4vw,34px);padding:clamp(22px,2.4vw,30px) 0;
+  border-bottom:1px solid var(--line);
+  opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.rec.is-in{opacity:1;transform:none}
+.rec[hidden]{display:none}
+.rec__n{flex:0 0 auto;width:3.4ch;font-family:var(--display);font-size:15px;
+  color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+.rec__b{min-width:0}
+.rec__t{margin:0;font-size:clamp(17px,1.7vw,23px);line-height:1.28;letter-spacing:.005em;
+  text-transform:none;max-width:46ch}
+.rec__p{margin:9px 0 0;font-size:13.5px;line-height:1.68;color:var(--muted);max-width:74ch}
+.rec__m{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0 0}
+.rec__c{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);padding:4px 9px}
+.rec__y{font-family:var(--display);font-size:13px;color:var(--muted)}
+@media (max-width:640px){
+  .rec{gap:14px}
+  .rec__n{width:2.8ch;font-size:13px}
+}
+@media (prefers-reduced-motion: reduce){
+  .rec{opacity:1;transform:none;transition:none}
+}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+
+/* ---------- filter bar, same component as the shop ---------- */
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:220px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);margin-left:auto;padding-left:12px;white-space:nowrap}
+
+/* ---------- legs ---------- */
+.legs{padding:0 var(--gutter) var(--band)}
+.leg{margin-top:var(--band)}
+.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel > *{position:relative;z-index:1}
+.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+
+/* ---------- date rows ---------- */
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:150px minmax(0,1.5fr) minmax(0,.9fr) 104px auto;gap:20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.row.hidden{display:none}
+.row .d{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.row .v{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.row .c{font-size:13px;color:var(--muted);line-height:1.35}
+.row .b{display:flex}
+.row .b em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);padding:5px 9px;white-space:nowrap}
+.row .b em.soft{border-color:var(--line);color:var(--muted)}
+.row .a{display:flex;gap:20px;justify-content:flex-end}
+.row .a a{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:2px;white-space:nowrap}
+.row .a span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.leg.hidden{display:none}
+.empty{padding:64px 0;text-align:center;font-size:13px;color:var(--muted)}
+
+/* ---------- closing band ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band--bone{background:var(--bone)}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,48px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+.toast{position:fixed;left:16px;bottom:20px;z-index:75;background:var(--ink);color:#fff;font-size:12px;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .row{grid-template-columns:132px minmax(0,1.4fr) minmax(0,.9fr) auto;gap:16px}
+  .row .b{grid-column:2 / 4;margin-top:-6px}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .legs{padding-left:16px;padding-right:16px}
+  .row{grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0}
+  .row .d{grid-column:1;grid-row:1}
+  .row .b{grid-column:2;grid-row:1;justify-content:flex-end;margin-top:0}
+  .row .v{grid-column:1 / -1;grid-row:2;margin-top:4px}
+  .row .c{grid-column:1 / -1;grid-row:3}
+  .row .a{grid-column:1 / -1;grid-row:4;justify-content:flex-start;gap:24px;margin-top:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/achievements">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The record">
+  <meta property="og:description" content="Thirty years of changes People for Animals has made to India’s animal law and to the systems that run it. One hundred and two entries, each naming what changed.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/achievements">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="The record">
+  <meta name="twitter:description" content="Thirty years of changes People for Animals has made to India’s animal law and to the systems that run it. One hundred and two entries, each naming what changed.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"The record","item":"https://peopleforanimalsindia.org/achievements"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+  <section class="hero" id="top">
+    <div class="hero__in">
+      <p class="eyebrow">The record</p>
+      <h1 class="display">Not what we&nbsp;said. What changed.</h1>
+      <p class="lede">Rules rewritten, orders obtained, practices ended. Thirty years of it, on eight fronts. Every entry below is a thing that is different now because of work that was done, and most of it sits in law rather than in memory.</p>
+    </div>
+  </section>
+
+  <section class="band rband">
+    <div class="rstat">
+      <div class="rstat__i"><span class="rstat__n" data-count="103">0</span><span class="rstat__l">entries in the record</span></div>
+      <div class="rstat__i"><span class="rstat__n" data-count="8">0</span><span class="rstat__l">fronts worked at once</span></div>
+      <div class="rstat__i"><span class="rstat__n" data-count="31">0</span><span class="rstat__l">years of it, from 1994</span></div>
+    </div>
+
+    <div class="rfil" role="group" aria-label="Filter the record">
+      <button type="button" class="rfil__b is-on" data-filter="">Everything</button>
+      <button type="button" class="rfil__b" data-filter="Courts &amp; law">Courts &amp; law</button>
+        <button type="button" class="rfil__b" data-filter="Farmed animals">Farmed animals</button>
+        <button type="button" class="rfil__b" data-filter="Policy &amp; systems">Policy &amp; systems</button>
+        <button type="button" class="rfil__b" data-filter="Wildlife &amp; shows">Wildlife &amp; shows</button>
+        <button type="button" class="rfil__b" data-filter="Community dogs">Community dogs</button>
+        <button type="button" class="rfil__b" data-filter="Testing &amp; labs">Testing &amp; labs</button>
+        <button type="button" class="rfil__b" data-filter="Teaching">Teaching</button>
+        <button type="button" class="rfil__b" data-filter="Working animals">Working animals</button>
+    </div>
+    <p class="rfil__c" id="recCount" aria-live="polite"></p>
+
+    <div class="recs" id="recs">
+      <article class="rec" data-theme="Courts &amp; law" data-year=2014><span class="rec__n">001</span><div class="rec__b"><h3 class="rec__t display">Helped end cosmetic testing on&nbsp;animals in&nbsp;India</h3><p class="rec__p">PFA’s campaign contributed to India becoming one of the first countries in the world to prohibit cosmetic testing on animals (2014) and to ban the import of animal-tested cosmetics.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2014</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows" data-year=2015><span class="rec__n">002</span><div class="rec__b"><h3 class="rec__t display">Secured a&nbsp;ban on&nbsp;the&nbsp;export of&nbsp;shark fins</h3><p class="rec__p">Advocated for an end to shark-fin exports, and in 2015 the Government prohibited the export of shark fins of all species, a ban subsequently upheld in court.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span><span class="rec__y">2015</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals" data-year=2015><span class="rec__n">003</span><div class="rec__b"><h3 class="rec__t display">Protected Rajasthan's camels</h3><p class="rec__p">Campaigned for the camel's recognition as Rajasthan's State Animal and for the 2015 State law prohibiting camel slaughter and regulating their movement and export.</p><p class="rec__m"><span class="rec__c">Farmed animals</span><span class="rec__y">2015</span></p></div></article>
+      <article class="rec" data-theme="Testing &amp; labs" data-year=1998><span class="rec__n">004</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;the&nbsp;ban on&nbsp;animal dissection in&nbsp;schools</h3><p class="rec__p">PFA’s legal and policy action led the Government of India to ban dissection for school students, implemented in 1998.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span><span class="rec__y">1998</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2001><span class="rec__n">005</span><div class="rec__b"><h3 class="rec__t display">Shaped India's community-dog (ABC) framework</h3><p class="rec__p">Assisted the Government of India to develop the Animal Birth Control Rules of 2001 and 2023, and have supported States and municipalities to implement scientific sterilisation and anti-rabies programmes.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2001</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2024><span class="rec__n">006</span><div class="rec__b"><h3 class="rec__t display">Delivered frontline veterinary care on&nbsp;the&nbsp;Char Dham route</h3><p class="rec__p">Transformed equine welfare on the Kedarnath Yatra. Since 2024 PFA has delivered veterinary care, health screening and rescue for working equines, by operating an equine infirmary at Rudraprayag. PFA’s advocacy led the Uttarakhand High Court to direct mandatory registration, rest periods, a ban on operations between sunset and sunrise, and mandatory health check of animals before deployment.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2024</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems" data-year=2013><span class="rec__n">007</span><div class="rec__b"><h3 class="rec__t display">Put animals into India's disaster response</h3><p class="rec__p">After leading the rescue of more than 6,000 animals in the 2013 Uttarakhand floods, PFA assisted the National Disaster Management Authority to develop Animal-Inclusive Disaster Risk Reduction guidelines.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span><span class="rec__y">2013</span></p></div></article>
+      <article class="rec" data-theme="Testing &amp; labs"><span class="rec__n">008</span><div class="rec__b"><h3 class="rec__t display">Drove reform of&nbsp;laboratory-animal use</h3><p class="rec__p">PFA’s sustained campaign contributed to major reforms in India's laboratory-animal regulation and earned international recognition through the Lush Prize.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">009</span><div class="rec__b"><h3 class="rec__t display">Pushed States to&nbsp;build real animal-welfare institutions</h3><p class="rec__p">Campaigned nationwide for functional State Animal Welfare Boards, working with every State on the long-pending directive and moving the Supreme Court to require their establishment.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">010</span><div class="rec__b"><h3 class="rec__t display">Helped consumers make informed choices</h3><p class="rec__p">Assisted the Government of India to introduce the mandatory vegetarian and non-vegetarian symbols (red and green dots) on packaged food products.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2014><span class="rec__n">011</span><div class="rec__b"><h3 class="rec__t display">Stopped the&nbsp;illegal cross-border animal-sacrifice trade at&nbsp;Gadhimai</h3><p class="rec__p">In Gauri Maulekhi v. Union of India, PFA moved the Supreme Court, which in 2014 directed authorities to halt the illegal transport of animals across the India–Nepal border for mass sacrifice, establishing a lasting precedent for protecting animals trafficked across international borders. With the Government of Bihar, PFA prevented the trafficking and ritual slaughter of about 700 animals ahead of Nepal's Gadhimai festival, working with the Sashastra Seema Bal from Motihari (30 November–9 December 2024) to intercept smuggling and provide emergency veterinary care.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2014</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2017><span class="rec__n">012</span><div class="rec__b"><h3 class="rec__t display">Dog Breeding and&nbsp;Marketing Rules, 2017</h3><p class="rec__p">Obtained directions from the Hon’ble Delhi High Court and assisted the Government of India to develop the Prevention of Cruelty to Animals (Dog Breeding and Marketing) Rules, 2017, creating a national framework for commercial dog breeding and sale.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2017</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2017><span class="rec__n">013</span><div class="rec__b"><h3 class="rec__t display">Regulation of&nbsp;Livestock Markets Rules, 2017</h3><p class="rec__p">Obtained directions from the Hon’ble Supreme Court and assisted the Government of India to develop the Prevention of Cruelty to Animals (Regulation of Livestock Markets) Rules, 2017, introducing welfare safeguards for the handling and sale of animals at livestock markets.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2017</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2017><span class="rec__n">014</span><div class="rec__b"><h3 class="rec__t display">Care and&nbsp;Maintenance of&nbsp;Case Property Animals Rules, 2017</h3><p class="rec__p">After securing directions from the Hon’ble Supreme Court, PFA assisted the Government of India to develop the Prevention of Cruelty to Animals (Care and Maintenance of Case Property Animals) Rules, 2017, protecting animals seized in cruelty cases during the pendency of proceedings.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2017</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2018><span class="rec__n">015</span><div class="rec__b"><h3 class="rec__t display">Pet Shop Rules, 2018</h3><p class="rec__p">Obtained directions from the Hon’ble Delhi High Court and assisted the Government of India to develop the Prevention of Cruelty to Animals (Pet Shop) Rules, 2018, mandating registration and welfare standards for pet shops.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2018</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2020><span class="rec__n">016</span><div class="rec__b"><h3 class="rec__t display">Environmental rules for&nbsp;dairy farms and&nbsp;gaushalas</h3><p class="rec__p">Advocated, through proceedings before the National Green Tribunal, for stronger environmental regulation of dairy farms and gaushalas, contributing to the Central Pollution Control Board's Guidelines for Environmental Management of Dairy Farms and Gaushalas (2020, revised 2021).</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2020</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">017</span><div class="rec__b"><h3 class="rec__t display">Environmental rules for&nbsp;poultry farms</h3><p class="rec__p">Advocated, before the National Green Tribunal, for stronger environmental regulation of poultry farms, contributing to the Central Pollution Control Board's Guidelines for Environmental Management of Poultry Farms.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">018</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;Package of&nbsp;Practice for&nbsp;Organised Pig Farms</h3><p class="rec__p">Co-authored the Package of Practice for Organised Pig Farms, with the National Research Center on Pig, Guwahati. This serves as an SOP which promotes welfare of lakhs of pigs and scientific management practices to prevent cruelty.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">019</span><div class="rec__b"><h3 class="rec__t display">Conditions improved for 10,000 pigs across 53 farms</h3><p class="rec__p">Documented welfare violations at 53 pig farms and secured regulatory directions improving conditions for more than 10,000 pigs in Uttar Pradesh and Haryana.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">020</span><div class="rec__b"><h3 class="rec__t display">Confinement crates taken off IndiaMART</h3><p class="rec__p">Facilitated the removal of approximately 1,000 confinement-crate listings from IndiaMART, curbing the sale of equipment used for intensive pig confinement.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">021</span><div class="rec__b"><h3 class="rec__t display">A&nbsp;scientific pig housing unit at&nbsp;Rishikesh</h3><p class="rec__p">Established, with the Government of Uttarakhand and ICAR-NRCP, a Scientific Pig Housing Model Demonstration Unit in Rishikesh, and PFA train veterinary officers in humane, welfare-oriented pig farming.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">022</span><div class="rec__b"><h3 class="rec__t display">31,000 poultry farmers reached across six States</h3><p class="rec__p">Conducted more than 150 farm visits and 10 training programmes, reaching over 31,000 poultry farmers across six States with guidance on cage-free production.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">023</span><div class="rec__b"><h3 class="rec__t display">A&nbsp;cage-free poultry training facility in&nbsp;Tamil Nadu</h3><p class="rec__p">Established a cage-free poultry demonstration and training facility in Tamil Nadu, and are developing a model cage-free farm and training centre with the Government of Uttar Pradesh and ICAR-CARI.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">024</span><div class="rec__b"><h3 class="rec__t display">Twenty-five companies moved on&nbsp;cage-free eggs</h3><p class="rec__p">Engaged more than 25 Indian and international companies on cage-free egg sourcing and brought farmers, retailers and institutional buyers together to grow cage-free supply.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">025</span><div class="rec__b"><h3 class="rec__t display">Illegal dairies off the&nbsp;Yamuna floodplains</h3><p class="rec__p">Litigated before the National Green Tribunal against illegally operated dairies polluting the Yamuna floodplains, causing illegal dairy operations and unauthorised colonies to be removed.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">026</span><div class="rec__b"><h3 class="rec__t display">Sixteen hundred vials of&nbsp;spurious oxytocin seized</h3><p class="rec__p">PFA’s intervention against the illegal use of spurious oxytocin in dairies contributed to enforcement action, including the seizure of around 1,600 vials, closure of illegal facilities and arrests.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">027</span><div class="rec__b"><h3 class="rec__t display">Science partnerships with ICAR and&nbsp;veterinary universities</h3><p class="rec__p">Work with the Indian Council of Agricultural Research (including ICAR-CARI, ICAR-NRCP and ICAR-CIFA) and veterinary universities to promote science-based, higher-welfare husbandry across poultry, pig and fish farming.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">028</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;only equine infirmary at&nbsp;Rudraprayag</h3><p class="rec__p">Manage the only equine infirmary at Rudraprayag in collaboration with the District Administration; the Uttarakhand High Court has recognised its role in caring for equines on the Kedarnath route. Government records placed before the Uttarakhand High Court recorded more than 21,000 equines screened and 3,482 treatments; its programme records report over 700 unfit equines kept off the track on medical grounds.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Working animals"><span class="rec__n">029</span><div class="rec__b"><h3 class="rec__t display">Happy Home Sanctuary, no&nbsp;tie and&nbsp;no&nbsp;cage</h3><p class="rec__p">Operate Happy Home Sanctuary at Chharba, Dehradun on a no-tie, no-cage model, currently caring for around 300 rescued animals, including working equines.</p><p class="rec__m"><span class="rec__c">Working animals</span></p></div></article>
+      <article class="rec" data-theme="Community dogs"><span class="rec__n">030</span><div class="rec__b"><h3 class="rec__t display">Phasewise ABC programmes in&nbsp;two States</h3><p class="rec__p">Assisted the Governments of Uttarakhand and Uttar Pradesh to develop phasewise ABC programs with robust infrastructure, monitoring and budgetary allocation.</p><p class="rec__m"><span class="rec__c">Community dogs</span></p></div></article>
+      <article class="rec" data-theme="Teaching"><span class="rec__n">031</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;country’s only approved ABC training centre</h3><p class="rec__p">Assisted the Government of Uttar Pradesh in developing the country’s only Government approved training center in Lucknow.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
+      <article class="rec" data-theme="Community dogs"><span class="rec__n">032</span><div class="rec__b"><h3 class="rec__t display">Seats on&nbsp;State ABC monitoring committees</h3><p class="rec__p">Serve on ABC Monitoring Committees and advisory mechanisms in several States to support effective implementation.</p><p class="rec__m"><span class="rec__c">Community dogs</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows"><span class="rec__n">033</span><div class="rec__b"><h3 class="rec__t display">Campaigned against the&nbsp;illegal wildlife trade at&nbsp;the&nbsp;Sonepur (Sonpur) fair in&nbsp;Bihar</h3><p class="rec__p">Secured court directions to ban the sale of all wildlife at the fair.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows" data-year=1995><span class="rec__n">034</span><div class="rec__b"><h3 class="rec__t display">Mobile zoos prohibited</h3><p class="rec__p">A 1995 intervention against mini and mobile zoos contributed to the prohibition of mobile zoos and stronger regulation of animal exhibition and transport, and PFA assisted in closing illegal facilities and rescuing animals.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span><span class="rec__y">1995</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=1996><span class="rec__n">035</span><div class="rec__b"><h3 class="rec__t display">Bull-fighting banned in&nbsp;Goa</h3><p class="rec__p">Secured Bombay High Court directions in 1996 banning bull-fighting and other animal fights in Goa under the Prevention of Cruelty to Animals Act.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">1996</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2001><span class="rec__n">036</span><div class="rec__b"><h3 class="rec__t display">Film safeguards extended to&nbsp;shoots abroad</h3><p class="rec__p">Advocated for India's animal-welfare safeguards to apply to Indian films using animals in sequences shot abroad, closing a loophole under the Performing Animals (Registration) Rules, 2001.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2001</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows"><span class="rec__n">037</span><div class="rec__b"><h3 class="rec__t display">Animals in&nbsp;film and&nbsp;television, monitored</h3><p class="rec__p">Monitor the use of animals in films and television and take legal action against productions involving animal abuse.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows"><span class="rec__n">038</span><div class="rec__b"><h3 class="rec__t display">Circuses regulated and&nbsp;wild animals rescued</h3><p class="rec__p">Worked with central and State authorities to regulate circuses and enforce the ban on prohibited wild animals, helping secure the rescue and rehabilitation of circus animals.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows"><span class="rec__n">039</span><div class="rec__b"><h3 class="rec__t display">Wild animals prohibited as&nbsp;performers</h3><p class="rec__p">Campaigned for the prohibition on using wild animals such as bears, tigers, lions, monkeys and panthers as performing animals.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=1994><span class="rec__n">040</span><div class="rec__b"><h3 class="rec__t display">Camels taken off Mumbai’s beaches</h3><p class="rec__p">A 1994 petition removed camels from beach rides in Mumbai and returned them to their native habitat.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">1994</span></p></div></article>
+      <article class="rec" data-theme="Working animals"><span class="rec__n">041</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;whipping of&nbsp;racehorses regulated</h3><p class="rec__p">Campaigned against the whipping of racehorses, leading to regulation on racecourses, with its representatives serving as welfare checkers at turf clubs.</p><p class="rec__m"><span class="rec__c">Working animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">042</span><div class="rec__b"><h3 class="rec__t display">Bullock-cart races prohibited in&nbsp;Andhra Pradesh</h3><p class="rec__p">PFA’s campaign against bullock-cart races led to their prohibition in Andhra Pradesh and elsewhere; PFA also introduced maintenance standards and daily veterinary checks for horses on Chennai beaches and halted plans for ostrich slaughter farms in Karnataka.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">043</span><div class="rec__b"><h3 class="rec__t display">Standing support to&nbsp;police on&nbsp;cruelty cases</h3><p class="rec__p">Assist the police and competent authorities to respond to cruelty complaints, document violations, rescue animals in distress and pursue prosecutions, on a day to day basis, while working to improve awareness and implementation of animal-welfare laws.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">044</span><div class="rec__b"><h3 class="rec__t display">Animal transport written into the&nbsp;Motor Vehicles Rules</h3><p class="rec__p">Worked with the Ministry of Road Transport to include Rules for animal transport in the Central Motor Vehicles Rules, which prevent the illegal, cruel and overcrowded transport of animals for slaughter.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Working animals" data-year=2013><span class="rec__n">045</span><div class="rec__b"><h3 class="rec__t display">Six thousand mules evacuated in&nbsp;the 2013 floods</h3><p class="rec__p">A long record of disaster rescue for working animals in Uttarakhand, during the 2013 floods PFA evacuated more than 6000 mules along a route rebuilt with Army assistance, and in the 2024 Kedarnath cloudburst PFA conducted a multi-day operation evacuating over hundreds of equines and establishing veterinary care camps, with the aid of the district administration.</p><p class="rec__m"><span class="rec__c">Working animals</span><span class="rec__y">2013</span></p></div></article>
+      <article class="rec" data-theme="Testing &amp; labs"><span class="rec__n">046</span><div class="rec__b"><h3 class="rec__t display">Hundreds of&nbsp;laboratories inspected</h3><p class="rec__p">Served on laboratory ethics and monitoring committees; hundreds of laboratories have been inspected and thousands of animals rescued.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
+      <article class="rec" data-theme="Testing &amp; labs"><span class="rec__n">047</span><div class="rec__b"><h3 class="rec__t display">Replacement, reduction and&nbsp;refinement in&nbsp;testing</h3><p class="rec__p">Advocate for the replacement, reduction and refinement of animal use and promote non-animal alternatives in toxicity testing, sensitivity testing and veterinary education.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
+      <article class="rec" data-theme="Teaching"><span class="rec__n">048</span><div class="rec__b"><h3 class="rec__t display">Five hundred police workshops across 25 States</h3><p class="rec__p">Conducted more than 500 workshops for police across 25+ States on animal-protection law, including training officers at the Central Detective Training Institute.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
+      <article class="rec" data-theme="Teaching"><span class="rec__n">049</span><div class="rec__b"><h3 class="rec__t display">Judges and&nbsp;magistrates sensitised in 12 States</h3><p class="rec__p">Sensitised judges and magistrates at judicial academies across 12 States and are training government veterinary, animal-husbandry and urban-development officials, the latter in partnership with the All India Institute of Local Self Government.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">050</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;Ahimsa Fellowship in&nbsp;law and&nbsp;policy</h3><p class="rec__p">Run the Ahimsa Fellowship, an animal-welfare law and policy in partnership with NALSAR University of Law, University of Delhi to strengthen animal-law education.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Community dogs"><span class="rec__n">051</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;Revised ABC Module for&nbsp;the&nbsp;AWBI</h3><p class="rec__p">Co-authored the Revised ABC Module for the Animal Welfare Board of India, along with handbooks for veterinary officers, law-enforcement personnel and urban local bodies.</p><p class="rec__m"><span class="rec__c">Community dogs</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">052</span><div class="rec__b"><h3 class="rec__t display">Management manuals written for&nbsp;Uttar Pradesh</h3><p class="rec__p">Assisted Uttar Pradesh with the Cattle Management Manual for Urban Local Bodies, the Kanha Gaushala Management Manual, the Lucknow ABC Implementation Manual and the Street Dog Management Manual for Urban Local Bodies.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2014><span class="rec__n">053</span><div class="rec__b"><h3 class="rec__t display">Helped end foie gras in&nbsp;India</h3><p class="rec__p">Advocated against the force-feeding cruelty behind foie gras, and in 2014 India became one of the first countries in the world to prohibit its import, effectively removing the product from the country.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2014</span></p></div></article>
+      <article class="rec" data-theme="Working animals"><span class="rec__n">054</span><div class="rec__b"><h3 class="rec__t display">Campaigned to&nbsp;stop the&nbsp;killing of&nbsp;retired Army dogs and&nbsp;horses</h3><p class="rec__p">Advocated for animals that had served the armed forces to be rehabilitated and cared for in their old age rather than put down.</p><p class="rec__m"><span class="rec__c">Working animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">055</span><div class="rec__b"><h3 class="rec__t display">Opposed the&nbsp;Army's “meat on&nbsp;the&nbsp;hoof” practice</h3><p class="rec__p">Campaigned against the procurement and airdropping of live animals as fresh meat for troops in remote areas, pressing for pre-packaged rations in their place.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems" data-year=2016><span class="rec__n">056</span><div class="rec__b"><h3 class="rec__t display">Supported the&nbsp;ban on&nbsp;importing dogs for&nbsp;commercial breeding</h3><p class="rec__p">Following advocacy by animal-welfare groups, the Directorate General of Foreign Trade prohibited the import of dogs for breeding and other commercial purposes in 2016, sparing thousands of unsuited foreign-breed dogs.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span><span class="rec__y">2016</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows"><span class="rec__n">057</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;a&nbsp;ban on&nbsp;the&nbsp;import of&nbsp;wildlife skins</h3><p class="rec__p">Campaigned to prohibit the import of skins of wild animals, closing a channel that fuelled cruelty and the wildlife trade.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows"><span class="rec__n">058</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;a&nbsp;ban on&nbsp;the&nbsp;import of&nbsp;seal leather and&nbsp;products</h3><p class="rec__p">Campaigned against the commercial sealing trade, supporting India's prohibition on importing seal skin and seal-derived products.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">059</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;mandatory registration of&nbsp;air guns</h3><p class="rec__p">Campaigned for air guns to be brought under registration requirements to curb the widespread killing of birds and small animals.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">060</span><div class="rec__b"><h3 class="rec__t display">Assisted in&nbsp;amending the&nbsp;broadcasting code to&nbsp;bar cruelty to&nbsp;animals on&nbsp;air</h3><p class="rec__p">Advocated for programme standards that prevent the telecast of content depicting cruelty to animals.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems" data-year=2016><span class="rec__n">061</span><div class="rec__b"><h3 class="rec__t display">Secured a&nbsp;shift to&nbsp;cruelty-free, machine-made silver leaf</h3><p class="rec__p">Advocated against making silver foil (chandi ka varq) by hammering silver between cattle intestines, and in 2016 the FSSAI barred the use of any animal-origin material in its manufacture, requiring hygienic, machine-based production.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span><span class="rec__y">2016</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">062</span><div class="rec__b"><h3 class="rec__t display">Assisted Uttar Pradesh to&nbsp;end public subsidies for&nbsp;slaughterhouses</h3><p class="rec__p">Advocated for an amendment to the State's municipal corporation law to stop government subsidies flowing to slaughterhouses in 2028.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Testing &amp; labs"><span class="rec__n">063</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;a&nbsp;ban on&nbsp;testing household products on&nbsp;animals</h3><p class="rec__p">Campaigned to prohibit the use of animals to test household and cleaning products, extending India's cruelty-free testing reforms beyond cosmetics.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
+      <article class="rec" data-theme="Testing &amp; labs"><span class="rec__n">064</span><div class="rec__b"><h3 class="rec__t display">Assisted in&nbsp;amending Schedule Y to&nbsp;prevent duplicate animal testing</h3><p class="rec__p">Advocated for changes under the Drugs and Cosmetics framework that avoid repeating animal tests already conducted for a drug, reducing unnecessary suffering.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
+      <article class="rec" data-theme="Testing &amp; labs"><span class="rec__n">065</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;reduced pesticide testing on&nbsp;animals</h3><p class="rec__p">Supported the adoption of internationally accepted OECD testing approaches that cut the number of animals used in pesticide safety testing.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
+      <article class="rec" data-theme="Teaching"><span class="rec__n">066</span><div class="rec__b"><h3 class="rec__t display">Helped establish an&nbsp;Animal Law Centre at&nbsp;NALSAR University of&nbsp;Law</h3><p class="rec__p">Supported the creation of a dedicated centre for animal law at the National Academy of Legal Studies and Research, building academic capacity in the field.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
+      <article class="rec" data-theme="Teaching"><span class="rec__n">067</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;animal law in&nbsp;the&nbsp;national law curriculum</h3><p class="rec__p">Following advocacy, the Bar Council of India introduced animal law into the syllabus across India's law universities.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">068</span><div class="rec__b"><h3 class="rec__t display">Assisted in&nbsp;updating the&nbsp;veterinary curriculum</h3><p class="rec__p">Advocated for animal-welfare content to be strengthened in the syllabus of veterinary colleges through the Veterinary Council of India.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Wildlife &amp; shows"><span class="rec__n">069</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;the&nbsp;removal of&nbsp;dissection from zoology courses</h3><p class="rec__p">Following advocacy, the University Grants Commission moved to phase out animal dissection in zoology and life-science teaching in favour of alternatives.</p><p class="rec__m"><span class="rec__c">Wildlife &amp; shows</span></p></div></article>
+      <article class="rec" data-theme="Working animals"><span class="rec__n">070</span><div class="rec__b"><h3 class="rec__t display">Secured the&nbsp;rehabilitation of&nbsp;privately held captive elephants in&nbsp;Uttarakhand and&nbsp;Delhi</h3><p class="rec__p">Advocated for and supported the removal of all private captive elephants in these regions into lawful, humane care.</p><p class="rec__m"><span class="rec__c">Working animals</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">071</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;a&nbsp;ban on&nbsp;animal sacrifice in&nbsp;Uttarakhand</h3><p class="rec__p">That advocacy supported the prohibition of animal sacrifice in the State. PFA secured court directions, worked with government agencies and temple authorities and brought about a peaceful transition towards a non-violent culture.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Working animals"><span class="rec__n">072</span><div class="rec__b"><h3 class="rec__t display">Created an&nbsp;equine rescue centre at&nbsp;Dehradun</h3><p class="rec__p">Established a dedicated rescue and rehabilitation centre for working and abandoned equines at Dehradun, Uttarakhand.</p><p class="rec__m"><span class="rec__c">Working animals</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">073</span><div class="rec__b"><h3 class="rec__t display">Brought crimes against animals into India's national crime data</h3><p class="rec__p">Over two years PFA worked with the National Crime Records Bureau, gathering data from States and Union Territories and working with statisticians to have animal crime recorded in the National Crime Records; PFA are now helping them develop methods to track repeat offenders and identify vulnerable areas so States can be advised accordingly.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems" data-year=2025><span class="rec__n">074</span><div class="rec__b"><h3 class="rec__t display">Put “Be Kind to&nbsp;Animals” on&nbsp;public transport nationwide</h3><p class="rec__p">Assisted the Ministry of Road Transport and Highways to issue its Order of 25 February 2025 mandating the “Be Kind to Animals” message on all public transport vehicles across India from 1 April 2025, and have since followed up with every State and Union Territory on implementation.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span><span class="rec__y">2025</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">075</span><div class="rec__b"><h3 class="rec__t display">Brought animal welfare into maritime-sector CSR</h3><p class="rec__p">Through the Sagar Samajik Sahyog initiative, PFA worked with the Ministry of Ports, Shipping and Waterways to amend its CSR guidelines to include animal welfare.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Teaching" data-year=2025><span class="rec__n">076</span><div class="rec__b"><h3 class="rec__t display">Secured a&nbsp;national push for&nbsp;Animal Welfare Societies in&nbsp;higher education</h3><p class="rec__p">Secured a University Grants Commission directive dated 13 June 2025 recommending the establishment of Animal Welfare Societies in all Higher Education Institutions, with the potential to reach millions of students.</p><p class="rec__m"><span class="rec__c">Teaching</span><span class="rec__y">2025</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">077</span><div class="rec__b"><h3 class="rec__t display">Secured a&nbsp;national environmental directive on&nbsp;piggery pollution</h3><p class="rec__p">Escalated the absence of sectoral guidelines on piggeries to the National Green Tribunal, which directed the Central Pollution Control Board to conduct a national piggery pollution study and frame binding environmental guidelines.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">078</span><div class="rec__b"><h3 class="rec__t display">Set a&nbsp;financial precedent against cruel confinement</h3><p class="rec__p">Secured a national advisory from Punjab National Bank instructing its branches to withhold financing for piggery projects that use restrictive gestation and farrowing crates.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Community dogs"><span class="rec__n">079</span><div class="rec__b"><h3 class="rec__t display">Assisted Uttar Pradesh to&nbsp;protect community dogs statewide</h3><p class="rec__p">Assisted the Government of Uttar Pradesh to issue Government Orders establishing designated feeding zones, protecting caregivers, banning the relocation or killing of community dogs, and mandating humane ABC infrastructure, CCTV monitoring and grievance redressal.</p><p class="rec__m"><span class="rec__c">Community dogs</span></p></div></article>
+      <article class="rec" data-theme="Community dogs" data-year=2025><span class="rec__n">080</span><div class="rec__b"><h3 class="rec__t display">Assisted Delhi to&nbsp;adopt community-dog management guidelines</h3><p class="rec__p">Assisted the Government of NCT of Delhi to issue its Order of 15 September 2025 covering feeding-zone designation, caregiver protection, pet registration, humane capture protocols and round-the-clock complaint helplines.</p><p class="rec__m"><span class="rec__c">Community dogs</span><span class="rec__y">2025</span></p></div></article>
+      <article class="rec" data-theme="Community dogs" data-year=2025><span class="rec__n">081</span><div class="rec__b"><h3 class="rec__t display">Assisted Jammu &amp; Kashmir to&nbsp;institutionalise humane dog management</h3><p class="rec__p">Assisted the Government of J&amp;K to issue its Order of 5 September 2025 directing all Urban Local Bodies to operationalise feeding sites, ABC infrastructure with CCTV, caregiver protections and compliance reporting.</p><p class="rec__m"><span class="rec__c">Community dogs</span><span class="rec__y">2025</span></p></div></article>
+      <article class="rec" data-theme="Community dogs"><span class="rec__n">082</span><div class="rec__b"><h3 class="rec__t display">Secured AWBI safeguards for&nbsp;animals in&nbsp;ABC surgery</h3><p class="rec__p">Assisted the Animal Welfare Board of India to issue a winter advisory setting temperature thresholds for ABC surgeries and hypothermia-monitoring requirements, and a further advisory keeping ABC centres at least 500 metres from landfills and waste sites.</p><p class="rec__m"><span class="rec__c">Community dogs</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">083</span><div class="rec__b"><h3 class="rec__t display">Standardised compensation for&nbsp;seized animals</h3><p class="rec__p">Secured case-property rates notified by District Magistrates across 11 districts of Uttarakhand, and in several other regions across states, creating enforceable compensation benchmarks for animals seized in cruelty cases.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals" data-year=2025><span class="rec__n">084</span><div class="rec__b"><h3 class="rec__t display">Formalised a&nbsp;pig-welfare partnership with Uttarakhand</h3><p class="rec__p">Signed an MoU with the Animal Husbandry Department, Uttarakhand in March 2025 and, with ICAR-NRCP, developed a welfare-oriented piggery training curriculum that the Department officially adopted in June 2025.</p><p class="rec__m"><span class="rec__c">Farmed animals</span><span class="rec__y">2025</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">085</span><div class="rec__b"><h3 class="rec__t display">Founded India's first Pig Welfare Alliance</h3><p class="rec__p">Established India's first Pig Welfare Alliance, uniting more than ten organisations, sanctuaries and experts to coordinate policy, rescue and rehabilitation nationwide.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">086</span><div class="rec__b"><h3 class="rec__t display">Drove enforcement against cruel piggeries</h3><p class="rec__p">PFA’s engagement with pollution authorities led to the closure of non-compliant crate-based facilities in Gurugram holding over 2,000 pigs, and 33 notices to unauthorised operators in Uttar Pradesh protecting over 7,000 pigs per cycle.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">087</span><div class="rec__b"><h3 class="rec__t display">Built the&nbsp;evidence base on&nbsp;piggery public health</h3><p class="rec__p">With the Physicians Association for Nutrition (PAN) India, PFA produced a primary research report assessing 146 piggery units across nine States and delivering targeted recommendations to regulators.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">088</span><div class="rec__b"><h3 class="rec__t display">Published India's first high-welfare dairy handbook</h3><p class="rec__p">Developed India's first comprehensive handbook on high-welfare dairy husbandry, giving operators of all scales evidence-based, measurable guidance on humane housing, nutrition and management.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">089</span><div class="rec__b"><h3 class="rec__t display">Advocated for&nbsp;a&nbsp;national milk-quality welfare standard</h3><p class="rec__p">Published a policy brief calling for a national Somatic Cell Count standard for domestic milk, closing the gap between export and domestic requirements and addressing antimicrobial resistance.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">090</span><div class="rec__b"><h3 class="rec__t display">Mapped subsidies to&nbsp;expose welfare blind spots</h3><p class="rec__p">Completed a national mapping of dairy and piggery subsidies, exposing where public finance ignores welfare and waste-management safeguards and equipping its push for welfare-linked lending conditions.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">091</span><div class="rec__b"><h3 class="rec__t display">Embedded welfare into dairy supply chains and&nbsp;technology</h3><p class="rec__p">Partnered with Madhur Dairy, Gandhinagar, Gujarat, to raise welfare standards across its supply chain and with agri-tech firm GormalOne to build animal-welfare guidance into its AI advisory chatbot for farmers.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">092</span><div class="rec__b"><h3 class="rec__t display">Helped draft India's first cage-free standards</h3><p class="rec__p">As a member of the Bureau of Indian Standards Committee FAD32, PFA contributed to draft cage-free egg-production standards.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">093</span><div class="rec__b"><h3 class="rec__t display">Built India's first large-scale cage-free demonstration farm</h3><p class="rec__p">With TANSIM and Global Food Partners, PFA launched India's first large-scale (10,000-bird) environmentally controlled cage-free demonstration and training farm in Trichy, Tamil Nadu.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law"><span class="rec__n">094</span><div class="rec__b"><h3 class="rec__t display">Equipped business and&nbsp;trainers to&nbsp;go cage-free</h3><p class="rec__p">Developed, with Ernst &amp; Young, an Implementation Guide giving companies a practical roadmap to transition their egg supply chains, and ran India's first “Training of Trainers” for officials, veterinarians and geneticists across three States.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">095</span><div class="rec__b"><h3 class="rec__t display">Made welfare training accessible in&nbsp;regional languages</h3><p class="rec__p">Worked with the Gujarat Animal Husbandry Department to translate ICAR-CARI's cage-free modules into Gujarati and embed them in the State's official Backyard Poultry Training Programme.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">096</span><div class="rec__b"><h3 class="rec__t display">Advanced a&nbsp;Uttar Pradesh cage-free demonstration farm</h3><p class="rec__p">As technical partners under an MoU, PFA supported the Government of Uttar Pradesh to develop its own cage-free demonstration farm for farmer learning and industry transition.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">097</span><div class="rec__b"><h3 class="rec__t display">Secured climate-adaptive protections for&nbsp;farmed fish</h3><p class="rec__p">Secured directives in four States, Arunachal Pradesh, Himachal Pradesh, Uttarakhand and Jammu &amp; Kashmir, mandating protective seasonal aquaculture measures to reduce stress, disease and mortality.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Policy &amp; systems"><span class="rec__n">098</span><div class="rec__b"><h3 class="rec__t display">Institutionalised compassionate school uniforms in&nbsp;Goa</h3><p class="rec__p">Secured an order from the Directorate of Education, Goa mandating canvas (non-leather) shoes in all government, aided and unaided schools as part of the uniform policy.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" data-theme="Farmed animals"><span class="rec__n">099</span><div class="rec__b"><h3 class="rec__t display">Advanced humane slaughter in&nbsp;Gujarat</h3><p class="rec__p">Secured an order from Gujarat's Urban Development Department directing all local bodies to enforce pre-slaughter stunning in slaughterhouses.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2017><span class="rec__n">100</span><div class="rec__b"><h3 class="rec__t display">Took illegal livestock markets to&nbsp;task in&nbsp;Uttarakhand</h3><p class="rec__p">That advocacy led the Udham Singh Nagar District Magistrate to constitute a District Livestock Market Monitoring Committee under the Regulation of Livestock Markets Rules, 2017.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2017</span></p></div></article>
+      <article class="rec" data-theme="Courts &amp; law" data-year=2025><span class="rec__n">101</span><div class="rec__b"><h3 class="rec__t display">Trained enforcers and&nbsp;professionals at&nbsp;scale</h3><p class="rec__p">Ran more than 30 capacity-building programmes in 2025, including sessions for around 800 public prosecutors at Gujarat National Law University, some 400 officers at the Gujarat Police Academy, and municipal officers from all 17 of Uttar Pradesh's corporations on ABC implementation.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2025</span></p></div></article>
+      <article class="rec" data-theme="Community dogs" data-year=2025><span class="rec__n">102</span><div class="rec__b"><h3 class="rec__t display">Co-authored national reference handbooks with AWBI</h3><p class="rec__p">In February 2025 the Animal Welfare Board of India published its co-authored Law Enforcement Handbook, Handbook for Veterinary Officers, and Animal Law Handbook for Urban Local Bodies, along with the Revised Street Dog Management Module.</p><p class="rec__m"><span class="rec__c">Community dogs</span><span class="rec__y">2025</span></p></div></article>
+      <article class="rec" data-theme="Teaching" data-year=2025><span class="rec__n">103</span><div class="rec__b"><h3 class="rec__t display">Embedded animal law at&nbsp;the&nbsp;University of&nbsp;Delhi</h3><p class="rec__p">Executed an MoU with the Faculty of Law, University of Delhi on 16 October 2025 to embed animal law through education, research and policy engagement.</p><p class="rec__m"><span class="rec__c">Teaching</span><span class="rec__y">2025</span></p></div></article>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+  var recs = document.getElementById('recs');
+  var count = document.getElementById('recCount');
+  if (!recs) return;
+  var all = [].slice.call(recs.querySelectorAll('.rec'));
+
+  function say(n){
+    count.textContent = n === all.length
+      ? all.length + ' entries'
+      : n + ' of ' + all.length + ' entries';
+  }
+
+  /* Filtering hides rather than removes, so the numbering stays the numbering:
+     entry 057 is entry 057 whichever front you are looking at. */
+  document.querySelector('.rfil').addEventListener('click', function(e){
+    var b = e.target.closest('.rfil__b');
+    if (!b) return;
+    var want = b.getAttribute('data-filter');
+    [].forEach.call(document.querySelectorAll('.rfil__b'), function(x){ x.classList.toggle('is-on', x === b); });
+    var shown = 0;
+    all.forEach(function(rec){
+      var on = !want || rec.getAttribute('data-theme') === want;
+      rec.hidden = !on;
+      if (on) { shown += 1; rec.classList.add('is-in'); }
+    });
+    say(shown);
+  });
+  say(all.length);
+
+  /* Entries rise in as they come up. One observer, unhooked once each has
+     arrived, so a hundred rows cost nothing to scroll past twice. */
+  if (!('IntersectionObserver' in window)) {
+    all.forEach(function(r){ r.classList.add('is-in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    all.forEach(function(r){ io.observe(r); });
+  }
+
+  /* The three figures count up once, when they are first seen. */
+  var nums = [].slice.call(document.querySelectorAll('.rstat__n'));
+  function tally(el){
+    var to = Number(el.getAttribute('data-count')) || 0, t0 = null;
+    function step(ts){
+      if (t0 === null) t0 = ts;
+      var k = Math.min(1, (ts - t0) / 1100);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if (!('IntersectionObserver' in window) || !window.requestAnimationFrame) {
+    nums.forEach(function(el){ el.textContent = el.getAttribute('data-count'); });
+  } else {
+    var io2 = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) { tally(en.target); io2.unobserve(en.target); } });
+    });
+    nums.forEach(function(el){ io2.observe(el); });
+  }
+})();
+</script>
+</body>
+</html>

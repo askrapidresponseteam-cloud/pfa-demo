@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who would you underestimate? &#183; People for Animals</title>
+<meta name="description" content="A six-question quiz on what farm animals can do, every answer drawn from published research. Download a certificate at the end.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --band:clamp(76px,8.5vw,136px);
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+body{padding-bottom:0;transition:padding-bottom .2s}
+body.has-bar{padding-bottom:76px}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+
+/* ---------- shared type + controls (matched to the main site) ---------- */
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn[disabled]:hover{background:var(--ink);color:#fff}
+
+/* ---------- the top of the shop ----------
+   There is no hero. The proposition, the eyebrow and the dark block all moved
+   to shop.html, the door this page is reached through, so what is left here is
+   a shopping page that opens on its products: the filter bar is the first
+   thing under the header and the first row of the grid is on screen at rest.
+
+   What remains is the space the fixed header needs - nothing below it is
+   pushed down automatically - and the page's name inside it, which a screen
+   reader announces and a search engine reads. It is not shown, because the
+   words a shopper reads are on the door. */
+.shoptop{padding-top:calc(var(--ann) + var(--nav))}
+.shoptop h1{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;white-space:nowrap;clip-path:inset(50%)}
+
+/* ---------- filter bar ---------- */
+.btn--ghost{background:transparent;color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:#fff}
+
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none;padding:12px var(--gutter)}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:216px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+/* Chips are words at rest and a filled block only when chosen. Twelve boxed
+   controls in a row read as a toolbar; twelve words read as a menu. */
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+/* At rest the shop filters nothing, and "nothing is filtered" needs no
+   badge: the defaults (All, Everything) sit as inked words - no box, no
+   fill - and the absence of any black pill is the state. Choose Dogs or
+   Food and that choice lands solid black as ever. Colour only, so the
+   row never reflows when a state flips. */
+.chip[data-pet="all"][aria-pressed="true"],.chip[data-cat="all"][aria-pressed="true"]{background:none;border-color:transparent;color:var(--ink)}
+.sep{flex:0 0 auto;width:1px;height:24px;background:var(--line)}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);white-space:nowrap;padding-left:12px}
+/* Sort and the count travel together at the end of the row. */
+.filters__end{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:12px;padding-left:12px}
+.sort{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.sort__label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sort select{height:38px;border:1px solid transparent;background:#fff;color:var(--ink);
+  font:inherit;font-size:12px;letter-spacing:.02em;padding:0 32px 0 12px;cursor:pointer;
+  border-radius:0;-webkit-appearance:none;appearance:none;outline:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.sort select:hover{border-color:var(--ink)}
+.sort select:focus-visible{border-color:var(--ink);outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- product grid ---------- */
+/* The top space used to be `calc(var(--band) * .6)`, up to 82px, because the
+   band above it was the dark hero and the grid needed to get clear of it. The
+   hero is gone and the filter bar sits directly above, so that much white now
+   reads as a page that has not finished loading. What is left is enough air to
+   keep the first row from touching the sticky bar. */
+.grid-wrap{padding:clamp(20px,2.4vw,34px) var(--gutter) var(--band)}
+/* stretch, not start: a card has to fill its row so the action can be pushed
+   to the bottom of it. With align-items:start every card stopped at its own
+   content and the Add buttons stepped up and down the row with the titles. */
+/* Shelves. A catalogue this size is a warehouse, not a shop: 839 things in five
+   aisles asks the person to already know what they came for. The best stores
+   sell the situation instead of the aisle, so these are the things actually
+   going on with an animal. They are saved queries over the same catalogue, so
+   they need nothing from the vendor and touch nothing in checkout. */
+.aisles{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0 0 clamp(4px,.8vw,10px)}
+.shelves{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 clamp(20px,2.4vw,30px)}
+/* No scroll anchoring in the goods: a filter replaces the grid wholesale and
+   the browser's anchor is then a card that no longer exists, so it lands the
+   visitor somewhere arbitrary. Card heights are all reserved (aspect-ratio
+   tiles, contain-intrinsic-size), so nothing above the fold shifts on its own
+   and the anchor has nothing left to do; where the view goes after a filter
+   is decided once, by settleView() beside paintAll. */
+.goods{min-width:0;overflow-anchor:none}
+.sider__tag{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.shelves button span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;display:none}
+/* On a wide screen the choosing stands to the left, the way a large
+   catalogue is read: one quiet column of words under small-caps tags, the
+   grid given the rest. Same buttons, same wiring - only arranged. */
+@media (min-width:1001px){
+  .grid-wrap{display:grid;grid-template-columns:180px minmax(0,1fr);column-gap:clamp(28px,3.4vw,56px);align-items:start}
+  .sider{grid-column:1;position:sticky;top:calc(var(--ann) + var(--nav) + 78px)}
+  .goods{grid-column:2}
+  .sider .sider__tag{display:block}
+  .sider .sider__tag[hidden]{display:block}
+  .sider .sep{display:none}
+  .aisles{flex-direction:column;align-items:stretch;gap:2px;margin:0 0 26px}
+  .aisles .sider__tag{margin:0 0 8px}
+  .aisles .sider__tag + .chip ~ .sider__tag{margin-top:22px}
+  .sider .chip{height:auto;padding:7px 10px;text-align:left;letter-spacing:.05em}
+  .sider__tag--shelves[hidden]{display:block;margin:0 0 8px}
+  .sider .shelves{flex-direction:column;gap:2px;margin:0}
+  .sider .shelves button{width:100%;justify-content:space-between;padding:7px 10px}
+  .sider .shelves button span{display:inline}
+  /* Searching hides the shelves; their tag goes with them, and a closed
+     store empties the whole rail rather than leaving headings over nothing. */
+  .sider:has(.shelves[hidden]) .sider__tag--shelves{display:none}
+}
+/* An index line, not a second menu: muted words that ink on hover. The
+   hover is colour, not a border - boxes are what the chosen shelf gets. */
+.shelves button{border:1px solid transparent;background:none;font:inherit;cursor:pointer;
+  padding:9px 12px;font-size:12px;letter-spacing:.02em;color:var(--muted);
+  display:inline-flex;align-items:baseline;gap:8px;
+  transition:background .18s,color .18s,border-color .18s}
+.shelves button:hover{color:var(--ink)}
+.shelves button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.shelves button span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.shelves button[aria-pressed="true"] span{color:rgba(255,255,255,.66)}
+
+/* ---------- offers rail ----------
+   The seller's markdowns and nothing else: a card exists only where Shopify
+   carries a compare-at price above the price, and the section exists only
+   while at least one such card is on the shelf. Each card leads with the
+   saving set in the display face, the way the record page leads with what
+   changed, then the product, its photograph, both prices and the same Add
+   control as the grid. The first card takes the hero's black. The rail
+   scrolls sideways and snaps a card at a time. */
+.offers{margin:0 0 clamp(32px,3.6vw,52px)}
+.offers[hidden]{display:none}
+.offers__head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:0 0 14px}
+.offers__head p{margin:0;font-size:12px;color:var(--muted)}
+.offers__nav{display:flex;gap:6px}
+.offers__nav button{width:34px;height:34px;border:1px solid var(--line);background:none;cursor:pointer;font-size:14px;line-height:1;color:var(--ink);transition:border-color .15s}
+.offers__nav button:hover{border-color:var(--ink)}
+.offers__rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:1px;scroll-padding:1px}
+.offers__rail::-webkit-scrollbar{display:none}
+.offer{position:relative;flex:0 0 min(372px,84vw);scroll-snap-align:start;border:1px solid var(--line);background:#fff;display:grid;grid-template-columns:minmax(0,1fr) 108px;grid-template-rows:auto auto 1fr auto;column-gap:16px;padding:18px 18px 16px}
+.offer__kind{grid-column:1;margin:0 0 10px}
+.offer__num{grid-column:1;font-size:clamp(44px,5.2vw,62px);letter-spacing:0;line-height:.95}
+.offer__num small{font-size:.42em;letter-spacing:.02em;margin-left:4px}
+.offer__why{grid-column:1;margin:8px 0 0;font-size:12px;line-height:1.5;color:var(--muted);max-width:26ch}
+.offer__tile{grid-column:2;grid-row:1 / span 3;aspect-ratio:1;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;padding:8px;align-self:start;background:#fff}
+.offer__tile img{width:100%;height:100%;object-fit:contain}
+.offer__tile svg{width:62%;height:62%;color:rgba(17,17,17,.42)}
+a.offer__tile:hover{opacity:1;border-color:var(--ink)}
+.offer__foot{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.offer__name{font-size:13px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.offer__price{font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+.offer__price small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.offer__action{grid-column:1 / -1;margin-top:12px}
+.offer .add,.offer .stepper{height:38px}
+.offer a.add{display:flex;align-items:center;justify-content:center}
+.offer--lead{background:var(--deep);color:#fff;border-color:var(--deep)}
+.offer--lead .offer__why,.offer--lead .offer__price small,.offer--lead .eyebrow{color:rgba(255,255,255,.62)}
+.offer--lead .offer__tile{border-color:rgba(255,255,255,.28)}
+.offer--lead .offer__foot{border-top-color:rgba(255,255,255,.22)}
+.offer--lead .add,.offer--lead .stepper{border-color:#fff;color:#fff}
+.offer--lead .stepper button{color:#fff}
+.offer--lead .add:hover{background:#fff;color:var(--ink)}
+.offer--lead .was{color:rgba(255,255,255,.55)}
+/* The old price, struck, in front of the new one. On a card and in the
+   picker it is the only sign of a markdown beside the tag. */
+.was{color:var(--muted);text-decoration:line-through;margin-right:6px;font-weight:400}
+
+/* Four across on a laptop, five on a wide screen, and never a wall: a
+   dozen at a time, the next dozen arriving as the person nears the end. */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:40px 24px;align-items:stretch}
+.card{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;content-visibility:auto;contain-intrinsic-size:auto 420px}
+.card__tile{position:relative;aspect-ratio:1;min-height:0;flex:0 0 auto;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;padding:12px}
+.card__tile svg{width:58%;height:58%;color:rgba(17,17,17,.42)}
+a.card__tile{cursor:pointer;transition:border-color .18s}
+a.card__tile:hover{opacity:1;border-color:var(--ink)}
+.card__tag{position:absolute;left:8px;top:8px;background:var(--deep);color:#fff;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px}
+.card__meta{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:13px;line-height:1.35}
+.card__meta>span:first-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
+.card__meta span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.card__sub{font-size:12px;color:var(--muted);margin:-4px 0 0;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.card__action{margin-top:auto;padding-top:2px}
+.add{width:100%;border:1px solid var(--ink);background:none;color:var(--ink);height:40px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
+.add:hover{background:var(--ink);color:#fff}
+/* The same outlined box as Add to cart, now holding a count: the control
+   changes state, not shape, so a card with something in the cart looks like
+   its neighbours and never like a different kind of button. */
+.stepper{display:flex;align-items:center;justify-content:space-between;height:40px;border:1px solid var(--ink);background:none;color:var(--ink)}
+.stepper button{width:40px;height:100%;background:none;border:none;color:var(--ink);font-size:16px;line-height:1;cursor:pointer}
+.stepper button:hover{opacity:.6}
+.stepper span{font-size:12px;letter-spacing:.08em;font-weight:700}
+/* Two ways off a card: Add keeps you browsing, Buy takes you to the address
+   and payment in one move. Both sit at the same 40px as the stepper. */
+/* The middle of a stepper is a button on a product with sizes: it names the
+   size in the bag and reopens the picker to change it or add another. */
+.stepper__pick{flex:1;height:100%;background:none;border:none;color:var(--ink);font-size:11px;letter-spacing:.06em;font-weight:700;cursor:pointer;padding:0 4px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stepper__pick:hover{opacity:.8}
+/* Size picker. It lays over the card rather than growing it, so choosing a
+   strength never shoves the rest of the row about. Kept inside the card
+   bounds on purpose: content-visibility:auto paints the card in isolation,
+   so anything that escaped the box would be clipped. */
+.pick{position:absolute;inset:0;z-index:6;background:#fff;border:1px solid var(--ink);display:flex;flex-direction:column;padding:12px 12px 10px}
+.pick__head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin:0 0 6px}
+.pick__title{font-size:12px;line-height:1.35;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
+.pick__close{background:none;border:none;font-size:14px;line-height:1;cursor:pointer;padding:2px 4px;flex:0 0 auto;margin:-2px -4px 0 0}
+.pick__hint{margin:0 0 4px;font-size:11px;color:var(--muted)}
+.pick__list{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin}
+.pick__row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.pick__name{font-size:12px;line-height:1.3;min-width:0}
+.pick__name small{display:block;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px}
+.pick__add{border:1px solid var(--ink);background:none;color:var(--ink);height:32px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.pick__add:hover{background:var(--ink);color:#fff}
+.pick .mini{border-color:var(--ink)}
+.empty{padding:56px 0;text-align:center;color:var(--muted);font-size:13px}
+.more{display:flex;justify-content:center;margin-top:44px}
+.more button{border:1px solid var(--ink);background:none;color:var(--ink);padding:15px 34px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.more button:hover{background:var(--ink);color:#fff}
+.more p{margin:0;font-size:12px;color:var(--muted)}
+.sentinel{height:1px}
+.more__of{opacity:.55;font-weight:400;letter-spacing:.06em}
+
+
+/* ---------- sticky cart bar ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--deep);color:#fff;transform:translateY(100%);transition:transform .25s ease}
+.bar.show{transform:none}
+.bar__in{display:flex;align-items:center;gap:16px;padding:14px var(--gutter)}
+.bar__info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bar__line{font-size:13px}
+.bar .btn{flex:0 0 auto;margin-left:auto}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;z-index:70;background:rgba(10,10,10,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:80;width:min(430px,100%);background:var(--paper);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s ease}
+.drawer.show{transform:none}
+.drawer__head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid var(--line)}
+.drawer__head h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.01em}
+.drawer__close{background:none;border:none;font-size:15px;cursor:pointer;padding:4px}
+.drawer__body{flex:1;overflow-y:auto;padding:20px}
+.drawer__foot{border-top:1px solid var(--line);padding:16px 20px 20px;display:grid;gap:12px}
+.totals{display:flex;justify-content:space-between;font-size:13px}
+.totals strong{font-weight:700}
+.line{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line:first-child{padding-top:0}
+.line__tile{aspect-ratio:1;background:var(--stone);display:grid;place-items:center}
+.line__tile svg{width:60%;height:60%;color:rgba(17,17,17,.42)}
+.line__name{font-size:13px;line-height:1.35}
+.line__sub{font-size:12px;color:var(--muted);margin-top:3px}
+.line__right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.mini{display:flex;align-items:center;border:1px solid var(--line)}
+.mini button{width:28px;height:28px;background:none;border:none;cursor:pointer;font-size:14px;line-height:1}
+.mini button:hover{background:var(--stone)}
+.mini span{min-width:24px;text-align:center;font-size:12px;font-weight:700}
+.co{border-top:1px solid var(--line);padding-top:20px;display:grid;gap:16px}
+.co h3{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field{display:grid;gap:6px}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field textarea{border:1px solid var(--line);padding:11px 12px;font-size:13px;outline:none;background:#fff;resize:none}
+.field input:focus,.field textarea:focus{border-color:var(--ink)}
+.field select{border:1px solid var(--line);padding:11px 12px;font-size:13px;outline:none;background:#fff;border-radius:0;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+.field select:focus{border-color:var(--ink)}
+.field.is-bad input,.field.is-bad select{border-color:#b3261e}
+.field input[readonly]{background:var(--stone)}
+/* Two short fields on one line: PIN and city, so the address takes fewer
+   rows and the PIN can fill the city and state before the person gets there. */
+.field--pair{grid-template-columns:1fr 1fr;gap:10px}
+.field--pair>div{display:grid;gap:6px;min-width:0}
+.field__hint{font-size:11px;color:var(--muted);margin:0;min-height:1.4em}
+/* Where the person told us to keep their details, the form collapses to a
+   card and checkout is one press. */
+.saved{border:1px solid var(--line);padding:14px 16px;display:grid;gap:4px;font-size:13px;line-height:1.5}
+.saved strong{font-size:13px}
+.saved p{margin:0;color:var(--muted)}
+.saved__row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.saved__acts{display:flex;gap:14px;margin-top:6px}
+.saved__acts button{background:none;border:none;padding:0;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.saved__acts button:hover{opacity:.6}
+.remember{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--muted);line-height:1.5;cursor:pointer}
+.remember input{margin:3px 0 0;flex:0 0 auto;accent-color:var(--ink)}
+.coerr{margin:0;font-size:12px;line-height:1.5;color:#b3261e}
+.coerr[hidden]{display:none}
+/* The shipping method, chosen here rather than on the seller's page. Every
+   price in it comes from Shopify's own rating of this bag and this PIN code;
+   nothing about delivery is priced by PFA. */
+.ship{display:grid;gap:10px}
+.ship__h{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0}
+.totals__note{display:block;margin-top:3px;font-size:11px;letter-spacing:.02em;color:var(--muted);font-weight:400}
+.ship__opt{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);padding:13px 15px;cursor:pointer;transition:border-color .18s}
+.ship__opt:hover{border-color:var(--ink)}
+.ship__opt input{margin:2px 0 0;flex:0 0 auto;accent-color:var(--ink)}
+.ship__opt[data-on="1"]{border-color:var(--ink)}
+.ship__body{flex:1;min-width:0;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.ship__name{font-size:13px;line-height:1.45}
+.ship__name small{display:block;font-size:11px;color:var(--muted)}
+.ship__price{font-size:13px;white-space:nowrap}
+.ship__note{margin:0;font-size:11px;color:var(--muted);line-height:1.5}
+/* One method at one price is a fact, not a choice: a single line, no radio. */
+.ship__one{margin:0;display:flex;justify-content:space-between;gap:12px;align-items:baseline;border:1px solid var(--line);padding:13px 15px}
+/* Real product photographs, now that the catalogue is the seller's. */
+/* The height comes from the ratio, not from a percentage. These frames are
+   display:grid with place-items:center, and a percentage height against a
+   centred grid area does not reliably resolve: when it falls back to auto the
+   picture keeps its own proportions, grows past a square frame and is cut off
+   by the overflow. A square image never showed it; a tall one always did.
+   width:100% resolves on its own, and aspect-ratio takes the height from
+   there, so object-fit:contain has a real box to letterbox inside.
+   The ratio here must match the frame's own aspect-ratio. */
+.card__tile img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block}
+.line__tile img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block;padding:6px}
+.done{display:flex;flex-direction:column;gap:16px;padding:8px 0}
+/* The number the shopper quotes. Given weight on purpose: it is the one thing
+   on this screen they may need to write down or read out. */
+.doneid{margin:0;font-size:24px;font-weight:700;letter-spacing:.06em;border:1px solid var(--ink);padding:14px 16px;text-align:center}
+.donelines{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:16px}
+.done h2{font-size:clamp(28px,6vw,44px)}
+.done p{margin:0;font-size:13px;line-height:1.6;color:var(--muted)}
+/* Not .done .toast. It sat in the run of .done rules above and picked up
+   their prefix, so it only applied inside the order-complete panel, and #toast
+   is a top-level element that is never in one. The upshot was that toast() has
+   never shown anything on this page or on the product page, which copies this
+   stylesheet: "Added" was written into an unstyled div under the footer. */
+.toast{position:fixed;left:16px;bottom:92px;z-index:75;background:var(--ink);color:#fff;font-size:12px;letter-spacing:.02em;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:640px){
+  .offer{grid-template-columns:minmax(0,1fr) 84px;padding:16px 14px 14px}
+  .offer__num{font-size:44px}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 44px}
+  .drawer{width:100%}
+  .bar__in{padding:12px}
+  .bar .btn{padding:14px 18px}
+}
+@media (max-width:720px){
+  /* Two across on a phone. One product per screen made a short list feel
+     like a long walk. */
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px}
+  .card__tile{padding:8px}
+}
+@media (max-width:400px){
+  .filters__row{padding:10px var(--gutter)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+
+/* PFA_QUIZ_CSS_START */
+/* ---------- quiz ---------- */
+/* The header is fixed, so the first section has to reserve its height the way
+   every other page does, .hero on twelve of them, .give on donate. These three
+   used calc(var(--band) * .55), which is 42px to 75px depending on the window
+   while the header needs 69px, so the top of the page slid underneath it at
+   anything under about 1470px wide. */
+.qz{padding:calc(var(--ann) + var(--nav) + clamp(32px,4.4vw,72px)) var(--gutter) var(--band);max-width:1100px;margin:0 auto}
+.qz__head{margin-bottom:clamp(28px,4vw,48px)}
+.qz__title{font-family:var(--display);font-weight:400;line-height:1.04;letter-spacing:-.01em;
+  font-size:clamp(30px,4.6vw,64px);text-transform:uppercase;margin:10px 0 0;max-width:16ch}
+.qz__lede{margin:18px 0 0;font-size:15px;line-height:1.6;color:var(--muted);max-width:56ch}
+
+/* progress */
+.qz__bar{display:flex;align-items:center;gap:14px;margin-top:clamp(24px,3vw,36px)}
+.qz__track{flex:1;height:2px;background:var(--line);position:relative;overflow:hidden}
+.qz__fill{position:absolute;inset:0 auto 0 0;background:var(--ink);width:0;transition:width .35s ease}
+.qz__count{font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* question */
+.qz__q{margin:clamp(28px,4vw,44px) 0 0;font-size:clamp(18px,2.1vw,26px);line-height:1.35;max-width:44ch}
+.qz__options{list-style:none;margin:clamp(22px,3vw,34px) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+/* The li stretches to the tallest in the row; the button has to fill it, or
+   the cards sit at different heights with their labels out of line. */
+.qz__options>li{display:flex}
+.qz__opt{position:relative;display:flex;flex-direction:column;gap:0;width:100%;flex:1;
+  border:1px solid var(--line);background:#fff;padding:0;font:inherit;text-align:left;cursor:pointer;
+  transition:border-color .18s,box-shadow .18s}
+.qz__opt:hover:not(:disabled){border-color:var(--ink)}
+.qz__opt:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.qz__opt:disabled{cursor:default}
+/* Faces are never cropped: contain, on a neutral field, whatever the source
+   aspect turns out to be. An object-position value would only be a guess. */
+/* The tile is a flex item, and a flex item's min-height:auto lets its content
+   push past aspect-ratio, so a portrait photograph made its tile taller than
+   a landscape one and the row of options came out ragged. Taking the image out
+   of flow removes the argument entirely: the tile is square because it says so,
+   and the photograph is fitted inside it. */
+.qz__shot{position:relative;aspect-ratio:1;min-height:0;background:var(--stone);display:block;overflow:hidden}
+.qz__shot img{position:absolute;top:10px;left:10px;
+  width:calc(100% - 20px);height:calc(100% - 20px);object-fit:contain;display:block}
+.qz__name{margin-top:auto;padding:12px 14px;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.qz__mark{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.qz__opt[data-state="right"]{border-color:#1a7f4b;box-shadow:inset 0 0 0 1px #1a7f4b}
+.qz__opt[data-state="right"] .qz__mark{color:#1a7f4b}
+.qz__opt[data-state="wrong"]{border-color:#b3261e;box-shadow:inset 0 0 0 1px #b3261e}
+.qz__opt[data-state="wrong"] .qz__mark{color:#b3261e}
+.qz__opt[data-state="dim"]{opacity:.42}
+
+/* reveal */
+.qz__reveal{margin-top:clamp(24px,3vw,34px);border-top:1px solid var(--ink);padding-top:20px}
+.qz__verdict{margin:0;font-size:14px;font-weight:700}
+.qz__verdict[data-ok="no"]{color:#b3261e}
+.qz__verdict[data-ok="yes"]{color:#1a7f4b}
+.qz__fact{margin:10px 0 0;font-size:15px;line-height:1.65;max-width:62ch}
+.qz__cite{margin:12px 0 0;font-size:12px;color:var(--muted)}
+.qz__cite a{border-bottom:1px solid var(--line)}
+.qz__next{margin-top:22px}
+
+/* result */
+.qz__score{font-family:var(--display);font-weight:400;font-size:clamp(40px,7vw,96px);line-height:1;margin:0}
+.qz__scoreline{margin:14px 0 0;font-size:16px;line-height:1.6;max-width:52ch}
+.qz__cert{margin-top:clamp(32px,4vw,48px);border:1px solid var(--line);padding:clamp(20px,3vw,32px);
+  display:grid;gap:16px;max-width:620px}
+.qz__cert h3{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.qz__cert p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+.qz__field{display:grid;gap:6px}
+.qz__field label{font-size:12px;color:var(--muted)}
+.qz__field input{border:1px solid var(--line);padding:12px;font:inherit;font-size:14px;outline:none;background:#fff}
+.qz__field input:focus{border-color:var(--ink)}
+.qz__certrow{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.qz__preview{margin-top:18px;border:1px solid var(--line);background:var(--stone)}
+.qz__preview canvas{width:100%;height:auto;display:block}
+.qz__note{margin:0;font-size:12px;color:var(--muted)}
+.qz__actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3.5vw,40px)}
+
+.qz__noscript{border:1px solid var(--line);padding:20px;font-size:15px;line-height:1.6}
+
+@media (max-width:560px){
+  .qz__options{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  .qz__fill{transition:none}
+}
+
+/* PFA_QUIZ_CSS_END */
+</style>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/quiz">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Who would you underestimate? &amp;#183; People for Animals">
+  <meta property="og:description" content="A six-question quiz on what farm animals can do, every answer drawn from published research. Download a certificate at the end.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/quiz">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Who would you underestimate? &amp;#183; People for Animals">
+  <meta name="twitter:description" content="A six-question quiz on what farm animals can do, every answer drawn from published research. Download a certificate at the end.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Who would you underestimate? &#183; People for Animals","item":"https://peopleforanimalsindia.org/quiz"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main id="top">
+  <section class="qz">
+    <div class="qz__head">
+      <p class="eyebrow">Test yourself</p>
+      <h1 class="qz__title">Who would you underestimate?</h1>
+      <p class="qz__lede">Six questions on what farm animals have been shown to do. Every answer is
+        drawn from a published study, and each one is named and linked as you go. There is a
+        certificate at the end if you want one.</p>
+    </div>
+
+    <div id="qz" aria-live="polite"></div>
+
+    <noscript>
+      <div class="qz__noscript">
+        <p>The quiz needs JavaScript to run. The findings it is built from are all on the
+        <a href="index.html#findings">home page</a>, with their citations.</p>
+      </div>
+    </noscript>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<script>
+/* PFA_QUIZ_JS_START */
+/* The quiz, and the certificate at the end of it.
+
+   Every question rests on a published study, named and linked. Nothing here is
+   an impression about animals: if a claim could not be traced to a paper it is
+   not in the quiz. Four of the six are the findings already cited in the rail
+   on the home page; the other two are the ones that section's own copy alludes
+   to, now carrying their citations.
+
+   The certificate is drawn on a canvas and saved as a PNG. No library, no
+   network: the wordmark is taken from the header already on this page, so the
+   logo is the real one and there is no second copy of it to fall out of date. */
+(function () {
+  'use strict';
+
+  var ANIMALS = {
+    sheep: { name: 'Sheep',  img: 'https://images.pexels.com/photos/36480527/pexels-photo-36480527.jpeg?auto=compress&cs=tinysrgb&w=600' },
+    cow:   { name: 'Cow',    img: 'https://images.pexels.com/photos/30147593/pexels-photo-30147593.jpeg?auto=compress&cs=tinysrgb&w=600' },
+    hen:   { name: 'Hen',    img: 'https://images.pexels.com/photos/16147459/pexels-photo-16147459.jpeg?auto=compress&cs=tinysrgb&w=600' },
+    pig:   { name: 'Pig',    img: 'https://images.pexels.com/photos/34768869/pexels-photo-34768869.jpeg?auto=compress&cs=tinysrgb&w=600' },
+    horse: { name: 'Horse',  img: 'https://images.pexels.com/photos/33358397/pexels-photo-33358397.jpeg?auto=compress&cs=tinysrgb&w=600' },
+    goat:  { name: 'Goat',   img: 'https://images.pexels.com/photos/32655841/pexels-photo-32655841.jpeg?auto=compress&cs=tinysrgb&w=600' },
+    chick: { name: 'Chick',  img: 'https://images.pexels.com/photos/37469812/pexels-photo-37469812.jpeg?auto=compress&cs=tinysrgb&w=600' }
+  };
+
+  var QUESTIONS = [
+    {
+      q: 'Who can remember about fifty faces, and still know them more than two years later?',
+      answer: 'sheep', options: ['sheep', 'pig', 'hen', 'goat'],
+      fact: 'Twenty sheep were trained on pairs of sheep faces for a food reward. They kept the associations for more than two years without seeing them again, and recordings showed the same brain cells still responding selectively to particular individuals.',
+      cite: 'Kendrick, da Costa, Leigh, Hinton and Peirce, “Sheep don’t forget a face”, Nature 414, 165–166 (2001)',
+      href: 'https://www.nature.com/articles/35102669'
+    },
+    {
+      q: 'Whose heart rate rose when her young were given a harmless puff of air?',
+      answer: 'hen', options: ['hen', 'cow', 'sheep', 'horse'],
+      fact: 'The chicks were not hurt, and the hens were not touched at all. Watching was enough: the mothers’ heart rates rose, their eye temperature dropped, they stood alert and called to the chicks. Their bodies responded to their chicks’ mild distress.',
+      cite: 'Edgar, Lowe, Paul and Nicol, “Avian maternal response to chick distress”, Proceedings of the Royal Society B 278, 3129–3134 (2011)',
+      href: 'https://royalsocietypublishing.org/doi/10.1098/rspb.2010.2701'
+    },
+    {
+      q: 'Who was shown a photograph of an angry face, then met that same person hours later and behaved more warily?',
+      answer: 'horse', options: ['horse', 'goat', 'pig', 'cow'],
+      fact: 'The person they met was wearing a neutral expression, and did not know which photograph the horse had seen. The horses had remembered the emotion and attached it to that individual.',
+      cite: 'Proops, Grounds, Smith and McComb, “Animals remember previous facial expressions that specific humans have exhibited”, Current Biology 28, 1428–1432 (2018)',
+      href: 'https://www.cell.com/current-biology/fulltext/S0960-9822(18)30375-0'
+    },
+    {
+      q: 'Who solved a two-step puzzle box, then solved it again ten months later with no practice in between?',
+      answer: 'goat', options: ['goat', 'sheep', 'hen', 'cow'],
+      fact: 'The box needed a lever pulled and then lifted to release food. Most of the goats did it again within about a minute after ten months away from it.',
+      cite: 'Briefer, Haque, Baciadonna and McElligott, “Goats excel at learning and remembering a highly novel cognitive task”, Frontiers in Zoology 11, 20 (2014)',
+      href: 'https://frontiersinzoology.biomedcentral.com/articles/10.1186/1742-9994-11-20'
+    },
+    {
+      q: 'Who showed signs of excitement, a jump in heart rate and more vigorous movement, at the moment of working out how to open a gate?',
+      answer: 'cow', options: ['cow', 'pig', 'horse', 'goat'],
+      fact: 'Heifers learned to press a panel to open a gate onto a food reward. Those who worked it out themselves showed a heart-rate rise and moved more vigorously than matched controls who were let through anyway. The researchers described it as a reaction to their own learning.',
+      cite: 'Hagen and Broom, “Emotional reactions to learning in cattle”, Applied Animal Behaviour Science 85, 203–213 (2004)',
+      href: 'https://www.sciencedirect.com/science/article/abs/pii/S0168159103002766'
+    },
+    {
+      q: 'Who, a few days after hatching, tracked small quantities being added and taken away behind two screens?',
+      answer: 'chick', options: ['chick', 'goat', 'pig', 'sheep'],
+      fact: 'The chicks watched groups of objects move behind two screens, then went reliably to the screen hiding the larger number, following additions and subtractions of quantities up to five.',
+      cite: 'Rugani, Fontanari, Simoni, Regolin and Vallortigara, “Arithmetic in newborn chicks”, Proceedings of the Royal Society B 276, 2451–2460 (2009)',
+      href: 'https://royalsocietypublishing.org/doi/10.1098/rspb.2009.0044'
+    }
+  ];
+
+  var root = document.getElementById('qz');
+  if (!root) return;
+
+  var index = 0, score = 0, answered = false, finished = false;
+
+  function esc(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function progress() {
+    var done = finished ? QUESTIONS.length : index;
+    return '<div class="qz__bar">' +
+      '<span class="qz__track"><i class="qz__fill" style="width:' + ((done / QUESTIONS.length) * 100) + '%"></i></span>' +
+      '<span class="qz__count">' + (finished ? QUESTIONS.length + ' of ' + QUESTIONS.length
+        : (index + 1) + ' of ' + QUESTIONS.length) + '</span>' +
+    '</div>';
+  }
+
+  function optionsHtml(question) {
+    return '<ul class="qz__options">' + question.options.map(function (key) {
+      var a = ANIMALS[key];
+      return '<li><button type="button" class="qz__opt" data-pick="' + esc(key) + '">' +
+        '<span class="qz__shot"><img src="' + esc(a.img) + '" alt="" loading="lazy" decoding="async"></span>' +
+        '<span class="qz__name">' + esc(a.name) + '<span class="qz__mark" data-mark></span></span>' +
+      '</button></li>';
+    }).join('') + '</ul>';
+  }
+
+  function paintQuestion() {
+    var question = QUESTIONS[index];
+    answered = false;
+    root.innerHTML =
+      progress() +
+      '<h2 class="qz__q">' + esc(question.q) + '</h2>' +
+      optionsHtml(question) +
+      '<div data-reveal></div>';
+    var first = root.querySelector('.qz__opt');
+    if (first && index > 0) first.focus();
+  }
+
+  function reveal(picked) {
+    if (answered) return;
+    answered = true;
+    var question = QUESTIONS[index];
+    var right = picked === question.answer;
+    if (right) score += 1;
+
+    Array.prototype.forEach.call(root.querySelectorAll('.qz__opt'), function (button) {
+      var key = button.getAttribute('data-pick');
+      var mark = button.querySelector('[data-mark]');
+      button.disabled = true;
+      if (key === question.answer) {
+        button.setAttribute('data-state', 'right');
+        if (mark) mark.textContent = 'Correct';
+      } else if (key === picked) {
+        button.setAttribute('data-state', 'wrong');
+        if (mark) mark.textContent = 'Not this one';
+      } else {
+        button.setAttribute('data-state', 'dim');
+      }
+    });
+
+    var last = index === QUESTIONS.length - 1;
+    root.querySelector('[data-reveal]').innerHTML =
+      '<div class="qz__reveal">' +
+        '<p class="qz__verdict" data-ok="' + (right ? 'yes' : 'no') + '" tabindex="-1">' +
+          (right ? 'Yes, ' : 'It was the ') + esc(ANIMALS[question.answer].name.toLowerCase()) + '.' +
+        '</p>' +
+        '<p class="qz__fact">' + esc(question.fact) + '</p>' +
+        '<p class="qz__cite"><a href="' + esc(question.href) + '" rel="noopener" target="_blank">' +
+          esc(question.cite) + '</a></p>' +
+        '<div class="qz__next"><button class="btn" data-next>' +
+          (last ? 'See your result' : 'Next question') + '</button></div>' +
+      '</div>';
+    var verdict = root.querySelector('.qz__verdict');
+    if (verdict) verdict.focus();
+  }
+
+  function paintResult() {
+    finished = true;
+    var line = score === QUESTIONS.length
+      ? 'Every one. You already knew what the research says.'
+      : score >= QUESTIONS.length - 2
+        ? 'Most of them. The ones that catch people out are usually the ones about memory.'
+        : 'The point of the quiz is the reading underneath, not the score. Every answer above links to the paper it came from.';
+
+    root.innerHTML =
+      progress() +
+      '<p class="qz__score">' + score + '/' + QUESTIONS.length + '</p>' +
+      '<p class="qz__scoreline">' + esc(line) + '</p>' +
+      '<section class="qz__cert">' +
+        '<h3>Certificate</h3>' +
+        '<p>Put your name on it and download a copy. Nothing is sent anywhere; it is drawn in your browser.</p>' +
+        '<div class="qz__field">' +
+          '<label for="qzName">Name for the certificate</label>' +
+          '<input id="qzName" type="text" maxlength="48" autocomplete="name" placeholder="Your name">' +
+        '</div>' +
+        '<div class="qz__certrow">' +
+          '<button class="btn" data-cert="pdf">Download PDF</button>' +
+          '<button class="btn" data-cert="png">Download PNG</button>' +
+          '<p class="qz__note" data-certnote></p>' +
+        '</div>' +
+        '<div class="qz__preview" hidden data-preview></div>' +
+      '</section>' +
+      '<div class="qz__actions">' +
+        '<button class="btn btn--ghost" data-again>Take it again</button>' +
+        '<a class="btn btn--ghost" href="index.html#findings">Read the findings</a>' +
+      '</div>';
+  }
+
+  /* ---------------- certificate ----------------
+     Drawn at print resolution on a canvas. The wordmark is read out of the
+     header on this page rather than embedded again, so there is one copy of
+     the logo in the repository and the certificate cannot drift from it. */
+  var CERT_W = 2000, CERT_H = 1414;
+  /* The drawing keeps its 2000-wide coordinate system; the canvas is twice
+     that, with one scale() before anything paints. At A4 landscape the PNG
+     now lands at ~340dpi - past the 300 print asks for - and every stroke,
+     glyph and rule sharpens with it. The one thing pixels cannot sharpen is
+     the logo: img/logo.png is 231x79 intrinsically, and on paper it will be
+     the softest thing on the page until a larger export of the artwork
+     exists in the repository. */
+  var CERT_SCALE = 2;
+
+  function wordmark() {
+    var img = document.querySelector('.wordmark img');
+    return img && img.src ? img.src : '';
+  }
+
+  function loadImage(src) {
+    return new Promise(function (resolve, reject) {
+      if (!src) { reject(new Error('no source')); return; }
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { reject(new Error('could not load')); };
+      img.src = src;
+    });
+  }
+
+  function wrap(ctx, text, maxWidth) {
+    var words = String(text).split(' '), lines = [], line = '';
+    words.forEach(function (word) {
+      var test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = word; }
+      else line = test;
+    });
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function drawCertificate(canvas, name) {
+    var ctx = canvas.getContext('2d');
+    canvas.width = CERT_W * CERT_SCALE;
+    canvas.height = CERT_H * CERT_SCALE;
+    ctx.scale(CERT_SCALE, CERT_SCALE);
+    if ('imageSmoothingQuality' in ctx) ctx.imageSmoothingQuality = 'high';
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, CERT_W, CERT_H);
+
+    /* Border */
+    ctx.strokeStyle = '#111111';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(60, 60, CERT_W - 120, CERT_H - 120);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(84, 84, CERT_W - 168, CERT_H - 168);
+
+    var display = '"Marcellus", Georgia, serif';
+    var body = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+    var mid = CERT_W / 2;
+
+    ctx.textAlign = 'center';
+    /* The organisation's name is on the certificate once: in the logo drawn
+       above this line, which carries the wordmark in its own artwork. A grey
+       caps repeat sat here until 2 Sep 2026, saying the same thing twice a
+       centimetre apart; the owner asked for one of them and the logo is the
+       one with the bird in it. */
+
+    ctx.fillStyle = '#111111';
+    ctx.font = '400 86px ' + display;
+    ctx.fillText('Who would you underestimate?', mid, 480);
+
+    ctx.fillStyle = '#6a6a6a';
+    ctx.font = '400 30px ' + body;
+    ctx.fillText('This is to certify that', mid, 590);
+
+    /* The name, shrunk to fit rather than overflowing the frame. */
+    var clean = String(name || '').trim().replace(/\s+/g, ' ').slice(0, 48) || 'A friend of animals';
+    var size = 110;
+    ctx.font = '400 ' + size + 'px ' + display;
+    while (ctx.measureText(clean).width > CERT_W - 420 && size > 44) {
+      size -= 4;
+      ctx.font = '400 ' + size + 'px ' + display;
+    }
+    ctx.fillStyle = '#111111';
+    ctx.fillText(clean, mid, 700);
+    ctx.strokeStyle = '#111111';
+    ctx.lineWidth = 1;
+    var half = Math.min(ctx.measureText(clean).width / 2 + 40, (CERT_W - 360) / 2);
+    ctx.beginPath(); ctx.moveTo(mid - half, 736); ctx.lineTo(mid + half, 736); ctx.stroke();
+
+    ctx.fillStyle = '#111111';
+    ctx.font = '400 34px ' + body;
+    var lines = wrap(ctx, 'completed the People for Animals quiz on what farm animals can do, ' +
+      'answering ' + score + ' of ' + QUESTIONS.length + ' correctly.', CERT_W - 520);
+    lines.forEach(function (l, i) { ctx.fillText(l, mid, 812 + i * 50); });
+
+    ctx.fillStyle = '#6a6a6a';
+    ctx.font = '400 26px ' + body;
+    ctx.fillText('Every question in the quiz is drawn from published research, cited in full on the site.',
+      mid, 812 + lines.length * 50 + 46);
+
+    var when = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    ctx.font = '400 26px ' + body;
+    ctx.fillText(when, mid, CERT_H - 190);
+
+    return loadImage(wordmark()).then(function (logo) {
+      var w = 420, h = logo.height * (w / logo.width);
+      ctx.drawImage(logo, mid - w / 2, 170, w, h);
+    }).catch(function () {
+      /* No logo rather than a broken certificate. */
+      ctx.fillStyle = '#111111';
+      ctx.font = '400 48px ' + display;
+      ctx.fillText('People for Animals', mid, 240);
+    });
+  }
+
+  function download(canvas) {
+    return new Promise(function (resolve, reject) {
+      if (!canvas.toBlob) { reject(new Error('unsupported')); return; }
+      canvas.toBlob(function (blob) {
+        if (!blob) { reject(new Error('empty')); return; }
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'pfa-quiz-certificate.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+        resolve();
+      }, 'image/png');
+    });
+  }
+
+  /* ---------- the PDF ----------
+     A certificate is for printing, and print wants PDF. This writes one by
+     hand - PDF is a text format with a few binary guests - so the promise on
+     the page ("nothing is sent anywhere") holds: no library, no request. One
+     A4 landscape page, the drawing embedded as a JPEG at quality .95, which
+     on a white document is indistinguishable from the PNG and a fraction of
+     its weight. TIFF was considered and declined: browsers cannot encode it,
+     no viewer expects it, and PDF is what a print shop asks for. */
+  function certificatePdf(canvas) {
+    var jpeg = canvas.toDataURL('image/jpeg', 0.95);
+    var b64 = jpeg.slice(jpeg.indexOf(',') + 1);
+    var bin = atob(b64);
+    var img = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) img[i] = bin.charCodeAt(i);
+    var W = 842, H = 595; /* A4 landscape, points */
+    var enc = new TextEncoder();
+    var head = '%PDF-1.4\n';
+    var objects = [
+      '1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n',
+      '2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n',
+      '3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 ' + W + ' ' + H + ']/Resources<</XObject<</Im0 4 0 R>>>>/Contents 5 0 R>>endobj\n'
+    ];
+    var imgHead = '4 0 obj<</Type/XObject/Subtype/Image/Width ' + canvas.width + '/Height ' + canvas.height +
+      '/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ' + img.length + '>>stream\n';
+    var imgTail = '\nendstream endobj\n';
+    var content = 'q ' + W + ' 0 0 ' + H + ' 0 0 cm /Im0 Do Q';
+    var contentObj = '5 0 obj<</Length ' + content.length + '>>stream\n' + content + '\nendstream endobj\n';
+    var parts = [enc.encode(head)];
+    var offsets = [];
+    var at = head.length;
+    function push(x) { var b = typeof x === 'string' ? enc.encode(x) : x; parts.push(b); at += b.length; }
+    offsets.push(at); push(objects[0]);
+    offsets.push(at); push(objects[1]);
+    offsets.push(at); push(objects[2]);
+    offsets.push(at); push(imgHead); push(img); push(imgTail);
+    offsets.push(at); push(contentObj);
+    var xrefAt = at;
+    var xref = 'xref\n0 6\n0000000000 65535 f \n' + offsets.map(function (o) {
+      return ('0000000000' + o).slice(-10) + ' 00000 n \n';
+    }).join('') + 'trailer<</Size 6/Root 1 0 R>>\nstartxref\n' + xrefAt + '\n%%EOF';
+    push(xref);
+    return new Blob(parts, { type: 'application/pdf' });
+  }
+
+  function downloadPdf(canvas) {
+    return new Promise(function (resolve, reject) {
+      try {
+        var blob = certificatePdf(canvas);
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'pfa-quiz-certificate.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+        resolve();
+      } catch (e) { reject(e); }
+    });
+  }
+
+  function makeCertificate(kind) {
+    var note = root.querySelector('[data-certnote]');
+    var host = root.querySelector('[data-preview]');
+    var name = (root.querySelector('#qzName') || {}).value || '';
+    if (note) note.textContent = 'Drawing\u2026';
+
+    var canvas = document.createElement('canvas');
+    /* Wait for Marcellus, or the certificate is drawn in a fallback serif. */
+    var fonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    fonts
+      .then(function () { return drawCertificate(canvas, name); })
+      .then(function () {
+        host.innerHTML = '';
+        host.appendChild(canvas);
+        host.hidden = false;
+        return kind === 'pdf' ? downloadPdf(canvas) : download(canvas);
+      })
+      .then(function () { if (note) note.textContent = 'Saved as pfa-quiz-certificate.' + (kind === 'pdf' ? 'pdf' : 'png'); })
+      .catch(function () {
+        if (note) note.textContent = 'The certificate could not be saved here. The preview above can be saved by hand.';
+      });
+  }
+
+  /* ---------------- events ---------------- */
+  root.addEventListener('click', function (event) {
+    var pick = event.target.closest('[data-pick]');
+    if (pick) { reveal(pick.getAttribute('data-pick')); return; }
+    if (event.target.closest('[data-next]')) {
+      if (index === QUESTIONS.length - 1) paintResult();
+      else { index += 1; paintQuestion(); }
+      return;
+    }
+    var certBtn = event.target.closest('[data-cert]');
+    if (certBtn) { makeCertificate(certBtn.getAttribute('data-cert')); return; }
+    if (event.target.closest('[data-again]')) {
+      index = 0; score = 0; finished = false; paintQuestion();
+    }
+  });
+
+  paintQuestion();
+}());
+
+/* PFA_QUIZ_JS_END */
+
+</script>
+</body>
+</html>

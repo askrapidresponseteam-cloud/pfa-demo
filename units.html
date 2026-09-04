@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Units | People for Animals</title>
+<meta name="description" content="People for Animals shelters, hospitals and rescue units across India.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --line:#e4e2df;
+  --line-dark:#2a2a2a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --band:clamp(64px,7.5vw,120px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* ============================================================ hero
+   Copy only. This carried a plot of every unit beside the headline; it read
+   as a scatter of dots rather than as a country and it is gone. The state
+   headings below are what carries the page now. */
+/* Geometry copied from laws.html, newsroom.html and get-involved.html rather
+   than tuned by eye, so the eyebrow starts on exactly the line it starts on
+   everywhere else. align-items:start, not center: centred, the copy column
+   floated against the taller plot and the eyebrow drifted down the page. */
+.u-hero{position:relative;background:var(--deep);color:#fff;overflow:hidden;isolation:isolate;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(380px,56svh,600px)}
+.u-hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(120% 90% at 78% 8%,rgba(255,255,255,.13),transparent 60%),
+  radial-gradient(70% 70% at 0% 100%,rgba(43,159,216,.16),transparent 62%)}
+.u-hero__in{position:relative;z-index:1}
+.u-hero__copy{min-width:0}
+.u-hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.u-hero h1{font-size:clamp(34px,5.6vw,86px);max-width:13ch}
+.u-hero__lede{margin:26px 0 0;max-width:44ch;font-size:15px;line-height:1.65;color:rgba(255,255,255,.76)}
+
+
+/* ============================================================ filter bar */
+.u-bar{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:rgba(255,255,255,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.u-bar__row{display:flex;align-items:center;gap:10px;overflow-x:auto;scrollbar-width:none}
+.u-bar__row::-webkit-scrollbar{display:none}
+.u-search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;
+  min-width:214px;flex:0 0 auto;background:#fff}
+.u-search:focus-within{border-color:var(--ink)}
+.u-search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.u-search svg{flex:0 0 auto;opacity:.45}
+.u-sep{flex:0 0 auto;width:1px;height:22px;background:var(--line)}
+.u-chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;
+  transition:background .15s,color .15s,border-color .15s}
+.u-chip:hover{color:var(--ink)}
+.u-chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.u-chip i{font-style:normal;margin-left:7px;opacity:.55;font-variant-numeric:tabular-nums}
+.u-count{flex:0 0 auto;font-size:12px;color:var(--muted);margin-left:auto;padding-left:14px;white-space:nowrap}
+
+/* ============================================================ body */
+.u-body{padding:clamp(36px,4.5vw,72px) var(--gutter) var(--band)}
+
+
+/* ============================================================ the list */
+.u-list{border-top:1px solid var(--ink)}
+.u-state{border-bottom:1px solid var(--line)}
+.u-state.is-out{display:none}
+.u-state__head{display:flex;align-items:baseline;gap:14px;padding:26px 0 10px}
+.u-state__name{font-family:var(--display);text-transform:uppercase;font-size:clamp(19px,2.2vw,30px);line-height:1;letter-spacing:.02em}
+.u-state__region{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.u-state__n{margin-left:auto;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.u-unit{display:grid;grid-template-columns:34px minmax(0,1.1fr) minmax(0,.9fr) minmax(0,1.5fr);gap:16px;align-items:baseline;
+  padding:13px 0;border-top:1px solid var(--line);cursor:default}
+.u-unit.is-out{display:none}
+.u-unit:first-of-type{border-top:0}
+.u-unit__idx{font-size:11px;color:#b9b6b2;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.u-unit__city{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.u-unit__lead{font-size:13px;color:var(--muted);line-height:1.45}
+.u-unit__reach{display:flex;flex-direction:column;gap:3px;min-width:0}
+.u-unit__tel{font-size:14px;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.u-unit__tel a{border-bottom:1px solid var(--line);padding-bottom:1px;transition:color .15s,border-color .15s}
+.u-unit__tel a:hover{color:var(--accent);border-color:var(--accent);opacity:1}
+.u-unit__mail{font-size:12px;color:var(--muted);word-break:break-all;transition:color .15s}
+.u-unit__mail:hover{color:var(--accent);opacity:1}
+.u-unit__addr{font-size:12px;line-height:1.5;color:var(--muted)}
+/* Shown only where the numbers have not been pulled across yet. */
+.u-unit__call{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--line);padding-bottom:2px;align-self:start;transition:color .15s,border-color .15s}
+.u-unit__call:hover{color:var(--accent);border-color:var(--accent)}
+.u-unit__work{grid-column:2 / -1;margin:7px 0 0;font-size:13px;line-height:1.55;color:var(--ink);
+  border-left:2px solid var(--accent);padding-left:12px}
+.u-unit:hover{background:var(--stone)}
+.u-unit:hover .u-unit__idx{color:var(--accent)}
+.u-unit.is-hit{background:var(--stone)}
+
+.u-empty{padding:44px 0;font-size:14px;color:var(--muted)}
+.u-empty.is-out{display:none}
+
+/* ============================================================ what units do */
+.u-work{background:var(--stone);padding:var(--band) var(--gutter)}
+.u-work__quote{max-width:24ch;font-size:clamp(24px,3.4vw,50px)}
+.u-work__attrib{margin:18px 0 0;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.u-work__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:1px;background:var(--line);
+  margin-top:clamp(34px,4vw,60px);border:1px solid var(--line)}
+.u-work__item{background:var(--stone);padding:24px 22px 26px}
+.u-work__where{margin:0;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+.u-work__what{margin:10px 0 0;font-size:14px;line-height:1.55}
+
+/* ============================================================ cta */
+.u-cta{background:var(--deep);color:#fff;padding:var(--band) var(--gutter);position:relative;overflow:hidden;isolation:isolate}
+.u-cta::before{content:"";position:absolute;inset:0;z-index:0;
+  background:radial-gradient(90% 130% at 92% 0%,rgba(43,159,216,.2),transparent 58%)}
+.u-cta__in{position:relative;z-index:1;max-width:62ch}
+.u-cta h2{font-size:clamp(26px,3.8vw,58px);margin-top:14px}
+.u-cta p{margin:22px 0 0;font-size:15px;line-height:1.65;color:rgba(255,255,255,.76)}
+.u-cta .eyebrow{color:rgba(255,255,255,.5)}
+.u-cta__acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.u-btn{display:inline-block;padding:16px 30px;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  border:1px solid #fff;background:#fff;color:var(--ink);transition:background .2s,color .2s}
+.u-btn:hover{background:transparent;color:#fff}
+.u-btn--ghost{background:transparent;color:#fff}
+.u-btn--ghost:hover{background:#fff;color:var(--ink)}
+.u-cta__addr{margin:34px 0 0;padding-top:22px;border-top:1px solid var(--line-dark);
+  font-size:13px;line-height:1.7;color:rgba(255,255,255,.6);font-style:normal}
+
+/* ============================================================ responsive */
+@media (max-width:1080px){
+}
+@media (max-width:720px){
+  .u-unit{grid-template-columns:26px minmax(0,1fr);gap:10px 12px}
+  .u-unit__lead{grid-column:2}
+  .u-unit__reach{grid-column:2}
+  .u-state__head{flex-wrap:wrap;gap:8px 12px}
+  .u-state__n{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/units">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Units">
+  <meta property="og:description" content="People for Animals shelters, hospitals and rescue units across India.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/units">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Units">
+  <meta name="twitter:description" content="People for Animals shelters, hospitals and rescue units across India.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Units","item":"https://peopleforanimalsindia.org/units"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="#top" data-nav="units.html" class="current" aria-current="page">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+
+  <section class="u-hero" id="top">
+    <div class="u-hero__in">
+      <div class="u-hero__copy">
+        <p class="eyebrow">The network</p>
+        <h1 class="display">Someone near you is already doing this.</h1>
+        <p class="u-hero__lede">Every unit here is run by people who live in the place it covers, with a name, a number and an address attached. Find the one closest to the animal in front of you.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="u-bar">
+    <div class="u-bar__row">
+      <label class="u-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="uq" type="search" placeholder="Search a town, a state, a person" aria-label="Search units">
+      </label>
+      <span class="u-sep" aria-hidden="true"></span>
+      <div id="uchips"></div>
+      <span class="u-count" id="ucount"></span>
+    </div>
+  </div>
+
+  <div class="u-body">
+    <div class="u-list" id="ulist"></div>
+    <p class="u-empty is-out" id="uempty">No unit matches that. Try a state, or clear the search.</p>
+  </div>
+
+  <section class="u-work">
+    <h2 class="display u-work__quote">Each group is doing different things.</h2>
+    <p class="u-work__attrib">People for Animals, on setting up a unit</p>
+    <div class="u-work__grid" id="uwork"></div>
+  </section>
+
+  <section class="u-cta">
+    <div class="u-cta__in">
+      <p class="eyebrow">Start one</p>
+      <h2 class="display">There is no unit in most districts yet.</h2>
+      <!-- Not "600 districts", which is what People for Animals' own Set Up A PFA
+     Unit page still says and was true when it was written: India had 593
+     districts at the 2001 census and 640 at the 2011 one. It is about 800
+     now, and the exact figure is genuinely disputed: Wikipedia counted 800
+     on 9 December 2025, including two Census districts and a temporary one
+     for the Kumbh Mela, while the government's own IGOD directory gave 784
+     in June 2026. The number also falls as well as rises; Rajasthan went
+     from 50 to 41 in December 2024. So it is stated as about 800 and said
+     to move, rather than given a precision it does not have. -->
+      <p>The aim is an animal welfare centre in every district in India. There are about 800, and the number moves as states draw new ones and merge others. A unit begins with six board members, a bank account and one campaign, and the first priority is always the animal in front of you rather than the poster about it.</p>
+      <div class="u-cta__acts">
+        <a class="u-btn" href="get-involved.html">Get involved</a>
+        <a class="u-btn u-btn--ghost" href="ask.html">Ask us how</a>
+      </div>
+      <address class="u-cta__addr">Applications go to the head office:<br>People for Animals, 14 Ashoka Road, New Delhi 110001</address>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+  'use strict';
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------------- the units ----------------
+     Every unit People for Animals lists publicly at
+     peopleforanimalsindia.org/units, transcribed as published: the town, the
+     state it is filed under, and the person named as the contact. Nothing is
+     invented and nothing is left out, so the counts on this page are the
+     length of this array rather than a number typed into the copy.
+
+     `la`/`lo` are the town's own coordinates, to about a tenth of a degree.
+     They place a point on the plot; they are not a unit's address.
+
+     `w` is what PFA's own "Set Up A PFA Unit" page says that unit is known
+     for, in its words. Most units have no such line there, and inventing one
+     would be worse than leaving it blank.
+
+     Secunderabad is filed under "Hyderabad" on the source page, which is a
+     city rather than a state. It is in Telangana and grouped there.
+
+     `d` is the unit's id on peopleforanimalsindia.org. The index page this
+     was transcribed from carries no phone number for anyone: the numbers sit
+     one level down, on each unit's own page, eighty of them. Until those are
+     pulled across, the link is how someone actually reaches a unit, which is
+     the entire job of this page. */
+  var UNITS = [
+    {c:'Guwahati',s:'Assam',p:'Indira Amma',la:26.14,lo:91.74,w:'Runs a shelter, and stops dogs being taken to Nagaland to be eaten.',d:31},
+    {c:'Durg Bhilai',s:'Chhattisgarh',p:'Dr. Dharamveer Chandrakar',la:21.19,lo:81.28,d:122},
+    {c:'Ponda',s:'Goa',p:'Sarita Parab',la:15.40,lo:74.01,w:'Won the case banning bull-fighting, runs the state shelters, and stopped dog killing across Goa.',d:27},
+    {c:'Vasco',s:'Goa',p:'Laxmi Gonsalves',la:15.40,lo:73.81,d:28},
+    {c:'Ahmedabad',s:'Gujarat',p:'Mr. Mahendra Shrimali',la:23.03,lo:72.58,d:1},
+    {c:'Charkhi Dadri',s:'Haryana',p:'Savita Chahar',la:28.59,lo:76.27,d:125},
+    {c:'Faridabad',s:'Haryana',p:'Vrinda Sharma',la:28.41,lo:77.31,d:91},
+    {c:'Gurgaon / Sadhana',s:'Haryana',p:'Ms. Manta Sidhu',la:28.46,lo:77.03,d:30},
+    {c:'Shimla',s:'Himachal Pradesh',p:'Shabnam Ahluwalia',la:31.10,lo:77.17,d:75},
+    {c:'Secunderabad',s:'Telangana',p:'Vasanthi Vadi',la:17.44,lo:78.50,d:73},
+    {c:'Bangalore',s:'Karnataka',p:'Wildlife Rescue and Conservation Centre',la:12.97,lo:77.59,w:'Runs an ambulance, does wildlife rescue, and keeps a wildlife rescue centre.',d:11},
+    {c:'Hubli',s:'Karnataka',p:'Tej Raj',la:15.36,lo:75.12,d:35},
+    {c:'Mysore',s:'Karnataka',p:'Ms. Savitha Nagabhushan',la:12.30,lo:76.64,w:'Has stopped animal sacrifices in the area.',d:59},
+    {c:'Calicut',s:'Kerala',p:'Mr. Madhu Nair',la:11.25,lo:75.78,d:19},
+    {c:'Kollam',s:'Kerala',p:'Prof. C. K. Thankachy',la:8.89,lo:76.61,d:45},
+    {c:'Thrissur',s:'Kerala',p:'Arya Bharathan',la:10.53,lo:76.21,d:99},
+    {c:'Thiruvananthapuram',s:'Kerala',p:'Lata Indira',la:8.52,lo:76.94,d:98},
+    {c:'Bhopal',s:'Madhya Pradesh',p:'Swati Gaurav',la:23.26,lo:77.41,d:96},
+    {c:'Dhar',s:'Madhya Pradesh',p:'Vijaya Sharma',la:22.60,lo:75.30,d:22},
+    {c:'Indore',s:'Madhya Pradesh',p:'Priyanshu Jain',la:22.72,lo:75.86,d:36},
+    {c:'Ahmednagar',s:'Maharashtra',p:'Mr. Laxman Natha Sakhare',la:19.09,lo:74.75,d:3},
+    {c:'Aurangabad',s:'Maharashtra',p:'Ms. Amruta Daulatabadkar',la:19.88,lo:75.34,d:10},
+    {c:'Gondia',s:'Maharashtra',p:'Mr. Amar Singh',la:21.46,lo:80.20,d:29},
+    {c:'Khamgaon',s:'Maharashtra',p:'Ms. Sunita Ailani',la:20.71,lo:76.57,d:42},
+    {c:'Kolhapur',s:'Maharashtra',p:'Parashram Dhanpal Sangave',la:16.70,lo:74.24,d:43},
+    {c:'Latur I',s:'Maharashtra',p:'Mr. Govind Shatrughna Kamble',la:18.40,lo:76.58,d:49},
+    {c:'Latur II',s:'Maharashtra',p:'Milind Sonkamble',la:18.41,lo:76.60,d:50},
+    {c:'Mumbai',s:'Maharashtra',p:'Vijay Rangare',la:19.08,lo:72.88,w:'Won the case banning camels on the beaches.',d:58},
+    {c:'Nagpur (Vidarbha)',s:'Maharashtra',p:'Ms. Karishma Govind Galani',la:21.15,lo:79.09,d:60},
+    {c:'Nashik',s:'Maharashtra',p:'Sharanya Shetty',la:20.00,lo:73.79,d:61},
+    {c:'Panchgani',s:'Maharashtra',p:'Mr. Prabodh Shankar Gaikwad',la:17.92,lo:73.80,d:63},
+    {c:'Parbhani',s:'Maharashtra',p:'Mr. Krushna Shriprakash Mundada',la:19.27,lo:76.77,d:126},
+    {c:'Wardha',s:'Maharashtra',p:'Shri Ashish N. Goswami',la:20.75,lo:78.60,d:116},
+    {c:'Shillong',s:'Meghalaya',p:'Larisa Ekka Paswet',la:25.58,lo:91.89,d:88},
+    {c:'Bhubaneshwar',s:'Odisha',p:'Ms. Jiban Das',la:20.30,lo:85.82,w:'Rescues cyclone-affected animals, besides regular first aid camps.',d:128},
+    {c:'Kendrapara',s:'Odisha',p:'Sudhansu Paridha',la:20.50,lo:86.42,d:41},
+    {c:'Malkangiri',s:'Odisha',p:'Mr. Ram Kishan Chaudhary',la:18.35,lo:81.90,d:54},
+    {c:'Sambalpur',s:'Odisha',p:'Mr. Jitender Sharma',la:21.47,lo:83.97,d:69},
+    {c:'Talcher',s:'Odisha',p:'Shri Kuna Kumar Sahoo',la:20.95,lo:85.23,d:83},
+    {c:'Talcher II',s:'Odisha',p:'Shri Arun Kumar Bhutia',la:20.96,lo:85.25,d:84},
+    {c:'Jalandhar',s:'Punjab',p:'Gursharan Singh Bedi',la:31.33,lo:75.58,d:38},
+    {c:'Alwar',s:'Rajasthan',p:'Mr. Arjun Sain',la:27.55,lo:76.63,d:6},
+    {c:'Bharatpur',s:'Rajasthan',p:'Mr. Brahm Dev Shastri',la:27.22,lo:77.49,d:15},
+    {c:'Bhiwadi',s:'Rajasthan',p:'Satnam Singh',la:28.21,lo:76.86,d:90},
+    {c:'Hanumangarh',s:'Rajasthan',p:'Mr. Dilip Verma',la:29.58,lo:74.32,d:32},
+    {c:'Jaipur',s:'Rajasthan',p:'Jaivardhan Bhardwaj',la:26.91,lo:75.79,d:37},
+    {c:'Kota',s:'Rajasthan',p:'Navnit Hada',la:25.21,lo:75.86,d:46},
+    {c:'Pali Marwar',s:'Rajasthan',p:'Shri Kantilal Mutha',la:25.77,lo:73.32,d:62},
+    {c:'Sirohi',s:'Rajasthan',p:'Mr. Babu Jaju',la:24.88,lo:72.86,w:'Holds first aid camps for camels in the villages, and provides fodder for drought-affected animals.',d:79},
+    {c:'Sriganganagar',s:'Rajasthan',p:'Shri Rajendara Soni',la:29.92,lo:73.88,d:81},
+    {c:'Suratgarh',s:'Rajasthan',p:'Shri Mahender Singh Jatav',la:29.32,lo:73.90,d:82},
+    {c:'Udaipur',s:'Rajasthan',p:'Mr. Shakir Khan',la:24.58,lo:73.71,d:86},
+    {c:'Pakyong',s:'Sikkim',p:'Anu Thami',la:27.24,lo:88.60,d:76},
+    {c:'Kumbakonam',s:'Tamil Nadu',p:'Ms. A. Kasturi',la:10.96,lo:79.39,d:48},
+    {c:'Madurai',s:'Tamil Nadu',p:'Mr. S. Sivakumar',la:9.93,lo:78.12,d:53},
+    {c:'Sivakasi',s:'Tamil Nadu',p:'Sunita Christy',la:9.45,lo:77.80,d:80},
+    {c:'Tambaram',s:'Tamil Nadu',p:'K. Ramesh',la:12.92,lo:80.12,d:124},
+    {c:'Tirupur',s:'Tamil Nadu',p:'Mrs. Y. Nalini',la:11.11,lo:77.34,d:127},
+    {c:'Trichy',s:'Tamil Nadu',p:'Ms. Hareni',la:10.79,lo:78.70,d:129},
+    {c:'Agra',s:'Uttar Pradesh',p:'Dr. Surat Prasad Gupta',la:27.18,lo:78.01,d:2},
+    {c:'Badaun',s:'Uttar Pradesh',p:'Mr. Vikendra Kumar',la:28.04,lo:79.12,d:18},
+    {c:'Firozabad',s:'Uttar Pradesh',p:'Shri Naresh Kumar Sharma',la:27.15,lo:78.40,d:25},
+    {c:'Ghaziabad',s:'Uttar Pradesh',p:'Surbhi Rawat',la:28.67,lo:77.43,w:'Checks the illegal transportation of cattle by rail.',d:26},
+    {c:'Kanpur',s:'Uttar Pradesh',p:'Archana Tripathi',la:26.45,lo:80.33,d:40},
+    {c:'Lucknow',s:'Uttar Pradesh',p:'Smt. Sheela Kala',la:26.85,lo:80.95,d:51},
+    {c:'Lucknow II',s:'Uttar Pradesh',p:'Amit Sehgal',la:26.86,lo:80.97,d:89},
+    {c:'Moradabad',s:'Uttar Pradesh',p:'Ms. Karuna Sharma',la:28.84,lo:78.77,d:56},
+    {c:'Rohilkhand / Bareilly',s:'Uttar Pradesh',p:'Mr. Prashant Patel',la:28.37,lo:79.43,d:13},
+    {c:'Shahjahanpur I',s:'Uttar Pradesh',p:'Shrish Dixit',la:27.88,lo:79.91,d:97},
+    {c:'Shahjahanpur II',s:'Uttar Pradesh',p:'Mr. Sudhir Kumar Dixit',la:27.89,lo:79.93,d:74},
+    {c:'Dehradun',s:'Uttarakhand',p:'Ms. Gauri Maulekhi',la:30.32,lo:78.03,w:'Runs the Animal Birth Control programme.',d:93},
+    {c:'Haridwar',s:'Uttarakhand',p:'Aditya Sharma',la:29.95,lo:78.16,d:33},
+    {c:'Kotabagh',s:'Uttarakhand',p:'Shri Chandrashekhar',la:29.35,lo:79.35,d:47},
+    {c:'Roorkee',s:'Uttarakhand',p:'Kuldeep Suryavanshi',la:29.87,lo:77.89,d:68},
+    {c:'Alipurduar',s:'West Bengal',p:'Mr. Shankar Dhar',la:26.49,lo:89.53,d:5},
+    {c:'Hooghly',s:'West Bengal',p:'Ayushi Dey',la:22.90,lo:88.39,d:34},
+    {c:'Kalimpong',s:'West Bengal',p:'Gazelle Bhujel',la:27.07,lo:88.47,d:39},
+    {c:'Raiganj',s:'West Bengal',p:'Shri Ajay Saha',la:25.62,lo:88.13,d:65},
+    {c:'Siliguri',s:'West Bengal',p:'Sujoy Kr. Dutta',la:26.73,lo:88.40,d:77},
+    {c:'Uttar Dinajpur',s:'West Bengal',p:'Goutam Tantia',la:25.78,lo:88.15,d:114}
+  ];
+
+  /* The six regions PFA's own network is usually described in. A state
+     belongs to exactly one, and every state in UNITS is listed here: a
+     state missing from this map would silently fall out of the filters, so
+     the check below throws rather than letting that happen quietly. */
+  var REGION = {
+    'Haryana':'North','Himachal Pradesh':'North','Punjab':'North','Rajasthan':'North',
+    'Uttar Pradesh':'North','Uttarakhand':'North',
+    'Goa':'West','Gujarat':'West','Maharashtra':'West',
+    'Karnataka':'South','Kerala':'South','Tamil Nadu':'South','Telangana':'South',
+    'Odisha':'East','West Bengal':'East',
+    'Chhattisgarh':'Central','Madhya Pradesh':'Central',
+    'Assam':'North East','Meghalaya':'North East','Sikkim':'North East'
+  };
+  var ORDER = ['North','West','South','East','Central','North East'];
+  UNITS.forEach(function(u){
+    if (!REGION[u.s]) throw new Error('no region for ' + u.s);
+    u.r = REGION[u.s];
+  });
+
+  /* Work PFA names on the same page for units whose contact details it does
+     not publish in the directory. Kept apart from UNITS on purpose: these
+     are not rows anyone can ring. */
+  var ELSEWHERE = [
+    {c:'Chandigarh', w:'Runs a shelter, an ambulance and a clinic.'},
+    {c:'Calcutta', w:'Runs a mobile clinic, a cattery and an ambulance, and holds weekly horse and cattle treatment camps.'},
+    {c:'Chennai', w:'Has taken over the Municipal Dog Pound and runs its own shelter.'},
+    {c:'Pune', w:'Catches wildlife smugglers.'},
+    {c:'Delhi', w:'Does daily wildlife raids and answers cruelty complaints.'}
+  ];
+
+
+  /* ---------------- contacts ----------------
+     Phone and shelter address, keyed by the unit's id on
+     peopleforanimalsindia.org. These are NOT on the /units index that the list
+     above was transcribed from: that page carries only state, town and a name.
+     Each number here was read off that unit's own page, one page per unit.
+
+     All eighty are here, every one with a number. Thirty-seven publish a
+     shelter address and forty-three do not; seventy-nine publish an email and
+     Thrissur does not. Nothing is filled in for the ones that do not: a made-up
+     address sends someone to the wrong place. The fallback link below is kept
+     for a unit that somehow has no entry at all, so a row can never be a dead
+     end, though as of this build none takes it. */
+  var CONTACT = {
+    31:  { t:['9435001865'], e:'indiraamma.dd@gmail.com' },   /* Guwahati */
+    122: { t:['96502 48509'], e:'pfadurgbhilai2@gmail.com' },   /* Durg Bhilai */
+    27:  { t:['9822130598'], e:'pfapondagoa@yahoo.com', a:'Near Goa Dairy Farm, Curti Ponda. (Directions: The shelter is next to the Govt\'s veterinary hospital and Goa Dairy farm. After entering the Curti Ponda bypass highway take the fourth turning on the left-hand side. The best is to ask for the location of Goa Dairy)' },   /* Ponda */
+    28:  { t:['9552600983'], e:'lagoa1227@yahoo.com', a:'Mormugao Municipal Council Animal shelter, Shantinagar, Vasco 403804, next to Ekta\'s engineer. (Directions: Exiting the airport take the left towards Mormugao and after driving around 5 mins on the right-hand side of the same highway is the shelter. The car needs to make a U-turn on the highway to enter the shelter)' },   /* Vasco */
+    1:   { t:['09429100202'], e:'mahendrashrimali@hotmail.com', a:'139, Swagat Bungalows - III, Opp Sshar School, New C G Road, Chandkheda, Ahmedabad, Gujarat - 382424. Ph: 079 - 23291415' },   /* Ahmedabad */
+    125: { t:['9350122231','86890 97010'], e:'thefamilybas@gmail.com', a:'Near Mittal Petrol Pump, Charkhi Dadri, Bhiwani 127306' },   /* Charkhi Dadri */
+    91:  { t:['7689044463','9461618045'], e:'vrinda.pfafaridabad@gmail.com' },   /* Faridabad */
+    30:  { t:['09810560230'], e:'mantasidhu@gmail.com', a:'Village Sadhana, nearby Budhera chowk, Bhawani Mandir. Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Gurgaon / Sadhana */
+    75:  { t:['8580424409'], e:'SHABNAMAHLUWALIA092@GMAIL.COM' },   /* Shimla */
+    73:  { t:['9849027601'], e:'info@pfahyd.org', a:'PFA ANIMAL CENTRE, FATTULLAGUDA, Nagole, Hyderabad' },   /* Secunderabad */
+    11:  { t:['080-28611986'], e:'info@peopleforanimalsbangalore.org', a:'Wildlife Rescue & Conservation Centre, No. 67, Uttarahalli Main Road, Next to BGS Global Hospital, Kengeri, Bengaluru, Karnataka -560 060. Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Bangalore */
+    35:  { t:['92422 39565'], e:'pfahubballidharwad@gmail.com', a:'At-pale, old karuna gaushala, behind shell petrol pump. N h -4 Pale. Correspondence address- Tej sales corporation, no. 11 ssk complex dajibanpet Hubli-580028' },   /* Hubli */
+    59:  { t:['9845654429'], e:'mysorepfa2016@gmail.com', a:'Survey no. 280, Roopa Nagar, Bogadhi Village, Mysore, Karnataka 570026 Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Mysore */
+    19:  { t:['9605770498','7034659391'], e:'madhup101@gmail.com' },   /* Calicut */
+    45:  { t:['9847606411'], e:'pfakollam@yahoo.com', a:'PFA, animal hospital, near tharavadu junction, Thazhudhala, Kollam-691001, Kerala' },   /* Kollam */
+    99:  { t:['9947612978'] },   /* Thrissur */
+    98:  { t:['9447050258'], e:'latha2000bc@yaho.com', a:'PEOPLE FOR ANIMALS HOSPITAL & RESCUE CENTRE TRIVANDRUM Kondodi, Valiarathala, Machel P.O, Trivandrum-695571' },   /* Thiruvananthapuram */
+    96:  { t:['9516895057'], e:'swati.smile129@gmail.com' },   /* Bhopal */
+    22:  { t:['7049085656'], e:'vijivasharmaddugky5@gmail.com' },   /* Dhar */
+    36:  { t:['09479713971','8770210636'], e:'Priyajain188@gmail.com' },   /* Indore */
+    3:   { t:['08390527060'], e:'pfaahmednagar@gmail.com', a:'70 Saniknagar, Nagar-Pathari Road, Kekati, Bhingar, Ahmednagar, Maharashtra 414002' },   /* Ahmednagar */
+    10:  { t:['08149990004'], e:'amrutadaulatabadkar@gmail.com' },   /* Aurangabad */
+    29:  { t:['09373990880'], e:'amar.singh293@gmail.com', a:'Dr. Lohiaward Kudwa Gondia 441601' },   /* Gondia */
+    42:  { t:['9423118333','9921886333'], e:'ailanisunita84@gmail.com', a:'Ashha - The Hope, PFA Khamgaon, Plot No. 41 -42, Near Agnishaman Building, Khamgaon, Maharashtra 444303' },   /* Khamgaon */
+    43:  { t:['9370323352'], e:'hisharvanid@rediffmail.com' },   /* Kolhapur */
+    49:  { t:['09284613149'], e:'indrayani702@gmail.com' },   /* Latur I */
+    50:  { t:['9422968788'], e:'milindsonkamble13@gmail.com' },   /* Latur II */
+    58:  { t:['9930143495'], e:'pfamumbai2@gmail.com' },   /* Mumbai */
+    60:  { t:['9921546863'], e:'karishmapfa@gmail.com', a:'Animal Shelter Home, near Nagpur Municipal Corporation, Bhandewadi, Nagpur, Maharashtra 440008' },   /* Nagpur (Vidarbha) */
+    61:  { t:['9422292436'], e:'sharanya3176@gmail.com', a:'PFA Nashik, next to Nehru botanical garden Old octroi godwons, Vilholi, Mumbai Agra Road, Nashik- 422005. Hospital Ashok Stham Govt Veterinary Hospital : 02532573541' },   /* Nashik */
+    63:  { t:['9422603733','8408823360'], e:'chingoog@yahoo.com', a:'Goldmohur Villa, Final Plot No. 1, TPS - 2, Panchgani, Maharashtra 412805' },   /* Panchgani */
+    126: { t:['8149740777'], e:'peopleforanimalspbn@gmail.com', a:'Sainath Medical Wisawa, Fata Jintur Road, Parbhani, Maharashtra' },   /* Parbhani */
+    116: { t:['9422141262','8608303853'], e:'ashish_pfa@yahoo.com', a:'Karunashram, People For Animals, Wardha Unit, Arvi Road, Pipri Meghe, Wardha, Maharashtra 442001 Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Wardha */
+    88:  { t:['08731094121'], e:'larisaekka@gmail.com' },   /* Shillong */
+    128: { t:['+91 94370 20717'], e:'pfa.orissa@gmail.com' },   /* Bhubaneshwar */
+    41:  { t:['8280242703'], e:'sudhansuknp.pfa@gmail.com', a:'Candiapalli, Dist. Kendrapara-754207, Odisha' },   /* Kendrapara */
+    54:  { t:['09439765065'], e:'pfa_mkg@rediffmail.com' },   /* Malkangiri */
+    69:  { t:['07504010610'], e:'jatinder.k.sharma83@gmail.com' },   /* Sambalpur */
+    83:  { t:['9853349627','9437149645'], e:'pfaangul@gmail.com' },   /* Talcher */
+    84:  { t:['9437164750'], e:'arun4awl@rediffmail.com', a:'Jagannath market South Balanda Talchar - 759116' },   /* Talcher II */
+    38:  { t:['9814258726'], e:'drgursharanjitbedi@gmail.com', a:'People for Animals and Animal Line, Police Line, Near Bus Stand, Jalandhar–144003' },   /* Jalandhar */
+    6:   { t:['8209698456'], e:'sainarjun18@gmail.com' },   /* Alwar */
+    15:  { t:['9413114371'], e:'PFAUNITBHARATPUR@GMAIL.COM', a:'Hospital (Govt) Animal Husbandry, Jurhera, Bharatpur, Rajasthan 321023' },   /* Bharatpur */
+    90:  { t:['9079162947'], e:'satnamniki@yahoo.in' },   /* Bhiwadi */
+    32:  { t:['09828258242'], e:'lysglw@gmail.com' },   /* Hanumangarh */
+    37:  { t:['9252560000'], e:'pfa.jaipur@gmail.com' },   /* Jaipur */
+    46:  { t:['9587986073'], e:'kotawafa08@gmail.com' },   /* Kota */
+    62:  { t:['7014349307','9414911941'], e:'kantimuthapali@gmail.com' },   /* Pali Marwar */
+    79:  { t:['09829047200'], e:'bjaju.bhl@gmail.com', a:'Rescue Animal Shelter Home and Veterinary Hospital (Pashu Ashray Sthhal), Near Sri Sarneshwar Road (Near temple) Sirohi -307001' },   /* Sirohi */
+    81:  { t:['08854012420','9414512420'], e:'betibachao@gmail.com' },   /* Sriganganagar */
+    82:  { t:['9413232852','9875032409'], e:'mahenderjatav@gmail.com' },   /* Suratgarh */
+    86:  { t:['09352121110'], e:'shakirkhan507@gmail.com' },   /* Udaipur */
+    76:  { t:['9593975551'], e:'anu.thami@gmail.com', a:'Shapley, West Pendam, East Sikkim-Pincode: 737134' },   /* Pakyong */
+    48:  { t:['9486648494','9442699076'], e:'pfakumbakonam@gmail.com', a:'Natjialgoi road, Srinivasa Puram, Sakkoltai PO., Kumbakonam Tk., Tanjore Dist., T.N.-612401' },   /* Kumbakonam */
+    53:  { t:['09943576065'], e:'pfamadurai@gmail.com' },   /* Madurai */
+    80:  { t:['9655222722'], e:'pfa.sivakasi2007@gmail.com', a:'Behind VSVN Polytechnic, Kumarapuram, Pandian Nagar, Virudhunagar, TN-626001' },   /* Sivakasi */
+    124: { t:['94458 02624‬'], e:'peopleforanimalstambaram@gmail.com' },   /* Tambaram */
+    127: { t:['86677 21186'], e:'nalinipfa17@gmail.com' },   /* Tirupur */
+    129: { t:['63856 71922'], e:'pfatrichy@hotmail.com' },   /* Trichy */
+    2:   { t:['9536639207 (from 10AM till 5PM)'], e:'suratprasad@pfa-agra.org', a:'Gata no. 81, Moja, Jaganpur Road behind Pushpanjali Seasons, Amar Vihar, Dayal Bagh, Agra Uttar Pradesh-282005. Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Agra */
+    18:  { t:['9756041113'], e:'Vikendra1985@gmail.com' },   /* Badaun */
+    25:  { t:['9250004141','9899733223'], e:'vashisthanaresh@yahoo.com' },   /* Firozabad */
+    26:  { t:['8447955480','9999198194'], e:'surbhirawat595@gmail.com', a:'Raj Nagar Ext Rd, Nava Jeevan Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Ghaziabad */
+    40:  { t:['9839504351','5122304513'], e:'archana4810@gmail.com', a:'SPCA Kanpur next to Raipurva Thana 208003' },   /* Kanpur */
+    51:  { t:['9208440010'], e:'sheelakalapfa2012@gmail.com', a:'Hans Kheda Para, Opp. Kanshi Ram Shahri Vikas Yojana, Lucknow, U.P. (hospital/shelter, private ambulance services)' },   /* Lucknow */
+    89:  { t:['8009521111'], e:'amitsehgal0277@gmail.com' },   /* Lucknow II */
+    56:  { t:['7534902761'], e:'karuna.sharma3007@gmail.com' },   /* Moradabad */
+    13:  { t:['9897066373'], e:'onlypfa@gmail.com', a:'Badayul Road, Gram Chowari block 11, Bareilly, Uttar Pradesh' },   /* Rohilkhand / Bareilly */
+    97:  { t:['7081977397'], e:'dixitshrishspn@gmail.com' },   /* Shahjahanpur I */
+    74:  { t:['09450416006'], e:'pfa.shahjahanpur@gmail.com' },   /* Shahjahanpur II */
+    93:  { t:['011-47083776'], e:'gaurimaulekhi@gmail.com', a:'Happy Home Sanctuary People for Animals Uttarakhand, Khata No. 1100 Khasra No. 1971 & khata No. 1132 khasra No 2012, Village Charba, Vikas Nagar, Dehradun, Uttarakhand Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Dehradun */
+    33:  { t:['7417415009','9359355252'], e:'adityasharma.7722@gmail.com', a:'Sarai road, jwalapur Haridwar 249047' },   /* Haridwar */
+    47:  { t:['9410112960'], e:'Rajntl99@gmail.com' },   /* Kotabagh */
+    68:  { t:['9897165567'], e:'pfaroorkee@gmail.com' },   /* Roorkee */
+    5:   { t:['09547403223'], e:'pfa_apd@rediffmail.com', a:'Behind Railway High School, P.O: Alipurduar Junction, Dist: Alipurduar-736123, West Bengal' },   /* Alipurduar */
+    34:  { t:['9007808999'], e:'raniaa09@yahoo.com', a:'People for Animals, Animal Care Centre- Dinen Bhattacharjee street, P.O mallickpara, Serampore, Hooghly 712203' },   /* Hooghly */
+    39:  { t:['7586829011'], e:'gazelle.bhujel@yahoo.com', a:'House Dara, Chandraloke, R.K. Ashram Road, Kalimpong, 734301. West Bengal' },   /* Kalimpong */
+    65:  { t:['9434197557','9046535454'], e:'ajaysaha483@gmail.com' },   /* Raiganj */
+    77:  { t:['9474379300'], e:'pfasiliguri@gmail.com' },   /* Siliguri */
+    114: { t:['9434232567','7908181395'], e:'udpplforanimals@gmail.com' }   /* Uttar Dinajpur */
+  };
+  var tel = function(n){ return String(n).replace(/[^0-9+]/g, ''); };
+
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); };
+
+  /* ---------------- chips ---------------- */
+  var counts = {};
+  UNITS.forEach(function(u){ counts[u.r] = (counts[u.r] || 0) + 1; });
+  var chips = '<button type="button" class="u-chip" data-r="all" aria-pressed="true">All<i class="num">' + UNITS.length + '</i></button>';
+  ORDER.forEach(function(r){
+    chips += '<button type="button" class="u-chip" data-r="' + esc(r) + '" aria-pressed="false">'
+      + esc(r) + '<i class="num">' + (counts[r] || 0) + '</i></button>';
+  });
+  $('#uchips').innerHTML = chips;
+  $('#uchips').style.display = 'contents';
+
+  /* ---------------- the list ----------------
+     Grouped by state, states in region order then alphabetically, so the
+     list reads as a country rather than as a spreadsheet sorted by name. */
+  var byState = {};
+  UNITS.forEach(function(u, i){ u.i = i; (byState[u.s] = byState[u.s] || []).push(u); });
+  var states = Object.keys(byState).sort(function(a, b){
+    var d = ORDER.indexOf(REGION[a]) - ORDER.indexOf(REGION[b]);
+    return d || a.localeCompare(b);
+  });
+
+  /* Numbered in the order they are read. This used to print the index into
+     UNITS, which is the source page's own order, so a list grouped by region
+     and state counted 6, 7, 8 ... 41 ... 42 and looked random. */
+  var seen = 0;
+  var html = '';
+  states.forEach(function(st){
+    var list = byState[st].slice().sort(function(a, b){ return a.c.localeCompare(b.c); });
+    html += '<section class="u-state" data-state="' + esc(st) + '" data-region="' + esc(REGION[st]) + '">'
+      + '<div class="u-state__head">'
+      + '<h2 class="u-state__name">' + esc(st) + '</h2>'
+      + '<span class="u-state__region">' + esc(REGION[st]) + '</span>'
+      + '<span class="u-state__n num">' + list.length + (list.length === 1 ? ' unit' : ' units') + '</span>'
+      + '</div>';
+    list.forEach(function(u){
+      seen += 1;
+      var k = CONTACT[u.d];
+      var reach;
+      if (k){
+        /* Every number is dialable. Where a unit publishes two, the second is
+           a link as well: a shelter that gives an alternate number expects it
+           to be rung. */
+        reach = '<span class="u-unit__tel">' + k.t.map(function(n){
+          return '<a href="tel:' + esc(tel(n)) + '">' + esc(n) + '</a>';
+        }).join(' \u00b7 ') + '</span>';
+        if (k.e) reach += '<a class="u-unit__mail" href="mailto:' + esc(k.e) + '">' + esc(k.e) + '</a>';
+        /* Forty-three of the eighty publish no shelter address. The row simply
+           does not carry one rather than carrying an empty label. */
+        if (k.a) reach += '<span class="u-unit__addr">' + esc(k.a) + '</span>';
+      } else {
+        reach = '<a class="u-unit__call" href="https://peopleforanimalsindia.org/units/details/' + u.d + '"'
+          + ' target="_blank" rel="noopener noreferrer">Phone and address</a>';
+      }
+      html += '<article class="u-unit" data-i="' + u.i + '" id="unit' + u.i + '">'
+        + '<span class="u-unit__idx num">' + seen + '</span>'
+        + '<span class="u-unit__city">' + esc(u.c) + '</span>'
+        + '<span class="u-unit__lead">' + esc(u.p) + '</span>'
+        + '<span class="u-unit__reach">' + reach + '</span>'
+        + (u.w ? '<p class="u-unit__work">' + esc(u.w) + '</p>' : '')
+        + '</article>';
+    });
+    html += '</section>';
+  });
+  $('#ulist').innerHTML = html;
+
+  /* ---------------- what units do ---------------- */
+  var work = '';
+  UNITS.filter(function(u){ return u.w; }).forEach(function(u){
+    work += '<div class="u-work__item"><p class="u-work__where">' + esc(u.c) + ' \u00b7 ' + esc(u.s) + '</p>'
+      + '<p class="u-work__what">' + esc(u.w) + '</p></div>';
+  });
+  ELSEWHERE.forEach(function(e){
+    work += '<div class="u-work__item"><p class="u-work__where">' + esc(e.c) + '</p>'
+      + '<p class="u-work__what">' + esc(e.w) + '</p></div>';
+  });
+  $('#uwork').innerHTML = work;
+
+  /* ---------------- filtering ---------------- */
+  var region = 'all', q = '';
+
+  function matches(u){
+    if (region !== 'all' && u.r !== region) return false;
+    if (!q) return true;
+    /* The address is searchable too, so a district or a pin code finds the
+       shelter that covers it even when the town is named something else. */
+    var k = CONTACT[u.d] || {};
+    var hay = u.c + ' ' + u.s + ' ' + u.p + ' ' + u.r + ' ' + (u.w || '')
+      + ' ' + (k.a || '') + ' ' + (k.t || []).join(' ');
+    return hay.toLowerCase().indexOf(q) > -1;
+  }
+
+  function apply(){
+    var shown = 0;
+    UNITS.forEach(function(u){
+      var ok = matches(u);
+      if (ok) shown += 1;
+      var row = document.getElementById('unit' + u.i);
+      if (row) row.classList.toggle('is-out', !ok);
+    });
+    [].slice.call(document.querySelectorAll('.u-state')).forEach(function(sec){
+      var any = sec.querySelector('.u-unit:not(.is-out)');
+      sec.classList.toggle('is-out', !any);
+    });
+    $('#uempty').classList.toggle('is-out', shown > 0);
+    $('#ucount').textContent = shown === UNITS.length
+      ? UNITS.length + ' units'
+      : shown + ' of ' + UNITS.length + ' units';
+  }
+
+  $('#uchips').addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.u-chip') : null;
+    if (!b) return;
+    region = b.getAttribute('data-r');
+    [].slice.call(document.querySelectorAll('.u-chip')).forEach(function(c){
+      c.setAttribute('aria-pressed', String(c === b));
+    });
+    apply();
+  });
+
+  $('#uq').addEventListener('input', function(e){
+    q = String(e.target.value || '').trim().toLowerCase();
+    apply();
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

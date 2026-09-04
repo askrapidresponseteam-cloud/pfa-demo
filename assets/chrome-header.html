@@ -1,0 +1,24 @@
+<!-- PFA site chrome: the one header. Do not edit the copy in a page;
+     edit this file and run `npm run sync:chrome`. Placeholders:
+       {{ANNOUNCE}}  the announcement bar, or nothing on pages without one
+       {{CURRENT:x}} each nav item; sync-chrome marks the page's own
+       {{CART}}      the Cart button on shop pages, nothing elsewhere -->
+{{ANNOUNCE}}
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      {{CURRENT:founder.html|Founder}}
+      {{CURRENT:laws.html|Laws}}
+      {{CURRENT:units.html|Units}}
+      {{CURRENT:newsroom.html|Newsroom}}
+      {{CURRENT:wall.html|The Wall}}
+      {{CURRENT:get-involved.html|Get Involved}}
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      {{CURRENT:cinekind.html|CineKind|hide-sm}}
+      {{CURRENT:pfa-shop.html|Shop|hide-sm}}
+      {{CURRENT:donate.html|Donate|donate}}{{CART}}
+    </div>
+  </nav>
+</header>

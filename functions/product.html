@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="/fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.217">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--PFA_HEAD_START-->
+<title>Product · People for Animals</title>
+<meta name="description" content="A product from the PFA Shop catalogue.">
+<!--PFA_HEAD_END-->
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+<link rel="stylesheet" href="/assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --band:clamp(76px,8.5vw,136px);
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+body{padding-bottom:0;transition:padding-bottom .2s}
+body.has-bar{padding-bottom:76px}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+
+/* ---------- shared type + controls (matched to the main site) ---------- */
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn[disabled]:hover{background:var(--ink);color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 56px) var(--gutter) 52px;
+  /* A shop is a tool, not an essay: the hero says what this is and gets
+     out of the way, so the first row of products is on screen at rest. */
+  min-height:0;overflow:hidden;isolation:isolate;
+  /* Air between the dark block and the filter chips. It sits on the hero, not
+     on .filters, deliberately: .filters is sticky, so space added there would
+     be carried up and pad the bar for the whole scroll. This gap scrolls away,
+     which is right, because the crowding only exists at rest against the hero. */
+  margin-bottom:clamp(24px,3.2vw,44px)}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+   radial-gradient(120% 90% at 78% 15%,rgba(255,255,255,.16),transparent 60%),
+   radial-gradient(70% 70% at 8% 100%,rgba(255,255,255,.09),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(32px,4.6vw,68px)}
+.hero p.lede{margin:20px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero 
+
+/* ---------- filter bar ---------- */
+.btn--ghost{background:transparent;color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:#fff}
+
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none;padding:12px var(--gutter)}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:216px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+/* Chips are words at rest and a filled block only when chosen. Twelve boxed
+   controls in a row read as a toolbar; twelve words read as a menu. */
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.sep{flex:0 0 auto;width:1px;height:24px;background:var(--line)}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);white-space:nowrap}
+/* Sort and the count travel together at the end of the row. */
+.filters__end{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:12px;padding-left:12px}
+.sort{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.sort__label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sort select{height:38px;border:1px solid transparent;background:#fff;color:var(--ink);
+  font:inherit;font-size:12px;letter-spacing:.02em;padding:0 32px 0 12px;cursor:pointer;
+  border-radius:0;-webkit-appearance:none;appearance:none;outline:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.sort select:hover{border-color:var(--ink)}
+.sort select:focus-visible{border-color:var(--ink);outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- product grid ---------- */
+.grid-wrap{padding:calc(var(--band) * .6) var(--gutter) var(--band)}
+/* stretch, not start: a card has to fill its row so the action can be pushed
+   to the bottom of it. With align-items:start every card stopped at its own
+   content and the Add buttons stepped up and down the row with the titles. */
+/* Shelves. A catalogue this size is a warehouse, not a shop: 839 things in five
+   aisles asks the person to already know what they came for. The best stores
+   sell the situation instead of the aisle, so these are the things actually
+   going on with an animal. They are saved queries over the same catalogue, so
+   they need nothing from the vendor and touch nothing in checkout. */
+.shelves{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 clamp(20px,2.4vw,30px)}
+.shelves button{border:1px solid transparent;background:none;font:inherit;cursor:pointer;
+  padding:9px 12px;font-size:12px;letter-spacing:.02em;color:var(--ink);
+  display:inline-flex;align-items:baseline;gap:8px;
+  transition:background .18s,color .18s,border-color .18s}
+.shelves button:hover{border-color:var(--line)}
+.shelves button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.shelves button span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.shelves button[aria-pressed="true"] span{color:rgba(255,255,255,.66)}
+
+/* ---------- offers rail ----------
+   The seller's markdowns and nothing else: a card exists only where Shopify
+   carries a compare-at price above the price, and the section exists only
+   while at least one such card is on the shelf. Each card leads with the
+   saving set in the display face, the way the record page leads with what
+   changed, then the product, its photograph, both prices and the same Add
+   control as the grid. The first card takes the hero's black. The rail
+   scrolls sideways and snaps a card at a time. */
+.offers{margin:0 0 clamp(32px,3.6vw,52px)}
+.offers[hidden]{display:none}
+.offers__head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:0 0 14px}
+.offers__head p{margin:0;font-size:12px;color:var(--muted)}
+.offers__nav{display:flex;gap:6px}
+.offers__nav button{width:34px;height:34px;border:1px solid var(--line);background:none;cursor:pointer;font-size:14px;line-height:1;color:var(--ink);transition:border-color .15s}
+.offers__nav button:hover{border-color:var(--ink)}
+.offers__rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:1px;scroll-padding:1px}
+.offers__rail::-webkit-scrollbar{display:none}
+.offer{position:relative;flex:0 0 min(372px,84vw);scroll-snap-align:start;border:1px solid var(--line);background:#fff;display:grid;grid-template-columns:minmax(0,1fr) 108px;grid-template-rows:auto auto 1fr auto;column-gap:16px;padding:18px 18px 16px}
+.offer__kind{grid-column:1;margin:0 0 10px}
+.offer__num{grid-column:1;font-size:clamp(44px,5.2vw,62px);letter-spacing:0;line-height:.95}
+.offer__num small{font-size:.42em;letter-spacing:.02em;margin-left:4px}
+.offer__why{grid-column:1;margin:8px 0 0;font-size:12px;line-height:1.5;color:var(--muted);max-width:26ch}
+.offer__tile{grid-column:2;grid-row:1 / span 3;aspect-ratio:1;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;padding:8px;align-self:start;background:#fff}
+.offer__tile img{width:100%;height:100%;object-fit:contain}
+.offer__tile svg{width:62%;height:62%;color:rgba(17,17,17,.42)}
+a.offer__tile:hover{opacity:1;border-color:var(--ink)}
+.offer__foot{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.offer__name{font-size:13px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.offer__price{font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+.offer__price small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.offer__action{grid-column:1 / -1;margin-top:12px}
+.offer .add,.offer .stepper{height:38px}
+.offer a.add{display:flex;align-items:center;justify-content:center}
+.offer--lead{background:var(--deep);color:#fff;border-color:var(--deep)}
+.offer--lead .offer__why,.offer--lead .offer__price small,.offer--lead .eyebrow{color:rgba(255,255,255,.62)}
+.offer--lead .offer__tile{border-color:rgba(255,255,255,.28)}
+.offer--lead .offer__foot{border-top-color:rgba(255,255,255,.22)}
+.offer--lead .add,.offer--lead .stepper{border-color:#fff;color:#fff}
+.offer--lead .stepper button{color:#fff}
+.offer--lead .add:hover{background:#fff;color:var(--ink)}
+.offer--lead .was{color:rgba(255,255,255,.55)}
+/* The old price, struck, in front of the new one. On a card and in the
+   picker it is the only sign of a markdown beside the tag. */
+.was{color:var(--muted);text-decoration:line-through;margin-right:6px;font-weight:400}
+
+/* Four across on a laptop, five on a wide screen, and never a wall: a
+   dozen at a time, the next dozen arriving as the person nears the end. */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:40px 24px;align-items:stretch}
+.card{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;content-visibility:auto;contain-intrinsic-size:auto 420px}
+.card__tile{position:relative;aspect-ratio:1;min-height:0;flex:0 0 auto;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;padding:12px}
+.card__tile svg{width:58%;height:58%;color:rgba(17,17,17,.42)}
+a.card__tile{cursor:pointer;transition:border-color .18s}
+a.card__tile:hover{opacity:1;border-color:var(--ink)}
+.card__tag{position:absolute;left:8px;top:8px;background:var(--deep);color:#fff;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px}
+.card__meta{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:13px;line-height:1.35}
+.card__meta>span:first-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
+.card__meta span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.card__sub{font-size:12px;color:var(--muted);margin:-4px 0 0;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.card__action{margin-top:auto;padding-top:2px}
+.add{width:100%;border:1px solid var(--ink);background:none;color:var(--ink);height:40px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
+.add:hover{background:var(--ink);color:#fff}
+/* The same outlined box as Add to cart, now holding a count: the control
+   changes state, not shape, so a card with something in the cart looks like
+   its neighbours and never like a different kind of button. */
+.stepper{display:flex;align-items:center;justify-content:space-between;height:40px;border:1px solid var(--ink);background:none;color:var(--ink)}
+.stepper button{width:40px;height:100%;background:none;border:none;color:var(--ink);font-size:16px;line-height:1;cursor:pointer}
+.stepper button:hover{opacity:.6}
+.stepper span{font-size:12px;letter-spacing:.08em;font-weight:700}
+/* Two ways off a card: Add keeps you browsing, Buy takes you to the address
+   and payment in one move. Both sit at the same 40px as the stepper. */
+/* The middle of a stepper is a button on a product with sizes: it names the
+   size in the bag and reopens the picker to change it or add another. */
+.stepper__pick{flex:1;height:100%;background:none;border:none;color:var(--ink);font-size:11px;letter-spacing:.06em;font-weight:700;cursor:pointer;padding:0 4px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stepper__pick:hover{opacity:.8}
+/* Size picker. It lays over the card rather than growing it, so choosing a
+   strength never shoves the rest of the row about. Kept inside the card
+   bounds on purpose: content-visibility:auto paints the card in isolation,
+   so anything that escaped the box would be clipped. */
+.pick{position:absolute;inset:0;z-index:6;background:#fff;border:1px solid var(--ink);display:flex;flex-direction:column;padding:12px 12px 10px}
+.pick__head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin:0 0 6px}
+.pick__title{font-size:12px;line-height:1.35;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
+.pick__close{background:none;border:none;font-size:14px;line-height:1;cursor:pointer;padding:2px 4px;flex:0 0 auto;margin:-2px -4px 0 0}
+.pick__hint{margin:0 0 4px;font-size:11px;color:var(--muted)}
+.pick__list{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin}
+.pick__row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.pick__name{font-size:12px;line-height:1.3;min-width:0}
+.pick__name small{display:block;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px}
+.pick__add{border:1px solid var(--ink);background:none;color:var(--ink);height:32px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.pick__add:hover{background:var(--ink);color:#fff}
+.pick .mini{border-color:var(--ink)}
+.empty{padding:56px 0;text-align:center;color:var(--muted);font-size:13px}
+.more{display:flex;justify-content:center;margin-top:44px}
+.more button{border:1px solid var(--ink);background:none;color:var(--ink);padding:15px 34px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.more button:hover{background:var(--ink);color:#fff}
+.more p{margin:0;font-size:12px;color:var(--muted)}
+.sentinel{height:1px}
+.more__of{opacity:.55;font-weight:400;letter-spacing:.06em}
+
+
+/* ---------- sticky cart bar ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--deep);color:#fff;transform:translateY(100%);transition:transform .25s ease}
+.bar.show{transform:none}
+.bar__in{display:flex;align-items:center;gap:16px;padding:14px var(--gutter)}
+.bar__info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bar__line{font-size:13px}
+.bar .btn{flex:0 0 auto;margin-left:auto}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;z-index:70;background:rgba(10,10,10,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:80;width:min(430px,100%);background:var(--paper);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s ease}
+.drawer.show{transform:none}
+.drawer__head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid var(--line)}
+.drawer__head h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.01em}
+.drawer__close{background:none;border:none;font-size:15px;cursor:pointer;padding:4px}
+.drawer__body{flex:1;overflow-y:auto;padding:20px}
+.drawer__foot{border-top:1px solid var(--line);padding:16px 20px 20px;display:grid;gap:12px}
+.totals{display:flex;justify-content:space-between;font-size:13px}
+.totals strong{font-weight:700}
+.line{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line:first-child{padding-top:0}
+.line__tile{aspect-ratio:1;background:var(--stone);display:grid;place-items:center}
+.line__tile svg{width:60%;height:60%;color:rgba(17,17,17,.42)}
+.line__name{font-size:13px;line-height:1.35}
+.line__sub{font-size:12px;color:var(--muted);margin-top:3px}
+.line__right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.mini{display:flex;align-items:center;border:1px solid var(--line)}
+.mini button{width:28px;height:28px;background:none;border:none;cursor:pointer;font-size:14px;line-height:1}
+.mini button:hover{background:var(--stone)}
+.mini span{min-width:24px;text-align:center;font-size:12px;font-weight:700}
+.co{border-top:1px solid var(--line);padding-top:20px;display:grid;gap:16px}
+.co h3{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field{display:grid;gap:6px}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field textarea{border:1px solid var(--line);padding:11px 12px;font-size:13px;outline:none;background:#fff;resize:none}
+.field input:focus,.field textarea:focus{border-color:var(--ink)}
+.field select{border:1px solid var(--line);padding:11px 12px;font-size:13px;outline:none;background:#fff;border-radius:0;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+.field select:focus{border-color:var(--ink)}
+.field.is-bad input,.field.is-bad select{border-color:#b3261e}
+.field input[readonly]{background:var(--stone)}
+/* Two short fields on one line: PIN and city, so the address takes fewer
+   rows and the PIN can fill the city and state before the person gets there. */
+.field--pair{grid-template-columns:1fr 1fr;gap:10px}
+.field--pair>div{display:grid;gap:6px;min-width:0}
+.field__hint{font-size:11px;color:var(--muted);margin:0;min-height:1.4em}
+/* Where the person told us to keep their details, the form collapses to a
+   card and checkout is one press. */
+.saved{border:1px solid var(--line);padding:14px 16px;display:grid;gap:4px;font-size:13px;line-height:1.5}
+.saved strong{font-size:13px}
+.saved p{margin:0;color:var(--muted)}
+.saved__row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.saved__acts{display:flex;gap:14px;margin-top:6px}
+.saved__acts button{background:none;border:none;padding:0;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.saved__acts button:hover{opacity:.6}
+.remember{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--muted);line-height:1.5;cursor:pointer}
+.remember input{margin:3px 0 0;flex:0 0 auto;accent-color:var(--ink)}
+.coerr{margin:0;font-size:12px;line-height:1.5;color:#b3261e}
+.coerr[hidden]{display:none}
+/* The shipping method, chosen here rather than on the seller's page. Every
+   price in it comes from Shopify's own rating of this bag and this PIN code;
+   nothing about delivery is priced by PFA. */
+.ship{display:grid;gap:10px}
+.ship__h{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0}
+.totals__note{display:block;margin-top:3px;font-size:11px;letter-spacing:.02em;color:var(--muted);font-weight:400}
+.ship__opt{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);padding:13px 15px;cursor:pointer;transition:border-color .18s}
+.ship__opt:hover{border-color:var(--ink)}
+.ship__opt input{margin:2px 0 0;flex:0 0 auto;accent-color:var(--ink)}
+.ship__opt[data-on="1"]{border-color:var(--ink)}
+.ship__body{flex:1;min-width:0;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.ship__name{font-size:13px;line-height:1.45}
+.ship__name small{display:block;font-size:11px;color:var(--muted)}
+.ship__price{font-size:13px;white-space:nowrap}
+.ship__note{margin:0;font-size:11px;color:var(--muted);line-height:1.5}
+/* One method at one price is a fact, not a choice: a single line, no radio. */
+.ship__one{margin:0;display:flex;justify-content:space-between;gap:12px;align-items:baseline;border:1px solid var(--line);padding:13px 15px}
+/* Real product photographs, now that the catalogue is the seller's. */
+/* The height comes from the ratio, not from a percentage. These frames are
+   display:grid with place-items:center, and a percentage height against a
+   centred grid area does not reliably resolve: when it falls back to auto the
+   picture keeps its own proportions, grows past a square frame and is cut off
+   by the overflow. A square image never showed it; a tall one always did.
+   width:100% resolves on its own, and aspect-ratio takes the height from
+   there, so object-fit:contain has a real box to letterbox inside.
+   The ratio here must match the frame's own aspect-ratio. */
+.card__tile img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block}
+.line__tile img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block;padding:6px}
+.done{display:flex;flex-direction:column;gap:16px;padding:8px 0}
+/* The number the shopper quotes. Given weight on purpose: it is the one thing
+   on this screen they may need to write down or read out. */
+.doneid{margin:0;font-size:24px;font-weight:700;letter-spacing:.06em;border:1px solid var(--ink);padding:14px 16px;text-align:center}
+.donelines{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:16px}
+.done h2{font-size:clamp(28px,6vw,44px)}
+.done p{margin:0;font-size:13px;line-height:1.6;color:var(--muted)}
+/* Not .done .toast. It sat in the run of .done rules above and picked up
+   their prefix, so it only applied inside the order-complete panel, and #toast
+   is a top-level element that is never in one. The upshot was that toast() has
+   never shown anything on this page or on the product page, which copies this
+   stylesheet: "Added" was written into an unstyled div under the footer. */
+.toast{position:fixed;left:16px;bottom:92px;z-index:75;background:var(--ink);color:#fff;font-size:12px;letter-spacing:.02em;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:640px){
+  .offer{grid-template-columns:minmax(0,1fr) 84px;padding:16px 14px 14px}
+  .offer__num{font-size:44px}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 44px}
+  .drawer{width:100%}
+  .bar__in{padding:12px}
+  .bar .btn{padding:14px 18px}
+}
+@media (max-width:720px){
+  /* Two across on a phone. One product per screen made a short list feel
+     like a long walk. */
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px}
+  .card__tile{padding:8px}
+}
+@media (max-width:400px){
+  .filters__row{padding:10px var(--gutter)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+.cursor-layer svg.on-dark path{stroke:#f2f0ec;filter:drop-shadow(0 1px 2px rgba(0,0,0,.45))}
+/* PFA_PRODUCT_CSS_START */
+/* ---------- product page ---------- */
+/* The header is fixed, so the first section has to reserve its height the way
+   every other page does, .hero on twelve of them, .give on donate. These three
+   used calc(var(--band) * .55), which is 42px to 75px depending on the window
+   while the header needs 69px, so the top of the page slid underneath it at
+   anything under about 1470px wide. */
+.pd{padding:calc(var(--ann) + var(--nav) + clamp(32px,4.4vw,72px)) var(--gutter) var(--band)}
+.pd__crumb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin-bottom:clamp(20px,3vw,34px)}
+.pd__crumb a{color:var(--muted);border-bottom:1px solid transparent}
+.pd__crumb a:hover{color:var(--ink);border-bottom-color:var(--ink);opacity:1}
+.pd__crumb span{opacity:.45}
+
+.pd__top{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+
+.pd__gallery{display:grid;gap:12px}
+.pd__shot{position:relative;aspect-ratio:1;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;padding:20px}
+.pd__shot img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block}
+.pd__shot svg{width:52%;height:52%;color:rgba(17,17,17,.42)}
+.pd__thumbs{display:flex;gap:10px;flex-wrap:wrap}
+/* overflow:hidden, like .pd__shot above: a picture must not be able to leave
+   its frame whatever the image turns out to be. */
+.pd__thumb{width:72px;height:72px;background:#fff;border:1px solid var(--line);padding:6px;cursor:pointer;display:grid;place-items:center;overflow:hidden}
+/* The height comes from the ratio, not from a percentage. This read
+   height:100%, and the box it resolves against is a <button>, which wraps its
+   contents in an anonymous box that a percentage height cannot always see
+   through. When it failed the image fell back to its natural size, 144px tall
+   inside a 58px frame, and with nothing clipping it, it hung out of the bottom.
+   width:100% resolves against the grid area on its own, and aspect-ratio takes
+   the height from there without asking the button anything. */
+.pd__thumb img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block}
+.pd__thumb[aria-pressed="true"]{border-color:var(--ink)}
+
+/* A grid child holding long titles: without this it can refuse to shrink. */
+.pd__buybox{min-width:0}
+.pd__eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.pd__title{font-family:var(--display);font-weight:400;letter-spacing:0;line-height:1.12;font-size:clamp(22px,2.3vw,34px);margin:0;text-wrap:balance}
+.pd__price{display:flex;align-items:baseline;gap:12px;margin-top:18px;font-size:20px;font-variant-numeric:tabular-nums}
+.pd__price s{color:var(--muted);font-size:15px}
+.pd__stock{margin:10px 0 0;font-size:12px;color:var(--muted)}
+.pd__stock.is-out{color:#b3261e}
+.pd__desc{margin:22px 0 0;font-size:14px;line-height:1.65;color:var(--muted);max-width:56ch}
+.pd__about{margin:22px 0 0;max-width:56ch}
+.pd__lead{margin:0;font-size:15px;line-height:1.65;color:var(--ink)}
+.pd__facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px 18px;margin:18px 0 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pd__facts div{min-width:0}
+.pd__facts dt{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 3px}
+.pd__facts dd{margin:0;font-size:13px;line-height:1.4}
+.pd__more{margin:14px 0 0}
+.pd__more summary{cursor:pointer;list-style:none;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+.pd__more summary::-webkit-details-marker{display:none}
+.pd__more summary::after{content:"+";font-size:16px;font-weight:400;color:var(--muted)}
+.pd__more[open] summary::after{content:"\2212"}
+.pd__body{margin:12px 0 0;font-size:14px;line-height:1.65;color:var(--muted)}
+.pd__body p{margin:0 0 12px}
+.pd__body p:last-child{margin-bottom:0}
+.pd__h{font-family:var(--display);font-weight:400;font-size:17px;color:var(--ink);margin:16px 0 6px}
+.pd__list{margin:0 0 12px;padding-left:18px}
+.pd__list li{margin:0 0 4px}
+
+.pd__variants{margin-top:26px}
+.pd__vlabel{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.pd__vlist{display:flex;flex-wrap:wrap;gap:8px}
+.pd__v{border:1px solid var(--line);background:#fff;padding:10px 16px;font:inherit;font-size:13px;cursor:pointer;transition:border-color .18s,background .18s,color .18s}
+.pd__v:hover:not(:disabled){border-color:var(--ink)}
+.pd__v[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pd__v:disabled{opacity:.4;cursor:default;text-decoration:line-through}
+
+/* align-items:stretch rather than center. The stepper took its height from its
+   own 12px label and sat in the row as a thin strip beside two full buttons.
+   Stretching lets the row decide, so the stepper is exactly as tall as the
+   buttons whatever padding .btn is given later, with no number to keep in
+   step. The .btn items are all the same height already, so nothing else moves. */
+.pd__buy{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+/* The same box as .btn: same border, same weight, same tracking. It replaces
+   the Add to bag button in place, so it has to read as the same object in a
+   different state rather than as a different kind of control. */
+.pd__qty{display:inline-flex;align-items:center;border:1px solid var(--ink);background:#fff;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.pd__qty>*{display:flex;align-items:center;justify-content:center;border:0;background:none;
+  color:inherit;font:inherit;padding:0}
+.pd__qty button{width:46px;align-self:stretch;font-size:17px;cursor:pointer;transition:background .15s}
+.pd__qty button:hover{background:var(--stone)}
+/* Just the count. "1 in bag" needed a strip wide enough to read as its own
+   panel; the number alone fits the button's footprint, which is the shape the
+   row already had. */
+.pd__qty__n{min-width:52px;font-size:13px;cursor:default;font-variant-numeric:tabular-nums}
+.pd__note{margin:16px 0 0;font-size:12px;line-height:1.6;color:var(--muted);max-width:52ch}
+.pd__rx{margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);background:var(--stone);font-size:12px;line-height:1.6}
+.pd__rx b{font-weight:700}
+
+.pd__meta{margin-top:30px;border-top:1px solid var(--line);display:grid}
+.pd__meta div{display:flex;justify-content:space-between;gap:20px;padding:13px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pd__meta dt{color:var(--muted);margin:0}
+.pd__meta dd{margin:0;text-align:right}
+
+.pd__related{margin-top:clamp(56px,7vw,96px)}
+.pd__related h2{font-family:var(--display);font-weight:400;font-size:clamp(20px,2.4vw,30px);margin:0 0 6px}
+.pd__related p.pd__relsub{margin:0 0 26px;font-size:13px;color:var(--muted)}
+
+.pd__empty{padding:clamp(60px,10vw,140px) var(--gutter);text-align:center}
+.pd__empty h1{font-family:var(--display);font-weight:400;font-size:clamp(26px,3.4vw,46px);margin:12px 0 0;line-height:1.08}
+.pd__empty p{margin:16px auto 0;font-size:14px;line-height:1.6;color:var(--muted);max-width:46ch}
+.pd__actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}
+
+@media (max-width:860px){
+  .pd__top{grid-template-columns:1fr;gap:32px}
+}
+.pd__rxsend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.pd__rxpick{display:inline-flex;align-items:center;border:1px solid var(--line);background:#fff;padding:10px 16px;font-size:13px;cursor:pointer}
+.pd__rxpick:hover{border-color:var(--ink)}
+.pd__rxpick input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pd__rxpick:focus-within{outline:2px solid var(--ink);outline-offset:2px}
+.pd__rxnote{margin:10px 0 0;font-size:12px;line-height:1.55;color:var(--muted)}
+
+/* PFA_PRODUCT_CSS_END */
+</style>
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every order funds rescue, treatment, and lifelong care</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="/founder.html" data-nav="founder.html">Founder</a>
+      <a href="/laws.html" data-nav="laws.html">Laws</a>
+      <a href="/units.html" data-nav="units.html">Units</a>
+      <a href="/newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="/wall.html" data-nav="wall.html">The Wall</a>
+      <a href="/get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="/index.html" aria-label="People for Animals"><img src="/img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="/cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="/pfa-shop.html" data-nav="pfa-shop.html" class="current" aria-current="page">Shop</a>
+      <a href="/donate.html" data-nav="donate.html" class="donate">Donate</a>
+      <button class="navcart" id="navCart" data-count="0" aria-label="Open cart">Cart <span class="dot" id="navDot">0</span></button>
+    </div>
+  </nav>
+</header>
+<script src="/assets/chrome.js"></script>
+<script src="/assets/bag.js"></script>
+
+<main id="top">
+  <section class="pd" id="pd" aria-live="polite"></section>
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="/donate.html">Donate</a></li>
+        <li><a href="/get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="/events.html">Events</a></li>
+        <li><a href="/cinekind.html">CineKind</a></li>
+        <li><a href="/pfa-shop.html">Shop</a></li>
+        <li><a href="/wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="/founder.html">Founder</a></li>
+        <li><a href="/achievements.html">The record</a></li>
+        <li><a href="/careers.html">Careers</a></li>
+        <li><a href="/ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/pfa-forms.js"></script>
+<!--PFA_DATA-->
+<script>
+/* PFA_PRODUCT_JS_START */
+/* Product page. Server-rendered by lib/routes/product-page.js, which fills the
+   PFA_DATA marker above with window.PFA_PRODUCT and window.PFA_RELATED, so the
+   page paints from real data before this runs. The marker is never spelled out
+   again in this file: render() substitutes the first occurrence, so a second
+   copy anywhere below would be a trap.
+
+   This page deliberately does not load assets/product.js: that file belongs to
+   the other half of the project (it renders pd-* markup and links to
+   store.html, neither of which exists here). The behaviour below matches
+   pfa-shop.html instead. */
+(function () {
+  'use strict';
+  var product = window.PFA_PRODUCT || null;
+  var related = Array.isArray(window.PFA_RELATED) ? window.PFA_RELATED : [];
+  var $ = function (s) { return document.querySelector(s); };
+
+  function esc(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function money(n) { return '\u20b9' + Number(n || 0).toLocaleString('en-IN'); }
+
+  /* Same CDN sizing as the shop grid: ask for the size actually drawn. */
+  function cdn(src, w) {
+    if (!src) return '';
+    if (!/(^|\.)(cdn\.shopify\.com|myshopify\.com)/.test(src)) return src;
+    return src.split('?')[0] + '?width=' + w;
+  }
+
+  /* ---- the bag, shared with pfa-shop.html ----
+     Both pages load assets/bag.js, so there is one store with one set of
+     rules. It was sessionStorage inline in each page, which is why an item
+     added here was gone if the shopper reached the grid in a new tab, or came
+     back later. Still keyed by Shopify variant id, which is what
+     /api/pfa-orders needs. The key is 'pfa:store:bag'. */
+  var BAG_KEY = 'pfa:store:bag';   /* PFABag.KEY; named here for the shared-key test */
+  function readBag() { return window.PFABag ? window.PFABag.read() : {}; }
+  function writeBag(bag) { if (window.PFABag) window.PFABag.write(bag); }
+  function bagCount() { return window.PFABag ? window.PFABag.count() : 0; }
+  function paintCart() {
+    var n = bagCount(), nav = $('#navCart'), dot = $('#navDot');
+    if (nav) nav.setAttribute('data-count', String(n));
+    if (dot) dot.textContent = n;
+  }
+
+  /* A second tab changing the bag repaints the count here rather than leaving
+     a stale number in the header. */
+  if (window.PFABag) window.PFABag.subscribe(function(){ paintCart(); });
+
+  var toastT = null;
+  function toast(msg) {
+    var el = $('#toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { el.classList.remove('show'); }, 1800);
+  }
+
+  /* ---- not found / catalogue unavailable ---- */
+  if (!product) {
+    var handle = (location.pathname.match(/\/products\/([^/]+)/) || [])[1] || '';
+    $('#pd').innerHTML =
+      '<div class="pd__empty">' +
+        '<p class="pd__eyebrow">PFA Shop</p>' +
+        '<h1>We could not find that product.</h1>' +
+        '<p>It may have been taken out of the catalogue, or the link may be incomplete.</p>' +
+        '<div class="pd__actions">' +
+          '<a class="btn" href="/pfa-shop.html">Browse the shop</a>' +
+          (handle ? '<a class="btn btn--ghost" href="/pfa-shop.html?q=' + encodeURIComponent(handle.replace(/-/g, ' ')) + '">Search the shop</a>' : '') +
+        '</div>' +
+      '</div>';
+    paintCart();
+    return;
+  }
+
+  var variants = (product.variants || []).filter(function (v) { return /^\d{8,20}$/.test(String(v.id)); });
+  var images = (product.images || []).filter(function (i) { return i && i.src; });
+  var chosen = variants.filter(function (v) { return v.available; })[0] || variants[0] || null;
+  var shot = (chosen && chosen.image && chosen.image.src) || (images[0] && images[0].src) || '';
+
+  function variantLabel(v) {
+    return (v.title && v.title !== 'Default' && v.title !== 'Default Title') ? v.title : '';
+  }
+
+  function galleryHtml() {
+    var main = shot
+      ? '<img src="' + esc(cdn(shot, 720)) + '" srcset="' + esc(cdn(shot, 720)) + ' 1x, ' + esc(cdn(shot, 1440)) + ' 2x" alt="' + esc(product.title) + '" fetchpriority="high" decoding="async">'
+      : '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M28 36h44v44H28z"/><path d="M28 36l8-14h28l8 14"/><path d="M42 22h16"/><circle cx="50" cy="56" r="6"/></svg>';
+    var thumbs = images.length > 1
+      ? '<div class="pd__thumbs">' + images.slice(0, 6).map(function (im) {
+          return '<button type="button" class="pd__thumb" data-shot="' + esc(im.src) + '"' +
+            ' aria-pressed="' + (im.src === shot) + '" aria-label="Show another photograph">' +
+            '<img src="' + esc(cdn(im.src, 144)) + '" alt="" loading="lazy" decoding="async"></button>';
+        }).join('') + '</div>'
+      : '';
+    return '<div class="pd__gallery"><div class="pd__shot" id="pdShot">' + main + '</div>' + thumbs + '</div>';
+  }
+
+  function variantsHtml() {
+    var labelled = variants.filter(function (v) { return variantLabel(v); });
+    if (labelled.length < 2) return '';
+    return '<div class="pd__variants">' +
+      '<p class="pd__vlabel">Size</p>' +
+      '<div class="pd__vlist">' + variants.map(function (v) {
+        return '<button type="button" class="pd__v" data-variant="' + esc(v.id) + '"' +
+          ' aria-pressed="' + (chosen && v.id === chosen.id) + '"' +
+          (v.available ? '' : ' disabled') + '>' +
+          esc(variantLabel(v) || product.title) + '</button>';
+      }).join('') + '</div></div>';
+  }
+
+  /* The vendor's text, laid out: the first paragraph as a summary, a strip
+     of facts the page already knows, and the rest folded under Read more.
+     Falls back to the flat description for any catalogue without blocks. */
+  function descriptionHtml() {
+    var blocks = Array.isArray(product.descriptionBlocks) ? product.descriptionBlocks : null;
+    if (!blocks || !blocks.length) return product.description ? '<p class="pd__desc">' + esc(product.description) + '</p>' : '';
+    var facts = [];
+    /* No Brand row. The seller's catalogue puts a manufacturer in the vendor
+       field on some products and the shop's own name on others, so the row read
+       "Brand: <the shop>" on a bottle made by somebody else. A field that is
+       wrong as often as it is right is worse than an absent one. Type, Sizes
+       and Section below all come from fields that mean one thing. */
+    if (product.productType) facts.push(['Type', product.productType]);
+    var sizes = (product.variants || []).filter(function (v) { return v.title && v.title !== 'Default Title'; }).map(function (v) { return v.title; });
+    if (sizes.length > 1) facts.push(['Sizes', sizes.slice(0, 6).join(' \u00b7 ') + (sizes.length > 6 ? ' \u2026' : '')]);
+    if (product.prescriptionRequired) facts.push(['Prescription', 'Needed']);
+    var block = function (b) {
+      if (b.type === 'heading') return '<h3 class="pd__h">' + esc(b.text) + '</h3>';
+      if (b.type === 'list') return '<ul class="pd__list">' + b.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>';
+      return '<p>' + esc(b.text) + '</p>';
+    };
+    var lead = blocks[0].type === 'p' ? blocks[0] : null;
+    var rest = lead ? blocks.slice(1) : blocks;
+    return '<div class="pd__about">' +
+      (lead ? '<p class="pd__lead">' + esc(lead.text) + '</p>' : '') +
+      (facts.length ? '<dl class="pd__facts">' + facts.map(function (f) { return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('') + '</dl>' : '') +
+      (rest.length ? '<details class="pd__more"><summary>Read more</summary><div class="pd__body">' + rest.map(block).join('') + '</div></details>' : '') +
+      '</div>';
+  }
+
+  function priceHtml() {
+    if (!chosen) return '';
+    var compare = Number(chosen.compareAtPrice || 0);
+    return money(chosen.price) + (compare > Number(chosen.price) ? ' <s>' + money(compare) + '</s>' : '');
+  }
+
+  function metaHtml() {
+    var rows = [];
+    /* No Sold by row either. The line above the fold already says the goods
+       are sold and delivered by an independent seller, which is the disclosure
+       that matters and does not turn the vendor field into a claim. */
+    if (product.categoryLabel) rows.push(['Section', product.categoryLabel]);
+    if (product.animal) rows.push(['For', product.animal]);
+    if (chosen && chosen.sku) rows.push(['Code', chosen.sku]);
+    if (!rows.length) return '';
+    return '<dl class="pd__meta">' + rows.map(function (r) {
+      return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>';
+    }).join('') + '</dl>';
+  }
+
+  function relatedHtml() {
+    if (!related.length) return '';
+    return '<section class="pd__related">' +
+      '<h2>More in ' + esc(product.categoryLabel || 'the shop') + '</h2>' +
+      '<p class="pd__relsub">From the same part of the catalogue.</p>' +
+      '<div class="grid">' + related.map(function (r) {
+        var img = r.images && r.images[0] && r.images[0].src;
+        return '<article class="card">' +
+          '<a class="card__tile" href="/products/' + encodeURIComponent(r.handle) + '"' +
+            ' tabindex="-1" aria-hidden="true">' +
+            (img ? '<img src="' + esc(cdn(img, 320)) + '" alt="" loading="lazy" decoding="async">' : '') +
+          '</a>' +
+          '<div class="card__meta">' +
+            '<span><a href="/products/' + encodeURIComponent(r.handle) + '">' + esc(r.title) + '</a></span>' +
+            '<span>' + money(r.minPrice) + '</span>' +
+          '</div>' +
+          '<p class="card__sub">' + esc(r.animal || '') + '</p>' +
+        '</article>';
+      }).join('') + '</div></section>';
+  }
+
+  /* Once something is in the bag the button stops being a button and becomes
+     the count, with a way to change it. This is the shop's own pattern: a tile
+     there turns into a stepper the moment it is added, so the answer to "did
+     that work" is the control you just pressed, not a number in the far corner
+     of the header. The count is per variant, because the bag is. */
+  function inBag() {
+    if (!chosen) return 0;
+    return readBag()[chosen.id] || 0;
+  }
+  function buyHtml(available) {
+    var n = inBag();
+    var keep = '<a class="btn btn--ghost" href="/pfa-shop.html">Keep shopping</a>';
+    if (!available) {
+      return '<div class="pd__buy"><button class="btn" id="pdAdd" disabled>Unavailable</button>' + keep + '</div>';
+    }
+    if (!n) {
+      return '<div class="pd__buy"><button class="btn" id="pdAdd">Add to bag</button>' + keep + '</div>';
+    }
+    return '<div class="pd__buy">' +
+      '<div class="pd__qty" role="group" aria-label="Quantity in bag">' +
+        '<button type="button" data-q="-" aria-label="One fewer">\u2212</button>' +
+        '<span class="pd__qty__n" aria-live="polite">' + n + '</span>' +
+        '<button type="button" data-q="+" aria-label="One more">+</button>' +
+      '</div>' +
+      '<a class="btn" href="/pfa-shop.html#bag">Go to bag</a>' + keep +
+    '</div>';
+  }
+  /* Repaints only the row, so pressing + does not rebuild the gallery and lose
+     which photograph the shopper was looking at. */
+  function paintBuy() {
+    var row = $('.pd__buy');
+    if (row) row.outerHTML = buyHtml(!!(chosen && chosen.available));
+  }
+
+  function paint() {
+    var available = !!(chosen && chosen.available);
+    $('#pd').innerHTML =
+      '<nav class="pd__crumb" aria-label="Breadcrumb">' +
+        '<a href="/index.html">Home</a><span>/</span>' +
+        '<a href="/pfa-shop.html">Shop</a><span>/</span>' +
+        /* the last crumb was plain text, so it looked like a link and went
+           nowhere. It now opens the shop with that aisle already chosen. */
+        (product.category
+          ? '<a href="/pfa-shop.html?cat=' + encodeURIComponent(product.category) + '">' +
+            esc(product.categoryLabel || 'Product') + '</a>'
+          : esc(product.categoryLabel || 'Product')) +
+      '</nav>' +
+      '<div class="pd__top">' +
+        galleryHtml() +
+        '<div class="pd__buybox">' +
+          '<p class="pd__eyebrow">' + esc(product.categoryLabel || 'PFA Shop') + '</p>' +
+          '<h1 class="pd__title">' + esc(product.title) + '</h1>' +
+          '<p class="pd__price">' + priceHtml() + '</p>' +
+          '<p class="pd__stock' + (available ? '' : ' is-out') + '">' +
+            (available ? 'In stock' : 'Out of stock at the moment') + '</p>' +
+          descriptionHtml() +
+          variantsHtml() +
+          buyHtml(available) +
+          (product.prescriptionRequired
+            ? '<div class="pd__rx">' +
+                '<p><b>Prescription needed.</b> The seller will ask for a valid prescription from your vet before this is dispatched. ' +
+                'You can send it to PFA here and we will pass it on, or wait and give it to them at checkout.</p>' +
+                '<div class="pd__rxsend">' +
+                  '<label class="pd__rxpick"><input type="file" id="rxFile" accept="image/*" capture="environment">' +
+                  '<span>Choose a photograph</span></label>' +
+                  '<button class="btn btn--ghost" id="rxSend" disabled>Send prescription</button>' +
+                '</div>' +
+                '<p class="pd__rxnote" data-rx-status>A clear photograph of the paper is enough. It goes only to PFA, ' +
+                'is not shown anywhere on the site, and is passed to the seller for this order.</p>' +
+              '</div>'
+            : '') +
+          '<p class="pd__note">Sold and delivered by an independent seller. Payment, delivery charges and returns are theirs; you finish paying on their secure checkout.</p>' +
+          metaHtml() +
+        '</div>' +
+      '</div>' +
+      relatedHtml();
+
+    paintCart();
+    paintRx();
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#rxSend')) { e.preventDefault(); sendPrescription(); return; }
+    var v = e.target.closest('[data-variant]');
+    if (v) {
+      var id = v.getAttribute('data-variant');
+      chosen = variants.filter(function (x) { return String(x.id) === id; })[0] || chosen;
+      if (chosen && chosen.image && chosen.image.src) shot = chosen.image.src;
+      paint();
+      return;
+    }
+    var t = e.target.closest('[data-shot]');
+    if (t) { shot = t.getAttribute('data-shot'); paint(); return; }
+    /* Delegated, like everything else here: paint() rewrites this row, so a
+       listener bound to the buttons would not survive a variant change. */
+    var q = e.target.closest('[data-q]');
+    if (q) {
+      if (!chosen) return;
+      /* A delta against storage, not against a copy this tab is holding, so
+         the shop open in another tab cannot be overwritten. PFABag clamps to
+         25, the same cap /api/pfa-orders enforces. */
+      if (window.PFABag) window.PFABag.add(chosen.id, q.getAttribute('data-q') === '+' ? 1 : -1);
+      paintCart();
+      paintBuy();
+      return;
+    }
+    if (e.target.closest('#pdAdd')) {
+      if (!chosen || !chosen.available) return;
+      if (window.PFABag) window.PFABag.add(chosen.id, 1);
+      paintCart();
+      paintBuy();
+      toast('Added \u00b7 ' + product.title);
+    }
+  });
+
+  /* ---------- prescription ----------
+     Delegated, not wired directly, and this is why: paint() writes the whole
+     product body with innerHTML, and it runs *after* this code. Attaching a
+     listener to #rxFile here found nothing and returned silently, so the
+     control never worked. Every later paint() — a variant change, a thumbnail
+     click — would have destroyed the listener again anyway.
+
+     So the state lives out here, the handlers are on document, and paintRx()
+     puts the control back the way the person left it after each repaint. */
+  var rxData = null, rxBusy = false, rxNote = '';
+
+  function rxDefaultNote(){
+    return 'A clear photograph of the paper is enough. It goes only to PFA, ' +
+           'is not shown anywhere on the site, and is passed to the seller for this order.';
+  }
+  function rxSay(msg){
+    rxNote = msg || '';
+    var el = document.querySelector('[data-rx-status]');
+    if (el) el.textContent = rxNote || rxDefaultNote();
+  }
+  /* Called at the end of every paint, so a chosen photograph survives a
+     variant change instead of the button silently going back to disabled. */
+  function paintRx(){
+    var send = document.getElementById('rxSend');
+    if (!send) return;
+    send.disabled = rxBusy || !rxData;
+    send.textContent = rxBusy ? 'Sending\u2026' : 'Send prescription';
+    var el = document.querySelector('[data-rx-status]');
+    if (el && rxNote) el.textContent = rxNote;
+  }
+
+  document.addEventListener('change', function (e) {
+    var input = e.target.closest && e.target.closest('#rxFile');
+    if (!input) return;
+    if (!window.PFAForms){ rxSay('Sending a prescription is not available right now. Please reload the page.'); return; }
+    var file = input.files && input.files[0];
+    rxData = null; paintRx();
+    if (!file) return;
+    rxSay('Preparing the photograph\u2026');
+    window.PFAForms.shrink(file, 1600, 0.82)
+      .then(function (dataUrl){
+        rxData = dataUrl;
+        rxSay('Ready to send. It goes only to PFA, and is passed to the seller for this order.');
+        paintRx();
+      })
+      .catch(function (error){ rxSay(error.message); paintRx(); });
+  });
+
+  function sendPrescription(){
+    if (rxBusy || !rxData) return;
+    if (!window.PFAForms){ rxSay('Sending a prescription is not available right now. Please reload the page.'); return; }
+    rxBusy = true; rxSay('Sending\u2026'); paintRx();
+    window.PFAForms.submit('PFA-RX', {
+      title: product.title,
+      notes: 'Prescription for /products/' + (product.handle || '') +
+             (chosen && chosen.title ? ' (' + chosen.title + ')' : '')
+    }, { photos: [rxData], page: 'products/' + (product.handle || '') })
+      .then(function (reference){
+        rxBusy = false; rxData = null;
+        var row = document.querySelector('.pd__rxsend');
+        if (row) row.remove();
+        rxSay('Sent. Your reference is ' + reference + '. Quote it if the seller asks for the prescription again.');
+      })
+      .catch(function (error){
+        rxBusy = false;
+        rxSay(error.message);
+        paintRx();
+      });
+  }
+
+  var navCart = document.getElementById('navCart');
+  if (navCart) navCart.addEventListener('click', function () { location.href = '/pfa-shop.html#bag'; });
+
+  paint();
+}());
+
+/* PFA_PRODUCT_JS_END */
+
+</script>
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };}());
+</script>
+</body>
+</html>

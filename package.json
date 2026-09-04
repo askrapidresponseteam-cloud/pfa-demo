@@ -1,0 +1,46 @@
+{
+  "name": "pfa-website-vercel",
+  "private": true,
+  "version": "1.0.0",
+  "description": "People for Animals website with server-side CCAvenue payments and Firebase persistence.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --require ./test/_isolate-env.js --test test/*.test.js",
+    "audit": "node scripts/audit-site.js",
+    "build:search": "node scripts/build-search-index.js",
+    "build:seo": "node scripts/build-seo.js",
+    "check:seo": "node scripts/build-seo.js --check",
+    "build:logos": "node scripts/build-brand-logos.js",
+    "fetch:logos": "node scripts/fetch-brand-logos.js",
+    "build:product": "node scripts/build-product-template.js",
+    "media:cinekind": "node scripts/fetch-cinekind-media.js",
+    "build:quiz": "node scripts/build-quiz-template.js",
+    "rename:section": "node scripts/rename-section.js",
+    "check:media": "node scripts/check-media.js",
+    "audit:laws": "node scripts/audit-laws.js",
+    "sync:chrome": "node scripts/sync-chrome.js",
+    "check:chrome": "node scripts/sync-chrome.js --check",
+    "check:admin": "node scripts/check-admin-setup.js",
+    "build:min": "node scripts/minify.js",
+    "check:min": "node scripts/minify.js --check",
+    "test:tap": "node --require ./test/_isolate-env.js --test --test-reporter=tap test/*.test.js",
+    "build:firebase": "node scripts/build-firebase.js",
+    "deploy:firebase": "node scripts/build-firebase.js && firebase deploy --project pfa-new-website",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.0",
+    "eslint": "^9.30.0",
+    "jsdom": "^26.0.0",
+    "terser": "^5.51.2"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
+  }
+}

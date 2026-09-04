@@ -1,0 +1,1755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Panel &#183; People for Animals</title>
+
+<!-- The panel is the same house as the public site: Marcellus for anything
+     that names something, Helvetica for anything that is read in bulk, one
+     hairline, no rounded corners. The fonts are the site's own files, so the
+     panel does not reach the network for type. -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Marcellus';font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Marcellus';font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  --paper:#fff; --ink:#111; --deep:#0a0a0a; --muted:#6a6a6a; --stone:#f4f3f1;
+  --line:#e4e2df; --line-dark:#3a3a3a; --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --rail:250px;
+  --waiting:#111; --working:#2b9fd8; --done:#6a6a6a;
+}
+*{box-sizing:border-box}
+/* The script shows and hides screens with the `hidden` attribute, but an
+   author `display` rule (.signin and .app are grids, .more is flex) beats the
+   browser's own [hidden]{display:none}. Without this, the sign-in form never
+   goes away and the panel renders below it, which reads as "the button does
+   nothing". */
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* the small uppercase label, lifted from the site footer */
+.lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.ttl{font-family:var(--display);font-weight:400;letter-spacing:.01em;margin:0}
+
+/* ---------- sign in ---------- */
+.signin{min-height:100vh;display:grid;place-items:center;padding:32px}
+.signin .box{width:100%;max-width:360px}
+.signin img{height:64px;width:auto;display:block;margin:0 auto 40px}
+.signin h1{font-family:var(--display);font-weight:400;font-size:26px;margin:0 0 6px;text-align:center}
+.signin p.sub{color:var(--muted);text-align:center;margin:0 0 32px;font-size:13px}
+.field{margin:0 0 16px}
+.field label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+.field input{width:100%;padding:12px 13px;border:1px solid var(--line);background:var(--paper);font:inherit;color:var(--ink)}
+.field input:focus{border-color:var(--ink);outline:none}
+.press{display:block;width:100%;padding:13px 24px;border:1px solid var(--ink);background:var(--ink);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:opacity .2s}
+.press:hover{opacity:.82}
+.press[disabled]{opacity:.4;cursor:default}
+.linky{background:none;border:none;padding:0;margin:18px auto 0;display:block;font-size:12px;color:var(--muted);text-decoration:underline;cursor:pointer}
+.say{margin:16px 0 0;font-size:13px;min-height:20px}
+.say[data-tone="bad"]{color:#a3251f}
+.say[data-tone="good"]{color:#1f6b3a}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);min-height:100vh}
+.rail{background:var(--deep);color:#fff;padding:26px 0 24px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.rail .mark{padding:0 24px 26px}
+.rail .mark img{height:44px;width:auto;display:block}
+.railgroup{padding:0 12px}
+.railgroup > p{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7d7d7d;margin:20px 0 8px;padding:0 12px}
+.tab{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;
+  padding:9px 12px;background:none;border:none;color:#c9c9c9;font-size:13px;cursor:pointer;transition:color .18s,background .18s}
+.tab:hover{color:#fff;background:#161616}
+.tab[aria-current="page"]{color:#fff;background:#1c1c1c}
+.tab[hidden]{display:none}
+.tab .pip{min-width:20px;height:18px;padding:0 6px;display:grid;place-items:center;background:#fff;color:var(--deep);font-size:10px;font-weight:700}
+.tab .pip[hidden]{display:none}
+.railfoot{margin-top:auto;padding:22px 24px 0;border-top:1px solid var(--line-dark);color:#8f8f8f;font-size:12px}
+.railfoot b{display:block;color:#fff;font-weight:400;font-size:13px;overflow-wrap:anywhere}
+.railfoot .role{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:4px 0 12px;display:block}
+.railfoot button{background:none;border:1px solid var(--line-dark);color:#c9c9c9;padding:7px 12px;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;width:100%}
+.railfoot button:hover{border-color:#fff;color:#fff}
+
+.main{min-width:0;display:flex;flex-direction:column}
+.bar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);
+  padding:20px 34px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.bar h1{font-family:var(--display);font-weight:400;font-size:22px;margin:0}
+.bar .note{color:var(--muted);font-size:12px}
+.bar .spring{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pane{padding:30px 34px 64px;display:none}
+.pane[data-live]{display:block}
+/* Sections folded into another (Donations, Verify, Issue, Audit) stack under
+   their host with a rule and a small heading, so one page reads as parts. */
+.pane[data-live] ~ .pane[data-live]{border-top:1px solid var(--line);padding-top:30px}
+.pane[data-live]:has(~ .pane[data-live]){padding-bottom:34px}
+.pane[data-pane="donations"]::before{content:"Donations"}
+.pane[data-pane="verify"]::before{content:"Verify a card"}
+.pane[data-pane="cards"]::before{content:"Issue cards"}
+.pane[data-pane="audit"]::before{content:"Audit log"}
+.pane[data-pane="donations"]::before,.pane[data-pane="verify"]::before,.pane[data-pane="cards"]::before,.pane[data-pane="audit"]::before{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+
+/* ---------- overview ---------- */
+.lead{border-bottom:1px solid var(--line);padding:0 0 30px;margin:0 0 30px;display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap}
+.lead .huge{font-family:var(--display);font-size:76px;line-height:.86;letter-spacing:-.01em}
+.lead .said{max-width:34ch;color:var(--muted);font-size:13px;padding-bottom:6px}
+.lead .said b{color:var(--ink);font-weight:400;display:block;font-size:15px;margin:0 0 3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.cell{background:var(--paper);padding:20px}
+.cell .n{font-family:var(--display);font-size:32px;line-height:1.1;display:block;margin:0 0 3px}
+.cell .n small{font-size:14px;color:var(--muted)}
+.cell .sub{color:var(--muted);font-size:12px}
+.spark{display:flex;align-items:flex-end;gap:2px;height:38px;margin:14px 0 0}
+.spark i{flex:1;background:var(--stone);min-height:2px;display:block}
+.spark i[data-hot]{background:var(--ink)}
+
+/* ---------- tables ---------- */
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 18px}
+.tools input,.tools select{padding:0 11px;height:38px;border:1px solid var(--line);background:var(--paper);font:inherit;font-size:13px}
+.tools input{min-width:230px}
+.tools input:focus,.tools select:focus{border-color:var(--ink);outline:none}
+.ghost{padding:0 15px;height:38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:none;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.ghost:hover{border-color:var(--ink)}
+.ghost[disabled]{opacity:.4;cursor:default}
+.wrap{border:1px solid var(--line);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:400;
+  padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--stone)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--stone)}
+td.ref{font-family:var(--display);white-space:nowrap}
+td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rowopen{background:none;border:none;padding:0;font-family:var(--display);font-size:14px;cursor:pointer;text-align:left;border-bottom:1px solid var(--ink)}
+.rowopen:hover{opacity:.6}
+.flag{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--line)}
+.flag[data-s="new"]{border-color:var(--waiting);color:var(--waiting)}
+.flag[data-s="in-progress"]{border-color:var(--working);color:var(--working)}
+.flag[data-s="handled"]{color:var(--done)}
+.flag[data-s="spam"]{color:var(--muted);text-decoration:line-through}
+.empty{padding:56px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font-family:var(--display);font-size:18px;color:var(--ink);font-weight:400;margin:0 0 6px}
+.more{display:flex;justify-content:center;padding:16px 0 0}
+
+/* ---------- case drawer ---------- */
+.veil{position:fixed;inset:0;background:rgba(10,10,10,.42);z-index:80;opacity:0;pointer-events:none;transition:opacity .24s}
+.veil[data-open]{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,100%);background:var(--paper);z-index:90;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-1px 0 0 var(--line)}
+.drawer[data-open]{transform:none}
+.drawer header{padding:22px 26px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:14px}
+.drawer header h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
+.drawer header .x{margin-left:auto;background:none;border:none;font-size:22px;line-height:1;cursor:pointer;color:var(--muted);padding:0 2px}
+.drawer header .x:hover{color:var(--ink)}
+.drawer .body{flex:1;overflow-y:auto;padding:24px 26px 40px}
+.drawer .act{border-top:1px solid var(--line);padding:16px 26px;background:var(--stone)}
+.drawer textarea{width:100%;padding:11px 12px;border:1px solid var(--line);font:inherit;font-size:13px;min-height:76px;resize:vertical;background:var(--paper)}
+.drawer textarea:focus{border-color:var(--ink);outline:none}
+.tabs{display:flex;gap:14px;margin:0 0 12px}
+.tabs button{background:none;border:none;padding:0 0 5px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:1px solid transparent}
+.tabs button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.kv{display:grid;grid-template-columns:minmax(110px,auto) 1fr;gap:9px 18px;font-size:13px;margin:0 0 26px}
+.kv dt{color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding-top:2px}
+.kv dd{margin:0;overflow-wrap:anywhere}
+.thread{border-top:1px solid var(--line);margin:26px 0 0;padding:20px 0 0}
+.msg{border-left:2px solid var(--line);padding:0 0 0 14px;margin:0 0 18px}
+.msg[data-k="reply"]{border-left-color:var(--ink)}
+.msg[data-k="note"]{border-left-color:var(--stone)}
+.msg .who{font-size:11px;color:var(--muted);margin:0 0 4px}
+.msg p{margin:0;white-space:pre-wrap;font-size:13px}
+.shots{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}
+.shots figure{margin:0}
+.shots img{width:132px;height:132px;object-fit:cover;border:1px solid var(--line);display:block}
+.shots figcaption{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 0 0}
+.decide{margin:0 0 16px;padding:0 0 16px;border-bottom:1px solid var(--line)}
+.decide .row2{margin:6px 0 0}
+.fix{margin:12px 0 0;display:grid;gap:8px}
+.fix label{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;cursor:pointer}
+.fix input{margin:3px 0 0}
+.fix[hidden]{display:none}
+.preview{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 24px}
+.preview figure{margin:0}
+.preview canvas{width:100%;height:auto;display:block;border:1px solid var(--line);background:#fff}
+.preview figcaption{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 0 0}
+.preview .note{grid-column:1 / -1;font-size:12px;color:var(--muted);margin:0}
+.row2{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0;align-items:center}
+.row2 select{padding:9px 11px;border:1px solid var(--line);background:var(--paper);font:inherit;font-size:12px}
+
+/* ---------- people, store, cards ---------- */
+.panel{border:1px solid var(--line);padding:22px;margin:0 0 22px}
+.panel h3{font-family:var(--display);font-weight:400;font-size:17px;margin:0 0 4px}
+.panel p.hint{color:var(--muted);font-size:12px;margin:0 0 18px}
+.mods{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.mods label{display:flex;align-items:center;gap:6px;font-size:12px;border:1px solid var(--line);padding:7px 11px;cursor:pointer}
+.mods label:hover{border-color:var(--ink)}
+.mods input{margin:0}
+.choices{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);margin:0 0 16px;flex-wrap:wrap}
+.choices button{flex:1;min-width:132px;background:var(--paper);border:none;padding:15px 14px;text-align:left;cursor:pointer}
+.choices button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.choices button b{display:block;font-family:var(--display);font-weight:400;font-size:15px;margin:0 0 3px}
+.choices button span{font-size:11px;opacity:.7}
+.sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px;margin:18px 0 0}
+.sheet figure{margin:0;border:1px solid var(--line);padding:9px}
+.sheet figure[data-printed] canvas{opacity:.55}
+.sheet canvas{width:100%;height:auto;display:block;background:var(--stone)}
+.sheet figcaption{font-size:11px;color:var(--muted);margin:8px 0 0;overflow-wrap:anywhere}
+.pick{position:fixed;left:-9999px;width:1px;height:1px;opacity:0}
+
+.loading{padding:48px 20px;text-align:center;color:var(--muted);font-size:13px}
+.warn{border:1px solid var(--line);border-left:2px solid var(--ink);padding:13px 16px;margin:0 0 22px;font-size:13px;background:var(--stone)}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static;height:auto;flex-direction:column}
+  .railfoot{margin-top:18px}
+  .bar,.pane{padding-left:20px;padding-right:20px}
+  .lead .huge{font-size:56px}
+}
+@media (prefers-reduced-motion:reduce){
+  .drawer,.veil,.press,.tab{transition:none!important}
+}
+</style>
+</head>
+<body>
+<script>document.addEventListener('contextmenu',function(e){e.preventDefault();},true);</script>
+
+
+<!-- Sign in. One named person, one Firebase account, no shared password.
+     The token is minted by Google's Identity Toolkit REST endpoint directly,
+     so the panel loads no third-party script to let someone in. -->
+<section class="signin" id="signin">
+  <div class="box">
+    <img alt="People for Animals" src="img/logo.png" width="231" height="79">
+    <h1>Panel</h1>
+    <p class="sub">Sign in with your PFA account.</p>
+    <!-- onsubmit="return false" and no name attributes are the belt and braces:
+         if the script below ever fails to attach its handler, a submit must not
+         navigate to admin.html?email=...&password=..., which would put the
+         password in the address bar, in history, and in the server log. -->
+    <form id="signinForm" novalidate onsubmit="return false">
+      <div class="field">
+        <label for="who">Email</label>
+        <input id="who" type="email" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+      </div>
+      <div class="field">
+        <label for="pass">Password</label>
+        <input id="pass" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="press" id="signinGo" type="submit">Sign in</button>
+      <p class="say" id="signinSay" role="status" aria-live="polite"></p>
+      <button class="linky" id="forgot" type="button">Email me a link to set a new password</button>
+    </form>
+  </div>
+</section>
+
+<div class="app" id="app" hidden>
+  <nav class="rail" aria-label="Panel sections">
+    <div class="mark"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></div>
+
+    <!-- Seven sections, not eleven (31 Aug 2026). Nothing was removed:
+         Donations lives inside Payments &amp; donations, Issue and Verify live
+         inside Colony cards, the Audit log inside People &amp; audit. A tab can
+         open a stack of panes, each still gated by its own module. -->
+    <div class="railgroup">
+      <button class="tab" type="button" data-tab="overview">Overview</button>
+      <button class="tab" type="button" data-tab="submissions">Submissions<span class="pip" id="pipWaiting" hidden>0</span></button>
+      <button class="tab" type="button" data-tab="volunteers">Volunteers</button>
+      <button class="tab" type="button" data-tab="payments">Payments &amp; donations</button>
+      <button class="tab" type="button" data-tab="caregivers">Colony cards</button>
+      <button class="tab" type="button" data-tab="store">Store orders</button>
+      <button class="tab" type="button" data-tab="people" data-super>People &amp; audit</button>
+    </div>
+
+    <div class="railfoot">
+      <b id="meName">&nbsp;</b>
+      <span class="role" id="meRole"></span>
+      <button type="button" id="signout">Sign out</button>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="bar">
+      <h1 id="paneTitle">Overview</h1>
+      <span class="note" id="paneNote"></span>
+      <span class="spring"><button class="ghost" type="button" id="refresh">Refresh</button></span>
+    </div>
+
+    <div class="pane" data-pane="overview" id="paneOverview"><div class="loading">Reading the registers&#8230;</div></div>
+
+    <div class="pane" data-pane="submissions">
+      <div class="tools">
+        <input type="search" id="subQ" placeholder="Reference, e.g. PFA-C-2026-00042" aria-label="Find a submission by reference">
+        <select id="subKind" aria-label="Kind"><option value="">Every kind</option></select>
+        <select id="subStatus" aria-label="Status">
+          <option value="">Every status</option>
+          <option value="new">Waiting</option>
+          <option value="in-progress">In progress</option>
+          <option value="handled">Handled</option>
+          <option value="spam">Spam</option>
+        </select>
+        <button class="ghost" type="button" id="subGo">Find</button>
+        <button class="ghost" type="button" id="subClear">Clear</button>
+      </div>
+      <div class="wrap"><table><thead><tr>
+        <th>Reference</th><th>Kind</th><th>From</th><th>Status</th><th>With</th><th>Arrived</th>
+      </tr></thead><tbody id="subRows"></tbody></table></div>
+      <div class="more"><button class="ghost" type="button" id="subMore" hidden>Load more</button></div>
+    </div>
+
+    <div class="pane" data-pane="volunteers">
+      <div class="wrap"><table><thead><tr>
+        <th>Reference</th><th>Name</th><th>Contact</th><th>Status</th><th>Arrived</th>
+      </tr></thead><tbody id="volRows"></tbody></table></div>
+      <div class="more"><button class="ghost" type="button" id="volMore" hidden>Load more</button></div>
+    </div>
+
+    
+
+    <div class="pane" data-pane="caregivers">
+      <div class="tools">
+        <input type="search" id="cgQ" placeholder="Card number, e.g. PFA-CCT-4K2M8QRT" aria-label="Find a card">
+        <button class="ghost" type="button" id="cgGo">Find</button>
+        <button class="ghost" type="button" id="cgClear">Clear</button>
+      </div>
+      <div class="wrap"><table><thead><tr>
+        <th>Card</th><th>Name</th><th>Issued</th><th>Valid to</th><th>Printed</th><th>State</th>
+      </tr></thead><tbody id="cgRows"></tbody></table></div>
+      <div class="more"><button class="ghost" type="button" id="cgMore" hidden>Load more</button></div>
+    </div>
+
+    <div class="pane" data-pane="verify" role="region" aria-label="Verify a card">
+      <div class="panel">
+        <h3>Verify a card</h3>
+        <p class="hint">Type any card number. The answer is the same one the public check gives.</p>
+        <div class="tools">
+          <input type="search" id="vfQ" placeholder="PFA-CCT-4K2M8QRT" aria-label="Card number">
+          <button class="ghost" type="button" id="vfGo">Check</button>
+        </div>
+        <div id="vfOut"></div>
+      </div>
+    </div>
+
+    <div class="pane" data-pane="cards" role="region" aria-label="Issue cards"><div class="loading">Reading the register&#8230;</div></div>
+
+    <div class="pane" data-pane="payments">
+      <div class="tools">
+        <select id="payType" aria-label="Purpose">
+          <option value="">Every purpose</option><option value="donate">Donation</option>
+          <option value="caregiver">Colony card postage</option><option value="send">Gift</option>
+        </select>
+        <select id="payStatus" aria-label="Outcome">
+          <option value="">Every outcome</option><option value="paid">Paid</option>
+          <option value="failed">Failed</option><option value="unverified">Unverified</option>
+          <option value="abandoned">Abandoned</option><option value="started">Started, not finished</option>
+        </select>
+        <button class="ghost" type="button" id="payGo">Apply</button>
+        <button class="ghost" type="button" id="payCsv">Download CSV</button>
+      </div>
+      <div class="wrap"><table><thead><tr>
+        <th>Order</th><th>Purpose</th><th>Name</th><th class="num">Amount</th><th>Outcome</th><th>Bank reference</th><th>When</th>
+      </tr></thead><tbody id="payRows"></tbody></table></div>
+      <div class="more"><button class="ghost" type="button" id="payMore" hidden>Load more</button></div>
+    </div>
+
+    <div class="pane" data-pane="donations" role="region" aria-label="Donations">
+      <div class="wrap"><table><thead><tr>
+        <th>Order</th><th>Name</th><th>Contact</th><th class="num">Amount</th><th>Outcome</th><th>When</th>
+      </tr></thead><tbody id="donRows"></tbody></table></div>
+      <div class="more"><button class="ghost" type="button" id="donMore" hidden>Load more</button></div>
+    </div>
+
+    <div class="pane" data-pane="store">
+      <div class="panel" id="storeSwitch">
+        <h3>What the Store lists</h3>
+        <p class="hint">The public shop follows this. The count under each choice is what a shopper would see.</p>
+        <div class="choices" id="storeChoices"></div>
+        <p class="say" id="storeSay" role="status" aria-live="polite"></p>
+      </div>
+      <div class="tools">
+        <input type="search" id="stQ" placeholder="Order number, customer email or Razorpay payment id" aria-label="Find an order">
+        <button class="ghost" type="button" id="stGo">Find</button>
+        <button class="ghost" type="button" id="stClear">Clear</button>
+      </div>
+      <div class="wrap"><table><thead><tr>
+        <th>Order</th><th>Name</th><th>Items</th><th class="num">Total</th><th>Status</th><th>Tracking</th><th>Placed</th>
+      </tr></thead><tbody id="stRows"></tbody></table></div>
+    </div>
+
+    
+
+    
+
+    
+
+    <div class="pane" data-pane="people"><div class="loading">Reading the accounts&#8230;</div></div>
+
+    <div class="pane" data-pane="audit" role="region" aria-label="Audit log">
+      <div class="tools">
+        <input type="search" id="auQ" placeholder="Filter by who did it, e.g. asha@…" aria-label="Filter by person">
+        <button class="ghost" type="button" id="auGo">Filter</button>
+        <button class="ghost" type="button" id="auClear">Clear</button>
+      </div>
+      <div class="wrap"><table><thead><tr>
+        <th>When</th><th>Who</th><th>Did what</th><th>To what</th><th>Detail</th>
+      </tr></thead><tbody id="auRows"></tbody></table></div>
+      <div class="more"><button class="ghost" type="button" id="auMore" hidden>Load more</button></div>
+    </div>
+  </main>
+</div>
+
+<div class="veil" id="veil"></div>
+<aside class="drawer" id="caseDrawer" role="dialog" aria-modal="true" aria-labelledby="caseTitle" aria-hidden="true">
+  <header>
+    <div>
+      <h2 class="ttl" id="caseTitle">Case</h2>
+      <span class="note" id="caseKind"></span>
+    </div>
+    <button class="x" type="button" id="caseShut" aria-label="Close">&#215;</button>
+  </header>
+  <div class="body" id="caseBody"></div>
+  <div class="act" id="caseAct" hidden>
+    <div class="decide" id="caseDecide" hidden>
+      <p class="lab">Decision</p>
+      <div class="row2">
+        <button class="press" type="button" id="caseApprove" style="width:auto">Approve and issue the card</button>
+        <button class="ghost" type="button" id="caseFix">Something is not right</button>
+      </div>
+      <div class="fix" id="caseFixBox" hidden>
+        <p class="hint">Tick what needs correcting. It becomes the email; edit it before sending. The application stays open until they send it.</p>
+        <label><input type="checkbox" value="The photograph does not show your face clearly. Send one taken straight on, in daylight, with no cap or sunglasses."> Photograph unclear or not a face</label>
+        <label><input type="checkbox" value="The proof of address is not readable. Send a sharper picture of the side that carries the address."> Address proof unreadable</label>
+        <label><input type="checkbox" value="The address on the proof does not match the colony you named. Tell us how the two are connected, or send a proof for the address near the colony."> Proof does not match the colony</label>
+        <label><input type="checkbox" value="The name on the application does not match the name on the proof. Tell us which one should go on the card."> Name does not match the proof</label>
+        <label><input type="checkbox" value="The colony address is incomplete. Give the street or landmark, the area and the 6-digit PIN code."> Colony address incomplete</label>
+        <label><input type="checkbox" value="The mobile number given already holds a Colony Caregiver Card. If that is yours, reply with the card number; if not, tell us."> Mobile already holds a card</label>
+      </div>
+    </div>
+    <div class="tabs">
+      <button type="button" data-mode="reply" aria-pressed="true">Reply by email</button>
+      <button type="button" data-mode="note" aria-pressed="false">Internal note</button>
+    </div>
+    <textarea id="caseText" aria-label="What to send or record"></textarea>
+    <div class="row2">
+      <button class="press" type="button" id="caseSend" style="width:auto">Send reply</button>
+      <select id="caseAssign" aria-label="Assign to"><option value="">Not assigned</option></select>
+      <select id="caseStatus" aria-label="Move to">
+        <option value="">Move to&#8230;</option>
+        <option value="new">Waiting</option>
+        <option value="in-progress">In progress</option>
+        <option value="handled">Handled</option>
+        <option value="spam">Spam</option>
+      </select>
+    </div>
+    <p class="say" id="caseSay" role="status" aria-live="polite"></p>
+  </div>
+</aside>
+
+<script>
+/* If anything below fails to parse or throws while starting up, the page still
+   renders perfectly and the button quietly does nothing, which is the least
+   debuggable failure a login page can have. Say it out loud instead. This is
+   registered before every other script so it catches all of them. */
+window.addEventListener('error', function (event) {
+  var box = document.getElementById('signinSay');
+  if (!box) return;
+  var where = event.filename ? ' (' + String(event.filename).split('/').pop() + ':' + event.lineno + ')' : '';
+  box.setAttribute('data-tone', 'bad');
+  box.textContent = 'The panel could not start: ' + (event.message || 'script error') + where;
+});
+window.addEventListener('unhandledrejection', function (event) {
+  var box = document.getElementById('signinSay');
+  if (!box || box.textContent) return;
+  var reason = event.reason;
+  box.setAttribute('data-tone', 'bad');
+  box.textContent = 'Something failed while signing in: ' + ((reason && reason.message) || String(reason));
+});
+</script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/qr.js"></script>
+<script src="assets/card-fields.js"></script>
+<script src="assets/caregiver-card.js"></script>
+<script>
+/* The panel.
+
+   Sign-in mints a Firebase ID token straight from Google's Identity Toolkit
+   REST endpoint, so no third-party script has to load before someone can get
+   in. Every call to /api/admin/* carries that token as a bearer header; the
+   server re-reads the account's claims, so a permission taken away on the
+   People page is gone from the next request, not the next hour.
+
+   Nothing here decides what an administrator may see. The rail hides what an
+   account does not carry, but the API refuses it as well - a hidden link is
+   not a locked door. */
+(function () {
+  'use strict';
+
+  var KEY = window.PFA_FIREBASE_API_KEY || '';
+  var IDENTITY = 'https://identitytoolkit.googleapis.com/v1/accounts:';
+  var REFRESH_URL = 'https://securetoken.googleapis.com/v1/token?key=';
+  var KEEP = 'pfa.panel.session';
+
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function say(node, text, tone) {
+    if (!node) return;
+    node.textContent = text || '';
+    if (tone) { node.setAttribute('data-tone', tone); } else { node.removeAttribute('data-tone'); }
+  }
+  function when(value) {
+    if (!value) return '\u2014';
+    var d = new Date(value);
+    if (isNaN(d.getTime())) return '\u2014';
+    var today = new Date();
+    var sameDay = d.toDateString() === today.toDateString();
+    if (sameDay) return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+  function money(amount, currency) {
+    var n = Number(amount) || 0;
+    var sign = String(currency || 'INR').toUpperCase() === 'USD' ? '$' : '\u20b9';
+    return sign + n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+  }
+
+  /* ---- credentials ------------------------------------------------------ */
+
+  var session = { idToken: '', refreshToken: '', expiresAt: 0 };
+  var me = null;
+
+  function remember() {
+    try { sessionStorage.setItem(KEEP, session.refreshToken); } catch (_) { /* private mode */ }
+  }
+  function forget() {
+    try { sessionStorage.removeItem(KEEP); } catch (_) { /* private mode */ }
+    session = { idToken: '', refreshToken: '', expiresAt: 0 };
+    me = null;
+  }
+
+  function post(url, body, form) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': form ? 'application/x-www-form-urlencoded' : 'application/json' },
+      body: form ? body : JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (data) {
+        if (!r.ok) {
+          var e = new Error((data.error && data.error.message) || 'REQUEST_FAILED');
+          e.code = (data.error && data.error.message) || '';
+          throw e;
+        }
+        return data;
+      });
+    });
+  }
+
+  function signIn(email, password) {
+    return post(IDENTITY + 'signInWithPassword?key=' + KEY, { email: email, password: password, returnSecureToken: true })
+      .then(function (data) {
+        session.idToken = data.idToken;
+        session.refreshToken = data.refreshToken;
+        session.expiresAt = Date.now() + (Number(data.expiresIn) || 3600) * 1000;
+        remember();
+        return data;
+      });
+  }
+
+  function renew() {
+    if (!session.refreshToken) return Promise.reject(new Error('NO_SESSION'));
+    return post(REFRESH_URL + KEY, 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(session.refreshToken), true)
+      .then(function (data) {
+        session.idToken = data.id_token;
+        session.refreshToken = data.refresh_token || session.refreshToken;
+        session.expiresAt = Date.now() + (Number(data.expires_in) || 3600) * 1000;
+        remember();
+        return session.idToken;
+      });
+  }
+
+  /* A token with at least a minute left on it, renewed if not. */
+  function token() {
+    if (session.idToken && session.expiresAt - Date.now() > 60000) return Promise.resolve(session.idToken);
+    return renew();
+  }
+
+  var FRIENDLY = {
+    EMAIL_NOT_FOUND: 'No account carries that email.',
+    INVALID_PASSWORD: 'That password does not match.',
+    INVALID_LOGIN_CREDENTIALS: 'That email and password do not match.',
+    USER_DISABLED: 'That account has been switched off. Ask a super administrator.',
+    TOO_MANY_ATTEMPTS_TRY_LATER: 'Too many tries. Wait a few minutes and start again.',
+    MISSING_PASSWORD: 'Enter your password.',
+    INVALID_EMAIL: 'That is not an email address.'
+  };
+  function plainly(error) {
+    var code = String((error && (error.code || error.message)) || '').split(' :')[0];
+    return FRIENDLY[code] || 'Sign-in did not go through. Check the details and try again.';
+  }
+
+  /* ---- talking to the panel's own API ----------------------------------- */
+
+  function api(path, options) {
+    var opts = options || {};
+    return token().then(function (id) {
+      return fetch(path, {
+        method: opts.method || 'GET',
+        headers: Object.assign(
+          { Authorization: 'Bearer ' + id },
+          opts.body ? { 'Content-Type': 'application/json' } : {}
+        ),
+        body: opts.body ? JSON.stringify(opts.body) : undefined
+      });
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (data) {
+        if (r.status === 401 || r.status === 403) {
+          var denied = new Error(data.message || 'Not allowed.');
+          denied.denied = true;
+          denied.status = r.status;
+          throw denied;
+        }
+        if (!r.ok) throw new Error(data.message || 'That did not go through.');
+        return data;
+      });
+    });
+  }
+
+  /* ---- who may open what ------------------------------------------------ */
+
+  /* The rail mirrors the server. `needs` is the module the API actually
+     enforces for that screen: Volunteers reads the submissions register and
+     Donations reads the payments one, so each needs both. */
+  var TABS = {
+    overview:    { title: 'Overview',      module: 'overview',    needs: 'overview' },
+    submissions: { title: 'Submissions',   module: 'submissions', needs: 'submissions' },
+    volunteers:  { title: 'Volunteers',    module: 'volunteers',  needs: 'submissions' },
+    donations:   { title: 'Donations',     module: 'donations',   needs: 'payments' },
+    caregivers:  { title: 'Colony cards',  module: 'caregivers',  needs: 'caregivers', panes: ['caregivers', 'verify', 'cards'] },
+    payments:    { title: 'Payments & donations', module: 'payments', needs: 'payments', panes: ['payments', 'donations'] },
+    store:       { title: 'Store orders',  module: 'store',       needs: 'store' },
+    cards:       { title: 'Issue cards',   module: 'cards',       needs: 'caregivers' },
+    verify:      { title: 'Verify a card', module: 'verify',      needs: 'verify' },
+    people:      { title: 'People & audit', module: 'people',     needs: 'people', panes: ['people', 'audit'] },
+    audit:       { title: 'Audit log',     module: 'people',      needs: 'people' }
+  };
+
+  function can(module) {
+    if (!me) return false;
+    if (!module) return true;
+    if (me.role === 'super') return true;
+    if (module === 'people') return false;
+    return (me.modules || []).indexOf(module) !== -1;
+  }
+
+  function reachable(tab) {
+    var spec = TABS[tab];
+    return Boolean(spec) && can(spec.module) && can(spec.needs);
+  }
+
+  function applyAccess() {
+    $$('.tab').forEach(function (button) {
+      var tab = button.getAttribute('data-tab');
+      button.hidden = !reachable(tab);
+    });
+    $('#meName').textContent = me.name || me.email || 'Signed in';
+    /* An `admin: true` claim from before roles existed carries everything.
+       It is worth saying so, rather than showing it as an ordinary super. */
+    $('#meRole').textContent = me.role === 'super'
+      ? (me.legacy ? 'Super administrator \u00b7 from before roles' : 'Super administrator')
+      : 'Staff';
+  }
+
+  /* ---- panes ------------------------------------------------------------ */
+
+  var current = '';
+  var loaded = {};
+
+  /* A section folded into another keeps its name here, so an old link or an
+     internal show('donations') lands on the section that now holds it. */
+  var HOMES = { donations: 'payments', cards: 'caregivers', verify: 'caregivers', audit: 'people' };
+  function panesOf(tab) { return (TABS[tab] || {}).panes || [tab]; }
+  function paneAllowed(pane) {
+    var spec = TABS[pane];
+    return Boolean(spec) && can(spec.module) && can(spec.needs);
+  }
+  function show(tab) {
+    tab = HOMES[tab] || tab;
+    if (!can(tab)) tab = 'overview';
+    if (!reachable(tab)) {
+      var first = $$('.tab').filter(function (b) { return !b.hidden; })[0];
+      tab = first ? first.getAttribute('data-tab') : 'overview';
+    }
+    current = tab;
+    var live = panesOf(tab).filter(paneAllowed);
+    $$('.tab').forEach(function (b) {
+      if (b.getAttribute('data-tab') === tab) { b.setAttribute('aria-current', 'page'); } else { b.removeAttribute('aria-current'); }
+    });
+    $$('.pane').forEach(function (p) {
+      if (live.indexOf(p.getAttribute('data-pane')) !== -1) { p.setAttribute('data-live', '1'); } else { p.removeAttribute('data-live'); }
+    });
+    $('#paneTitle').textContent = (TABS[tab] || {}).title || 'Panel';
+    say($('#paneNote'), '');
+    live.forEach(function (pane) {
+      if (!loaded[pane]) { loaded[pane] = true; fill(pane); }
+    });
+  }
+
+  function fill(tab, force) {
+    if (force) loaded[tab] = true;
+    if (tab === 'overview') return overview();
+    if (tab === 'submissions') return submissions(true);
+    if (tab === 'volunteers') return volunteers(true);
+    if (tab === 'donations') return donations(true);
+    if (tab === 'caregivers') return caregivers(true);
+    if (tab === 'payments') return payments(true);
+    if (tab === 'store') return store();
+    if (tab === 'cards') return cardsPane();
+    if (tab === 'people') return people();
+    if (tab === 'audit') return auditLog(true);
+    return undefined;
+  }
+
+  function fail(node, error) {
+    var text = error && error.denied
+      ? 'Your account does not carry this section.'
+      : (error && error.message) || 'That could not be read.';
+    node.innerHTML = '<div class="empty"><b>Nothing to show</b>' + esc(text) + '</div>';
+  }
+
+  /* ---- overview --------------------------------------------------------- */
+
+  function stat(module, n, label, sub) {
+    if (!can(module)) return '';
+    return '<span class="n">' + esc(n) + '</span>'
+      + '<span class="sub">' + esc(label) + (sub ? ' \u00b7 ' + esc(sub) : '') + '</span>';
+  }
+
+  function spark(days) {
+    if (!days || !days.length) return '';
+    var top = days.reduce(function (a, d) { return Math.max(a, Number(d.count || d.total) || 0); }, 0) || 1;
+    return '<div class="spark">' + days.map(function (d) {
+      var v = Number(d.count || d.total) || 0;
+      var pct = Math.round((v / top) * 100);
+      return '<i style="height:' + Math.max(pct, 3) + '%"' + (v ? ' data-hot' : '') + ' title="' + esc(d.day || '') + ': ' + v + '"></i>';
+    }).join('') + '</div>';
+  }
+
+  function overview() {
+    var node = $('#paneOverview');
+    node.innerHTML = '<div class="loading">Reading the registers\u2026</div>';
+    api('/api/admin/metrics').then(function (m) {
+      var c = m.cards || {};
+      var waiting = Number(c.submissionsWaiting) || 0;
+      var out = [];
+
+      out.push('<div class="lead"><div class="huge">' + waiting + '</div><div class="said"><b>'
+        + (waiting === 1 ? 'One submission is waiting' : waiting === 0 ? 'Nothing is waiting' : waiting + ' submissions are waiting')
+        + '</b>' + (waiting ? 'Nobody has picked these up yet. Open one from Submissions.' : 'Everything that has come in has been picked up.')
+        + '</div></div>');
+
+      var cells = [];
+
+      var subs = can('submissions') && stat('submissions', c.submissionsTotal || 0, 'submissions in all', (c.submissionsLast7 || 0) + ' in the last 7 days');
+      if (subs) cells.push('<div class="cell" data-module="submissions">' + subs + (m.submissions ? spark(m.submissions.arrivals) : '') + '</div>');
+
+      var vols = can('volunteers') && stat('volunteers', ((m.byKind || {})['PFA-V'] || {}).waiting || 0, 'volunteer applications waiting');
+      if (vols) cells.push('<div class="cell" data-module="volunteers">' + vols + '</div>');
+
+      var gave = can('donations') && stat('donations', money(((m.payments || {}).byType || {}).donate ? m.payments.byType.donate.inr : 0), 'given in 30 days', (((m.payments || {}).byType || {}).donate || {}).count + ' gifts');
+      if (gave) cells.push('<div class="cell" data-module="donations">' + gave + '</div>');
+
+      var cg = can('caregivers') && stat('caregivers', c.caregivers || 0, 'colony cards issued', ((m.caregivers || {}).unprinted || 0) + ' not printed');
+      if (cg) cells.push('<div class="cell" data-module="caregivers">' + cg + '</div>');
+
+      var pay = can('payments') && stat('payments', money((m.revenue30d || {}).inr), 'taken in 30 days', (c.paymentsPaid || 0) + ' payments');
+      if (pay) cells.push('<div class="cell" data-module="payments">' + pay + ((m.payments || {}).byDay ? spark(m.payments.byDay) : '') + '</div>');
+
+      var st = can('store') && stat('store', c.storeOrders || 0, 'store orders',
+        (c.storeNeedsAttention ? c.storeNeedsAttention + ' paid but not with the seller \u00b7 ' : '') + (c.storeOrdersAwaitingShipment || 0) + ' awaiting despatch');
+      if (st) cells.push('<div class="cell" data-module="store">' + st + '</div>');
+
+      out.push('<div class="grid">' + cells.join('') + '</div>');
+      node.innerHTML = out.join('');
+      offerKinds(m.byKind);
+      var pip = $('#pipWaiting');
+      pip.textContent = waiting;
+      pip.hidden = !waiting;
+      say($('#paneNote'), 'Read ' + when(m.generatedAt));
+    }).catch(function (e) { fail(node, e); });
+  }
+
+  /* ---- submissions: the register the public forms fill ------------------- */
+
+  var subCursor = null;
+
+  /* The kinds come from the server with the overview, so the panel never keeps
+     a second copy of a vocabulary that lives in lib/submissions.js. */
+  function offerKinds(byKind) {
+    var select = $('#subKind');
+    if (!byKind || select.options.length > 1) return;
+    Object.keys(byKind).forEach(function (key) {
+      var option = document.createElement('option');
+      option.value = key;
+      option.textContent = (byKind[key] || {}).label || key;
+      select.appendChild(option);
+    });
+  }
+
+  function contactOf(fields) {
+    var f = fields || {};
+    var name = '', email = '', mobile = '';
+    Object.keys(f).forEach(function (k) {
+      var v = String(f[k] == null ? '' : f[k]).trim();
+      if (!v) return;
+      if (!name && /^(name|full ?name|your name|contact name)$/i.test(k)) name = v;
+      if (!email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) email = v;
+      if (!mobile && /^[+ ]?[\d ]{10,14}$/.test(v) && /\d{10}/.test(v.replace(/\D/g, ''))) mobile = v;
+    });
+    return { name: name, email: email, mobile: mobile };
+  }
+
+  function flag(status) {
+    var label = { 'new': 'Waiting', 'in-progress': 'In progress', handled: 'Handled', spam: 'Spam' }[status] || status;
+    return '<span class="flag" data-s="' + esc(status) + '">' + esc(label) + '</span>';
+  }
+
+  function subRow(r) {
+    var c = contactOf(r.fields);
+    return '<tr>'
+      + '<td class="ref"><button class="rowopen" type="button" data-open-case="' + esc(r.reference) + '">' + esc(r.reference) + '</button></td>'
+      + '<td>' + esc(r.kindLabel || r.kind) + (r.attachments ? ' <span class="flag">' + (r.kind === 'PFA-CG' && r.attachments >= 2 ? 'photo + proof' : r.attachments + ' photo') + '</span>' : '') + '</td>'
+      + '<td>' + esc(c.name || '\u2014') + '<br><span class="note">' + esc(c.email || c.mobile || '') + '</span></td>'
+      + '<td>' + flag(r.status) + '</td>'
+      + '<td>' + esc(r.assignedTo || '\u2014') + '</td>'
+      + '<td>' + esc(when(r.createdAt)) + '</td>'
+      + '</tr>';
+  }
+
+  function submissions(reset) {
+    var body = $('#subRows');
+    if (reset) { subCursor = null; body.innerHTML = '<tr><td colspan="6" class="loading">Reading\u2026</td></tr>'; }
+    var q = $('#subQ').value.trim();
+    var url = '/api/admin/records?type=submissions&limit=25';
+    if (q) { url += '&q=' + encodeURIComponent(q); } else {
+      if ($('#subKind').value) url += '&kind=' + encodeURIComponent($('#subKind').value);
+      if ($('#subStatus').value) url += '&status=' + encodeURIComponent($('#subStatus').value);
+      if (subCursor) url += '&cursor=' + encodeURIComponent(subCursor);
+    }
+    api(url).then(function (data) {
+      var rows = data.rows || [];
+      if (reset) body.innerHTML = '';
+      if (!rows.length && reset) {
+        body.innerHTML = '<tr><td colspan="6"><div class="empty"><b>Nothing here yet</b>'
+          + esc(data.message || 'When someone sends a form on the site, it lands here.') + '</div></td></tr>';
+      }
+      body.insertAdjacentHTML('beforeend', rows.map(subRow).join(''));
+      subCursor = data.cursor || null;
+      $('#subMore').hidden = !subCursor || Boolean(q);
+      say($('#paneNote'), rows.length ? rows.length + ' shown' : '');
+    }).catch(function (e) {
+      body.innerHTML = '<tr><td colspan="6"><div class="empty"><b>Nothing to show</b>'
+        + esc(e.denied ? 'Your account does not carry Submissions.' : e.message) + '</div></td></tr>';
+    });
+  }
+
+  /* ---- volunteers: the same register, one kind --------------------------- */
+
+  var volCursor = null;
+  function volunteers(reset) {
+    var body = $('#volRows');
+    if (reset) { volCursor = null; body.innerHTML = '<tr><td colspan="5" class="loading">Reading\u2026</td></tr>'; }
+    var url = '/api/admin/records?type=submissions&kind=PFA-V&limit=25' + (volCursor ? '&cursor=' + encodeURIComponent(volCursor) : '');
+    api(url).then(function (data) {
+      var rows = data.rows || [];
+      if (reset) body.innerHTML = '';
+      if (!rows.length && reset) {
+        body.innerHTML = '<tr><td colspan="5"><div class="empty"><b>No applications yet</b>'
+          + 'Volunteer applications from Get Involved arrive here.</div></td></tr>';
+      }
+      body.insertAdjacentHTML('beforeend', rows.map(function (r) {
+        var c = contactOf(r.fields);
+        return '<tr><td class="ref"><button class="rowopen" type="button" data-open-case="' + esc(r.reference) + '">' + esc(r.reference) + '</button></td>'
+          + '<td>' + esc(c.name || '\u2014') + '</td>'
+          + '<td>' + esc(c.email || c.mobile || '\u2014') + '</td>'
+          + '<td>' + flag(r.status) + '</td>'
+          + '<td>' + esc(when(r.createdAt)) + '</td></tr>';
+      }).join(''));
+      volCursor = data.cursor || null;
+      $('#volMore').hidden = !volCursor;
+    }).catch(function (e) {
+      body.innerHTML = '<tr><td colspan="5"><div class="empty"><b>Nothing to show</b>' + esc(e.message) + '</div></td></tr>';
+    });
+  }
+
+  /* ---- donations and payments -------------------------------------------- */
+
+  function payRow(r, short) {
+    var cells = '<tr><td class="ref">' + esc(r.orderId || r.id) + '</td>';
+    if (!short) cells += '<td>' + esc(r.type || '\u2014') + '</td>';
+    cells += '<td>' + esc(r.name || '\u2014') + '</td>';
+    if (short) cells += '<td>' + esc(r.email || r.mobile || '\u2014') + '</td>';
+    cells += '<td class="num">' + esc(money(r.amount, r.currency)) + '</td>'
+      + '<td><span class="flag" data-s="' + (r.status === 'success' ? 'handled' : 'spam') + '">' + esc(r.status || '\u2014') + '</span></td>';
+    if (!short) cells += '<td>' + esc(r.bankReference || '\u2014') + '</td>';
+    cells += '<td>' + esc(when(r.createdAt)) + '</td></tr>';
+    return cells;
+  }
+
+  var donCursor = null;
+  function donations(reset) {
+    var body = $('#donRows');
+    if (reset) { donCursor = null; body.innerHTML = '<tr><td colspan="6" class="loading">Reading\u2026</td></tr>'; }
+    var url = '/api/admin/records?type=payments&purpose=donate,send&limit=25' + (donCursor ? '&cursor=' + encodeURIComponent(donCursor) : '');
+    api(url).then(function (data) {
+      var rows = data.rows || [];
+      if (reset) body.innerHTML = '';
+      if (!rows.length && reset) {
+        body.innerHTML = '<tr><td colspan="6"><div class="empty"><b>No giving recorded yet</b>'
+          + 'Donations made on the site appear here with the transaction behind each.</div></td></tr>';
+      }
+      body.insertAdjacentHTML('beforeend', rows.map(function (r) { return payRow(r, true); }).join(''));
+      donCursor = data.cursor || null;
+      $('#donMore').hidden = !donCursor;
+    }).catch(function (e) {
+      body.innerHTML = '<tr><td colspan="6"><div class="empty"><b>Nothing to show</b>' + esc(e.message) + '</div></td></tr>';
+    });
+  }
+
+  var payCursor = null;
+  function paymentQuery() {
+    var url = '/api/admin/records?type=payments&limit=25';
+    if ($('#payType').value) url += '&purpose=' + encodeURIComponent($('#payType').value);
+    if ($('#payStatus').value) url += '&status=' + encodeURIComponent($('#payStatus').value);
+    return url;
+  }
+  function payments(reset) {
+    var body = $('#payRows');
+    if (reset) { payCursor = null; body.innerHTML = '<tr><td colspan="7" class="loading">Reading\u2026</td></tr>'; }
+    var url = paymentQuery() + (payCursor ? '&cursor=' + encodeURIComponent(payCursor) : '');
+    api(url).then(function (data) {
+      var rows = data.rows || [];
+      if (reset) body.innerHTML = '';
+      if (!rows.length && reset) {
+        body.innerHTML = '<tr><td colspan="7"><div class="empty"><b>No payments yet</b>'
+          + 'Card payments taken on the site are listed here.</div></td></tr>';
+      }
+      body.insertAdjacentHTML('beforeend', rows.map(function (r) { return payRow(r, false); }).join(''));
+      payCursor = data.cursor || null;
+      $('#payMore').hidden = !payCursor;
+      if (data.summary) {
+        say($('#paneNote'), data.summary.paidCount + ' paid \u00b7 ' + money(data.summary.paidInr || 0)
+          + (data.summary.failed ? ' \u00b7 ' + data.summary.failed + ' failed' : '')
+          + (data.summary.abandoned ? ' \u00b7 ' + data.summary.abandoned + ' abandoned' : ''));
+      }
+    }).catch(function (e) {
+      body.innerHTML = '<tr><td colspan="7"><div class="empty"><b>Nothing to show</b>' + esc(e.message) + '</div></td></tr>';
+    });
+  }
+
+  /* ---- colony cards register ---------------------------------------------- */
+
+  var cgCursor = null;
+  function caregivers(reset) {
+    var body = $('#cgRows');
+    if (reset) { cgCursor = null; body.innerHTML = '<tr><td colspan="6" class="loading">Reading\u2026</td></tr>'; }
+    var q = $('#cgQ').value.trim();
+    var url = '/api/admin/records?type=caregivers&limit=25'
+      + (q ? '&q=' + encodeURIComponent(q) : (cgCursor ? '&cursor=' + encodeURIComponent(cgCursor) : ''));
+    api(url).then(function (data) {
+      var rows = data.rows || [];
+      if (reset) body.innerHTML = '';
+      if (!rows.length && reset) {
+        body.innerHTML = '<tr><td colspan="6"><div class="empty"><b>Nothing found</b>'
+          + esc(data.message || 'Cards issued from an application appear here.') + '</div></td></tr>';
+      }
+      body.insertAdjacentHTML('beforeend', rows.map(function (r) {
+        var state = r.status === 'revoked' ? 'revoked' : (r.state || 'unknown');
+        return '<tr><td class="ref">' + esc(r.cardId || r.id) + '</td>'
+          + '<td>' + esc(r.name || '\u2014') + '</td>'
+          + '<td>' + esc(when(r.issuedAt)) + '</td>'
+          + '<td>' + esc(when(r.validUntil)) + '</td>'
+          + '<td>' + (r.printed ? 'Yes' : 'Not yet') + '</td>'
+          + '<td><span class="flag" data-s="' + (state === 'valid' ? 'handled' : 'spam') + '">'
+          + esc(state) + '</span></td></tr>';
+      }).join(''));
+      cgCursor = data.cursor || null;
+      $('#cgMore').hidden = !cgCursor || Boolean(q);
+    }).catch(function (e) {
+      body.innerHTML = '<tr><td colspan="6"><div class="empty"><b>Nothing to show</b>' + esc(e.message) + '</div></td></tr>';
+    });
+  }
+
+  /* ---- store ------------------------------------------------------------- */
+
+  function store() {
+    api('/api/admin/store').then(function (s) {
+      var counts = s.counts || {};
+      $('#storeChoices').innerHTML = (s.choices || []).map(function (choice) {
+        var n = counts[choice.key];
+        var sub = counts.available === false ? 'count unavailable'
+          : (choice.key === 'off' ? 'the shop is closed' : (n || 0) + ' items listed');
+        return '<button type="button" data-state="' + esc(choice.key) + '" aria-pressed="' + (s.state === choice.key) + '">'
+          + '<b>' + esc(choice.label) + '</b><span>' + esc(sub) + '</span></button>';
+      }).join('');
+      say($('#storeSay'), s.changedAt ? 'Last changed ' + when(s.changedAt) + (s.changedBy ? ' by ' + s.changedBy : '') : '');
+    }).catch(function (e) { say($('#storeSay'), e.message, 'bad'); });
+    storeOrders();
+  }
+
+  function storeOrders() {
+    var body = $('#stRows');
+    body.innerHTML = '<tr><td colspan="7" class="loading">Reading\u2026</td></tr>';
+    var q = $('#stQ').value.trim();
+    api('/api/admin/records?type=store&limit=25' + (q ? '&q=' + encodeURIComponent(q) : '')).then(function (data) {
+      var rows = data.rows || [];
+      body.innerHTML = rows.length ? rows.map(function (r) {
+        /* A direct-pay order shows the seller's number underneath once the
+           seller's webhook has named it; a person answering the phone needs
+           both. `attention` is set only when someone has to act. */
+        var sub = r.source === 'direct' && r.orderNumber ? '<br><small style="color:var(--muted)">seller #' + esc(r.orderNumber) + '</small>' : '';
+        var flag = r.attention
+          ? '<span class="flag" style="border-color:#B42318;color:#B42318">' + esc(r.status) + '</span><br><small style="color:#B42318">' + esc(r.attention) + '</small>'
+          : '<span class="flag">' + esc(r.status) + '</span>';
+        var track = r.trackingUrl ? '<a href="' + esc(r.trackingUrl) + '" target="_blank" rel="noopener">' + esc(r.tracking) + '</a>' : esc(r.tracking || '\u2014');
+        return '<tr><td class="ref">' + esc(r.pfaOrderId || r.orderNumber || '\u2014') + sub + '</td>'
+          + '<td>' + esc(r.name || '\u2014') + (r.email ? '<br><small style="color:var(--muted)">' + esc(r.email) + '</small>' : '') + '</td>'
+          + '<td>' + esc(r.items || '\u2014') + '</td>'
+          + '<td class="num">' + esc(money(r.total, r.currency)) + '</td>'
+          + '<td>' + flag + '</td>'
+          + '<td>' + track + '</td>'
+          + '<td>' + esc(when(r.createdAt)) + '</td></tr>';
+      }).join('') : '<tr><td colspan="7"><div class="empty"><b>No orders</b>' + esc(data.message || 'Orders paid on the site and orders mirrored from the seller both appear here.') + '</div></td></tr>';
+    }).catch(function (e) {
+      body.innerHTML = '<tr><td colspan="7"><div class="empty"><b>Nothing to show</b>' + esc(e.message) + '</div></td></tr>';
+    });
+  }
+
+  /* ---- people ------------------------------------------------------------- */
+
+  function people() {
+    var node = $('[data-pane="people"]');
+    node.innerHTML = '<div class="loading">Reading the accounts\u2026</div>';
+    api('/api/admin/people').then(function (data) {
+      var mods = data.modules || [];
+      /* The API names every section; the panel should not keep a second list. */
+      var label = {};
+      mods.forEach(function (m) { label[m.key] = m.label; });
+      var named = function (keys) {
+        return (keys || []).map(function (k) { return label[k] || k; }).join(', ');
+      };
+      var out = [];
+      if (!data.mailConfigured) {
+        out.push('<div class="warn">Email is not configured, so an invitation shows its link here instead of being sent.</div>');
+      }
+      out.push('<div class="panel"><h3>Give someone the panel</h3>'
+        + '<p class="hint">A super administrator sees everything, including this page. Staff see only what is ticked.</p>'
+        + '<div class="tools"><input id="pplEmail" type="email" placeholder="name@peopleforanimalsindia.org" aria-label="Email">'
+        + '<input id="pplName" type="text" placeholder="Their name" aria-label="Name">'
+        + '<select id="pplRole" aria-label="Role"><option value="staff">Staff</option><option value="super">Super administrator</option></select></div>'
+        + (data.presets && data.presets.length
+          ? '<p class="lab">Start from a job</p><div class="mods">' + data.presets.map(function (preset) {
+            return '<label><button class="ghost" type="button" data-preset="' + esc(preset.modules.join(',')) + '">'
+              + esc(preset.label) + '</button></label>';
+          }).join('') + '</div>'
+          : '')
+        + '<p class="lab">Sections</p><div class="mods" id="pplMods">' + mods.map(function (m) {
+          return '<label title="' + esc(m.blurb || '') + '"><input type="checkbox" value="' + esc(m.key) + '"> ' + esc(m.label) + '</label>';
+        }).join('') + '</div>'
+        + '<button class="ghost" type="button" data-ppl="set">Give access</button>'
+        + '<p class="say" id="pplSay" role="status" aria-live="polite"></p></div>');
+
+      out.push('<div class="wrap"><table><thead><tr><th>Person</th><th>Role</th><th>Sections</th><th>Last signed in</th><th></th></tr></thead><tbody>'
+        + (data.people || []).map(function (p) {
+          return '<tr><td>' + esc(p.name || '\u2014') + '<br><span class="note">' + esc(p.email) + '</span></td>'
+            + '<td>' + esc(p.role === 'super' ? 'Super' : 'Staff')
+            + (p.legacy ? ' <span class="flag">from before roles</span>' : '') + '</td>'
+            + '<td>' + esc(p.role === 'super' ? 'Everything, and People' : named(p.modules) || '\u2014') + '</td>'
+            + '<td>' + esc(when(p.lastSignInAt)) + '</td>'
+            + '<td>' + (p.you ? '<span class="note">you</span>'
+              : '<button class="ghost" type="button" data-ppl="reset" data-email="' + esc(p.email) + '">Password link</button> '
+                + '<button class="ghost" type="button" data-ppl="remove" data-email="' + esc(p.email) + '">Remove</button>') + '</td></tr>';
+        }).join('') + '</tbody></table></div>');
+      node.innerHTML = out.join('');
+    }).catch(function (e) { fail(node, e); });
+  }
+
+  /* ---- audit log ----------------------------------------------------------
+     Every administrative action, append-only, newest first. Super admins only,
+     because it names people and what they did. */
+
+  var auCursor = null;
+  function auditLog(reset) {
+    var body = $('#auRows');
+    if (reset) { auCursor = null; body.innerHTML = '<tr><td colspan="5" class="loading">Reading\u2026</td></tr>'; }
+    var actor = $('#auQ').value.trim().toLowerCase();
+    var url = '/api/admin/records?type=audit&limit=50'
+      + (actor ? '&actor=' + encodeURIComponent(actor) : '')
+      + (auCursor ? '&cursor=' + encodeURIComponent(auCursor) : '');
+    api(url).then(function (data) {
+      var rows = data.rows || [];
+      if (reset) body.innerHTML = '';
+      if (!rows.length && reset) {
+        body.innerHTML = '<tr><td colspan="5"><div class="empty"><b>Nothing recorded yet</b>'
+          + 'Replies, status moves, card batches, Store changes and access changes are written here as they happen.</div></td></tr>';
+      }
+      body.insertAdjacentHTML('beforeend', rows.map(function (r) {
+        var actorName = (r.actor && (r.actor.name || r.actor.email)) || 'unknown';
+        return '<tr><td>' + esc(when(r.at)) + '</td>'
+          + '<td>' + esc(actorName) + '</td>'
+          + '<td><span class="flag"' + (r.outcome === 'refused' ? ' data-s="spam"' : '') + '>' + esc(r.action) + '</span></td>'
+          + '<td class="ref">' + esc(r.subject || '\u2014') + '</td>'
+          + '<td>' + esc(r.detail || '') + '</td></tr>';
+      }).join(''));
+      auCursor = data.cursor || null;
+      $('#auMore').hidden = !auCursor;
+    }).catch(function (e) {
+      body.innerHTML = '<tr><td colspan="5"><div class="empty"><b>Nothing to show</b>' + esc(e.message) + '</div></td></tr>';
+    });
+  }
+
+  /* ---- verify ------------------------------------------------------------- */
+
+  function verify() {
+    var q = $('#vfQ').value.trim().toUpperCase();
+    var out = $('#vfOut');
+    if (!q) { out.innerHTML = ''; return; }
+    out.innerHTML = '<div class="loading">Checking\u2026</div>';
+    /* The check answers one question - is this card real, and is it still
+       valid today - and returns no more than the public check does. */
+    fetch('/api/verify-card?id=' + encodeURIComponent(q)).then(function (r) {
+      return r.json().catch(function () { return {}; });
+    }).then(function (data) {
+      if (!data.found) {
+        out.innerHTML = '<div class="empty"><b>' + esc(q) + '</b>'
+          + esc(data.message || 'No live card carries that number.') + '</div>';
+        return;
+      }
+      var answer = data.status === 'valid' ? 'Valid today'
+        : data.status === 'expired' ? 'On record, but expired'
+          : 'On record, with no validity date';
+      out.innerHTML = '<dl class="kv">'
+        + '<dt>Card</dt><dd>' + esc(data.cardId || q) + '</dd>'
+        + '<dt>Answer</dt><dd><span class="flag" data-s="' + (data.valid ? 'handled' : 'spam') + '">'
+        + esc(answer) + '</span></dd>'
+        + (data.name ? '<dt>Held by</dt><dd>' + esc(data.name) + '</dd>' : '')
+        + (data.issuedOn ? '<dt>Issued</dt><dd>' + esc(when(data.issuedOn)) + '</dd>' : '')
+        + (data.validUntil ? '<dt>Valid to</dt><dd>' + esc(when(data.validUntil)) + '</dd>' : '')
+        + '</dl>';
+    }).catch(function () {
+      out.innerHTML = '<div class="empty"><b>No answer</b>The check could not be reached.</div>';
+    });
+  }
+
+  /* ---- one case, opened from its row -------------------------------------- */
+
+  var openCase = null;
+  var caseMode = 'reply';
+  var staffLoaded = false;
+
+  function shutCase() {
+    $('#caseDrawer').removeAttribute('data-open');
+    $('#caseDrawer').setAttribute('aria-hidden', 'true');
+    $('#veil').removeAttribute('data-open');
+    $('#caseAct').hidden = true;
+    openCase = null;
+  }
+
+  function loadStaff() {
+    if (staffLoaded) return Promise.resolve();
+    staffLoaded = true;
+    return api('/api/admin/staff').then(function (data) {
+      var select = $('#caseAssign');
+      (data.staff || []).forEach(function (person) {
+        var option = document.createElement('option');
+        option.value = person.email;
+        option.textContent = person.name ? person.name + ' (' + person.email + ')' : person.email;
+        select.appendChild(option);
+      });
+    }).catch(function () { staffLoaded = false; });
+  }
+
+  /* Draws both faces of the card an application would produce, in the
+     drawer, from the application's own fields. The photograph is the
+     applicant's first attachment, once shots() has it. */
+  var previewPhoto = { reference: '', data: '' };
+  function previewCard(c) {
+    var C = window.PFACaregiverCard;
+    if (!C || !$('#cardPreview')) return;
+    var f = c.fields || {};
+    var address = [f.address, f.city].filter(Boolean).join(', ');
+    var data = {
+      cardId: c.cardId || 'PFA-CCT-PREVIEW',
+      name: f.name || '', address: address, mobile: f.mobile || '', email: f.email || '',
+      issuedOn: c.cardId ? (c.handledAt || c.createdAt || '') : new Date().toISOString(),
+      photo: previewPhoto.reference === c.reference ? previewPhoto.data : ''
+    };
+    C.loadAssets().then(function (assets) {
+      return C.hydrate(data).then(function (full) {
+        ['front', 'back'].forEach(function (side) {
+          var canvas = $('#cardPreview canvas[data-side="' + side + '"]');
+          if (canvas) C.draw(canvas, side, full, assets, 260, window.devicePixelRatio || 2);
+        });
+      });
+    }).catch(function (e) { var n = $('#previewNote'); if (n) n.textContent = 'The card could not be drawn: ' + e.message; });
+  }
+
+  function shots(reference, count) {
+    if (!count) return;
+    var box = $('#caseShots');
+    if (!box) return;
+    var pending = count;
+    function settle() { pending -= 1; if (pending <= 0 && !box.children.length) box.innerHTML = '<p class="say" data-tone="bad">The photographs did not come through. Try Refresh.</p>'; }
+    for (var n = 1; n <= count; n += 1) {
+      /* /api/admin/attachment answers { data: <base64>, contentType }. */
+      api('/api/admin/attachment?reference=' + encodeURIComponent(reference) + '&n=' + n).then(function (data) {
+        var b64 = data && (data.data || data.bytes);
+        /* The drawer may have moved on to another case while this was in flight. */
+        if (!b64 || !openCase || openCase.reference !== reference || !box.isConnected) return;
+        if (Number(data.n) === 1 && openCase && openCase.kind === 'PFA-CG') {
+          previewPhoto = { reference: reference, data: 'data:' + (data.contentType || 'image/jpeg') + ';base64,' + b64 };
+          previewCard(openCase);
+        }
+        var fig = document.createElement('figure');
+        var img = document.createElement('img');
+        img.src = 'data:' + (data.contentType || 'image/jpeg') + ';base64,' + b64;
+        img.alt = data.label || 'Photograph sent with this report';
+        var open = document.createElement('a');
+        open.href = img.src; open.target = '_blank'; open.rel = 'noopener'; open.title = 'Open full size';
+        open.appendChild(img);
+        fig.appendChild(open);
+        if (data.label) { var cap = document.createElement('figcaption'); cap.textContent = data.label; fig.appendChild(cap); }
+        /* Keep the order the applicant sent them in, whichever answers first. */
+        fig.dataset.n = data.n;
+        var after = null;
+        Array.prototype.forEach.call(box.children, function (c) { if (Number(c.dataset.n) < Number(data.n)) after = c; });
+        box.insertBefore(fig, after ? after.nextSibling : box.firstChild);
+      }).catch(function () { /* one missing photo is not a broken case */ }).then(settle);
+    }
+  }
+
+  function drawCase(c, mailConfigured) {
+    openCase = c;
+    $('#caseTitle').textContent = c.reference;
+    $('#caseKind').textContent = c.kindLabel + ' \u00b7 ' + c.statusLabel + (c.page ? ' \u00b7 sent from ' + c.page : '');
+
+    var out = [];
+    out.push('<dl class="kv">');
+    if (c.contact.name) out.push('<dt>From</dt><dd>' + esc(c.contact.name) + '</dd>');
+    if (c.contact.email) out.push('<dt>Email</dt><dd>' + esc(c.contact.email) + '</dd>');
+    if (c.contact.mobile) out.push('<dt>Mobile</dt><dd>' + esc(c.contact.mobile) + '</dd>');
+    out.push('<dt>Arrived</dt><dd>' + esc(when(c.createdAt)) + '</dd>');
+    out.push('<dt>With</dt><dd>' + esc((c.assignedTo && c.assignedTo.email) || 'Nobody yet') + '</dd>');
+    out.push('</dl>');
+
+    if (c.kind === 'PFA-CG') {
+      out.push('<p class="lab">' + (c.cardId ? 'The card, as issued: ' + esc(c.cardId) : 'The card, as it would be issued') + '</p>'
+        + '<div class="preview" id="cardPreview"><figure><canvas data-side="front"></canvas><figcaption>Front</figcaption></figure>'
+        + '<figure><canvas data-side="back"></canvas><figcaption>Back</figcaption></figure>'
+        + '<p class="note" id="previewNote">Drawn from the application by the same renderer the holder\u2019s card uses. ' + (c.cardId ? '' : 'The number and dates are set when you approve.') + '</p></div>');
+    }
+    if (c.attachments) out.push('<p class="lab">' + (c.kind === 'PFA-CG' ? 'Photograph and address proof' : 'Photographs') + '</p><div class="shots" id="caseShots"></div>');
+
+    out.push('<p class="lab">What was sent</p><dl class="kv">');
+    Object.keys(c.fields || {}).forEach(function (name) {
+      var value = c.fields[name];
+      if (value == null || value === '') return;
+      var text = Array.isArray(value) ? value.join(', ') : String(value);
+      /* A link someone sent - a wall video, a portfolio - opens as a link.
+         Only http(s): the server refuses any other scheme, and this is the
+         second check. */
+      var shown = /^https?:\/\/[^\s<>"']+$/i.test(text)
+        ? '<a href="' + esc(text) + '" target="_blank" rel="noopener noreferrer">' + esc(text) + '</a>'
+        : esc(text);
+      out.push('<dt>' + esc(name) + '</dt><dd>' + shown + '</dd>');
+    });
+    out.push('</dl>');
+
+    out.push('<div class="thread"><p class="lab">History</p>');
+    (c.messages || []).forEach(function (m) {
+      out.push('<div class="msg" data-k="' + esc(m.kind || 'note') + '">'
+        + '<p class="who">' + esc(m.kind === 'reply' ? 'Replied' : m.kind === 'note' ? 'Note' : 'Change')
+        + ' by ' + esc(m.by || 'someone') + ' \u00b7 ' + esc(when(m.at)) + '</p>'
+        + '<p>' + esc(m.text || m.summary || '') + '</p></div>');
+    });
+    (c.history || []).forEach(function (h) {
+      if (h.event === 'reply') return;
+      out.push('<div class="msg"><p class="who">Moved to ' + esc(h.status) + ' \u00b7 ' + esc(when(h.at)) + '</p></div>');
+    });
+    out.push('</div>');
+
+    $('#caseBody').innerHTML = out.join('');
+    shots(c.reference, c.attachments);
+    if (c.kind === 'PFA-CG') previewCard(c);
+
+    $('#caseAct').hidden = false;
+    var decide = $('#caseDecide');
+    decide.hidden = !(c.kind === 'PFA-CG' && !c.cardId && c.status !== 'spam');
+    $('#caseFixBox').hidden = true;
+    $$('#caseFixBox input').forEach(function (i) { i.checked = false; });
+    $('#caseAssign').value = (c.assignedTo && c.assignedTo.email) || '';
+    $('#caseStatus').value = '';
+    $('#caseText').value = '';
+    say($('#caseSay'), mailConfigured === false && caseMode === 'reply' ? 'Email is not configured, so a reply cannot be sent yet.' : '');
+  }
+
+  function showCase(reference) {
+    $('#caseDrawer').setAttribute('data-open', '1');
+    $('#caseDrawer').setAttribute('aria-hidden', 'false');
+    $('#veil').setAttribute('data-open', '1');
+    $('#caseBody').innerHTML = '<div class="loading">Opening ' + esc(reference) + '\u2026</div>';
+    $('#caseAct').hidden = true;
+    loadStaff();
+    api('/api/admin/case?reference=' + encodeURIComponent(reference)).then(function (data) {
+      drawCase(data.case, data.mailConfigured);
+    }).catch(function (e) {
+      $('#caseBody').innerHTML = '<div class="empty"><b>Not opened</b>' + esc(e.message) + '</div>';
+    });
+  }
+
+  function act(body, done) {
+    say($('#caseSay'), 'Saving\u2026');
+    api('/api/admin/case', { method: 'POST', body: body }).then(function (data) {
+      if (data.case) drawCase(data.case, data.mailConfigured);
+      say($('#caseSay'), done, 'good');
+      fill(current, true);
+      if (can('overview')) overview();
+    }).catch(function (e) { say($('#caseSay'), e.message, 'bad'); });
+  }
+
+  function sendCase() {
+    if (!openCase) return;
+    var text = $('#caseText').value.trim();
+    if (!text) { say($('#caseSay'), caseMode === 'reply' ? 'Write the reply first.' : 'Write the note first.', 'bad'); return; }
+    if (caseMode === 'reply') {
+      act({ reference: openCase.reference, action: 'reply', text: text }, 'Reply sent.');
+    } else {
+      act({ reference: openCase.reference, action: 'note', text: text }, 'Note recorded.');
+    }
+  }
+
+  /* ---- wiring -------------------------------------------------------------- */
+
+  function on(selector, event, handler) {
+    var node = $(selector);
+    if (node) node.addEventListener(event, handler);
+  }
+
+  document.addEventListener('click', function (event) {
+    var opener = event.target.closest('[data-open-case]');
+    if (opener) { showCase(opener.getAttribute('data-open-case')); return; }
+
+    var choice = event.target.closest('[data-state]');
+    if (choice) {
+      say($('#storeSay'), 'Saving\u2026');
+      api('/api/admin/store', { method: 'POST', body: { state: choice.getAttribute('data-state') } })
+        .then(function () { store(); say($('#storeSay'), 'The Store was changed.', 'good'); })
+        .catch(function (e) { say($('#storeSay'), e.message, 'bad'); });
+      return;
+    }
+
+    var preset = event.target.closest('[data-preset]');
+    if (preset) {
+      var wanted = preset.getAttribute('data-preset').split(',');
+      $$('#pplMods input').forEach(function (box) { box.checked = wanted.indexOf(box.value) !== -1; });
+      return;
+    }
+
+    var ppl = event.target.closest('[data-ppl]');
+    if (ppl) {
+      var what = ppl.getAttribute('data-ppl');
+      if (what === 'remove') {
+        if (!window.confirm('Take the panel away from ' + ppl.getAttribute('data-email') + '?')) return;
+        api('/api/admin/people', { method: 'POST', body: { action: 'remove', email: ppl.getAttribute('data-email') } })
+          .then(people).catch(function (e) { say($('#pplSay'), e.message, 'bad'); });
+        return;
+      }
+      if (what === 'reset') {
+        say($('#pplSay'), 'Sending\u2026');
+        api('/api/admin/people', { method: 'POST', body: { action: 'reset', email: ppl.getAttribute('data-email') } })
+          .then(function (data) { say($('#pplSay'), data.note || 'Password link sent.', 'good'); })
+          .catch(function (e) { say($('#pplSay'), e.message, 'bad'); });
+        return;
+      }
+      var picked = $$('#pplMods input:checked').map(function (i) { return i.value; });
+      say($('#pplSay'), 'Saving\u2026');
+      api('/api/admin/people', { method: 'POST', body: {
+        action: 'set', email: $('#pplEmail').value.trim(), name: $('#pplName').value.trim(),
+        role: $('#pplRole').value, modules: picked
+      } }).then(function (data) {
+        say($('#pplSay'), data.link ? 'Access given. Send them this link: ' + data.link : 'Access given, and they have been emailed.', 'good');
+        people();
+      }).catch(function (e) { say($('#pplSay'), e.message, 'bad'); });
+    }
+  });
+
+  $$('.tab').forEach(function (button) {
+    button.addEventListener('click', function () { show(button.getAttribute('data-tab')); });
+  });
+
+  $$('#caseAct .tabs button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      caseMode = button.getAttribute('data-mode');
+      $$('#caseAct .tabs button').forEach(function (b) { b.setAttribute('aria-pressed', String(b === button)); });
+      $('#caseSend').textContent = caseMode === 'reply' ? 'Send reply' : 'Record note';
+    });
+  });
+
+  on('#caseSend', 'click', sendCase);
+
+  /* ---- deciding an application ---- */
+  on('#caseApprove', 'click', function () {
+    if (!openCase) return;
+    var f = openCase.fields || {};
+    if (!window.confirm('Issue a Colony Caregiver Card to ' + (f.name || 'this applicant') + ' for ' + (f.address || 'the colony given') + '? The card is drawn exactly as previewed, and they are emailed.')) return;
+    say($('#caseSay'), 'Issuing the card\u2026');
+    api('/api/admin/case', { method: 'POST', body: { reference: openCase.reference, action: 'approve' } }).then(function (data) {
+      say($('#caseSay'), 'Card ' + data.cardId + ' issued' + (data.emailed ? ' and the holder emailed.' : '. No email on the application, so nothing was sent.'), 'good');
+      showCase(openCase.reference);
+      fill(current, true);
+    }).catch(function (e) { say($('#caseSay'), e.message, 'bad'); });
+  });
+  on('#caseFix', 'click', function () {
+    var box = $('#caseFixBox');
+    box.hidden = !box.hidden;
+    if (!box.hidden) composeFix();
+  });
+  function composeFix() {
+    if (!openCase) return;
+    var f = openCase.fields || {};
+    var picked = $$('#caseFixBox input').filter(function (i) { return i.checked; }).map(function (i) { return i.value; });
+    var lines = ['Thank you for applying for a Colony Caregiver Card (' + openCase.reference + '). Before it can be issued, one or two things need correcting:', ''];
+    picked.forEach(function (p, i) { lines.push((i + 1) + '. ' + p); });
+    if (!picked.length) lines.push('1. ');
+    lines.push('', 'Reply to this email with the corrected picture or detail and quote your reference. The fee you paid is kept against this application; nothing needs paying again.');
+    $$('#caseAct .tabs button').forEach(function (b) { if (b.getAttribute('data-mode') === 'reply') b.click(); });
+    $('#caseText').value = lines.join('\n');
+  }
+  on('#caseFixBox', 'change', composeFix);
+  on('#caseShut', 'click', shutCase);
+  on('#veil', 'click', shutCase);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') shutCase(); });
+
+  on('#caseAssign', 'change', function () {
+    if (!openCase) return;
+    act({ reference: openCase.reference, action: 'assign', to: $('#caseAssign').value }, 'Assigned.');
+  });
+  on('#caseStatus', 'change', function () {
+    if (!openCase || !$('#caseStatus').value) return;
+    act({ reference: openCase.reference, action: 'status', status: $('#caseStatus').value }, 'Moved.');
+  });
+
+  on('#refresh', 'click', function () { panesOf(current).filter(paneAllowed).forEach(function (pane) { fill(pane, true); }); });
+  on('#subGo', 'click', function () { submissions(true); });
+  on('#subClear', 'click', function () { $('#subQ').value = ''; $('#subKind').value = ''; $('#subStatus').value = ''; submissions(true); });
+  on('#subMore', 'click', function () { submissions(false); });
+  on('#subQ', 'keydown', function (e) { if (e.key === 'Enter') submissions(true); });
+  on('#subKind', 'change', function () { submissions(true); });
+  on('#subStatus', 'change', function () { submissions(true); });
+  on('#volMore', 'click', function () { volunteers(false); });
+  on('#donMore', 'click', function () { donations(false); });
+  on('#payGo', 'click', function () { payments(true); });
+  on('#payMore', 'click', function () { payments(false); });
+  on('#payCsv', 'click', function () {
+    token().then(function (id) {
+      return fetch(paymentQuery() + '&format=csv', { headers: { Authorization: 'Bearer ' + id } });
+    }).then(function (r) { return r.blob(); }).then(function (blob) {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'pfa-payments.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  });
+  on('#cgGo', 'click', function () { caregivers(true); });
+  on('#cgClear', 'click', function () { $('#cgQ').value = ''; caregivers(true); });
+  on('#cgMore', 'click', function () { caregivers(false); });
+  on('#stGo', 'click', storeOrders);
+  on('#stClear', 'click', function () { $('#stQ').value = ''; storeOrders(); });
+  on('#auGo', 'click', function () { auditLog(true); });
+  on('#auClear', 'click', function () { $('#auQ').value = ''; auditLog(true); });
+  on('#auMore', 'click', function () { auditLog(false); });
+  on('#vfGo', 'click', verify);
+  on('#vfQ', 'keydown', function (e) { if (e.key === 'Enter') verify(); });
+
+  /* ---- getting in ---------------------------------------------------------- */
+
+  function begin(admin) {
+    me = admin;
+    $('#signin').hidden = true;
+    $('#app').hidden = false;
+    applyAccess();
+    show('overview');
+  }
+
+  function enter() {
+    /* Two different failures used to read the same. Google accepted the
+       password and the panel then asked its own API who this is; if that call
+       fails, the credential was fine and the server is the problem. Saying
+       "check the details" there sends someone to reset a working password. */
+    return api('/api/admin/records?type=session').then(function (data) {
+      begin(data.admin);
+    }, function (error) {
+      if (error && error.denied) throw error;
+      var unreachable = new Error('Your password was accepted, but the panel could not reach its own API. '
+        + 'The server is not answering /api/admin. Check the Firebase server keys on the deployment.');
+      unreachable.server = true;
+      throw unreachable;
+    });
+  }
+
+  function trouble(error) {
+    /* The server refuses an unknown account and an unverifiable one with the
+       same 401, on purpose, so the panel genuinely cannot tell them apart and
+       should not pretend to. */
+    if (error && error.denied) {
+      return 'Signed in, but the panel refused the account. Either it has not been given the panel yet, '
+        + 'or the server cannot verify it. Whoever set up the deployment can run: npm run check:admin';
+    }
+    if (error && error.server) return error.message;
+    return plainly(error);
+  }
+
+  var signingIn = false;
+
+  function attemptSignIn(event) {
+    if (event) event.preventDefault();
+    if (signingIn) return;
+    if (!window.pfaSignInReady) { say($('#signinSay'), 'Still starting up. Give it a moment and try again.', 'bad'); return; }
+    var email = $('#who').value.trim();
+    var password = $('#pass').value;
+    if (!email || !password) { say($('#signinSay'), 'Enter your email and password.', 'bad'); return; }
+    signingIn = true;
+    $('#signinGo').disabled = true;
+    say($('#signinSay'), 'Signing in\u2026');
+    signIn(email, password)
+      .then(enter)
+      .then(function () { say($('#signinSay'), ''); })
+      .catch(function (error) {
+        forget();
+        say($('#signinSay'), trouble(error), 'bad');
+      })
+      .then(function () { signingIn = false; $('#signinGo').disabled = false; });
+  }
+
+  /* Both, deliberately. The button is inside the form, so a click normally
+     arrives as a submit - but if anything ever swallows the submit event the
+     button still has to work, and a login page that does nothing on click is
+     the worst possible outcome. `signingIn` stops the two paths firing twice. */
+  on('#signinForm', 'submit', attemptSignIn);
+  on('#signinGo', 'click', attemptSignIn);
+
+  on('#forgot', 'click', function () {
+    var email = $('#who').value.trim();
+    if (!email) { say($('#signinSay'), 'Type your email first, then ask for the link.', 'bad'); return; }
+    post(IDENTITY + 'sendOobCode?key=' + KEY, { requestType: 'PASSWORD_RESET', email: email })
+      .then(function () { say($('#signinSay'), 'If that account exists, a link is on its way.', 'good'); })
+      .catch(function () { say($('#signinSay'), 'If that account exists, a link is on its way.', 'good'); });
+  });
+
+  on('#signout', 'click', function () {
+    forget();
+    window.location.reload();
+  });
+
+  /* A tab that was already signed in keeps its place across a reload. The
+     refresh token lives in sessionStorage, so closing the tab ends it. */
+  try { session.refreshToken = sessionStorage.getItem(KEEP) || ''; } catch (_) { session.refreshToken = ''; }
+  if (session.refreshToken) {
+    renew().then(enter).catch(function () { forget(); });
+  }
+
+  window.pfaSignInReady = true;
+
+  /* ---- issue cards ---------------------------------------------------------
+     The faces are drawn here by the same renderer the public download uses,
+     so a card printed from the panel is stroke for stroke the card its holder
+     sees. A card approved from an application prints with the photograph the
+     applicant sent; older cards can still have one matched from the office's
+     own folder, in this browser. */
+
+  var C = window.PFACaregiverCard;
+  var photos = new Map();
+  var sheet = [];
+
+  /* The register calls it issuedAt and keeps the PIN apart from the street;
+     the card reads issuedOn and takes the address as lines. Without this the
+     card prints a ghost date and a ghost address, which is exactly what
+     card-fields.js exists to make visible. */
+  function cardData(row) {
+    var held = photos.get(row.id) || photos.get('app:' + row.applicationRef);
+    return {
+      cardId: row.id,
+      name: row.name || '',
+      address: [row.address, row.pin].filter(Boolean).join('\n'),
+      mobile: row.mobile || '',
+      email: row.email || '',
+      issuedOn: row.issuedAt || '',
+      photo: held || ''
+    };
+  }
+
+  var cardFilter = 'unprinted';
+  function cardsPane(keepMessage) {
+    var node = $('[data-pane="cards"]');
+    var kept = keepMessage && $('#cardSay') ? { text: $('#cardSay').textContent, tone: $('#cardSay').getAttribute('data-tone') } : null;
+    if (!kept) node.innerHTML = '<div class="loading">Reading the register\u2026</div>';
+    api('/api/admin/cards?type=caregiver&filter=' + cardFilter).then(function (data) {
+      sheet = data.rows || [];
+      if (kept) { paint(); say($('#cardSay'), kept.text, kept.tone); return; }
+      node.innerHTML = '<div class="panel"><h3>Print or email a batch</h3>'
+        + '<p class="hint">Tick the cards you want. Cards approved from an application already carry the applicant\u2019s photograph; for older cards, match photographs from your own folder.</p>'
+        + '<div class="tools">'
+        + '<input type="file" id="cardPhotos" class="pick" accept="image/*" multiple>'
+        + '<button class="ghost" type="button" id="cardPick">Match photographs from a folder</button>'
+        + '<button class="ghost" type="button" id="cardAll">Tick all</button>'
+        + '<button class="ghost" type="button" id="cardPdf">Download PDF</button>'
+        + '<button class="ghost" type="button" id="cardMail">Email the holders</button>'
+        + '<button class="ghost" type="button" id="cardPrinted">Mark as printed</button>'
+        + '<span class="flag" style="margin-left:auto"><label><input type="checkbox" id="cardShowAll"' + (cardFilter === 'current' ? ' checked' : '') + '> Show printed cards too</label></span>'
+        + '</div><p class="say" id="cardSay" role="status" aria-live="polite"></p></div>'
+        + '<div class="sheet" id="cardSheet"></div>';
+      paint();
+      on('#cardShowAll', 'change', function () { cardFilter = $('#cardShowAll').checked ? 'current' : 'unprinted'; cardsPane(); });
+      on('#cardPick', 'click', function () { $('#cardPhotos').click(); });
+      on('#cardPhotos', 'change', match);
+      on('#cardAll', 'click', function () {
+        $$('#cardSheet input[type=checkbox]').forEach(function (b) { b.checked = true; });
+      });
+      on('#cardPdf', 'click', makePdf);
+      on('#cardMail', 'click', function () { mark('email', 'Emailed.'); });
+      on('#cardPrinted', 'click', function () { mark('printed', 'Marked as printed.'); });
+    }).catch(function (e) { fail(node, e); });
+  }
+
+  function paint() {
+    var box = $('#cardSheet');
+    if (!sheet.length) {
+      box.innerHTML = '<div class="empty"><b>' + (cardFilter === 'unprinted' ? 'Nothing left to print' : 'No cards to issue') + '</b>'
+        + (cardFilter === 'unprinted' ? 'Every current card is marked as printed. Tick "Show printed cards too" to see them.' : 'Cards appear here once an application is approved.') + '</div>';
+      return;
+    }
+    box.innerHTML = sheet.map(function (row) {
+      var done = row.printed || row.printedAt;
+      return '<figure' + (done ? ' data-printed="1"' : '') + '><label><input type="checkbox" value="' + esc(row.id) + '"> ' + esc(row.id) + '</label>'
+        + '<canvas data-face="' + esc(row.id) + '"></canvas>'
+        + '<figcaption>' + esc(row.name || '\u2014') + '<br>' + esc(row.email || row.mobile || '')
+        + (done ? '<br><span class="flag">Printed ' + esc(row.printedAt ? when(row.printedAt) : '') + '</span>' : '')
+        + (row.emailedAt ? '<br><span class="flag">Emailed ' + esc(when(row.emailedAt)) + '</span>' : '')
+        + '</figcaption></figure>';
+    }).join('');
+    /* hydrate() completes the fields through card-fields.js and loads the
+       photograph and the chairperson signature; draw() does neither, so a
+       preview built without it is missing both. */
+    C.loadAssets().then(function (assets) {
+      sheet.forEach(function (row) {
+        var canvas = box.querySelector('[data-face="' + row.id + '"]');
+        if (!canvas) return;
+        C.hydrate(cardData(row)).then(function (full) {
+          var side = 'front';
+          C.draw(canvas, side, full, assets, 160, window.devicePixelRatio || 2);
+        });
+      });
+    });
+    /* Cards approved from an application carry the applicant's photograph
+       on the record; fetch it once and redraw that face. */
+    sheet.forEach(function (row) {
+      if (!row.applicationRef || photos.has('app:' + row.applicationRef) || photos.has(row.id)) return;
+      photos.set('app:' + row.applicationRef, '');   /* one request per card */
+      api('/api/admin/attachment?reference=' + encodeURIComponent(row.applicationRef) + '&n=1').then(function (data) {
+        var b64 = data && (data.data || data.bytes);
+        if (!b64) return;
+        photos.set('app:' + row.applicationRef, 'data:' + (data.contentType || 'image/jpeg') + ';base64,' + b64);
+        var canvas = $('#cardSheet [data-face="' + row.id + '"]');
+        if (!canvas) return;
+        C.loadAssets().then(function (assets) {
+          return C.hydrate(cardData(row)).then(function (full) { C.draw(canvas, 'front', full, assets, 160, window.devicePixelRatio || 2); });
+        });
+      }).catch(function () { photos.delete('app:' + row.applicationRef); });
+    });
+  }
+
+  /* Filenames carry the card number: PFA-CCT-4K2M8QRT.jpg. Read locally. */
+  function match(event) {
+    var files = Array.prototype.slice.call(event.target.files || []);
+    var pending = files.length;
+    if (!pending) return;
+    files.forEach(function (file) {
+      var id = String(file.name).toUpperCase().replace(/\.[A-Z0-9]+$/, '').trim();
+      var reader = new FileReader();
+      reader.onload = function () {
+        photos.set(id, reader.result);
+        pending -= 1;
+        if (pending <= 0) { paint(); say($('#cardSay'), files.length + ' photographs matched on this machine.', 'good'); }
+      };
+      reader.onerror = function () { pending -= 1; };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function ticked() {
+    return $$('#cardSheet input[type=checkbox]:checked').map(function (b) { return b.value; });
+  }
+
+  function makePdf() {
+    var ids = ticked();
+    if (!ids.length) { say($('#cardSay'), 'Tick at least one card first.', 'bad'); return; }
+    say($('#cardSay'), 'Drawing ' + ids.length + ' cards\u2026');
+    var chosen = sheet.filter(function (row) { return ids.indexOf(row.id) !== -1; });
+    C.loadAssets().then(function () {
+      return Promise.all(chosen.map(function (row) { return C.hydrate(cardData(row)); }));
+    }).then(function (all) {
+      var pages = [];
+      all.forEach(function (data) {
+        ['front', 'back'].forEach(function (side) {
+          var canvas = C.offscreen(side, data, C.PRINT_DPI);
+          pages.push({ width: canvas.width, height: canvas.height, bytes: C.jpegBytes(canvas, 0.95) });
+        });
+      });
+      C.saveBlob(C._buildPdf(pages), 'pfa-colony-cards.pdf');
+      say($('#cardSay'), ids.length + ' cards written to a PDF.', 'good');
+    }).catch(function (e) { say($('#cardSay'), e.message, 'bad'); });
+  }
+
+  function mark(what, done) {
+    var ids = ticked();
+    if (!ids.length) { say($('#cardSay'), 'Tick at least one card first.', 'bad'); return; }
+    say($('#cardSay'), 'Saving\u2026');
+    var body = what === 'email'
+      ? { action: 'email', type: 'caregiver', ids: ids }
+      : { action: 'printed', type: 'caregiver', ids: ids };
+    api('/api/admin/cards', { method: 'POST', body: body })
+      .then(function (data) {
+        var results = (data && data.results) || [];
+        var failed = results.filter(function (r) { return r && r.ok === false; });
+        var okCount = results.length - failed.length;
+        var text = okCount + (okCount === 1 ? ' card ' : ' cards ') + (what === 'email' ? 'emailed.' : 'marked as printed.');
+        if (failed.length) text += ' ' + failed.length + ' not done: ' + failed.map(function (r) { return r.id + ' (' + (r.reason || 'refused') + ')'; }).join('; ');
+        say($('#cardSay'), text, failed.length ? 'bad' : 'good');
+        cardsPane(true);
+      })
+      .catch(function (e) { say($('#cardSay'), e.message, 'bad'); });
+  }
+}());
+</script>
+</body>
+</html>

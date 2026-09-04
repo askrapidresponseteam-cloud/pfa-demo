@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Donate | People for Animals</title>
+<meta name="description" content="Give once or monthly. Every rupee funds rescue, treatment and lifelong care.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+
+/* ---------- filter bar, same component as the shop ---------- */
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:220px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);margin-left:auto;padding-left:12px;white-space:nowrap}
+
+/* ---------- legs ---------- */
+.legs{padding:0 var(--gutter) var(--band)}
+.leg{margin-top:var(--band)}
+.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel > *{position:relative;z-index:1}
+.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+
+/* ---------- date rows ---------- */
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:150px minmax(0,1.5fr) minmax(0,.9fr) 104px auto;gap:20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.row.hidden{display:none}
+.row .d{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.row .v{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.row .c{font-size:13px;color:var(--muted);line-height:1.35}
+.row .b{display:flex}
+.row .b em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);padding:5px 9px;white-space:nowrap}
+.row .b em.soft{border-color:var(--line);color:var(--muted)}
+.row .a{display:flex;gap:20px;justify-content:flex-end}
+.row .a a{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:2px;white-space:nowrap}
+.row .a span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.leg.hidden{display:none}
+.empty{padding:64px 0;text-align:center;font-size:13px;color:var(--muted)}
+
+/* ---------- closing band ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band--bone{background:var(--bone)}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,48px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+.toast{position:fixed;left:16px;bottom:20px;z-index:75;background:var(--ink);color:#fff;font-size:12px;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .row{grid-template-columns:132px minmax(0,1.4fr) minmax(0,.9fr) auto;gap:16px}
+  .row .b{grid-column:2 / 4;margin-top:-6px}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .legs{padding-left:16px;padding-right:16px}
+  .row{grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0}
+  .row .d{grid-column:1;grid-row:1}
+  .row .b{grid-column:2;grid-row:1;justify-content:flex-end;margin-top:0}
+  .row .v{grid-column:1 / -1;grid-row:2;margin-top:4px}
+  .row .c{grid-column:1 / -1;grid-row:3}
+  .row .a{grid-column:1 / -1;grid-row:4;justify-content:flex-start;gap:24px;margin-top:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+/* ---------- donate ---------- */
+.give{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:calc(100svh - var(--ann) - var(--nav));padding-top:calc(var(--ann) + var(--nav))}
+.give__side{position:relative;background:var(--deep);color:#fff;padding:clamp(40px,5vw,80px) var(--gutter-lg);display:flex;flex-direction:column;justify-content:space-between;isolation:isolate;overflow:hidden}
+.give__side::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%)}
+.give__side > *{position:relative;z-index:1}
+.give__side .eyebrow{color:rgba(255,255,255,.55)}
+.give__side h1{font-size:clamp(34px,4.6vw,76px);margin-top:16px;max-width:12ch}
+.give__side p.lede{margin:24px 0 0;max-width:40ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.75)}
+.impact{margin-top:40px;padding-top:24px;border-top:1px solid var(--line-dark)}
+.impact .eyebrow{margin-bottom:12px}
+.impact p:not(.eyebrow){margin:0;font-family:var(--display);font-size:clamp(22px,2.4vw,36px);line-height:1.15;text-transform:uppercase;letter-spacing:.01em;min-height:2.3em}
+.give__form{padding:clamp(40px,5vw,80px) var(--gutter-lg);display:flex;flex-direction:column;justify-content:center}
+.card{max-width:520px;width:100%;margin:0 auto}
+.stepbar{display:flex;gap:24px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:36px}
+.stepbar span.on{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:3px}
+.stepbar span.done{color:var(--ink)}
+.pane{display:none}.pane.on{display:block}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--ink)}
+.seg button{background:none;border:none;padding:14px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.amts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.amts button{border:1px solid var(--line);background:#fff;padding:18px 8px;font-size:15px;font-weight:700;letter-spacing:.02em;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.amts button small{display:block;margin-top:6px;font-size:11px;font-weight:400;color:var(--muted);letter-spacing:.02em}
+.amts button:hover{border-color:var(--ink)}
+.amts button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.amts button[aria-pressed="true"] small{color:rgba(255,255,255,.7)}
+/* other amount is a fourth choice in the same group, not a second live field.
+   Closed it is a chip; open it becomes the field, and the chips let go. */
+.other{margin-top:10px}
+.other__btn{display:block;width:100%;border:1px solid var(--line);background:#fff;padding:18px 8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.other__btn:hover{border-color:var(--ink)}
+.other__in{display:none;align-items:center;gap:10px;border:1px solid var(--ink);box-shadow:inset 0 0 0 1px var(--ink);padding:0 14px;height:64px}
+.other.is-open .other__btn{display:none}
+.other.is-open .other__in{display:flex}
+.other__in b{flex:none;font-size:20px;font-weight:700}
+.other__in input{border:none;outline:none;font-size:20px;font-weight:700;letter-spacing:.02em;width:100%;min-width:0;background:none;padding:0;-moz-appearance:textfield}
+.other__in input::-webkit-outer-spin-button,.other__in input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.other__back{flex:none;background:none;border:none;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:0 0 2px;cursor:pointer;transition:color .15s,border-color .15s}
+.other__back:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.amt-err{margin:12px 0 0;font-size:12px;line-height:1.5;color:#b3261e}
+.amt-err[hidden]{display:none}
+.btn--full{display:block;width:100%;margin-top:26px}
+.fine{margin:16px 0 0;font-size:12px;line-height:1.55;color:var(--muted)}
+.field{display:grid;gap:8px}
+.field label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.field input{width:100%;border:1px solid var(--line);background:#fff;padding:14px;font-size:14px;outline:none;border-radius:0;-webkit-appearance:none}
+.field input:focus{border-color:var(--ink)}
+.field .error{display:none;font-size:12px;color:#b3261e}
+.field.is-bad input{border-color:#b3261e}.field.is-bad .error{display:block}
+.form{display:grid;gap:18px}
+.sum{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:22px;font-size:14px}
+.sum b{font-size:20px}
+.sum button{background:none;border:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding:0 0 2px;cursor:pointer}
+.done h2{font-size:clamp(28px,3.4vw,48px)}
+.done p{margin:20px 0 0;font-size:14px;line-height:1.65;color:var(--muted);max-width:44ch}
+.done .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn--ghost{background:transparent;color:var(--ink)}
+/* ---------- flow chooser: money or food ---------- */
+.flows{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.flows button{display:block;text-align:left;border:1px solid var(--line);background:#fff;padding:18px 16px;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.flows button:hover{border-color:var(--ink)}
+.flows button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.flows__tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line);padding:4px 8px}
+.flows button[aria-pressed="true"] .flows__tag{border-color:rgba(255,255,255,.5)}
+.flows__t{display:block;margin-top:14px;font-family:var(--display);font-size:20px;line-height:1.1;text-transform:uppercase;letter-spacing:.01em}
+.flows__d{display:block;margin-top:8px;font-size:12px;line-height:1.5;color:var(--muted)}
+.flows button[aria-pressed="true"] .flows__d{color:rgba(255,255,255,.72)}
+.flownote{display:flex;gap:10px;margin:12px 0 0;padding:12px 14px;background:var(--stone);font-size:12px;line-height:1.55;color:var(--muted)}
+.flownote b{flex:none;color:var(--ink);font-weight:700}
+.stepbar[hidden],.pane[hidden],[hidden]{display:none!important}
+.stepbar{margin-top:30px}
+
+/* ---------- food order: place ---------- */
+.field2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field select{width:100%;border:1px solid var(--line);background:#fff;padding:14px;font-size:14px;outline:none;border-radius:0;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+.field select:focus{border-color:var(--ink)}
+.field .hint{font-size:12px;line-height:1.5;color:var(--muted)}
+.field.is-bad select{border-color:#b3261e}
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--muted);cursor:pointer}
+.agree input{margin-top:3px;flex:0 0 auto;accent-color:var(--ink)}
+#gAgreeErr{display:none;font-size:12px;color:#b3261e;margin-top:-6px}
+#gAgreeErr.on{display:block}
+#giveCur{margin-bottom:22px}
+/* Dollars on: everything that is not the currency seg or the dollar pane is
+   the rupee flow, and it steps aside as one thing. */
+#p1.usd > :not(#giveCur):not(#usdPane){display:none}
+.amts--usd{grid-template-columns:repeat(4,1fr)}
+@media (max-width:520px){.amts--usd{grid-template-columns:repeat(2,1fr)}}
+.callout{display:grid;gap:6px;border-left:2px solid var(--ink);background:var(--stone);padding:14px 16px;margin-top:22px}
+.callout b{font-size:12px;font-weight:700;letter-spacing:.04em}
+.callout p{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+
+/* ---------- food order: items ---------- */
+.items{display:grid;gap:10px}
+.item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px 16px;border:1px solid var(--line);padding:16px;transition:border-color .15s}
+.item.has{border-color:var(--ink)}
+.item__n{font-size:15px;font-weight:700;letter-spacing:.02em}
+.item__m{display:block;margin-top:5px;font-size:11px;line-height:1.5;color:var(--muted)}
+.qty{display:flex;align-items:center;border:1px solid var(--line)}
+.qty button{width:38px;height:38px;background:none;border:none;font-size:17px;line-height:1;cursor:pointer;transition:background .15s,color .15s}
+.qty button:hover:not(:disabled){background:var(--ink);color:#fff}
+.qty button:disabled{color:var(--line);cursor:default}
+.qty span{min-width:34px;text-align:center;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.item__s{grid-column:1 / -1;display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.item__s b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ---------- food order: live summary in the dark panel ---------- */
+.order{margin-top:40px;padding-top:24px;border-top:1px solid var(--line-dark)}
+.order .eyebrow{margin-bottom:12px}
+.order__t{margin:0;font-family:var(--display);font-size:clamp(30px,3.4vw,52px);line-height:1;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.order__fx{margin:6px 0 0;font-size:12px;color:rgba(255,255,255,.6)}
+.order__l{margin:20px 0 0;display:grid;gap:10px;font-size:13px}
+.order__l div{display:flex;justify-content:space-between;gap:16px;padding-bottom:10px;border-bottom:1px solid var(--line-dark)}
+.order__l dt{color:rgba(255,255,255,.6)}
+.order__l dd{margin:0;text-align:right;font-weight:700}
+.order__n{margin:18px 0 0;font-size:12px;line-height:1.6;color:rgba(255,255,255,.6);max-width:38ch}
+
+/* The dark panel carries the live summary, so it stays in view while the form scrolls. */
+@media (min-width:861px){
+  .give__side{position:sticky;top:calc(var(--ann) + var(--nav));align-self:start;height:calc(100svh - var(--ann) - var(--nav));overflow-y:auto}
+}
+/* On small screens the dark panel with the running total is scrolled far above the
+   list, so the total travels with the items instead. */
+.cartbar{display:none}
+@media (max-width:860px){
+  .cartbar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:10px;padding:14px 16px;background:var(--ink);color:#fff;font-size:13px;letter-spacing:.02em}
+  .cartbar b{font-size:19px;font-variant-numeric:tabular-nums}
+  .flows{grid-template-columns:1fr}
+  .flows__t{font-size:18px}
+  .field2{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .item{grid-template-columns:1fr}
+  .item .qty{justify-self:start}
+}
+
+@media (max-width:860px){.give{grid-template-columns:1fr}.give__side{min-height:0}.impact p{min-height:0}.amts{grid-template-columns:repeat(3,1fr)}}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/donate">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Donate">
+  <meta property="og:description" content="Give once or monthly. Every rupee funds rescue, treatment and lifelong care.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/donate">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Donate">
+  <meta name="twitter:description" content="Give once or monthly. Every rupee funds rescue, treatment and lifelong care.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Donate","item":"https://peopleforanimalsindia.org/donate"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="#top" data-nav="donate.html" class="donate current" aria-current="page">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+  <section class="give" id="top">
+    <div class="give__side" data-cursor="light">
+      <div>
+        <p class="eyebrow">Donate</p>
+        <h1 class="display" id="sideHead">Turn a&nbsp;crisis into a&nbsp;second chance.</h1>
+        <p class="lede" id="sideLede">Every rupee goes to rescue, treatment and lifelong care for animals who have no one else. No admin fee is taken from your gift.</p>
+      </div>
+      <div class="impact" id="sideGive">
+        <p class="eyebrow">Your gift</p>
+        <p id="impact" aria-live="polite">Rabies shots for five street dogs.</p>
+      </div>
+      <div class="order" id="sideFood" hidden>
+        <p class="eyebrow">Your food order</p>
+        <p class="order__t" id="oTotal" aria-live="polite">₹0</p>
+        <p class="order__fx" id="oFx" hidden></p>
+        <dl class="order__l">
+          <div><dt>Destination</dt><dd id="oDest">Not selected</dd></div>
+          <div><dt>Total feed</dt><dd id="oKg">0 kg</dd></div>
+        </dl>
+        <p class="order__n" id="oNote">Choose a destination and add at least one item. Your order summary appears here.</p>
+      </div>
+    </div>
+    <div class="give__form">
+      <div class="card">
+        <div class="flows" role="group" aria-label="How you want to help">
+          <button type="button" data-flow="give" aria-pressed="true">
+            <span class="flows__tag">Direct donation</span>
+            <span class="flows__t">Donate to PFA</span>
+            <span class="flows__d">Your contribution supports rescue, legal work, learning and urgent animal care.</span>
+          </button>
+          <button type="button" data-flow="food" aria-pressed="false">
+            <span class="flows__tag">Food order</span>
+            <span class="flows__t">Send food to a place</span>
+            <span class="flows__d">Choose a district or city, buy vegetarian feed and send it to a verified local volunteer.</span>
+          </button>
+        </div>
+        <p class="flownote" id="flowNote"><b>You selected a direct donation.</b><span>Money goes to PFA and is used for the cause you choose.</span></p>
+
+        <div class="stepbar" id="barGive" aria-hidden="true"><span class="on" data-s="1">01 Amount</span><span data-s="2">02 Details</span><span data-s="3">03 Done</span></div>
+        <div class="stepbar" id="barFood" aria-hidden="true" hidden><span class="on" data-s="1">01 Place</span><span data-s="2">02 Food</span><span data-s="3">03 Details</span><span data-s="4">04 Done</span></div>
+
+        <div id="flowGive">
+        <div class="pane on" id="p1">
+          <!-- Same seg the feed flow already uses for currency. Rupees keep
+               the whole flow below exactly as it was; dollars are a different
+               country's rails entirely, so they route to PayPal
+               (paypal.me/Peopleforanimals) which collects the donor's details
+               and issues the receipt - steps 02 and 03 are PayPal's there,
+               not ours. One class on the pane swaps the panels. -->
+          <div class="seg" role="group" aria-label="Currency" id="giveCur"><button type="button" data-gcur="INR" aria-pressed="true">&#8377; INR</button><button type="button" data-gcur="USD" aria-pressed="false">$ USD</button></div>
+          <div id="usdPane" hidden>
+            <div class="amts amts--usd" id="usdAmts" role="group" aria-label="Choose an amount in dollars"></div>
+            <div class="other" id="usdOtherWrap">
+              <button type="button" class="other__btn" id="usdOtherBtn" aria-pressed="false">Other amount</button>
+              <div class="other__in">
+                <b>$</b>
+                <input id="usdOther" type="text" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="Amount" aria-label="Other amount in dollars">
+                <button type="button" class="other__back" id="usdOtherBack">Presets</button>
+              </div>
+            </div>
+            <a class="btn btn--full" id="usdGo" href="https://www.paypal.com/paypalme/Peopleforanimals/25USD" target="_blank" rel="noopener">Give $25 with PayPal</a>
+            <p class="fine">Dollar gifts go through PayPal to @Peopleforanimals; PayPal collects your details and sends the receipt. Section 80G applies to rupee gifts.</p>
+          </div>
+          <div class="seg" role="group" aria-label="How often"><button type="button" data-freq="once" aria-pressed="true">Give once</button><button type="button" data-freq="monthly" aria-pressed="false">Give monthly</button></div>
+          <div class="amts" id="amts" role="group" aria-label="Choose an amount"></div>
+          <div class="other" id="otherWrap">
+            <button type="button" class="other__btn" id="otherBtn" aria-pressed="false">Other amount</button>
+            <div class="other__in">
+              <b>₹</b>
+              <input id="other" type="text" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="Amount" aria-label="Other amount in rupees">
+              <button type="button" class="other__back" id="otherBack">Presets</button>
+            </div>
+          </div>
+          <p class="amt-err" id="amtErr" role="alert" hidden></p>
+          <button class="btn btn--full" type="button" id="next1">Continue</button>
+          <p class="fine">Donations to People for Animals are eligible for tax deduction under Section 80G. A receipt follows by email.</p>
+        </div>
+
+        <div class="pane" id="p2">
+          <div class="sum"><span id="sumLine"></span><button type="button" id="back">Change</button></div>
+          <!-- Posts straight to the CCAvenue layer. /api/payment/create answers with
+               an auto-submitting form, so this is a real navigation, not fetch(). -->
+          <form class="form" id="giveForm" method="post" action="/api/payment/create" novalidate>
+            <input type="hidden" name="type" value="donate">
+            <input type="hidden" name="currency" value="inr">
+            <input type="hidden" name="amount" id="gAmount" value="1500">
+            <input type="hidden" name="terms" id="gTerms" value="">
+            <input type="hidden" name="client_ref" id="gRef" value="">
+            <div class="field"><label for="gName">Full name</label><input id="gName" name="name" type="text" autocomplete="name" required><span class="error">Add your name for the receipt.</span></div>
+            <div class="field"><label for="gMobile">Mobile number</label><input id="gMobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" required><span class="error">Enter a 10-digit Indian mobile number.</span><span class="hint">Used to trace the payment if anything goes wrong.</span></div>
+            <div class="field"><label for="gEmail">Email</label><input id="gEmail" name="email" type="email" autocomplete="email" required><span class="error">Add a valid email for the receipt.</span></div>
+            <div class="field"><label for="gAddress">Address</label><input id="gAddress" name="address" type="text" autocomplete="street-address" required><span class="error">Add the address your 80G receipt should carry.</span></div>
+            <div class="field"><label for="gCause">Where it should go</label>
+              <select id="gCause" name="cause">
+                <option>Where it is needed most</option>
+                <option>Hospitals</option>
+                <option>Rescue</option>
+                <option>Legal work</option>
+                <option>Learning</option>
+              </select>
+            </div>
+            <div class="field"><label for="gPan">PAN (optional, for 80G)</label><input id="gPan" name="pan" type="text" autocomplete="off" maxlength="10" style="text-transform:uppercase"><span class="error">Enter a PAN in the form ABCDE1234F.</span></div>
+            <label class="agree"><input type="checkbox" id="gAgree" required><span>I confirm these details are mine and I accept the gift and receipt terms.</span></label>
+            <span class="error" id="gAgreeErr">Accept the gift and receipt terms to continue.</span>
+            <button class="btn btn--full" type="submit" id="payBtn">Pay &#8377;1,500</button>
+            <p class="fine" id="payNote">You are handed to CCAvenue to pay. PFA never sees your card, bank or UPI credentials. Your 80G receipt is emailed as soon as the gift clears.</p>
+          </form>
+        </div>
+
+        <div class="pane done" id="p3">
+          <p class="eyebrow">Thank you</p>
+          <h2 class="display" id="doneHead">Your gift is&nbsp;in.</h2>
+          <p id="doneText"></p>
+          <div class="actions"><a class="btn" href="index.html">Back to PFA</a><a class="btn btn--ghost" href="wall.html">Watch the wall</a></div>
+        </div>
+        </div><!-- /flowGive -->
+
+        <div id="flowFood" hidden>
+          <div class="pane on" id="f1">
+            <div class="form">
+              <div class="field2">
+                <div class="field">
+                  <label for="fState">State or union territory</label>
+                  <select id="fState"><option value="">Choose state</option></select>
+                  <span class="error">Choose the state or union territory.</span>
+                </div>
+                <div class="field">
+                  <label for="fDist">District or city</label>
+                  <input id="fDist" type="text" autocomplete="off" placeholder="For example, Udupi">
+                  <span class="error">Add the district or city.</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="fVill">Village or locality, optional</label>
+                <input id="fVill" type="text" autocomplete="off" placeholder="For example, Koteshwara">
+                <span class="hint">Leave this blank when any verified volunteer in the district or city may receive the order.</span>
+              </div>
+              <div class="field">
+                <label for="fPin">PIN code, optional</label>
+                <input id="fPin" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6" placeholder="For example, 576222">
+                <span class="hint" id="pinHint">Six digits. It suggests the state for you; check it is right before you continue.</span>
+              </div>
+            </div>
+            <div class="callout">
+              <b>How volunteer matching works</b>
+              <p>PFA matches the order with a verified volunteer serving the area you choose. Their name, mobile number and receiving details are shared with you after they accept the order.</p>
+            </div>
+            <button class="btn btn--full" type="button" id="fNext1">Choose food</button>
+          </div>
+
+          <div class="pane" id="f2">
+            <div class="sum"><span id="fSum1"></span><button type="button" data-fstep="1">Change</button></div>
+            <div class="seg" role="group" aria-label="Currency"><button type="button" data-cur="INR" aria-pressed="true">₹ INR</button><button type="button" data-cur="USD" aria-pressed="false">$ USD</button></div>
+            <div class="items" id="items" style="margin-top:10px"></div>
+            <div class="cartbar" id="cartBar" hidden><span id="cbK">0 kg</span><b id="cbT">₹0</b></div>
+            <p class="amt-err" id="foodErr" role="alert" hidden></p>
+            <button class="btn btn--full" type="button" id="fNext2">Continue</button>
+            <p class="fine">Feed is bought at cost. Nothing is added for handling, and the volunteer receives the whole order.</p>
+          </div>
+
+          <div class="pane" id="f3">
+            <div class="sum"><span id="fSum2"></span><button type="button" data-fstep="2">Change</button></div>
+            <form class="form" id="foodForm" method="post" action="/api/payment/create" novalidate>
+              <input type="hidden" name="type" value="send">
+              <input type="hidden" name="currency" id="fCurrency" value="inr">
+              <input type="hidden" name="items" id="fItems" value="">
+              <input type="hidden" name="client_ref" id="fRef" value="">
+              <input type="hidden" name="state" id="fStateVal" value="">
+              <input type="hidden" name="district" id="fDistrictVal" value="">
+              <input type="hidden" name="locality" id="fLocalityVal" value="">
+              <input type="hidden" name="terms" id="fTerms" value="">
+              <div class="field"><label for="fName">Full name</label><input id="fName" name="name" type="text" autocomplete="name" required><span class="error">Add your name for the receipt.</span></div>
+              <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" autocomplete="email" required><span class="error">Add a valid email for the receipt.</span></div>
+              <div class="field"><label for="fPhone">Mobile number</label><input id="fPhone" name="mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required placeholder="10 digits"><span class="error">Enter a 10-digit Indian mobile number.</span><span class="hint">Shared with the volunteer who accepts, so the two of you can arrange the handover.</span></div>
+              <label class="agree"><input type="checkbox" id="fAgree" required><span>I confirm these details are mine and I accept the food-order terms.</span></label>
+              <span class="error" id="fAgreeErr">Accept the food-order terms to continue.</span>
+              <button class="btn btn--full" type="submit" id="fPayBtn">Pay &#8377;0</button>
+              <p class="fine" id="fPayNote">You are handed to CCAvenue to pay. PFA never sees your card, bank or UPI credentials. An order receipt is emailed as soon as the payment clears.</p>
+            </form>
+          </div>
+
+          <div class="pane done" id="f4">
+            <p class="eyebrow">Thank you</p>
+            <h2 class="display" id="fDoneHead">Your food order is&nbsp;placed.</h2>
+            <p id="fDoneText"></p>
+            <div class="actions"><a class="btn" href="index.html">Back to PFA</a><a class="btn btn--ghost" href="wall.html">Watch the wall</a></div>
+          </div>
+        </div><!-- /flowFood -->
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------- donate flow: amount, details, done. The submit handler is where the gateway goes. ---------- */
+  /* A nonce for this page load. Combined with what is being paid for, it is
+     the idempotency key /api/payment/create uses to make a double submit, or
+     a back-button return to this same page, one transaction rather than two.
+     Per load, not per tab: a person who has paid and comes back to give the
+     same amount again is making a second gift, and must not be refused as a
+     duplicate of the first. */
+  var VISIT = (function(){
+    var v = '';
+    try { v = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ''; } catch (_) {}
+    return v || (String(Date.now()) + Math.random().toString(36).slice(2));
+  })();
+  function visitRef(kind, what){
+    var s = String(what), h = 0;
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return kind + '-' + VISIT + '-' + h.toString(36);
+  }
+
+  (function give(){
+    /* Presets and what each one funds. Each tier keeps its own three. */
+    var AMTS = {
+      /* What each tier says it buys is checked against real 2026 figures, not
+         rounded up. Feeding a street dog runs about ₹22 a day on the BBMP
+         tender and about ₹83 a day once medicine is included. Municipal ABC
+         contracts pay ₹250 a vaccination. A rescue seen through to the end
+         runs into tens of thousands, so no single tier claims to cover one. */
+      once:    [[500,'A week of food and care'],[1500,'Rabies shots for five street dogs'],[5000,'Emergency care for an injured animal']],
+      monthly: [[300,'Two weeks of food for a street dog'],[1000,'Sponsors a kennel all year'],[2500,'Funds a clinic day each month']]
+    };
+    /* Lets an off-preset amount say what it buys, so a typed gift reads as real as a chosen one. */
+    var UNIT = {
+      once:    {step:500, one:'week of food and care',  many:'weeks of food and care'},
+      monthly: {step:300, one:'animal fed every month', many:'animals fed every month'}
+    };
+    var MIN = 10, MAX = 500000;
+
+    /* Recurring gifts need a CCAvenue mandate (UPI AutoPay / card standing
+       instruction). /api/payment/create has no recurring path, so a "monthly"
+       choice would be charged once. Rather than mis-charge, monthly is hidden
+       until that integration exists: flip this to true only when it does. */
+    var MONTHLY_MANDATE_LIVE = false;
+    var freq = 'once', amt = 1500, idx = 1, custom = false;
+    var wrap = $('#otherWrap'), input = $('#other'), errBox = $('#amtErr');
+    var fmt = function(n){ return '₹' + Number(n).toLocaleString('en-IN'); };
+    function digits(v){ var d = String(v == null ? '' : v).replace(/[^0-9]/g, '').replace(/^0+/, ''); return d ? +d : 0; }
+    function err(msg){ errBox.textContent = msg || ''; errBox.hidden = !msg; }
+
+    /* ---------- state: one amount is selected at all times, never two ---------- */
+    function pickPreset(n){
+      AMTS[freq].forEach(function(a, i){ if (a[0] === n) idx = i; });
+      amt = n; custom = false;
+      wrap.classList.remove('is-open');
+      $('#otherBtn').setAttribute('aria-pressed', 'false');
+      err(''); render();
+    }
+    function openOther(){
+      custom = true;
+      wrap.classList.add('is-open');
+      $('#otherBtn').setAttribute('aria-pressed', 'true');
+      amt = digits(input.value);
+      render(); input.focus();
+    }
+    function backToPresets(){ input.value = ''; pickPreset(AMTS[freq][idx][0]); }
+    function setFreq(f){
+      if (f === freq) return;
+      freq = f;
+      document.querySelectorAll('[data-freq]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-freq') === f)); });
+      /* A typed amount is the donor's own decision, so it carries across. A preset moves to
+         its opposite number in the other tier instead of snapping back to the middle. */
+      if (!custom) amt = AMTS[freq][idx][0];
+      err(''); render();
+    }
+
+    /* ---------- render ---------- */
+    function chips(){
+      $('#amts').innerHTML = AMTS[freq].map(function(a){
+        return '<button type="button" data-amt="' + a[0] + '" aria-pressed="' + (!custom && a[0] === amt) + '">' + fmt(a[0]) + '<small>' + a[1] + '</small></button>';
+      }).join('');
+    }
+    function line(){
+      if (amt < MIN) return 'Choose an amount.';
+      var preset = AMTS[freq].filter(function(a){ return a[0] === amt; })[0];
+      if (preset) return preset[1] + '.';
+      var u = UNIT[freq], n = Math.floor(amt / u.step);
+      if (n < 1) return freq === 'monthly' ? 'Food and treatment, every month.' : 'Straight to food and treatment.';
+      return n + ' ' + (n === 1 ? u.one : u.many) + '.';
+    }
+    function note(){
+      /* UPI, card, netbanking and wallet are all offered on CCAvenue's page,
+         so the method is no longer chosen here. */
+      $('#payNote').textContent = freq !== 'monthly'
+        ? 'You are handed to CCAvenue to pay. PFA never sees your card, bank or UPI credentials. Your 80G receipt is emailed as soon as the gift clears.'
+        : 'A monthly gift needs a mandate you approve once, in your UPI app or on your bank\'s page. Cancel any time with one email.';
+    }
+    function render(){
+      chips();
+      $('#impact').textContent = line();
+      $('#payBtn').textContent = amt >= MIN ? 'Pay ' + fmt(amt) + (freq === 'monthly' ? ' monthly' : '') : 'Pay';
+      $('#sumLine').innerHTML = '<b>' + fmt(amt) + '</b> ' + (freq === 'monthly' ? 'every month' : 'once');
+      /* The server re-checks this against its own bounds; sending it keeps the
+         amount the donor confirmed attached to the request. */
+      $('#gAmount').value = String(amt);
+      note();
+    }
+    function step(n){
+      [1,2,3].forEach(function(k){ $('#p' + k).classList.toggle('on', k === n); });
+      document.querySelectorAll('#barGive span').forEach(function(sp){ var k = +sp.getAttribute('data-s'); sp.classList.toggle('on', k === n); sp.classList.toggle('done', k < n); });
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    /* Monthly is removed from the DOM, not just greyed out, so a campaign link
+       carrying ?freq=monthly cannot select something that will not be honoured. */
+    if (!MONTHLY_MANDATE_LIVE){
+      var monthlyBtn = document.querySelector('[data-freq="monthly"]');
+      if (monthlyBtn){
+        var seg = monthlyBtn.parentNode;
+        monthlyBtn.remove();
+        /* And with monthly out of the DOM, "Give once" was a segmented
+           control with one segment: always pressed, answering nothing, a
+           full row restating the default. The seg hides whole until the
+           mandate path exists and there is a second choice to offer. */
+        seg.hidden = true;
+      }
+    }
+
+    /* ---------- events ---------- */
+    document.addEventListener('click', function(e){
+      var f = e.target.closest('[data-freq]'); if (f){ setFreq(f.getAttribute('data-freq')); return; }
+      var a = e.target.closest('[data-amt]'); if (a){ pickPreset(+a.getAttribute('data-amt')); return; }
+    });
+    $('#otherBtn').addEventListener('click', openOther);
+    $('#otherBack').addEventListener('click', backToPresets);
+    input.addEventListener('input', function(){
+      var n = digits(this.value), over = n > MAX;
+      if (over) n = MAX;
+      var clean = n ? String(n) : '';
+      if (this.value !== clean) this.value = clean;
+      amt = n;
+      err(over ? 'The most that can be given here is ' + fmt(MAX) + '. For a larger gift, please get in touch.' : '');
+      render();
+    });
+    input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); $('#next1').click(); } });
+    /* Grouped while resting, raw while editing: ₹70,000 and ₹7,000 are hard to tell apart as bare digits. */
+    input.addEventListener('focus', function(){ this.value = amt ? String(amt) : ''; });
+    input.addEventListener('blur',  function(){ this.value = amt ? Number(amt).toLocaleString('en-IN') : ''; });
+    $('#next1').addEventListener('click', function(){
+      if (amt < MIN){
+        if (custom) input.focus(); else openOther();
+        err('Enter an amount of ' + fmt(MIN) + ' or more.');
+        return;
+      }
+      err(''); step(2);
+      setTimeout(function(){ $('#gName').focus(); }, 300);
+    });
+    $('#back').addEventListener('click', function(){ step(1); });
+
+    function bad(el, on){ el.closest('.field').classList.toggle('is-bad', on); return on; }
+    $('#giveForm').addEventListener('submit', function(e){
+      var n = $('#gName'), mob = $('#gMobile'), m = $('#gEmail'), ad = $('#gAddress'), pan = $('#gPan'), errs = 0;
+      errs += bad(n, !n.value.trim()) ? 1 : 0;
+      /* Same rule the server applies in assets/field-rules.js: ten digits
+         starting 6-9. Catching it here saves a round trip to an error page. */
+      errs += bad(mob, !/^[6-9]\d{9}$/.test(mob.value.replace(/\D/g, ''))) ? 1 : 0;
+      errs += bad(m, !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m.value)) ? 1 : 0;
+      errs += bad(ad, ad.value.trim().length < 6) ? 1 : 0;
+      errs += bad(pan, !!pan.value.trim() && !/^[A-Za-z]{5}[0-9]{4}[A-Za-z]$/.test(pan.value.trim())) ? 1 : 0;
+      var agreed = $('#gAgree').checked;
+      $('#gAgreeErr').classList.toggle('on', !agreed);
+      if (errs || !agreed){
+        e.preventDefault();
+        var first = this.querySelector('.is-bad input');
+        if (first) first.focus(); else $('#gAgree').focus();
+        return;
+      }
+      if (amt < MIN){ e.preventDefault(); step(1); return; }
+      /* parseDonation() expects the acceptance as a value, not a checkbox. */
+      $('#gTerms').value = 'yes';
+      $('#gAmount').value = String(amt);
+      /* One key per visit and amount. Pressing back from the bank's page and
+         paying again is the same transaction, not a second one; changing the
+         amount first is a new key, so it is never refused as a conflict. */
+      $('#gRef').value = visitRef('donate', amt);
+      $('#payBtn').disabled = true;
+      $('#payBtn').textContent = 'Opening secure payment\u2026';
+      /* No preventDefault: the browser posts to /api/payment/create, which
+         answers with the CCAvenue hand-off page. Pane 3 is never reached from
+         here; the real confirmation is /api/payment/response after the bank. */
+    });
+    $('#giveForm').addEventListener('input', function(e){ var t = e.target; if (t.closest('.field')) bad(t, false); });
+
+    /* Campaign links can arrive pre-set: donate.html?amt=2000&freq=monthly */
+    (function fromUrl(){
+      var q = new URLSearchParams(location.search), qf = q.get('freq'), qa = digits(q.get('amt'));
+      if (qf === 'monthly' && !MONTHLY_MANDATE_LIVE) qf = 'once';
+      if (qf === 'once' || qf === 'monthly'){
+        freq = qf;
+        amt = AMTS[freq][idx][0];
+        document.querySelectorAll('[data-freq]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-freq') === qf)); });
+      }
+      if (qa < MIN || qa > MAX) return;
+      if (AMTS[freq].filter(function(a){ return a[0] === qa; })[0]){ pickPreset(qa); return; }
+      input.value = Number(qa).toLocaleString('en-IN'); custom = true; amt = qa;
+      wrap.classList.add('is-open');
+      $('#otherBtn').setAttribute('aria-pressed', 'true');
+    })();
+    render();
+  })();
+
+  /* ---------- which flow: money to PFA, or feed to a place ---------- */
+  var LEDE = {
+    give: 'Every rupee goes to rescue, treatment and lifelong care for animals who have no one else. No admin fee is taken from your gift.',
+    food: 'Choose a district or city, buy vegetarian feed at cost, and a verified PFA volunteer nearby receives it and feeds the animals there.'
+  };
+  var NOTE = {
+    give: ['You selected a direct donation.', 'Money goes to PFA and is used for the cause you choose.'],
+    food: ['You selected a food order.', 'You buy the feed. A verified volunteer in the area you choose receives it and feeds the animals.']
+  };
+  var flow = 'give';
+  function setFlow(f){
+    if (f !== 'give' && f !== 'food') return;
+    flow = f;
+    var give = f === 'give';
+    document.querySelectorAll('[data-flow]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-flow') === f)); });
+    $('#flowGive').hidden = !give; $('#barGive').hidden = !give; $('#sideGive').hidden = !give;
+    $('#flowFood').hidden = give;  $('#barFood').hidden = give;  $('#sideFood').hidden = give;
+    $('#sideLede').textContent = LEDE[f];
+    $('#flowNote').innerHTML = '<b>' + NOTE[f][0] + '</b><span>' + NOTE[f][1] + '</span>';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-flow]');
+    if (b) setFlow(b.getAttribute('data-flow'));
+  });
+
+  /* ---------- food order: place, food, details, done ---------- */
+  (function foodOrder(){
+    var STATES = ['Andaman and Nicobar Islands','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chandigarh','Chhattisgarh','Dadra and Nagar Haveli and Daman and Diu','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Ladakh','Lakshadweep','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Puducherry','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'];
+
+    /* PIN prefixes, longest match first. A suggestion the donor confirms, never a silent fact. */
+    var PIN3 = {
+      '160':'Chandigarh','194':'Ladakh','396':'Dadra and Nagar Haveli and Daman and Diu',
+      '403':'Goa','605':'Puducherry','609':'Puducherry','737':'Sikkim','744':'Andaman and Nicobar Islands',
+      '790':'Arunachal Pradesh','791':'Arunachal Pradesh','792':'Arunachal Pradesh',
+      '793':'Meghalaya','794':'Meghalaya','795':'Manipur','796':'Mizoram',
+      '797':'Nagaland','798':'Nagaland','799':'Tripura',
+      '246':'Uttarakhand','248':'Uttarakhand','249':'Uttarakhand','262':'Uttarakhand','263':'Uttarakhand',
+      '814':'Jharkhand','815':'Jharkhand','816':'Jharkhand','825':'Jharkhand','826':'Jharkhand',
+      '827':'Jharkhand','828':'Jharkhand','829':'Jharkhand','831':'Jharkhand','832':'Jharkhand',
+      '833':'Jharkhand','834':'Jharkhand','835':'Jharkhand'
+    };
+    var PIN2 = {
+      '11':'Delhi','12':'Haryana','13':'Haryana','14':'Punjab','15':'Punjab','16':'Punjab',
+      '17':'Himachal Pradesh','18':'Jammu and Kashmir','19':'Jammu and Kashmir',
+      '20':'Uttar Pradesh','21':'Uttar Pradesh','22':'Uttar Pradesh','23':'Uttar Pradesh','24':'Uttar Pradesh',
+      '25':'Uttar Pradesh','26':'Uttar Pradesh','27':'Uttar Pradesh','28':'Uttar Pradesh',
+      '30':'Rajasthan','31':'Rajasthan','32':'Rajasthan','33':'Rajasthan','34':'Rajasthan',
+      '36':'Gujarat','37':'Gujarat','38':'Gujarat','39':'Gujarat',
+      '40':'Maharashtra','41':'Maharashtra','42':'Maharashtra','43':'Maharashtra','44':'Maharashtra',
+      '45':'Madhya Pradesh','46':'Madhya Pradesh','47':'Madhya Pradesh','48':'Madhya Pradesh',
+      '49':'Chhattisgarh','50':'Telangana','51':'Andhra Pradesh','52':'Andhra Pradesh','53':'Andhra Pradesh',
+      '56':'Karnataka','57':'Karnataka','58':'Karnataka','59':'Karnataka',
+      '60':'Tamil Nadu','61':'Tamil Nadu','62':'Tamil Nadu','63':'Tamil Nadu','64':'Tamil Nadu',
+      '65':'Tamil Nadu','66':'Tamil Nadu','67':'Kerala','68':'Kerala','69':'Kerala',
+      '70':'West Bengal','71':'West Bengal','72':'West Bengal','73':'West Bengal','74':'West Bengal',
+      '75':'Odisha','76':'Odisha','77':'Odisha','78':'Assam',
+      '80':'Bihar','81':'Bihar','82':'Bihar','83':'Bihar','84':'Bihar','85':'Bihar'
+    };
+
+    /* The catalogue, mirroring SEND_CATALOG in lib/payment.js. The server
+       prices every line itself and rejects any key it does not hold, so these
+       ids and prices must match that file exactly or checkout fails. Change
+       both together. `id` is the key the server matches on. */
+    var FOOD = [
+      {id:'rice',                name:'Rice',                unit:'10 kg', kg:10, inr:550},
+      {id:'wheat',               name:'Wheat',               unit:'10 kg', kg:10, inr:480},
+      {id:'poha',                name:'Poha',                unit:'5 kg',  kg:5,  inr:320},
+      {id:'soya chunks',         name:'Soya chunks',         unit:'5 kg',  kg:5,  inr:650},
+      {id:'vegetarian dog food', name:'Vegetarian dog food', unit:'10 kg', kg:10, inr:1450}
+    ];
+    /* parseItems() caps each line at 10 and the order at 10 distinct items. */
+    var MAXQ = 10;
+    /* Display only. The gateway charges in INR, so the rupee figure is always shown alongside. */
+    var FX = {USD: 88};
+
+    var cur = 'INR', qty = {};   /* method is chosen on CCAvenue's page, not here */
+    var sel = $('#fState'), dist = $('#fDist'), vill = $('#fVill'), pin = $('#fPin');
+
+    var inr = function(n){ return '₹' + Number(n).toLocaleString('en-IN'); };
+    function money(n){ return cur === 'USD' ? '$' + (n / FX.USD).toFixed(2) : inr(n); }
+    function totals(){
+      var kg = 0, sum = 0;
+      FOOD.forEach(function(f){ var q = qty[f.id] || 0; kg += q * f.kg; sum += q * f.inr; });
+      return {kg: kg, inr: sum, items: FOOD.filter(function(f){ return qty[f.id]; }).length};
+    }
+    function dest(){
+      var s = sel.value, d = dist.value.trim(), v = vill.value.trim();
+      if (!s || !d) return '';
+      return (v ? v + ', ' : '') + d + ', ' + s;
+    }
+    function err(box, msg){ box.textContent = msg || ''; box.hidden = !msg; }
+    function bad(el, on){ el.closest('.field').classList.toggle('is-bad', on); return on; }
+
+    /* ---------- render ---------- */
+    function byId(id){ return FOOD.filter(function(f){ return f.id === id; })[0]; }
+    function subHTML(f){
+      var q = qty[f.id] || 0;
+      return '<span>' + q + ' × ' + f.unit + ' · ' + (q * f.kg) + ' kg</span><b>' + money(q * f.inr) + '</b>';
+    }
+    function buildItems(){
+      $('#items').innerHTML = FOOD.map(function(f){
+        var q = qty[f.id] || 0;
+        return '<div class="item' + (q ? ' has' : '') + '" data-row="' + f.id + '">' +
+          '<div><span class="item__n">' + f.name + '</span><small class="item__m">' + f.unit + ' · ' + money(f.inr) + '</small></div>' +
+          '<div class="qty">' +
+            '<button type="button" data-q="' + f.id + '" data-d="-1" aria-label="One less ' + f.name + '"' + (q ? '' : ' disabled') + '>−</button>' +
+            '<span data-count="' + f.id + '" aria-live="polite">' + q + '</span>' +
+            '<button type="button" data-q="' + f.id + '" data-d="1" aria-label="One more ' + f.name + '"' + (q >= MAXQ ? ' disabled' : '') + '>+</button>' +
+          '</div>' +
+          '<div class="item__s" data-sub="' + f.id + '"' + (q ? '' : ' hidden') + '>' + subHTML(f) + '</div>' +
+        '</div>';
+      }).join('');
+    }
+    /* Only the row that changed is touched, so the +/- button under the cursor or
+       the keyboard focus is never destroyed mid-press. */
+    function syncItem(id){
+      var f = byId(id), q = qty[id] || 0, row = $('[data-row="' + id + '"]');
+      if (!row) return;
+      var minus = row.querySelector('[data-d="-1"]'), plus = row.querySelector('[data-d="1"]');
+      row.classList.toggle('has', !!q);
+      row.querySelector('[data-count="' + id + '"]').textContent = q;
+      if (!q && document.activeElement === minus) plus.focus();
+      minus.disabled = !q;
+      plus.disabled = q >= MAXQ;
+      var sub = row.querySelector('[data-sub="' + id + '"]');
+      sub.innerHTML = subHTML(f);
+      sub.hidden = !q;
+    }
+    function render(){
+      var t = totals(), d = dest();
+      $('#oTotal').textContent = money(t.inr);
+      $('#oFx').textContent = cur === 'USD' ? 'Charged as ' + inr(t.inr) + ' at an indicative rate.' : '';
+      $('#oFx').hidden = cur !== 'USD';
+      $('#oDest').textContent = d || 'Not selected';
+      $('#oKg').textContent = t.kg + ' kg';
+      $('#oNote').textContent = !d ? 'Choose a destination and add at least one item. Your order summary appears here.'
+        : !t.inr ? 'Going to ' + d + '. Add at least one item to see the total.'
+        : 'Going to ' + d + '. A verified volunteer there receives ' + t.kg + ' kg of feed.';
+      $('#fSum1').innerHTML = '<b>' + (d || 'No destination') + '</b>';
+      $('#fSum2').innerHTML = '<b>' + money(t.inr) + '</b> ' + t.kg + ' kg to ' + (d || 'no destination');
+      $('#cbK').textContent = t.kg + ' kg';
+      $('#cbT').textContent = money(t.inr);
+      $('#cartBar').hidden = !t.inr;
+      $('#fPayBtn').textContent = 'Pay ' + money(t.inr);
+      $('#fPayNote').textContent = (cur === 'USD' ? 'Charged as ' + inr(t.inr) + '. ' : '')
+        + 'You are handed to CCAvenue to pay. PFA never sees your card, bank or UPI credentials. An order receipt is emailed as soon as the payment clears, and the volunteer\'s details follow when they accept.';
+    }
+    function fstep(n){
+      [1,2,3,4].forEach(function(k){ $('#f' + k).classList.toggle('on', k === n); });
+      document.querySelectorAll('#barFood span').forEach(function(sp){ var k = +sp.getAttribute('data-s'); sp.classList.toggle('on', k === n); sp.classList.toggle('done', k < n); });
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    /* ---------- place ---------- */
+    sel.innerHTML = '<option value="">Choose state</option>' + STATES.map(function(s){ return '<option>' + s + '</option>'; }).join('');
+    function stateFromPin(p){ return p.length < 3 ? '' : (PIN3[p.slice(0,3)] || PIN2[p.slice(0,2)] || ''); }
+    var PIN_DEFAULT = 'Six digits. It suggests the state for you; check it is right before you continue.';
+    pin.addEventListener('input', function(){
+      var v = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+      if (this.value !== v) this.value = v;
+      var st = stateFromPin(v);
+      if (st){
+        sel.value = st; bad(sel, false);
+        $('#pinHint').textContent = 'PIN ' + v + ' suggests ' + st + '. Change it above if that is not right.';
+      } else {
+        $('#pinHint').textContent = v.length === 6 ? 'That PIN is not one we recognise. Choose the state above.' : PIN_DEFAULT;
+      }
+      render();
+    });
+    sel.addEventListener('change', function(){ bad(sel, false); $('#pinHint').textContent = PIN_DEFAULT; render(); });
+    [dist, vill].forEach(function(el){ el.addEventListener('input', function(){ bad(el, false); render(); }); });
+
+    $('#fNext1').addEventListener('click', function(){
+      var e1 = bad(sel, !sel.value), e2 = bad(dist, !dist.value.trim());
+      if (e1 || e2){ (e1 ? sel : dist).focus(); return; }
+      fstep(2);
+    });
+
+    /* ---------- food ---------- */
+    document.addEventListener('click', function(e){
+      var q = e.target.closest('[data-q]');
+      if (q){
+        var id = q.getAttribute('data-q'), d = +q.getAttribute('data-d');
+        qty[id] = Math.max(0, Math.min(MAXQ, (qty[id] || 0) + d));
+        if (!qty[id]) delete qty[id];
+        err($('#foodErr'), '');
+        syncItem(id);
+        render();
+        return;
+      }
+      var c = e.target.closest('[data-cur]');
+      if (c){ cur = c.getAttribute('data-cur'); document.querySelectorAll('[data-cur]').forEach(function(b){ b.setAttribute('aria-pressed', String(b === c)); }); buildItems(); render(); return; }
+      var s = e.target.closest('[data-fstep]');
+      if (s){ fstep(+s.getAttribute('data-fstep')); return; }
+    });
+    $('#fNext2').addEventListener('click', function(){
+      if (!totals().inr){ err($('#foodErr'), 'Add at least one item before you continue.'); return; }
+      err($('#foodErr'), '');
+      fstep(3);
+      setTimeout(function(){ $('#fName').focus(); }, 300);
+    });
+
+    /* ---------- details ---------- */
+    $('#foodForm').addEventListener('submit', function(e){
+      var n = $('#fName'), m = $('#fEmail'), ph = $('#fPhone'), errs = 0;
+      errs += bad(n, !n.value.trim()) ? 1 : 0;
+      errs += bad(m, !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m.value)) ? 1 : 0;
+      /* The server takes Indian mobiles only on this path: a country code
+         would be accepted here and then rejected at /api/payment/create. */
+      errs += bad(ph, !/^[6-9]\d{9}$/.test(ph.value.replace(/\D/g, ''))) ? 1 : 0;
+      var agreed = $('#fAgree').checked;
+      $('#fAgreeErr').classList.toggle('on', !agreed);
+      if (errs || !agreed){
+        e.preventDefault();
+        var first = this.querySelector('.is-bad input');
+        if (first) first.focus(); else $('#fAgree').focus();
+        return;
+      }
+      var t = totals();
+      if (!t.inr || !sel.value || !dist.value.trim()){ e.preventDefault(); fstep(!t.inr ? 2 : 1); return; }
+
+      /* parseItems() wants [{key, quantity}] and prices it from its own table;
+         nothing about the total is taken from this page. */
+      var lines = FOOD.filter(function(f){ return (qty[f.id] || 0) > 0; })
+                      .map(function(f){ return { key: f.id, quantity: qty[f.id] }; });
+      $('#fItems').value = JSON.stringify(lines);
+      $('#fStateVal').value = sel.value;
+      $('#fDistrictVal').value = dist.value.trim();
+      $('#fLocalityVal').value = vill.value.trim();
+      $('#fTerms').value = 'yes';
+      /* USD is display-only here; the send flow is priced and charged in INR. */
+      $('#fCurrency').value = 'inr';
+      $('#fRef').value = visitRef('send', $('#fItems').value + '|' + sel.value + '|' + dist.value.trim());
+      $('#fPayBtn').disabled = true;
+      $('#fPayBtn').textContent = 'Opening secure payment\u2026';
+      /* No preventDefault: posts to /api/payment/create and CCAvenue takes over. */
+    });
+    $('#foodForm').addEventListener('input', function(e){ var t = e.target; if (t.closest('.field')) bad(t, false); });
+
+    /* Campaign links can arrive pre-set: donate.html?flow=food&state=Karnataka&district=Udupi */
+    (function fromUrl(){
+      var q = new URLSearchParams(location.search);
+      var st = q.get('state'), dt = q.get('district');
+      if (st && STATES.indexOf(st) > -1) sel.value = st;
+      if (dt) dist.value = dt.slice(0, 60);
+      if (q.get('flow') === 'food') setFlow('food');
+    })();
+    buildItems();
+    render();
+  })();
+})();
+</script>
+<script>
+/* ---------- dollars: four presets and a typed amount, all one PayPal link.
+     10 / 25 / 50 / 100 - the brief said "10, 25, 500, 100", and 500 between
+     25 and 100 reads as a slipped zero; if 500 was meant, it is one number
+     in the list below. The link is the whole gateway: paypal.me takes the
+     amount in the path and the donor finishes there. ---------- */
+(function(){
+  'use strict';
+  var pane = document.getElementById('p1'), seg = document.getElementById('giveCur');
+  var amts = document.getElementById('usdAmts'), go = document.getElementById('usdGo');
+  var wrap = document.getElementById('usdOtherWrap'), oBtn = document.getElementById('usdOtherBtn');
+  var oIn = document.getElementById('usdOther'), oBack = document.getElementById('usdOtherBack');
+  var usdPane = document.getElementById('usdPane');
+  if (!pane || !seg || !amts || !go) return;
+  var USD = [10, 25, 50, 100], amt = 25, custom = false;
+  var BASE = 'https://www.paypal.com/paypalme/Peopleforanimals';
+  function paint(){
+    amts.innerHTML = USD.map(function(n){
+      return '<button type="button" data-usd="' + n + '" aria-pressed="' + (!custom && n === amt) + '">$' + n + '</button>';
+    }).join('');
+    wrap.classList.toggle('open', custom);
+    oBtn.setAttribute('aria-pressed', String(custom));
+    var n = custom ? parseInt(oIn.value, 10) : amt;
+    if (custom && (!n || n < 1)) { go.href = BASE; go.textContent = 'Give with PayPal'; }
+    else { go.href = BASE + '/' + n + 'USD'; go.textContent = 'Give $' + n + ' with PayPal'; }
+  }
+  seg.addEventListener('click', function(e){
+    var b = e.target.closest('[data-gcur]');
+    if (!b) return;
+    var usd = b.getAttribute('data-gcur') === 'USD';
+    pane.classList.toggle('usd', usd);
+    usdPane.hidden = !usd;
+    Array.prototype.forEach.call(seg.querySelectorAll('[data-gcur]'), function(c){
+      c.setAttribute('aria-pressed', String(c === b));
+    });
+    if (usd) paint();
+  });
+  amts.addEventListener('click', function(e){
+    var b = e.target.closest('[data-usd]');
+    if (b) { amt = Number(b.getAttribute('data-usd')); custom = false; paint(); }
+  });
+  oBtn.addEventListener('click', function(){ custom = true; paint(); oIn.focus(); });
+  oBack.addEventListener('click', function(){ custom = false; oIn.value = ''; paint(); });
+  oIn.addEventListener('input', function(){ oIn.value = oIn.value.replace(/[^0-9]/g, ''); paint(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+/* ======================================================================
+   PFA editorial layer.
+
+   The home page's register, applied to every page. Loaded LAST, after each
+   page's own <style>, so it retunes the shared vocabulary the pages already
+   share (.display, .eyebrow, .btn, .band, .band__head) without any page
+   needing to change its markup. All colour and metric tokens come from each
+   page's own :root, so nothing here hard-codes the palette.
+
+   Added by the theme pass, Sep 2026. Load it after the page style:
+     <link rel="stylesheet" href="assets/pfa-theme.css">
+   ====================================================================== */
+
+/* ---------- 1. labels: 11px, regular, widely tracked ----------
+   The pages set these at 700 and .14em, which reads as a caption. The home
+   page sets them at regular weight and .16em, where they read as a rule the
+   eye passes over on the way to the heading. */
+.eyebrow{font-size:11px;font-weight:400;letter-spacing:.16em}
+
+/* ---------- 2. display type: one line-height, set tight ----------
+   1.02 was tuned for two-line headings. At the sizes the home page uses,
+   three uppercase lines of Marcellus want to sit closer than that. */
+.display{line-height:1;letter-spacing:.005em}
+h3.display,h4.display,h5.display{line-height:1.06}
+
+/* ---------- 3. the numbered band head ----------
+   The home page's signature: a hairline across the measure, the section's
+   number in grey, its subject beside it. Done here with a counter on <body>
+   rather than a number typed into each page, so sections can be added,
+   removed or reordered and the sequence still reads 01, 02, 03. */
+body{counter-reset:pfa-band}
+.band > .band__head{padding-top:22px;border-top:1px solid var(--ink,#111)}
+.band--deep > .band__head{border-top-color:rgba(255,255,255,.3)}
+/* font-size restated here, not left to .eyebrow: every page carries
+   `.band__head p{font-size:14px}` at (0,1,1), which outranks a bare
+   `.eyebrow` however late this file loads. */
+.band > .band__head > .eyebrow{display:flex;gap:22px;align-items:baseline;
+  font-size:11px;color:var(--ink,#111)}
+.band--deep > .band__head > .eyebrow{color:#fff}
+/* Only where there is a sequence to read: a page with one band would print a
+   lone "01", which numbers nothing. One flat :has, never nested - :has inside
+   :has is invalid and drops the whole rule at parse time. */
+body:has(.band ~ .band) .band > .band__head > .eyebrow::before{
+  counter-increment:pfa-band;
+  content:counter(pfa-band,decimal-leading-zero);
+  color:var(--muted,#6a6a6a);font-variant-numeric:tabular-nums}
+body:has(.band ~ .band) .band--deep > .band__head > .eyebrow::before{color:rgba(255,255,255,.55)}
+
+/* ---------- 4. calls to action: a fixed height, and they invert ----------
+   Vertical padding sat the label on the text baseline and made two buttons
+   side by side different heights whenever their labels wrapped differently.
+   A fixed height with the label centred is the home page's control. The
+   hover fills with paper rather than going transparent, so a button over a
+   photograph does not turn into a hole. --light and --ghost keep the hover
+   their own page gave them: those two sit on dark ground, where filling with
+   paper would be wrong or invisible. */
+.btn{display:inline-flex;align-items:center;justify-content:center;
+  min-height:50px;padding:0 34px;font-size:11px;letter-spacing:.16em;line-height:1;
+  transition:background .35s,color .35s,border-color .35s}
+.btn:not(.btn--ghost):not(.btn--light):hover{background:var(--paper,#fff);color:var(--ink,#111)}
+/* re-stated: this page rule lands before this file and would otherwise lose
+   its display:block to the flex above. */
+.btn--full{display:flex;width:100%}
+
+/* ---------- 5. square, and hairline ---------- */
+.btn,.card,.tile,
+input:not([type="radio"]):not([type="checkbox"]),select,textarea{border-radius:0}
+hr{border:0;border-top:1px solid var(--line,#e4e2df);margin:0}
+::selection{background:var(--accent,#2b9fd8);color:#fff}

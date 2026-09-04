@@ -1,0 +1,69 @@
+# Runs the store reconciler every ten minutes.
+#
+# Vercel's Hobby plan refuses any cron that would fire more than once a day, and
+# it refuses it at deploy time: the push succeeds, the commit gets a red cross
+# and no deployment appears in Vercel at all. So vercel.json keeps a daily run
+# as a backstop and the real cadence lives here, where it is free.
+#
+# What it does: one authenticated POST to /api/pfa-store-reconcile, which
+# retries paid orders that have not reached the seller and sends confirmation
+# emails that did not go out. The endpoint is idempotent and safe to call at any
+# frequency; every step it takes is claimed, so two overlapping runs collide
+# harmlessly.
+#
+# Two repository secrets are needed (Settings > Secrets and variables > Actions):
+#   PFA_SITE_URL        https://your-production-domain
+#   PFA_ADMIN_TOKEN     the same value as the Vercel environment variable
+#
+# Note on timing: GitHub's scheduled workflows are best-effort and run late
+# under load, sometimes by several minutes. That is fine here. This is the third
+# line of defence, behind the browser confirmation and the Razorpay webhook,
+# both of which are immediate.
+
+name: Store reconcile
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:        # so it can also be run by hand after an incident
+
+concurrency:
+  group: store-reconcile
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call the reconciler
+        env:
+          SITE: ${{ secrets.PFA_SITE_URL }}
+          TOKEN: ${{ secrets.PFA_ADMIN_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SITE:-}" ] || [ -z "${TOKEN:-}" ]; then
+            echo "PFA_SITE_URL or PFA_ADMIN_TOKEN is not set; nothing to do."
+            exit 0
+          fi
+          body=$(mktemp)
+          code=$(curl -sS -o "$body" -w '%{http_code}' \
+            --max-time 60 --retry 2 --retry-delay 5 \
+            -X POST "${SITE%/}/api/pfa-store-reconcile" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H 'Content-Type: application/json' \
+            -d '{}')
+          echo "HTTP $code"
+          cat "$body"
+          echo
+          # A non-2xx here means the reconciler itself is unreachable or
+          # refusing, which is worth a red mark on the workflow.
+          case "$code" in
+            2*) ;;
+            *) echo "::error::reconcile returned HTTP $code"; exit 1 ;;
+          esac
+          # Orders that have exhausted their retries need a person, so make them
+          # loud rather than leaving them in a JSON blob nobody opens.
+          if grep -q '"exhausted":\[[^]]' "$body"; then
+            echo "::warning::paid orders have not reached the seller after repeated retries; see the response above"
+          fi

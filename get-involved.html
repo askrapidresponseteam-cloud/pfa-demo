@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get Involved &#183; People for Animals</title>
+<meta name="description" content="Volunteer with People for Animals, or apply for a colony caregiver card. Both applications are read by a named person and you are told where yours has got to.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --band:clamp(76px,8.5vw,136px);
+  --ann:34px;
+  --nav:69px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+body{padding-bottom:0;transition:padding-bottom .2s}
+body.has-bar{padding-bottom:76px}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+
+/* ---------- shared type + controls (matched to the main site) ---------- */
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn[disabled]:hover{background:var(--ink);color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(380px,58svh,640px);overflow:hidden;isolation:isolate;
+  /* Air between the dark block and the filter chips. It sits on the hero, not
+     on .filters, deliberately: .filters is sticky, so space added there would
+     be carried up and pad the bar for the whole scroll. This gap scrolls away,
+     which is right, because the crowding only exists at rest against the hero. */
+  margin-bottom:clamp(24px,3.2vw,44px)}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+   radial-gradient(120% 90% at 78% 15%,rgba(255,255,255,.16),transparent 60%),
+   radial-gradient(70% 70% at 8% 100%,rgba(255,255,255,.09),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(34px,5.6vw,88px)}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero 
+
+/* ---------- filter bar ---------- */
+.btn--ghost{background:transparent;color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:#fff}
+
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none;padding:12px var(--gutter)}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:216px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.sep{flex:0 0 auto;width:1px;height:24px;background:var(--line)}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);white-space:nowrap;padding-left:12px}
+/* Sort and the count travel together at the end of the row. */
+.filters__end{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:12px;padding-left:12px}
+.sort{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.sort__label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sort select{height:38px;border:1px solid var(--line);background:#fff;color:var(--ink);
+  font:inherit;font-size:12px;letter-spacing:.02em;padding:0 32px 0 12px;cursor:pointer;
+  border-radius:0;-webkit-appearance:none;appearance:none;outline:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.sort select:hover{border-color:var(--ink)}
+.sort select:focus-visible{border-color:var(--ink);outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- product grid ---------- */
+.grid-wrap{padding:calc(var(--band) * .6) var(--gutter) var(--band)}
+/* stretch, not start: a card has to fill its row so the action can be pushed
+   to the bottom of it. With align-items:start every card stopped at its own
+   content and the Add buttons stepped up and down the row with the titles. */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:34px 20px;align-items:stretch}
+.card{display:flex;flex-direction:column;gap:10px;height:100%}
+.card__tile{position:relative;aspect-ratio:1;min-height:0;flex:0 0 auto;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;padding:12px}
+.card__tile svg{width:58%;height:58%;color:rgba(17,17,17,.42)}
+a.card__tile{cursor:pointer;transition:border-color .18s}
+a.card__tile:hover{opacity:1;border-color:var(--ink)}
+.card__tag{position:absolute;left:8px;top:8px;background:var(--deep);color:#fff;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px}
+.card__meta{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:13px;line-height:1.35}
+.card__meta>span:first-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
+.card__meta span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.card__sub{font-size:12px;color:var(--muted);margin:-4px 0 0;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.card__action{margin-top:auto;padding-top:2px}
+.add{width:100%;border:1px solid var(--ink);background:none;color:var(--ink);height:40px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
+.add:hover{background:var(--ink);color:#fff}
+.stepper{display:flex;align-items:center;justify-content:space-between;height:40px;border:1px solid var(--ink);background:var(--ink);color:#fff}
+.stepper button{width:40px;height:100%;background:none;border:none;color:#fff;font-size:16px;line-height:1;cursor:pointer}
+.stepper button:hover{opacity:.6}
+.stepper span{font-size:12px;letter-spacing:.08em;font-weight:700}
+.empty{padding:56px 0;text-align:center;color:var(--muted);font-size:13px}
+.more{display:flex;justify-content:center;margin-top:44px}
+.more button{border:1px solid var(--ink);background:none;color:var(--ink);padding:15px 34px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.more button:hover{background:var(--ink);color:#fff}
+.more p{margin:0;font-size:12px;color:var(--muted)}
+.more__of{opacity:.55;font-weight:400;letter-spacing:.06em}
+
+
+/* ---------- sticky cart bar ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--deep);color:#fff;transform:translateY(100%);transition:transform .25s ease}
+.bar.show{transform:none}
+.bar__in{display:flex;align-items:center;gap:16px;padding:14px var(--gutter)}
+.bar__info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bar__line{font-size:13px}
+.bar__note{font-size:11px;color:#9a9a9a;letter-spacing:.02em}
+.timer{margin-left:auto;font-size:12px;color:#9a9a9a;font-variant-numeric:tabular-nums;letter-spacing:.06em;white-space:nowrap}
+.bar .btn{flex:0 0 auto}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;z-index:70;background:rgba(10,10,10,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:80;width:min(430px,100%);background:var(--paper);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s ease}
+.drawer.show{transform:none}
+.drawer__head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid var(--line)}
+.drawer__head h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.01em}
+.drawer__close{background:none;border:none;font-size:15px;cursor:pointer;padding:4px}
+.drawer__body{flex:1;overflow-y:auto;padding:20px}
+.drawer__foot{border-top:1px solid var(--line);padding:16px 20px 20px;display:grid;gap:12px}
+.totals{display:flex;justify-content:space-between;font-size:13px}
+.totals strong{font-weight:700}
+.line{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line:first-child{padding-top:0}
+.line__tile{aspect-ratio:1;background:var(--stone);display:grid;place-items:center}
+.line__tile svg{width:60%;height:60%;color:rgba(17,17,17,.42)}
+.line__name{font-size:13px;line-height:1.35}
+.line__sub{font-size:12px;color:var(--muted);margin-top:3px}
+.line__right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.mini{display:flex;align-items:center;border:1px solid var(--line)}
+.mini button{width:28px;height:28px;background:none;border:none;cursor:pointer;font-size:14px;line-height:1}
+.mini button:hover{background:var(--stone)}
+.mini span{min-width:24px;text-align:center;font-size:12px;font-weight:700}
+.co{border-top:1px solid var(--line);padding-top:20px;display:grid;gap:16px}
+.co h3{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field{display:grid;gap:6px}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field textarea{border:1px solid var(--line);padding:14px;font-size:14px;outline:none;background:#fff;resize:none}
+.field input:focus,.field textarea:focus{border-color:var(--ink)}
+.field select{border:1px solid var(--line);padding:14px;font-size:14px;outline:none;background:#fff;border-radius:0;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+.field select:focus{border-color:var(--ink)}
+.field.is-bad input,.field.is-bad select{border-color:#b3261e}
+.coerr{margin:0;font-size:12px;line-height:1.5;color:#b3261e}
+.coerr[hidden]{display:none}
+/* Real product photographs, now that the catalogue is the seller's. */
+/* The height comes from the ratio, not from a percentage. These frames are
+   display:grid with place-items:center, and a percentage height against a
+   centred grid area does not reliably resolve: when it falls back to auto the
+   picture keeps its own proportions, grows past a square frame and is cut off
+   by the overflow. A square image never showed it; a tall one always did.
+   width:100% resolves on its own, and aspect-ratio takes the height from
+   there, so object-fit:contain has a real box to letterbox inside.
+   The ratio here must match the frame's own aspect-ratio. */
+.card__tile img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block}
+.line__tile img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;display:block;padding:6px}
+.done{display:flex;flex-direction:column;gap:16px;padding:8px 0}
+.done h2{font-size:clamp(28px,6vw,44px)}
+.done p{margin:0;font-size:13px;line-height:1.6;color:var(--muted)}
+.done .toast{position:fixed;left:16px;bottom:92px;z-index:75;background:var(--ink);color:#fff;font-size:12px;letter-spacing:.02em;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 44px}
+  .drawer{width:100%}
+  .bar__in{padding:12px}
+  .bar .btn{padding:14px 18px}
+  .timer{display:none}
+}
+@media (max-width:400px){
+  .card__tile{aspect-ratio:16/9}
+  .filters__row{padding:10px var(--gutter)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* PFA_GI_CSS_START */
+/* ---------- get involved ---------- */
+/* The header is fixed, so the first section has to reserve its height the way
+   every other page does, .hero on twelve of them, .give on donate. These three
+   used calc(var(--band) * .55), which is 42px to 75px depending on the window
+   while the header needs 69px, so the top of the page slid underneath it at
+   anything under about 1470px wide. */
+.gi{padding:calc(var(--ann) + var(--nav) + clamp(32px,4.4vw,72px)) var(--gutter) var(--band)}
+.gi__head{max-width:60ch}
+.gi__title{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.04;
+  font-size:clamp(30px,4.6vw,64px);margin:10px 0 0}
+.gi__lede{margin:18px 0 0;font-size:15px;line-height:1.65;color:var(--muted);max-width:58ch}
+.gi__paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:clamp(30px,4vw,48px)}
+.gi__path{border:1px solid var(--line);padding:clamp(20px,2.6vw,30px);display:flex;flex-direction:column;gap:12px}
+.gi__path h2{font-family:var(--display);font-weight:400;font-size:clamp(20px,2.4vw,30px);margin:0}
+.gi__path p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+.gi__path .btn{margin-top:auto;align-self:flex-start}
+
+.gi__section{margin-top:clamp(56px,7vw,96px);scroll-margin-top:calc(var(--ann) + var(--nav) + 20px)}
+.gi__section h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(24px,3.2vw,44px);margin:10px 0 0}
+.gi__areas{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.gi__area{border:1px solid var(--line);background:#fff;padding:16px;text-align:left;font:inherit;cursor:pointer;
+  display:flex;flex-direction:column;gap:6px;transition:border-color .18s}
+.gi__area:hover{border-color:var(--ink)}
+.gi__area[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.gi__area b{font-size:14px}
+.gi__area span{font-size:13px;line-height:1.5;color:var(--muted)}
+.gi__areahint{margin:18px 0 0;font-size:12px;color:var(--muted)}
+.gi__stages{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gi__stage{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);padding:7px 12px}
+.gi__stage:first-child{border-color:var(--ink);color:var(--ink)}
+.gi__arrow{font-size:12px;color:var(--muted)}
+.gi__form{margin-top:clamp(20px,3vw,36px)}
+
+/* ---- the journey as one screen at a time ----
+   Each .gi__step is a two-column screen: what this step is on the left, what
+   it asks for on the right. Nothing on it should need scrolling on a laptop:
+   at most four fields, in two columns, per step. */
+.gi__bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.gi__progress{list-style:none;margin:0;padding:0;display:flex;gap:18px;font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);counter-reset:step}
+.gi__progress li{display:flex;align-items:center;gap:8px;counter-increment:step}
+.gi__progress li::before{content:counter(step);width:22px;height:22px;border:1px solid var(--line);
+  display:grid;place-items:center;font-size:10px}
+.gi__progress li.is-done::before{background:var(--ink);border-color:var(--ink);color:#fff}
+.gi__progress li.is-current{color:var(--ink)}
+.gi__progress li.is-current::before{border-color:var(--ink)}
+.gi__step{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,96px);align-items:start}
+.gi__step + .gi__step{margin-top:clamp(40px,5vw,64px)}
+.gi__copy .gi__lede{margin-top:14px}
+.gi__copy .fine{margin:18px 0 0;font-size:12px;line-height:1.6;color:var(--muted);max-width:52ch}
+.gi__body{min-width:0}
+.gi__fields{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}
+.gi__fields .gi__wide,.gi__fields .btn,.gi__fields .formstatus,.gi__fields .field:has(textarea){grid-column:1 / -1}
+.gi__fields--stack{grid-template-columns:1fr}
+.gi__fields .btn{margin-top:4px}
+.gi__prose p{margin:0 0 14px;font-size:15px;line-height:1.65;color:var(--muted);max-width:58ch}
+.gi__prose a{border-bottom:1px solid var(--line)}
+.gi__nav{display:none}
+.gi__prev{background:none;border:0;padding:0;font:inherit;font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);cursor:pointer}
+.gi__prev:hover{color:var(--ink)}
+.gi__prev[hidden]{visibility:hidden;display:block}
+
+/* With the script: one step at a time, the section sized to the window. */
+.gi.is-guided.has-open{min-height:100svh;box-sizing:border-box;display:flex;flex-direction:column;
+  padding-bottom:clamp(24px,3vw,48px)}
+.gi.is-guided .gi__section.is-open .gi__form{display:flex;flex-direction:column;flex:1}
+.is-stepped .gi__step{display:none}
+.is-stepped .gi__step.is-current{display:grid;flex:1;align-content:center}
+.is-stepped .gi__step + .gi__step{margin-top:0}
+.is-stepped .gi__nav{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin-top:clamp(20px,3vw,36px);padding-top:18px;border-top:1px solid var(--line)}
+.is-stepped .gi__step:last-of-type ~ .gi__nav [data-step-next]{display:none}
+.is-stepped.on-last .gi__nav [data-step-next]{display:none}
+.gi__doc input[type="file"]{border:1px dashed var(--line);padding:14px 12px;font-size:13px;background:#fff;width:100%}
+.gi__doc.is-bad input[type="file"]{border-color:#b3261e}
+.gi__hint{margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+.gi__preview{position:relative;width:112px;height:112px;margin:10px 0 0;border:1px solid var(--line)}
+.gi__preview img{width:100%;height:100%;object-fit:cover;display:block}
+.gi__preview button{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:12px;line-height:1;cursor:pointer;padding:0}
+.gi__preview[hidden]{display:none}
+
+@media (max-width:860px){
+  .gi__step{grid-template-columns:1fr;gap:20px}
+  .gi__fields{grid-template-columns:1fr}
+  .gi__progress li{font-size:0;gap:0}
+  .gi__progress li::before{font-size:10px}
+  .gi.is-guided.has-open{min-height:0}
+  .is-stepped .gi__step.is-current{align-content:start}
+}
+
+/* One journey at a time. `is-guided` is added by the script, so without
+   JavaScript both sections stay open and the page still works; hiding them in
+   plain CSS would leave a no-script visitor with two dead buttons. */
+.gi.is-guided .gi__section{display:none}
+.gi.is-guided .gi__section.is-open{display:flex;flex-direction:column;flex:1;margin-top:0}
+.gi.is-guided.has-open .gi__head,
+.gi.is-guided.has-open .gi__paths{display:none}
+.gi__back{display:none;font-size:12px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:none;border:0;
+  padding:0;cursor:pointer;align-items:center;gap:8px}
+.gi.is-guided.has-open .gi__back{display:inline-flex}
+.gi__back:hover{color:var(--ink)}
+.gi__back:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.gi__section:focus{outline:none}
+/* PFA_GI_CSS_END */
+
+.formstatus{margin:10px 0 0;font-size:13px;line-height:1.5}
+.formstatus[hidden]{display:none}
+.formstatus[data-state="bad"]{color:#b3261e}
+.formstatus[data-state="good"]{color:#1a7f4b}
+.field .opt{color:var(--muted);font-weight:400}
+.field{display:grid;gap:8px;align-content:start}
+.field label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.field input,.field textarea{width:100%;border:1px solid var(--line);background:#fff;padding:14px;font:inherit;font-size:14px;outline:none;border-radius:0;resize:vertical;-webkit-appearance:none}
+/* Two fields sharing a row must agree: same box height, same top edge. The
+   parent grid stretches each field to the row's height; without
+   align-content:start (above) that stretch is dealt into the field's own
+   rows and inflates the input - the giant empty box. With subgrid the
+   columns also share their label, input and hint rows, so a label that
+   wraps, or a hint under one box only, can never push the boxes apart.
+   The document fields keep their own flow: previews grow as they load. */
+@supports (grid-template-rows: subgrid){
+  .gi__fields > .field:not(.gi__doc){display:grid;grid-template-rows:subgrid;grid-row:span 3}
+}
+.field input:focus,.field textarea:focus{border-color:var(--ink)}
+.field .error{display:none;font-size:12px;color:#b3261e}
+.field .hint{font-size:12px;line-height:1.5;color:var(--muted)}
+.field.is-bad input,.field.is-bad textarea{border-color:#b3261e}.field.is-bad .error{display:block}
+.form{display:grid;gap:18px}
+.btn--full{display:block;width:100%;margin-top:26px}
+.fine{margin:16px 0 0;font-size:12px;line-height:1.55;color:var(--muted)}
+</style>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/get-involved">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Get Involved &amp;#183; People for Animals">
+  <meta property="og:description" content="Volunteer with People for Animals, or apply for a colony caregiver card. Both applications are read by a named person and you are told where yours has got to.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/get-involved">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Get Involved &amp;#183; People for Animals">
+  <meta name="twitter:description" content="Volunteer with People for Animals, or apply for a colony caregiver card. Both applications are read by a named person and you are told where yours has got to.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Get Involved &#183; People for Animals","item":"https://peopleforanimalsindia.org/get-involved"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="#top" data-nav="get-involved.html" class="current" aria-current="page">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="hide-sm">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main id="top">
+  <section class="gi">
+    <div class="gi__head">
+      <p class="eyebrow">Get involved</p>
+      <h1 class="gi__title">Two ways in.</h1>
+      <p class="gi__lede">One is to give PFA your time. The other is to be recognised for what you already
+        do where you live. Both start with an application that a named person reads, and both keep you told
+        of where it has got to.</p>
+    </div>
+
+    <div class="gi__paths">
+      <div class="gi__path">
+        <h2>Volunteer</h2>
+        <p>Read what each area actually involves, pick the ones that fit, and apply. Nobody is put in front
+          of an animal without knowing what the work is.</p>
+        <a class="btn" href="#volunteer" data-gi-open="volunteer">Volunteer with PFA</a>
+      </div>
+      <div class="gi__path">
+        <h2>Colony caregiver</h2>
+        <p>If you already feed and look after the animals in your colony, the card is a document that says
+          so, useful when a resident association or a guard asks what you are doing.</p>
+        <a class="btn btn--ghost" href="#caregiver" data-gi-open="caregiver">About the card</a>
+      </div>
+    </div>
+
+    <!-- ---------------- volunteer ----------------
+         One step per screen. The steps are plain markup inside the form, so
+         with no JavaScript they simply stack and the form still sends. -->
+    <section class="gi__section" id="volunteer" data-journey="Volunteer">
+      <div class="gi__bar">
+        <button type="button" class="gi__back" data-gi-back><span aria-hidden="true">&larr;</span> Both ways in</button>
+        <ol class="gi__progress" aria-label="Steps"><li>Areas</li><li>About you</li><li>Send</li></ol>
+      </div>
+
+      <form class="form gi__form" id="volForm" novalidate>
+        <div class="gi__step" data-step="Areas">
+          <div class="gi__copy">
+            <p class="eyebrow">Learn first</p>
+            <h2>What the work is.</h2>
+            <p class="gi__lede">Pick the areas you want to be considered for. Choosing one tells you what it
+              involves; what you choose is sent with the application.</p>
+            <p class="gi__areahint" data-area-hint>Nothing selected yet. Choose at least one area.</p>
+          </div>
+          <div class="gi__body">
+            <ul class="gi__areas">
+              <li><button type="button" class="gi__area" data-area="Head Office" aria-pressed="false"><b>Head Office</b><span>Administration, correspondence, records and the work that keeps the rest running.</span></button></li>
+              <li><button type="button" class="gi__area" data-area="Shelters" aria-pressed="false"><b>Shelters</b><span>Feeding, cleaning, socialising animals and helping visitors meet them.</span></button></li>
+              <li><button type="button" class="gi__area" data-area="Hospitals" aria-pressed="false"><b>Hospitals</b><span>Assisting veterinary staff, handling animals calmly, aftercare and records.</span></button></li>
+              <li><button type="button" class="gi__area" data-area="Rescue Operations" aria-pressed="false"><b>Rescue Operations</b><span>Responding to calls, safe handling and transport. Training first, always.</span></button></li>
+              <li><button type="button" class="gi__area" data-area="Laws" aria-pressed="false"><b>Laws</b><span>Complaints, FIRs, following cases through and helping people use the law.</span></button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="gi__step" data-step="About you">
+          <div class="gi__copy">
+            <p class="eyebrow">About you</p>
+            <h2>Who is applying.</h2>
+            <p class="gi__lede">A named person at PFA reads this and replies to the email you give. The mobile
+              number is for the unit nearest you.</p>
+          </div>
+          <div class="gi__body gi__fields">
+            <div class="field"><label for="volName">Your name</label><input id="volName" type="text" autocomplete="name" required><span class="error">Add your name.</span></div>
+            <div class="field"><label for="volMobile">Mobile number</label><input id="volMobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required><span class="error">Enter a 10-digit Indian mobile number.</span></div>
+            <div class="field"><label for="volEmail">Email</label><input id="volEmail" type="email" autocomplete="email" required><span class="error">Add a valid email for the reply.</span></div>
+            <div class="field"><label for="volCity">City or town</label><input id="volCity" type="text" autocomplete="address-level2" required><span class="error">Tell us where you are.</span></div>
+          </div>
+        </div>
+
+        <div class="gi__step" data-step="Send">
+          <div class="gi__copy">
+            <p class="eyebrow">Where an application goes</p>
+            <h2>Send it.</h2>
+            <ul class="gi__stages"><li class="gi__stage">Submitted</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Under review</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Shortlisted</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Approved or not taken forward</li></ul>
+            <p class="fine">You get a reference number. Every application appears in PFA's admin record under
+              Volunteers, and its stage is updated there as it moves.</p>
+          </div>
+          <div class="gi__body gi__fields gi__fields--stack">
+            <div class="field"><label for="volWhen">When you are free <span class="opt">(optional)</span></label><input id="volWhen" type="text" autocomplete="off"><span class="hint">Weekends, evenings, a few hours a week: whatever is true.</span></div>
+            <div class="field"><label for="volNotes">Anything else <span class="opt">(optional)</span></label><textarea id="volNotes" rows="3" maxlength="1200" placeholder="Experience with animals, a licence, languages, anything relevant"></textarea></div>
+            <button class="btn btn--full" type="submit" id="volSend">Send the application</button>
+            <p class="formstatus" data-form-status hidden></p>
+          </div>
+        </div>
+
+        <div class="gi__nav">
+          <button type="button" class="gi__prev" data-step-prev>Back</button>
+          <button type="button" class="btn" data-step-next>Continue</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ---------------- caregiver ---------------- -->
+    <section class="gi__section" id="caregiver" data-journey="Colony caregiver">
+      <div class="gi__bar">
+        <button type="button" class="gi__back" data-gi-back><span aria-hidden="true">&larr;</span> Both ways in</button>
+        <ol class="gi__progress" aria-label="Steps"><li>The card</li><li>About you</li><li>Your colony</li><li>Pay</li></ol>
+      </div>
+
+      <form class="form gi__form" id="cgForm" method="post" action="/api/payment/create" novalidate>
+        <input type="hidden" name="type" value="caregiver-application">
+        <input type="hidden" name="documents" id="cgDocuments" value="">
+
+        <div class="gi__step" data-step="The card">
+          <div class="gi__copy">
+            <p class="eyebrow">Colony caregiver</p>
+            <h2>The card.</h2>
+            <p class="gi__lede">Applying costs &#8377;50 and the card is not issued on the spot: a named person at PFA
+              reads the application and decides. You get an application number the moment the fee clears.</p>
+          </div>
+          <div class="gi__body gi__prose">
+            <p>Feeding community dogs is lawful. The ABC Rules 2023 recognise caregivers, and the courts have
+              held that a resident association cannot stop it.</p>
+            <p>The card is a document you can show when that is disputed. It is not a permit, and it does not
+              give PFA any authority over your colony: it records that PFA knows who you are and what you do.</p>
+            <p><a href="laws.html#a10">What the law actually says about feeding and caregivers</a></p>
+          </div>
+        </div>
+
+        <div class="gi__step" data-step="About you">
+          <div class="gi__copy">
+            <p class="eyebrow">About you</p>
+            <h2>Who is applying.</h2>
+            <p class="gi__lede">The name goes on the card exactly as you write it here.</p>
+          </div>
+          <div class="gi__body gi__fields">
+            <div class="field"><label for="cgName">Your name</label><input id="cgName" name="name" type="text" autocomplete="name" required><span class="error">Add your name.</span></div>
+            <div class="field"><label for="cgMobile">Mobile number</label><input id="cgMobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required><span class="error">Enter a 10-digit Indian mobile number.</span></div>
+            <div class="field gi__wide"><label for="cgEmail">Email <span class="opt">(optional)</span></label><input id="cgEmail" name="email" type="email" autocomplete="email"><span class="error">Check the email address, or leave it blank.</span></div>
+            <div class="field gi__doc" data-doc="photo"><label for="cgPhoto">Your photograph</label>
+              <input id="cgPhoto" type="file" accept="image/*" capture="user">
+              <p class="gi__hint">Face straight on, plain background, no cap or sunglasses. This prints on the card.</p>
+              <div class="gi__preview" hidden><img alt="Your photograph"><button type="button" data-doc-clear aria-label="Remove">&#10005;</button></div>
+              <span class="error">Add your photograph. It goes on the card.</span></div>
+            <div class="field gi__doc" data-doc="proof"><label for="cgProof">Proof of address</label>
+              <input id="cgProof" type="file" accept="image/*">
+              <p class="gi__hint">Aadhaar, voter ID, driving licence, passport, or a utility bill. One clear picture of the side with the address. Only the reviewer sees it.</p>
+              <div class="gi__preview" hidden><img alt="Address proof"><button type="button" data-doc-clear aria-label="Remove">&#10005;</button></div>
+              <span class="error">Add a proof of address, so the colony can be checked.</span></div>
+          </div>
+        </div>
+
+        <div class="gi__step" data-step="Your colony">
+          <div class="gi__copy">
+            <p class="eyebrow">Your colony</p>
+            <h2>Where you feed.</h2>
+            <p class="gi__lede">The locality goes on the card too, so a guard or an association can see it
+              matches where they met you.</p>
+          </div>
+          <div class="gi__body gi__fields">
+            <div class="field gi__wide"><label for="cgAddress">Colony or locality</label><input id="cgAddress" name="address" type="text" autocomplete="street-address" required><span class="error">Where do you feed?</span></div>
+            <div class="field"><label for="cgCity">City or town</label><input id="cgCity" name="city" type="text" autocomplete="address-level2" required><span class="error">Tell us where.</span></div>
+            <div class="field"><label for="cgCount">Roughly how many animals <span class="opt">(optional)</span></label><input id="cgCount" name="animals" type="text" inputmode="numeric" maxlength="4"><span class="hint">An estimate is fine.</span></div>
+          </div>
+        </div>
+
+        <div class="gi__step" data-step="Pay">
+          <div class="gi__copy">
+            <p class="eyebrow">Where an application goes</p>
+            <h2>Pay and apply.</h2>
+            <ul class="gi__stages"><li class="gi__stage">Submitted</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Under review</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Verified</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Card issued</li></ul>
+            <p class="fine">The fifty rupees confirms the application and gives it a number you can track it
+              with. It is not payment for a card: a named person at PFA reads every application and decides.
+              If it is not approved, the fee is not refunded, because it pays for the reading rather than the
+              card. Every application appears in PFA's admin record under Caregiver Cards.</p>
+          </div>
+          <div class="gi__body gi__fields gi__fields--stack">
+            <div class="field"><label for="cgNotes">How long, and anything else <span class="opt">(optional)</span></label><textarea id="cgNotes" name="notes" rows="3" maxlength="1200" placeholder="How long you have been feeding there, who else helps, any trouble you have had"></textarea></div>
+            <button class="btn btn--full" type="submit" id="cgSend">Pay &#8377;50 and apply</button>
+            <p class="formstatus" data-form-status hidden></p>
+          </div>
+        </div>
+
+        <div class="gi__nav">
+          <button type="button" class="gi__prev" data-step-prev>Back</button>
+          <button type="button" class="btn" data-step-next>Continue</button>
+        </div>
+      </form>
+    </section>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };}());
+</script>
+
+<script src="pfa-forms.js"></script>
+<script>
+/* PFA_GI_JS_START */
+(function(){
+  'use strict';
+
+  /* ---- one journey at a time ----
+     The page opens on the choice. Picking one shows that journey and puts it
+     in the address bar, so it can be linked to and the back button works.
+
+     The sections are hidden by a class the script adds rather than by plain
+     CSS, so a visitor with no JavaScript sees both journeys and both forms
+     instead of a page with two buttons that do nothing. */
+  (function guide(){
+    var wrap = document.querySelector('.gi');
+    var sections = [].slice.call(document.querySelectorAll('.gi__section'));
+    if (!wrap || sections.length < 2) return;
+
+    wrap.classList.add('is-guided');
+
+    function open(id, focus){
+      var found = false;
+      sections.forEach(function(s){
+        var on = s.id === id;
+        s.classList.toggle('is-open', on);
+        if (on) found = true;
+      });
+      wrap.classList.toggle('has-open', found);
+      if (found && focus){
+        var el = document.getElementById(id);
+        el.setAttribute('tabindex', '-1');
+        el.focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+      return found;
+    }
+
+    function fromHash(focus){
+      var id = String(location.hash || '').replace(/^#/, '');
+      if (!open(id, focus)) {
+        wrap.classList.remove('has-open');
+        sections.forEach(function(s){ s.classList.remove('is-open'); });
+      }
+    }
+
+    /* The choices are ordinary links to #volunteer and #caregiver, so they
+       still work with the script gone; here they only need the section shown. */
+    document.addEventListener('click', function(e){
+      var back = e.target.closest && e.target.closest('[data-gi-back]');
+      if (back){
+        e.preventDefault();
+        if (location.hash) history.pushState(null, '', location.pathname);
+        fromHash(false);
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        var first = document.querySelector('.gi__paths .btn');
+        if (first) first.focus({ preventScroll: true });
+        return;
+      }
+      var pick = e.target.closest && e.target.closest('[data-gi-open]');
+      if (!pick) return;
+      var id = pick.getAttribute('data-gi-open');
+      if (!document.getElementById(id)) return;
+      e.preventDefault();
+      history.pushState(null, '', '#' + id);
+      open(id, true);
+    });
+
+    window.addEventListener('hashchange', function(){ fromHash(true); });
+    window.addEventListener('popstate', function(){ fromHash(false); });
+    fromHash(false);                       /* a link straight to #caregiver opens it */
+  })();
+  var $ = function(s){ return document.querySelector(s); };
+  function bad(el, on){ var f = el.closest('.field'); if (f) f.classList.toggle('is-bad', on); return on; }
+  function mobileOk(v){ return /^[6-9]\d{9}$/.test(String(v).replace(/\D/g, '')); }
+  function emailOk(v){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(v).trim()); }
+
+  /* ---- one step per screen ----
+     The steps are ordinary markup inside each form. This shows one at a time,
+     checks the current step's required fields before moving on, and keeps the
+     progress row honest. Without the script every step is simply visible. */
+  var picked = [];
+  function stepper(section){
+    var form = section.querySelector('form');
+    var steps = [].slice.call(section.querySelectorAll('.gi__step'));
+    var dots = [].slice.call(section.querySelectorAll('.gi__progress li'));
+    var prev = section.querySelector('[data-step-prev]');
+    var next = section.querySelector('[data-step-next]');
+    if (!form || steps.length < 2) return;
+    form.classList.add('is-stepped');
+    var at = 0;
+
+    function paint(focus){
+      steps.forEach(function(s, i){ s.classList.toggle('is-current', i === at); });
+      dots.forEach(function(d, i){
+        d.classList.toggle('is-done', i < at);
+        d.classList.toggle('is-current', i === at);
+        if (i === at) d.setAttribute('aria-current', 'step'); else d.removeAttribute('aria-current');
+      });
+      form.classList.toggle('on-last', at === steps.length - 1);
+      if (prev) prev.hidden = at === 0;
+      if (focus){
+        var first = steps[at].querySelector('input:not([type="hidden"]), textarea, button.gi__area, a');
+        if (first) first.focus({ preventScroll: true });
+      }
+    }
+    function stepOk(){
+      var errs = 0;
+      [].forEach.call(steps[at].querySelectorAll('input[required], textarea[required]'), function(el){
+        var v = el.value;
+        var wrong = !String(v).trim() ||
+          (el.type === 'tel' && !mobileOk(v)) ||
+          (el.type === 'email' && !emailOk(v));
+        errs += bad(el, wrong) ? 1 : 0;
+      });
+      [].forEach.call(steps[at].querySelectorAll('input[type="email"]:not([required])'), function(el){
+        errs += bad(el, !!el.value.trim() && !emailOk(el.value)) ? 1 : 0;
+      });
+      [].forEach.call(steps[at].querySelectorAll('.gi__doc'), function(box){
+        var kind = box.getAttribute('data-doc');
+        var missing = !(window.PFA_CG_DOCS && window.PFA_CG_DOCS[kind]);
+        box.classList.toggle('is-bad', missing);
+        if (missing) errs += 1;
+      });
+      if (steps[at].querySelector('[data-area]') && !picked.length){
+        var hint = steps[at].querySelector('[data-area-hint]');
+        if (hint){ hint.textContent = 'Choose at least one area to continue.'; hint.style.color = '#b3261e'; }
+        errs += 1;
+      }
+      if (errs){ var f = steps[at].querySelector('.is-bad input:not([type="file"]), .is-bad textarea, .is-bad input'); if (f) f.focus(); }
+      return !errs;
+    }
+    function go(n, focus){ at = Math.max(0, Math.min(steps.length - 1, n)); paint(focus); }
+
+    if (next) next.addEventListener('click', function(){ if (stepOk()) go(at + 1, true); });
+    if (prev) prev.addEventListener('click', function(){ go(at - 1, true); });
+    form.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+      if (at < steps.length - 1){ e.preventDefault(); if (stepOk()) go(at + 1, true); }
+    });
+    /* A submit from anywhere but the last step (a browser autofill, say)
+       walks the visitor to the first step that still needs something. */
+    form.addEventListener('submit', function(e){
+      if (at === steps.length - 1) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();       /* the sender must not see this one */
+      if (stepOk()) go(at + 1, true);
+    }, true);
+    section.addEventListener('gi:reset', function(){ go(0, false); });
+    paint(false);
+  }
+  [].forEach.call(document.querySelectorAll('.gi__section'), stepper);
+
+  /* ---- the Learn section: pick the areas ---- */
+  var hint = document.querySelector('[data-area-hint]');
+  function paintAreas(){
+    if (!hint) return;
+    hint.textContent = picked.length
+      ? 'Applying for: ' + picked.join(', ') + '.'
+      : 'Nothing selected yet. Choose at least one area.';
+    hint.style.color = '';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-area]'), function(b){
+    b.addEventListener('click', function(){
+      var area = b.getAttribute('data-area');
+      var at = picked.indexOf(area);
+      if (at > -1) picked.splice(at, 1); else picked.push(area);
+      b.setAttribute('aria-pressed', String(at === -1));
+      paintAreas();
+    });
+  });
+  paintAreas();
+
+  function offline(form){
+    var note = form.querySelector('[data-form-status]');
+    if (note){ note.hidden = false; note.setAttribute('data-state','bad');
+      note.textContent = 'This form cannot be sent right now. Please reload the page.'; }
+    var btn = form.querySelector('[type="submit"]');
+    if (btn) btn.disabled = true;
+  }
+
+  function sent(form, reference, where){
+    form.innerHTML =
+      '<p class="eyebrow">Application sent</p>' +
+      '<h3 style="font-family:var(--display);font-weight:400;font-size:clamp(20px,2.4vw,30px);margin:8px 0 0">' +
+      'Your reference is ' + reference + '.</h3>' +
+      '<p style="margin:14px 0 0;font-size:14px;line-height:1.6;color:var(--muted);max-width:52ch">' +
+      'Keep the number. It is on PFA\u2019s record under ' + where + ' at the Submitted stage, and a named ' +
+      'person moves it from there. Nothing is decided yet.</p>';
+  }
+
+  /* ---- volunteer ---- */
+  (function volunteer(){
+    var form = $('#volForm');
+    if (!form) return;
+    if (!window.PFAForms) return offline(form);
+    form.addEventListener('input', function(e){ var f = e.target.closest('.field'); if (f) f.classList.remove('is-bad'); });
+    window.PFAForms.wire(form, {
+      kind: 'PFA-V',
+      collect: function(){
+        var n=$('#volName'), m=$('#volMobile'), e=$('#volEmail'), c=$('#volCity'), w=$('#volWhen'), x=$('#volNotes');
+        var errs = 0;
+        errs += bad(n, !n.value.trim()) ? 1 : 0;
+        errs += bad(m, !mobileOk(m.value)) ? 1 : 0;
+        errs += bad(e, !emailOk(e.value)) ? 1 : 0;
+        errs += bad(c, !c.value.trim()) ? 1 : 0;
+        if (errs){ var first = form.querySelector('.is-bad input'); if (first) first.focus(); return null; }
+        if (!picked.length){
+          var note = form.querySelector('[data-form-status]');
+          if (note){ note.hidden=false; note.setAttribute('data-state','bad');
+            note.textContent = 'Go back to the first step and choose at least one area, so PFA knows what to consider you for.'; }
+          var areas = document.querySelector('[data-area]'); if (areas) areas.focus();
+          return null;
+        }
+        return {
+          name: n.value.trim(), mobile: m.value.replace(/\D/g,''), email: e.value.trim(),
+          city: c.value.trim(), title: 'Volunteer: ' + picked.join(', '),
+          notes: (w.value.trim() ? 'Free: ' + w.value.trim() + '. ' : '') + x.value.trim()
+        };
+      },
+      onSent: function(reference){ sent(form, reference, 'Volunteers'); }
+    });
+  })();
+
+  /* ---- colony caregiver ----
+     This one is not sent by fetch. It is a real form POST to
+     /api/payment/create, because the browser has to end up on CCAvenue's page.
+     The script only validates before letting it go. */
+  (function caregiver(){
+    var form = $('#cgForm');
+    if (!form) return;
+    form.addEventListener('input', function(e){ var f = e.target.closest('.field'); if (f) f.classList.remove('is-bad'); });
+
+    /* ---- the two pictures ----
+       Shrunk on the phone, previewed, and kept in memory until the fee. The
+       stepper reads window.PFA_CG_DOCS to refuse "Continue" without them. */
+    var docs = window.PFA_CG_DOCS = { photo: '', proof: '' };
+    function docBox(kind){ var input = $(kind === 'photo' ? '#cgPhoto' : '#cgProof'); return input ? input.closest('.gi__doc') : null; }
+    function paintDoc(kind){
+      var box = docBox(kind); if (!box) return;
+      var prev = box.querySelector('.gi__preview'), img = prev && prev.querySelector('img');
+      if (img) img.src = docs[kind] || '';
+      if (prev) prev.hidden = !docs[kind];
+      box.querySelector('input[type="file"]').hidden = !!docs[kind];
+      if (docs[kind]) box.classList.remove('is-bad');
+    }
+    form.addEventListener('change', function(e){
+      var input = e.target; var box = input.closest && input.closest('.gi__doc');
+      if (!box || input.type !== 'file') return;
+      var kind = box.getAttribute('data-doc'); var file = input.files && input.files[0];
+      if (!file) return;
+      var err = box.querySelector('.error');
+      if (!window.PFAForms){ err.textContent = 'Pictures cannot be attached right now. Reload the page.'; box.classList.add('is-bad'); return; }
+      err.textContent = 'Preparing\u2026';
+      window.PFAForms.shrink(file, kind === 'photo' ? 1200 : 1800, 0.85)
+        .then(function(dataUrl){ docs[kind] = dataUrl; paintDoc(kind); })
+        .catch(function(error){ err.textContent = error.message; box.classList.add('is-bad'); });
+      input.value = '';
+    });
+    form.addEventListener('click', function(e){
+      var clear = e.target.closest && e.target.closest('[data-doc-clear]'); if (!clear) return;
+      var box = clear.closest('.gi__doc'); var kind = box.getAttribute('data-doc');
+      docs[kind] = ''; $('#cgDocuments').value = ''; paintDoc(kind);
+    });
+
+    var sending = false;
+    form.addEventListener('submit', function(e){
+      var n=$('#cgName'), m=$('#cgMobile'), em=$('#cgEmail'), a=$('#cgAddress'), c=$('#cgCity');
+      var errs = 0;
+      errs += bad(n, !n.value.trim()) ? 1 : 0;
+      errs += bad(m, !mobileOk(m.value)) ? 1 : 0;
+      errs += bad(em, !!em.value.trim() && !emailOk(em.value)) ? 1 : 0;
+      errs += bad(a, !a.value.trim()) ? 1 : 0;
+      errs += bad(c, !c.value.trim()) ? 1 : 0;
+      ['photo', 'proof'].forEach(function(kind){ var box = docBox(kind); if (box){ box.classList.toggle('is-bad', !docs[kind]); if (!docs[kind]) errs += 1; } });
+      if (errs){
+        e.preventDefault();
+        var first = form.querySelector('.is-bad input');
+        if (first) first.focus();
+        return;
+      }
+      m.value = m.value.replace(/\D/g, '');
+      var btn = $('#cgSend');
+      var note = form.querySelector('[data-form-status]');
+      function say(text, state){ if (!note) return; note.hidden = !text; note.textContent = text || ''; note.setAttribute('data-state', state || ''); }
+
+      /* The pictures go first, by fetch, and the token they come back under
+         rides with the fee. Only then does the form navigate to CCAvenue. */
+      if ($('#cgDocuments').value) return;            /* second pass: let it go */
+      e.preventDefault();
+      if (sending) return;
+      sending = true;
+      if (btn){ btn.disabled = true; btn.textContent = 'Sending your pictures\u2026'; }
+      fetch('/api/caregiver/documents', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ photo: docs.photo, proof: docs.proof }) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(p){ return { ok: r.ok, p: p }; }); })
+        .then(function(res){
+          if (!res.ok || !res.p.token) throw new Error((res.p && res.p.error) || 'The pictures could not be sent. Try again.');
+          $('#cgDocuments').value = res.p.token;
+          if (btn) btn.textContent = 'Opening secure payment\u2026';
+          form.submit();                                /* straight to CCAvenue; handlers do not run again */
+        })
+        .catch(function(error){
+          sending = false;
+          if (btn){ btn.disabled = false; btn.textContent = 'Pay \u20b950 and apply'; }
+          say(error.message, 'bad');
+        });
+    });
+  })();
+
+}());
+
+/* PFA_GI_JS_END */
+
+</script>
+</body>
+</html>

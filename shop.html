@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page and the shop, so the
+     display heading on the door renders identically to the one behind it. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.266">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop · People for Animals</title>
+<meta name="description" content="Buy what you already want. Food, meds and gear for the animal you adopted, sold by the seller, with every order funding rescue, treatment and lifelong care.">
+<!-- The grid behind this door paints from a snapshot and reconciles with the
+     live catalogue. Both are warmed here, while the visitor reads the door, so
+     the shop is already holding its answer by the time Explore is pressed. -->
+<link rel="prefetch" href="pfa-shop.html">
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.shopify.com">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --line:#e4e2df;
+  --accent:#2b9fd8;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:69px;
+  /* No --max here: the 1440 ceiling is already inside --gutter, which grows to
+     (100% - 1440px) / 2 once the window is wider than that, so the padding
+     centres the door's content on its own. */
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+}
+*{box-sizing:border-box}
+/* One screen and no scroll: the door is the whole page. `svh` rather than `vh`
+   because on a phone `vh` is the tallest the viewport ever gets, so with the
+   browser bars showing the bottom of the door - the button - sat below the
+   fold and the page scrolled after all. */
+html,body{height:100%;overflow:hidden}
+html,body{margin:0;padding:0;background:var(--deep);color:#fff;font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+ul{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- shared type + controls, taken from pfa-shop.html so the door and
+     the room behind it are set in the same face at the same weights ---------- */
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff;opacity:1}
+/* The two doors share one flex row and one baseline; a <button> and an <a>
+   do not agree on line-height by default, so it is said once for both. On
+   a narrow screen they stack, full width, still aligned. */
+.gate__ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+.gate__ctas .gate__cta{margin:0;line-height:1.2;font-family:inherit;display:inline-flex;align-items:center;justify-content:center}
+.gate__cta--track{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.gate__cta--track:hover{background:#fff;color:var(--ink);border-color:#fff;opacity:1}
+.trk__form[hidden]{display:none}
+
+/* ---------- track order: the dialog ----------
+   Paper on the dark door, ink on paper inside, Marcellus for the one title:
+   the site's own dialog language. The rail is the six stations every parcel
+   passes; the list beneath is every update, newest first, the courier's and
+   the store's together. */
+.trk{border:0;padding:0;width:min(640px,calc(100vw - 32px));max-height:min(88vh,900px);background:#fff;color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.trk::backdrop{background:rgba(10,10,10,.72)}
+.trk__in{padding:34px clamp(22px,4vw,44px) 38px}
+.trk__top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
+.trk__eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.trk__title{font-family:var(--display);font-weight:400;font-size:clamp(26px,3.4vw,34px);line-height:1.05;margin:0;letter-spacing:.01em}
+.trk__close{border:1px solid var(--line);background:none;width:40px;height:40px;font-size:18px;cursor:pointer;flex:0 0 auto;color:var(--ink)}
+.trk__close:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.trk__form{display:grid;gap:12px}
+.trk__form label{display:grid;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.trk__form input{border:1px solid var(--line);padding:14px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff}
+.trk__form input:focus{outline:2px solid var(--ink);outline-offset:-1px}
+.trk__form .btn{background:var(--ink);color:#fff;border-color:var(--ink);width:100%;text-align:center;margin-top:6px}
+.trk__form .btn:hover{opacity:.88}
+.trk__hint{font-size:13px;color:var(--muted);margin:4px 0 0;line-height:1.5}
+.trk__err{margin:0;padding:12px 14px;border:1px solid var(--ink);font-size:14px;line-height:1.45}
+.trk__err[hidden]{display:none}
+.trk__head{display:grid;gap:4px;margin-bottom:22px}
+.trk__num{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.trk__state{font-family:var(--display);font-size:clamp(24px,3vw,30px);line-height:1.1;margin:0}
+.trk__meta{font-size:14px;color:var(--muted);line-height:1.5;margin:0}
+.trk__note{margin:0 0 18px;padding:12px 14px;background:#f5f4f1;font-size:14px;line-height:1.5}
+.trk__rail{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:0;position:relative}
+.trk__rail li{position:relative;text-align:center;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:26px;line-height:1.3}
+.trk__rail li::before{content:"";position:absolute;top:7px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;border:2px solid var(--line);background:#fff;box-sizing:border-box}
+.trk__rail li::after{content:"";position:absolute;top:12px;left:calc(-50% + 6px);right:calc(50% + 6px);height:2px;background:var(--line)}
+.trk__rail li:first-child::after{display:none}
+.trk__rail li.done{color:var(--ink)}
+.trk__rail li.done::before{background:var(--ink);border-color:var(--ink)}
+.trk__rail li.done::after{background:var(--ink)}
+.trk__rail li.now{color:var(--ink);font-weight:700}
+.trk__rail li.now::before{background:#fff;border-color:var(--ink);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--ink)}
+.trk__rail li.now::after{background:var(--ink)}
+.trk--off .trk__rail li{color:var(--muted)}
+@media (max-width:560px){.trk__rail{grid-template-columns:repeat(3,1fr);row-gap:14px}.trk__rail li::after{display:none}}
+.trk__sub{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.trk__log{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.trk__log li{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}
+.trk__log time{color:var(--muted);font-size:13px;white-space:nowrap}
+.trk__log small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.trk__again{margin-top:22px;background:none;border:none;padding:0;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer}
+@media (max-width:560px){.trk__log li{grid-template-columns:1fr;gap:2px}}
+
+/* ---------- the door ----------
+   The shop's own hero is a dark block lit from the top right. The door is that
+   same block taken to full height, so pressing Explore reads as walking into
+   the room the door is cut into rather than as arriving somewhere new.
+
+   Wide enough, it is two columns: the words on the left, the cat standing on
+   the bottom edge at the right. Narrower, the two stack. */
+.gate{
+  position:relative;
+  /* Named because the cat has to cancel it: see .gate__cat. */
+  --gate-foot:clamp(20px,3.6vh,48px);
+  height:100svh;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  gap:clamp(14px,2.4vh,30px);
+  /* The header is fixed, so the door reserves its height itself. Both parts
+     are measured by assets/chrome.js; the values above are only a first paint. */
+  padding:calc(var(--ann) + var(--nav) + clamp(18px,3.4vh,48px)) var(--gutter) var(--gate-foot);
+  background:var(--deep);
+  overflow:hidden;
+  isolation:isolate;
+}
+.gate::before{content:"";position:absolute;inset:0;z-index:0;background:
+   radial-gradient(120% 90% at 78% 15%,rgba(255,255,255,.16),transparent 60%),
+   radial-gradient(70% 70% at 8% 100%,rgba(255,255,255,.09),transparent 65%)}
+
+/* Three bands, spaced apart rather than piled at the bottom: the section's
+   name under the header, the proposition and the way in at the optical centre,
+   the shortcuts on a rule along the foot. The rule stops at this column's edge,
+   which is why the cat can stand beside it without a line across its chest. */
+.gate__text{position:relative;z-index:1;flex:1 1 auto;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:clamp(14px,2.4vh,30px)}
+.gate .eyebrow{color:rgba(255,255,255,.55)}
+.gate__mid{display:flex;flex-direction:column;gap:clamp(14px,2.6vh,30px)}
+
+/* Sized against the viewport's height as well as its width. A headline set in
+   vw alone is what pushed the button off a short laptop window, which on a
+   page that must not scroll means the only thing to do here is unreachable. */
+.gate__head{font-size:clamp(30px,min(6.2vw,8.4vh),84px);max-width:16ch}
+
+/* Read, then act: the sentence sits under the headline and the button under
+   the sentence, in that order, at every width. */
+.gate__act{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(14px,2.4vh,26px)}
+.gate__lede{margin:0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.gate__cta{min-width:220px;flex:0 0 auto}
+
+/* The cat is a cut-out whose subject runs off the bottom of its own frame, so
+   the only honest place for it is standing on the bottom edge of the screen.
+   The negative margin cancels the door's foot padding to put it there: stopped
+   short of the edge, a cut-out reads as a sticker hanging in mid-air. */
+.gate__cat{
+  position:relative;z-index:1;
+  flex:0 0 auto;
+  align-self:flex-end;
+  width:auto;height:min(56vh,500px);
+  margin-bottom:calc(var(--gate-foot) * -1);
+  object-fit:contain;object-position:bottom center;
+  pointer-events:none;
+}
+@media (min-width:900px){
+  .gate{flex-direction:row;align-items:stretch;gap:clamp(28px,4vw,80px)}
+  .gate__cat{height:min(64vh,600px)}
+}
+/* Below that the door stacks: the words, the shortcuts, then the cat along the
+   foot of the screen. It is smaller here because everything above it has to
+   fit on the same screen without scrolling. */
+@media (max-width:899px){
+  .gate__cat{height:min(32vh,280px)}
+}
+
+/* A shortcut for the shopper who already knows what they came for. Quiet on
+   purpose: the button is the way in, this is the side entrance. The filters
+   these open are the shop's own, so an unknown value cannot empty the grid. */
+.gate__cats{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px clamp(16px,2.4vw,30px);padding-top:clamp(14px,2.4vh,24px);border-top:1px solid rgba(255,255,255,.16)}
+.gate__cats p{margin:0;font-size:12px;color:rgba(255,255,255,.45)}
+.gate__cats a{font-size:13px;color:rgba(255,255,255,.82);padding-bottom:2px;border-bottom:1px solid rgba(255,255,255,.28);transition:border-color .2s,color .2s}
+.gate__cats a:hover{color:#fff;border-bottom-color:#fff}
+
+/* The footer is stamped into every page from assets/chrome-footer.html and
+   this page is no exception - the contact details are in the markup and stay
+   in step with the rest of the site. It is not shown, because a door that is
+   one screen with no scroll has nowhere to show it, and taking it out of the
+   flow altogether is kinder than leaving it clipped and still tabbable. It is
+   on the page the button opens. */
+.offstage{display:none}
+
+@media (max-width:639px){
+  .gate__cta{width:100%}
+  /* The label takes its own line rather than sitting in front of the links and
+     pushing the last of them onto a second row on its own. */
+  .gate__cats{gap:10px 18px}
+  .gate__cats p{flex:0 0 100%}
+}
+/* Under about 620px tall - a phone held sideways - the shortcuts are the first
+   thing to go, so the headline and the button keep their room. The door clips
+   rather than scrolls, so anything that does not fit is not merely awkward:
+   it is gone, and the eyebrow was the first thing over the edge. */
+@media (max-height:620px){
+  .gate__cats{display:none}
+  .gate{gap:10px}
+  .gate__mid{gap:12px}
+  .gate__act{gap:12px}
+  /* Putting the sentence above the button rather than beside it costs a whole
+     button's height, which a 390px-tall screen does not have. It is bought
+     back from the width, which such a screen has plenty of: the headline and
+     the paragraph both run wider here, so each is a line or two shorter. */
+  .gate__head{max-width:24ch}
+  .gate__lede{font-size:13px;max-width:90ch}
+  .gate__cta{padding:12px 26px}
+}
+/* Stacked and short at once - a phone held sideways - is the one case with no
+   room for the cat: stacked, it is 125px of height added under the words, and
+   that was enough to push Explore off the bottom edge. Beside the words on a
+   short laptop window it costs nothing, so it stays there. */
+@media (max-width:899px) and (max-height:620px){
+  .gate__cat{display:none}
+}
+</style>
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/shop">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Shop">
+  <meta property="og:description" content="Buy what you already want. Food, meds and gear for the animal you adopted, sold by the seller, with every order funding rescue, treatment and lifelong care.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/shop">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Shop">
+  <meta name="twitter:description" content="Buy what you already want. Food, meds and gear for the animal you adopted, sold by the seller, with every order funding rescue, treatment and lifelong care.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Shop","item":"https://peopleforanimalsindia.org/shop"}]}</script>
+  <!-- seo:end -->
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every order funds rescue, treatment, and lifelong care</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <div class="navgroup left">
+      <a href="founder.html" data-nav="founder.html">Founder</a>
+      <a href="laws.html" data-nav="laws.html">Laws</a>
+      <a href="units.html" data-nav="units.html">Units</a>
+      <a href="newsroom.html" data-nav="newsroom.html">Newsroom</a>
+      <a href="wall.html" data-nav="wall.html">The Wall</a>
+      <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+    </div>
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navgroup right">
+      <a href="cinekind.html" data-nav="cinekind.html" class="hide-sm">CineKind</a>
+      <a href="pfa-shop.html" data-nav="pfa-shop.html" class="current" aria-current="page">Shop</a>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main id="top">
+  <section class="gate" data-cursor="light" data-screen-label="Shop door">
+    <div class="gate__text">
+      <p class="eyebrow">PFA Shop</p>
+      <div class="gate__mid">
+        <h1 class="display gate__head">Buy what you already want</h1>
+        <div class="gate__act">
+          <p class="gate__lede">Food, meds and gear for the animal you adopted. The stock, the prices and the delivery are the seller&rsquo;s. Everything listed is checked so the food is vegetarian, and every order funds rescue, treatment and lifelong care.</p>
+          <!-- Two doors on one row. Tracking happens here, on this page, in
+               a dialog: no other site, no other page. The form asks for the
+               PFA order number and the email or mobile given with the order,
+               because the number runs in sequence and can be guessed by
+               counting; the contact is what proves the order is yours. -->
+          <div class="gate__ctas">
+            <a class="btn btn--light gate__cta" href="pfa-shop.html">Explore</a>
+            <button type="button" class="btn gate__cta gate__cta--track" id="trackOpen">Track order</button>
+          </div>
+        </div>
+      </div>
+      <nav class="gate__cats" aria-label="Go straight to a category">
+        <p>Or go straight to</p>
+        <a href="pfa-shop.html?cat=food">Food</a>
+        <a href="pfa-shop.html?cat=health">Health</a>
+        <a href="pfa-shop.html?cat=grooming">Grooming</a>
+        <a href="pfa-shop.html?cat=home">Home</a>
+        <a href="pfa-shop.html?cat=toys">Toys</a>
+      </nav>
+    </div>
+    <!-- Decorative, so the alt is empty on purpose: everything this picture
+         says, the paragraph beside it already says in words. -->
+    <img class="gate__cat" src="img/shop-cat.webp" alt="" width="1000" height="1000" decoding="async">
+  </section>
+</main>
+
+<div class="offstage">
+<footer class="pfa-footer" data-cursor="light" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="pfa-shop.html">Shop</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <p class="pfa-tally__label">People who have come to this site</p>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+</div>
+
+<dialog class="trk" id="trackDlg" aria-labelledby="trkTitle">
+  <div class="trk__in">
+    <div class="trk__top">
+      <div>
+        <p class="trk__eyebrow">PFA shop</p>
+        <h2 class="trk__title" id="trkTitle">Track your order</h2>
+      </div>
+      <button type="button" class="trk__close" id="trackClose" aria-label="Close">&#x2715;</button>
+    </div>
+    <form class="trk__form" id="trkForm" novalidate>
+      <label>PFA order number<input id="trkId" type="text" autocomplete="off" inputmode="text" placeholder="PFA-ST-…" required></label>
+      <label>Email or mobile used for the order<input id="trkContact" type="text" autocomplete="email" placeholder="you@example.com or 98765 43210" required></label>
+      <p class="trk__err" id="trkErr" role="alert" hidden></p>
+      <button type="submit" class="btn">Show status</button>
+      <p class="trk__hint">The PFA order number is on your confirmation screen and in the email PFA sent. The contact proves the order is yours to see; neither is stored by this page.</p>
+    </form>
+    <div id="trkResult" hidden></div>
+  </div>
+</dialog>
+<script>
+/* ---------- track order ----------
+   One request, to PFA's own status endpoint, with the PFA order number and
+   the contact given with the order. The answer is drawn here: six stations,
+   the current one lit, then every update newest first - the store's own
+   (placed, payment verified, fulfilled) and the courier's (picked up, in
+   transit, out for delivery, delivered) in one list. Nothing leaves this
+   page.
+
+   Every way this can go wrong has its own sentence. Before asking: a field
+   left empty says which; a seller's order number typed by mistake ("1006")
+   is caught, since a PFA number starts with PFA-; a contact that is neither
+   an email nor a mobile is caught. While asking: a browser that cannot reach
+   PFA, a request that hangs past twelve seconds, and an answer that is not
+   JSON (an edge gateway's HTML error page) are told apart, because each
+   needs a different next step from the shopper. On the answer: the server's
+   own codes are mapped to plain sentences with the server's wording as the
+   fallback, and an update with an unreadable time cannot scramble the list
+   (a NaN comparator would). A browser with no dialog support gets no dead
+   button: the button hides. */
+(function(){
+  'use strict';
+  var dlg = document.getElementById('trackDlg'), open = document.getElementById('trackOpen');
+  if (!dlg || !open) return;
+  if (typeof dlg.showModal !== 'function'){ open.hidden = true; return; }
+  var form = document.getElementById('trkForm'), out = document.getElementById('trkResult');
+  var idIn = document.getElementById('trkId'), cIn = document.getElementById('trkContact'), err = document.getElementById('trkErr');
+  var STAGES = ['Order placed', 'Confirmed', 'Processing', 'Shipped', 'Out for delivery', 'Delivered'];
+  var SAY = {
+    CONTACT_REQUIRED: 'Give the order number together with the email or mobile used for the order.',
+    ORDER_NOT_FOUND: 'No verified order matches that number and contact. Check both against your confirmation email; the number starts with PFA-.',
+    STATUS_UNAVAILABLE: 'Order status is temporarily unavailable. Please try again in a few minutes.',
+    METHOD_NOT_ALLOWED: 'Order status is temporarily unavailable. Please try again in a few minutes.'
+  };
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function ts(v){ var n = v ? Date.parse(v) : NaN; return isNaN(n) ? 0 : n; }
+  function when(v){
+    var n = ts(v); if (!n) return v ? esc(v) : '';
+    return new Date(n).toLocaleString('en-IN', { day:'numeric', month:'short', hour:'numeric', minute:'2-digit' });
+  }
+  /* Where the parcel is, from everything the answer says. The courier's word
+     wins when it has one; the store's status carries the early stations. */
+  /* Shopify's shipment_status, which is what the seller's courier writes into
+     the order when they ship through Shiprocket: it is already in the answer
+     as p.tracking, with the carrier and the AWB. No other credential needed. */
+  var SHIP = { label_printed:'Label printed', label_purchased:'Label ready', ready_for_pickup:'Ready for pickup',
+               confirmed:'Handed to the courier', in_transit:'In transit', out_for_delivery:'Out for delivery',
+               attempted_delivery:'Delivery attempted', delivered:'Delivered', failure:'Delivery could not be completed' };
+  function stageOf(p){
+    var s = String(p.status || '').toUpperCase();
+    var c = String(p.courier && p.courier.status || '').toLowerCase();
+    var t = String(p.tracking && p.tracking.status || '').toLowerCase();
+    if (t === 'delivered' || (/delivered/.test(c) && !/out for|undeliver|not deliver/.test(c))) return 5;
+    if (t === 'out_for_delivery' || /out for delivery/.test(c)) return 4;
+    if (SHIP[t] || /ship|transit|dispatch|pick/.test(c) || s === 'FULFILLED' || (p.courier && p.courier.awb) || (p.tracking && p.tracking.number)) return 3;
+    if (s === 'CONFIRMED' || p.verified) return 2;
+    return 0;
+  }
+  function off(s){ return s === 'CANCELLED' || s === 'PAYMENT_FAILED' || s === 'REFUND_RECORDED'; }
+  function draw(p){
+    var s = String(p.status || '').toUpperCase(), at = stageOf(p), dead = off(s);
+    var rail = STAGES.map(function(name, i){
+      var cls = dead ? '' : i < at ? ' class="done"' : i === at ? ' class="now"' : '';
+      return '<li' + cls + '>' + esc(name) + '</li>';
+    }).join('');
+    var log = [].concat(
+      (p.timeline || []).map(function(t){ return { at: t.at, label: t.label || t.status, where: '' }; }),
+      (p.courier && p.courier.events || []).map(function(e){ return { at: e.at, label: e.label, where: e.location }; })
+    ).filter(function(e){ return e.label; });
+    log.sort(function(a, b){ return ts(b.at) - ts(a.at); });
+    var meta = [], tr = p.tracking || {}, shipWord = SHIP[String(tr.status || '').toLowerCase()] || '';
+    if (!(p.courier && p.courier.name) && (tr.company || tr.number)) meta.push((tr.company || 'Courier') + (tr.number ? ' \u00b7 AWB ' + tr.number : ''));
+    if (p.courier && p.courier.name) meta.push(p.courier.name + (p.courier.awb ? ' \u00b7 AWB ' + p.courier.awb : ''));
+    if (p.courier && p.courier.location && at < 5) meta.push('Last seen ' + p.courier.location);
+    if (p.courier && p.courier.eta && at < 5 && !dead) meta.push('Expected ' + when(p.courier.eta));
+    if (!p.courier && p.next && !dead) meta.push(p.next);
+    var state = dead ? (s === 'CANCELLED' ? 'This order was cancelled' : s === 'PAYMENT_FAILED' ? 'Payment was not completed' : 'Refund recorded')
+              : (p.courier && p.courier.status) || shipWord || p.statusLabel || STAGES[at];
+    var shipNote = tr.status === 'attempted_delivery' ? 'The courier tried to deliver and will try again; keep the phone on the order reachable.'
+                 : tr.status === 'failure' ? 'The courier could not complete delivery. Write to us with this order number and we will chase it with the seller.' : '';
+    var deadNote = s === 'PAYMENT_FAILED' ? 'Nothing was charged. Place the order again from the shop, or write to us with this number if money did leave your account.'
+                 : s === 'CANCELLED' ? 'If you did not cancel it, write to us with this order number.'
+                 : s === 'REFUND_RECORDED' ? 'The refund is on its way back to the method you paid with; banks take 5\u201310 working days to show it.' : '';
+    var empty = at >= 5 ? 'Delivered. No further updates are expected.' : dead ? '' : 'Updates will appear here as the order moves.';
+    out.innerHTML =
+      '<div class="trk__head"><p class="trk__num">Order ' + esc(p.pfaOrderId || idIn.value) + '</p>' +
+      '<h3 class="trk__state" id="trkState" tabindex="-1">' + esc(state) + '</h3>' +
+      (meta.length ? '<p class="trk__meta">' + meta.map(esc).join(' \u00b7 ') + '</p>' : '') + '</div>' +
+      (deadNote ? '<p class="trk__note">' + esc(deadNote) + '</p>' : '') +
+      (shipNote ? '<p class="trk__note">' + esc(shipNote) + '</p>' : '') +
+      (p.message && !p.verified && !dead ? '<p class="trk__note">' + esc(p.message) + ' Payment usually verifies within a few minutes; if it has been longer, check back or write to us with this number.</p>' : '') +
+      '<ol class="trk__rail' + (dead ? ' trk--off' : '') + '" aria-label="Progress">' + rail + '</ol>' +
+      (log.length ? '<p class="trk__sub">Updates</p><ol class="trk__log">' + log.map(function(e){
+        return '<li><time>' + when(e.at) + '</time><span>' + esc(e.label) + (e.where ? '<small>' + esc(e.where) + '</small>' : '') + '</span></li>';
+      }).join('') + '</ol>' : (empty ? '<p class="trk__meta">' + esc(empty) + '</p>' : '')) +
+      '<button type="button" class="trk__again" id="trkAgain">Track another order</button>';
+    form.hidden = true; out.hidden = false;
+    document.getElementById('trkState').focus();
+    document.getElementById('trkAgain').addEventListener('click', function(){ out.hidden = true; form.hidden = false; idIn.focus(); });
+  }
+  function fail(msg, field){ err.textContent = msg; err.hidden = false; if (field) field.focus(); }
+  /* The number as the shopper typed it, made comparable: case, spaces and a
+     leading # are noise, never a different order. */
+  function cleanId(v){ return String(v || '').toUpperCase().replace(/\s+/g, '').replace(/^#/, '').slice(0, 40); }
+  function contactOk(v){
+    if (v.indexOf('@') >= 0) return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    return v.replace(/\D/g, '').length >= 10;
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault(); err.hidden = true;
+    var id = cleanId(idIn.value), contact = cIn.value.trim();
+    if (!id && !contact) return fail('Both the PFA order number and the email or mobile are needed.', idIn);
+    if (!id) return fail('The PFA order number is needed. It is on your confirmation screen and in the email PFA sent.', idIn);
+    if (/^\d+$/.test(id)) return fail('That looks like the seller\u2019s order number. The PFA number starts with PFA- and is on your confirmation and email.', idIn);
+    if (!contact) return fail('The email or mobile used for the order is needed; it is what proves the order is yours to see.', cIn);
+    if (!contactOk(contact)) return fail('Enter the email address or the 10-digit mobile number you gave with the order.', cIn);
+    var btn = form.querySelector('button[type="submit"]'); btn.disabled = true; btn.textContent = 'Checking\u2026';
+    var ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 12000) : null;
+    fetch('/api/pfa-order-status?id=' + encodeURIComponent(id) + '&contact=' + encodeURIComponent(contact), { headers: { Accept: 'application/json' }, signal: ctrl ? ctrl.signal : undefined })
+      .then(function(r){
+        return r.text().then(function(body){
+          var p = null; try { p = JSON.parse(body); } catch (_) { p = null; }
+          return { ok: r.ok && !!p, status: r.status, p: p };
+        });
+      })
+      .then(function(x){
+        if (x.ok) return draw(x.p);
+        if (!x.p) return fail(x.status >= 500 ? SAY.STATUS_UNAVAILABLE : 'PFA answered in a way this page could not read. Please try again.');
+        fail(SAY[x.p.code] || x.p.message || SAY.STATUS_UNAVAILABLE);
+      })
+      .catch(function(er){
+        fail(er && er.name === 'AbortError' ? 'PFA took too long to answer. Please try again in a moment.'
+           : 'PFA could not be reached. Check your connection and try again.');
+      })
+      .then(function(){ if (timer) clearTimeout(timer); btn.disabled = false; btn.textContent = 'Show status'; });
+  });
+  function show(){ dlg.showModal(); (idIn.value ? cIn : idIn).focus(); }
+  open.addEventListener('click', show);
+  document.getElementById('trackClose').addEventListener('click', function(){ dlg.close(); });
+  dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+  /* The confirmation email can land here with the number already typed. */
+  var q = new URLSearchParams(location.search).get('track');
+  if (q){ idIn.value = cleanId(q); show(); }
+})();
+</script>
+</body>
+</html>
