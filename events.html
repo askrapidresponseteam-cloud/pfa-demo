@@ -448,19 +448,11 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 (function(){
   'use strict';
   var $ = function(s){ return document.querySelector(s); };
-  var all = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
   /* The filter row is gone: there is one dated entry on the record, and a
      search box over a single row is furniture, not a feature. What this page
      does now is take requests. */
 
-  var toastT = null;
-  function toast(msg){
-    var t = $('#toast');
-    t.textContent = msg; t.classList.add('show');
-    clearTimeout(toastT);
-    toastT = setTimeout(function(){ t.classList.remove('show'); }, 1800);
-  }
 
   /* ---------- the event request ----------
      Posts to /api/pfa-submissions as PFA-EV and shows the reference the server

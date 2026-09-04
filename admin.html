@@ -1434,7 +1434,6 @@ window.addEventListener('unhandledrejection', function (event) {
   });
   function composeFix() {
     if (!openCase) return;
-    var f = openCase.fields || {};
     var picked = $$('#caseFixBox input').filter(function (i) { return i.checked; }).map(function (i) { return i.value; });
     var lines = ['Thank you for applying for a Colony Caregiver Card (' + openCase.reference + '). Before it can be issued, one or two things need correcting:', ''];
     picked.forEach(function (p, i) { lines.push((i + 1) + '. ' + p); });

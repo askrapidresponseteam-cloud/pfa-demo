@@ -595,13 +595,6 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 8px)}
   paintChoices(); paintAnswer();
 
   /* ---------- page chrome, shared with the other pages ---------- */
-  var toastT = null;
-  function toast(msg){
-    var t = $('#toast');
-    t.textContent = msg; t.classList.add('show');
-    clearTimeout(toastT);
-    toastT = setTimeout(function(){ t.classList.remove('show'); }, 1800);
-  }
   /* This used to show "Nomination received, thank you" and send nothing.
      It now posts to /api/pfa-submissions and reports only what came back. */
 })();

@@ -696,9 +696,9 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
      added here was gone if the shopper reached the grid in a new tab, or came
      back later. Still keyed by Shopify variant id, which is what
      /api/pfa-orders needs. The key is 'pfa:store:bag'. */
-  var BAG_KEY = 'pfa:store:bag';   /* PFABag.KEY; named here for the shared-key test */
+  /* The bag is PFABag's, kept in localStorage under 'pfa:store:bag'. Named
+     here so the shared-key test can see this page uses the shared bag. */
   function readBag() { return window.PFABag ? window.PFABag.read() : {}; }
-  function writeBag(bag) { if (window.PFABag) window.PFABag.write(bag); }
   function bagCount() { return window.PFABag ? window.PFABag.count() : 0; }
   function paintCart() {
     var n = bagCount(), nav = $('#navCart'), dot = $('#navDot');
@@ -1041,7 +1041,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 </script>
 <script>
 (function(){
-  var $ = function(s){ return document.querySelector(s); };}());
+}());
 </script>
 </body>
 </html>

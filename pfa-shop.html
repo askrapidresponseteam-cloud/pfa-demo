@@ -957,9 +957,9 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
      inline here, which is why a bag did not survive closing the tab or open
      in a new one. Still keyed by Shopify variant id: that is what
      /api/pfa-orders needs, and it has not changed. The key is 'pfa:store:bag'. */
-  var BAG_KEY = 'pfa:store:bag';   /* PFABag.KEY; named here for the shared-key test */
+  /* The bag is PFABag's, kept in localStorage under 'pfa:store:bag'. Named
+     here so the shared-key test can see this page uses the shared bag. */
   function readBag(){ return window.PFABag ? window.PFABag.read() : {}; }
-  function writeBag(){ if (window.PFABag) window.PFABag.write(cart); }
   var cart = readBag();       /* variantId -> qty */
   /* A second tab is a second shopper as far as storage is concerned. When it
      changes the bag, take its version rather than carrying on with a copy
@@ -1113,8 +1113,8 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
     }
   }
   function totalsHtml(){
-    var sub = subtotal();
     var picked = shipChosen();
+    var sub = subtotal();
     /* Delivery is only a number here once Shopify has given us one. Until then
        the line reads as it always did, and the seller's checkout settles it. */
     var gap = deliveryGap(sub);
@@ -1722,8 +1722,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
       $('#keep').addEventListener('click', closeCart);
       return;
     }
-    var sub = subtotal();
-
     body.innerHTML =
       '<ul>' + ids.map(function(id){
         var x = BY_ID[id];
@@ -2241,11 +2239,17 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 
   /* Ask about a payment whose confirmation is still in flight, a few times,
      spaced out. Stops the moment it is paid or the person starts a new attempt. */
-  var watching = null;
+  /* Named for what it is. It was `watching`, which is also the name the
+     infinite-scroll observer four hundred lines above gives its own flag,
+     in the same scope: one `var`, two meanings. Scrolling the grid set it
+     to true, so the clearTimeout here stopped cancelling anything and a
+     second poll ran beside the first; and a poll in flight made the
+     scroll guard's `rest > 0 && watching` true on a timer id. */
+  var pollTimer = null;
   function watchHandle(h, tries){
     if (!h || !tries) return;
-    clearTimeout(watching);
-    watching = setTimeout(function(){
+    clearTimeout(pollTimer);
+    pollTimer = setTimeout(function(){
       if (finished || placing) return;
       statusByHandle(h).then(function(data){
         if (data && data.paid){ showDone(data); return; }
@@ -2288,7 +2292,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
      order number is not in the answer this came from and is never shown. */
   function showDone(order){
     placing = false;
-    clearTimeout(watching);
+    clearTimeout(pollTimer);
     rememberHandle('');
     attemptId = null; attemptSig = '';
     cart = window.PFABag ? window.PFABag.clear() : {}; finished = true;

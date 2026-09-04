@@ -857,10 +857,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     give: ['You selected a direct donation.', 'Money goes to PFA and is used for the cause you choose.'],
     food: ['You selected a food order.', 'You buy the feed. A verified volunteer in the area you choose receives it and feeds the animals.']
   };
-  var flow = 'give';
   function setFlow(f){
     if (f !== 'give' && f !== 'food') return;
-    flow = f;
     var give = f === 'give';
     document.querySelectorAll('[data-flow]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-flow') === f)); });
     $('#flowGive').hidden = !give; $('#barGive').hidden = !give; $('#sideGive').hidden = !give;
