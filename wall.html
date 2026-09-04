@@ -773,13 +773,22 @@ body.theatre-lock{overflow:hidden}
   /* ---------- submission form: validated here, sent to /api/pfa-submissions ---------- */
   (function form(){
     var f = $('#wallForm'); if (!f) return;
-    var HOSTS = /(instagram\.com|facebook\.com|fb\.watch|youtube\.com|youtu\.be|vimeo\.com)/i;
+    /* The six platforms The Wall is for. Matched as a host and not as a
+       substring: the regex this replaced was unanchored, so
+       youtube.com.example.net satisfied it. The same list is enforced again in
+       lib/submission-fields.js, because this one is only a courtesy. */
+    var HOSTS = ['instagram.com', 'facebook.com', 'fb.watch', 'youtube.com', 'youtu.be', 'vimeo.com'];
+    function knownHost(value){
+      var host;
+      try { host = new URL(value).hostname.toLowerCase().replace(/^www\./, ''); } catch (err) { return false; }
+      return HOSTS.some(function(name){ return host === name || host.slice(-(name.length + 1)) === '.' + name; });
+    }
     function bad(el, on){ var w = el.closest('.field') || el.closest('.consent'); if (w) w.classList.toggle('is-bad', on); return on; }
     f.addEventListener('submit', function(e){
       e.preventDefault();
       var url = $('#wallUrl'), name = $('#wallName'), contact = $('#wallContact'), consent = $('#wallConsent'), which = $('#wallWhich');
       var errs = 0;
-      var ok = false; try { ok = HOSTS.test(new URL(url.value).hostname); } catch(err){ ok = false; }
+      var ok = knownHost(url.value);
       errs += bad(url, !ok) ? 1 : 0;
       errs += bad(which, !which.value) ? 1 : 0;
       errs += bad(name, !name.value.trim()) ? 1 : 0;

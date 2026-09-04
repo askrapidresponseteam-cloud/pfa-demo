@@ -299,3 +299,32 @@ test('the scheduled worker presents a token instead of locking itself out', () =
   assert.match(call, /authorization: `Bearer \$\{token\}`/, 'the scheduled worker sends no credential');
   assert.match(call, /process\.env\.CRON_SECRET/, 'it does not read the secret it is meant to present');
 });
+
+test('The Wall takes a link to the six platforms it is for, and nothing else', () => {
+  const base = { wall: 'Short form, under a minute', name: 'Asha Rao', email: 'asha@example.com' };
+  const errorsFor = (url) => FIELDS.validate('PFA-S', { ...base, url }).errors;
+
+  for (const good of ['https://www.youtube.com/watch?v=x', 'https://youtu.be/x', 'https://vimeo.com/1',
+    'https://m.instagram.com/p/x', 'https://fb.watch/abc']) {
+    assert.deepEqual(errorsFor(good), [], `${good} was refused`);
+  }
+
+  /* The allowlist used to live only in wall.html, so a direct post could put
+     any link at all on a page PFA republishes under a name the sender chose. */
+  assert.equal(errorsFor('https://evil.example.com/x').length, 1);
+  /* And wall.html's own regex was unanchored, so this satisfied the page. */
+  const spoofed = errorsFor('https://youtube.com.example.net/x');
+  assert.equal(spoofed.length, 1, 'a host merely containing youtube.com was accepted');
+  assert.equal(spoofed[0].field, 'url');
+});
+
+test('the platforms the API allows are the platforms the page offers', () => {
+  /* Two copies of a list drift. wall.html holds one to tell the sender before
+     they send; this reads it back and compares. */
+  const html = page('wall.html');
+  const declared = /var HOSTS = \[([^\]]+)\]/.exec(html);
+  assert.ok(declared, 'wall.html no longer declares its host list where this can read it');
+  const onThePage = declared[1].split(',').map((s) => s.trim().replace(/^'|'$/g, '')).filter(Boolean);
+  assert.deepEqual([...onThePage].sort(), [...FIELDS.KINDS['PFA-S'].hosts.url].sort(),
+    'wall.html and lib/submission-fields.js disagree about what The Wall is for');
+});
