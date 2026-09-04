@@ -251,3 +251,51 @@ test('the account of what happened is judged as prose, not merely for length', a
   assert.equal(R.checkField('what', '123', {}), 'Please write a little more so this can be acted on.');
   assert.equal(R.checkField('what', '1234567890123', {}), 'Use words here, not just numbers or symbols.');
 });
+
+test('a caller cannot choose a field name Firestore refuses', async () => {
+  /* Firestore reserves any field name matching __.*__ . The keys of `fields`
+     came straight from the request, so a caller could pick one and fail a
+     write whose reference number had already been issued. */
+  const { cleanFields } = require('../lib/routes/pfa-submissions')._private;
+  const kept = cleanFields({ name: 'Asha Rao', __type__: 'x', __name__: 'y', __ok: 'z', a__b: 'w' });
+  assert.equal(kept.__type__, undefined);
+  assert.equal(kept.__name__, undefined);
+  assert.equal(kept.name, 'Asha Rao');
+  assert.equal(kept.__ok, 'z', 'only the reserved shape is dropped, not every underscore');
+  assert.equal(kept.a__b, 'w');
+
+  const db = fakeDb();
+  const res = await post(handler(db), { kind: 'PFA-CR', data: Object.assign({ __type__: 'boom' }, REPORT) });
+  assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+  assert.equal(db.store.get(`submissions/${res.body.reference}`).fields.__type__, undefined);
+});
+
+test('both cron routes take either of the two tokens they document', async () => {
+  /* `PFA_ADMIN_TOKEN || CRON_SECRET` accepted only whichever was set first, so
+     a deployment carrying both answered its own nightly run with a 401. */
+  const saved = { admin: process.env.PFA_ADMIN_TOKEN, cron: process.env.CRON_SECRET };
+  process.env.PFA_ADMIN_TOKEN = 'admin-token-value';
+  process.env.CRON_SECRET = 'cron-secret-value';
+  try {
+    const { authorised } = require('../lib/routes/pfa-store-reconcile')._private;
+    const bearer = (t) => ({ headers: { authorization: `Bearer ${t}` } });
+    assert.equal(authorised(bearer('cron-secret-value')), true, 'the cron token was refused');
+    assert.equal(authorised(bearer('admin-token-value')), true, 'the admin token was refused');
+    assert.equal(authorised(bearer('neither-of-them')), false);
+    assert.equal(authorised({ headers: {} }), false);
+  } finally {
+    if (saved.admin === undefined) delete process.env.PFA_ADMIN_TOKEN; else process.env.PFA_ADMIN_TOKEN = saved.admin;
+    if (saved.cron === undefined) delete process.env.CRON_SECRET; else process.env.CRON_SECRET = saved.cron;
+  }
+});
+
+test('the scheduled worker presents a token instead of locking itself out', () => {
+  /* functions/index.js built its request with headers: {} while its own
+     comment said the worker checks CRON_SECRET, so every nightly run was a
+     401 and no caregiver email was ever sent from that deployment. */
+  const fs = require('node:fs');
+  const source = fs.readFileSync(path.join(ROOT, 'functions', 'index.js'), 'utf8');
+  const call = source.slice(source.indexOf('caregiverEmailWorker'));
+  assert.match(call, /authorization: `Bearer \$\{token\}`/, 'the scheduled worker sends no credential');
+  assert.match(call, /process\.env\.CRON_SECRET/, 'it does not read the secret it is meant to present');
+});

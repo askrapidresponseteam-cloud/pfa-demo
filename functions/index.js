@@ -41,7 +41,15 @@ exports.caregiverEmailWorker = onSchedule(
   { region: REGION, schedule: '0 3 * * *', timeZone: 'Asia/Kolkata' },
   async () => {
     const worker = require('./lib/routes/caregiver/email-worker.js');
-    const request = { method: 'POST', url: '/api/caregiver/email-worker', query: {}, headers: {}, body: {} };
+    /* The comment above says the worker checks CRON_SECRET itself, and it
+       does - but nothing was ever presenting one. With no Authorization
+       header the worker answered 401 every night and no caregiver email was
+       ever sent from this deployment. */
+    const token = String(process.env.CRON_SECRET || process.env.PFA_ADMIN_TOKEN || '');
+    const request = {
+      method: 'POST', url: '/api/caregiver/email-worker', query: {}, body: {},
+      headers: token ? { authorization: `Bearer ${token}` } : {}
+    };
     const response = {
       statusCode: 200, _body: '',
       setHeader() {}, end(body) { this._body = body || ''; }
