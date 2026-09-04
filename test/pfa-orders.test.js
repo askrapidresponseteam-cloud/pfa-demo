@@ -91,6 +91,18 @@ test.afterEach(() => {
   global.fetch = nativeFetch;
 });
 
+test('a two-letter province has to be one India actually has', () => {
+  /* The fast path returned whatever two letters it was given, so a delivery
+     province of "ZZ" reached Shopify on a real order. */
+  const { provinceCode } = handler._private;
+  assert.equal(provinceCode('Karnataka'), 'KA');
+  assert.equal(provinceCode('ka'), 'KA');
+  assert.equal(provinceCode('Andaman and Nicobar Islands'), 'AN');
+  for (const nonsense of ['ZZ', 'QQ', 'XY']) {
+    assert.throws(() => provinceCode(nonsense), /valid Indian state/, `${nonsense} was passed through`);
+  }
+});
+
 test('the 25 cap is per product, not per line, and one order cannot carry a thousand of them', () => {
   /* validateLine allowed 25 of a variant and nothing stopped the same
      variantId arriving on twenty lines, so the limit the bag advertises - and
