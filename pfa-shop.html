@@ -56,10 +56,10 @@
 }
 </style>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.267">
+<meta name="pfa-build" content="v1.273">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shop · People for Animals</title>
-<meta name="description" content="Food, meds and gear for the animal you adopted. Everything listed is checked so the food is vegetarian, and every order funds rescue, treatment and lifelong care.">
+<meta name="description" content="Food, meds and gear for the animal you adopted, sold by an independent licensed seller. The food list is vegetarian by policy; tell PFA if anything slips through.">
 <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 <link rel="dns-prefetch" href="https://cdn.shopify.com">
 <link rel="preconnect" href="https://checkout.razorpay.com" crossorigin>
@@ -455,7 +455,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
   <meta property="og:locale" content="en_IN">
   <meta property="og:type" content="article">
   <meta property="og:title" content="Shop">
-  <meta property="og:description" content="Food, meds and gear for the animal you adopted. Everything listed is checked so the food is vegetarian, and every order funds rescue, treatment and lifelong care.">
+  <meta property="og:description" content="Food, meds and gear for the animal you adopted, sold by an independent licensed seller. The food list is vegetarian by policy; tell PFA if anything slips through.">
   <meta property="og:url" content="https://peopleforanimalsindia.org/pfa-shop">
   <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <meta property="og:image:width" content="1200">
@@ -464,7 +464,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@pfaindia">
   <meta name="twitter:title" content="Shop">
-  <meta name="twitter:description" content="Food, meds and gear for the animal you adopted. Everything listed is checked so the food is vegetarian, and every order funds rescue, treatment and lifelong care.">
+  <meta name="twitter:description" content="Food, meds and gear for the animal you adopted, sold by an independent licensed seller. The food list is vegetarian by policy; tell PFA if anything slips through.">
   <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Shop","item":"https://peopleforanimalsindia.org/pfa-shop"}]}</script>
   <!-- seo:end -->
@@ -472,7 +472,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 <body>
 
 <div class="announce" id="announce" data-cursor="light">
-  <p>Every order funds rescue, treatment, and lifelong care</p>
+  <p>Every donation funds rescue, treatment, and lifelong care</p>
   <button type="button" aria-label="Close" id="annClose">✕</button>
 </div>
 <header class="site" id="header" data-cursor="dark">
@@ -1755,8 +1755,10 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
       '<div id="coTotals">' + totalsHtml() + '</div>' +
       '<button class="btn" id="place">Continue to payment</button>' +
       '<p style="margin:0;font-size:11px;color:var(--muted);text-align:center;line-height:1.5">' +
-        'The Store is stocked and shipped by an independent seller, who takes the payment. ' +
-        'PFA never sees a card, a UPI handle or a bank detail.</p>';
+        'Every product here is listed, sold, invoiced and shipped by an independent seller, ' +
+        'who holds the trade and drug licences its catalogue requires and who takes the payment. ' +
+        'PFA is not the seller, holds no e-commerce or medicine-selling licence, and never sees ' +
+        'a card, a UPI handle or a bank detail.</p>';
 
     $('#place').addEventListener('click', placeOrder);
     /* Choosing here is what removes the step on the seller's page. */
@@ -2312,7 +2314,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
       (lines ? '<div class="donelines">' + lines +
         '<div class="totals" style="font-weight:700"><span>Paid</span><span>' + money(order.total) + '</span></div></div>' : '') +
       '<p style="font-size:12px;color:var(--muted)">Quote that number in any message to us about this order. ' +
-      'The Store is stocked and shipped by an independent seller.' +
+      'This order was sold, invoiced and shipped by an independent seller, who holds the licences its catalogue requires; PFA is not the seller.' +
       (order.pfaOrderId ? ' You can <a href="track.html#ref=' + encodeURIComponent(order.pfaOrderId) + '">follow it here</a> with the email or mobile you gave.' : '') + '</p>' +
     '</div>';
     foot.innerHTML = '<button class="btn" id="again">Shop again</button>';

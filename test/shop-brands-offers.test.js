@@ -415,3 +415,34 @@ test('a cart line walks to its product page, and the steppers never do', () => {
   const steppers = shop2.slice(shop2.indexOf('line__right', shop2.indexOf('var door')), shop2.indexOf('</li>', shop2.indexOf('var door')));
   assert.ok(!/href=/.test(steppers), 'nothing in the stepper column navigates');
 });
+
+test('the seller of record is named at the door, the till and the receipt', () => {
+  /* PFA holds no e-commerce or medicine-selling licence because PFA sells
+     nothing: every product is the independent seller's, licences included.
+     That fact protects PFA only if a shopper meets it before paying, while
+     paying, and on the record afterwards, so it stands in all three places
+     and this pins it there. Wording is the owner's to refine with counsel;
+     the presence of the clause is not. */
+  const shop2 = fs.readFileSync(`${__dirname}/../pfa-shop.html`, 'utf8');
+  const door = fs.readFileSync(`${__dirname}/../shop.html`, 'utf8');
+  assert.match(shop2, /holds the trade and drug licences its catalogue requires/, 'the till says who is licensed');
+  assert.match(shop2, /PFA is not the seller, holds no e-commerce or medicine-selling licence/, 'and who is not');
+  /* "every order funds rescue" came out of this clause on the owner's word
+     that it is not right: if the seller takes the payment and PFA earns no
+     margin, the sentence promises money a shopper's order does not send.
+     A licence disclaimer must not end on a fundraising claim. */
+  assert.ok(!/every order funds rescue\.<\/p>/.test(shop2), 'the clause makes no funding claim');
+  /* Two claims retired from the shop's copy on 4 Sep 2026. "Every order
+     funds rescue" promised money an order does not send - the banner now
+     says donations, which do. "Everything listed is checked so the food is
+     vegetarian" guaranteed an outcome one slipped listing would falsify -
+     the copy now states the policy and opens a door to report a slip,
+     which stays true even on the bad day. The veg screening code keeps
+     running; only the promise of infallibility is gone. */
+  assert.ok(!/order funds rescue/.test(shop2) && !/order funds rescue/.test(door), 'no shop surface claims orders fund anything');
+  assert.ok(!/checked so the food is vegetarian/.test(shop2) && !/checked so the food is vegetarian/.test(door), 'no shop surface guarantees the list');
+  assert.match(shop2, /vegetarian by policy; tell PFA if anything slips through/, 'the descriptions state the policy and the door to report');
+  assert.match(door, /vegetarian by policy; if something slips through, tell us and it goes/, 'so does the lede');
+  assert.match(shop2, /This order was sold, invoiced and shipped by an independent seller/, 'the receipt keeps the record');
+  assert.match(door, /licensed for what it sells; PFA is not the seller/, 'and the door says it before anyone shops');
+});

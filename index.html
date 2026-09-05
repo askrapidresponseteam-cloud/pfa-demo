@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.267">
+<meta name="pfa-build" content="v1.273">
 <title>People for Animals | India’s largest animal welfare organisation</title>
 <meta name="description" content="Report cruelty, find your nearest unit, read what the law actually says, or give. People for Animals turns moments of crisis into second chances for animals across the country.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,7 +73,14 @@ a:hover{opacity:.65}
    (cover), framed a little above centre so the subject stays in view; anchored to the top on small screens. ---------- */
 section[data-screen-label="Hero"]{margin-top:var(--bar,112px)!important;height:calc(100svh - var(--bar,112px))!important;min-height:520px!important;background:#0a0a0a}
 section[data-screen-label="Hero"] .hero-fill{display:none}
-section[data-screen-label="Hero"] #hero-media{position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block}
+/* 18% anchored the crop below her crown: on a wide viewport, cover scales
+   this portrait frame by width and the vertical overflow ate the top of her
+   head against the header (owner, 5 Sep 2026). Anchoring to 0 means the
+   crop can only take from the bottom of the frame, so her head - and the
+   photograph's white ceiling that meets the white header - survive at every
+   viewport. Verify the dog stays whole on a short window before trusting
+   this: the trade of a top anchor is that short viewports crop low. */
+section[data-screen-label="Hero"] #hero-media{position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block}
 @media (max-width:860px){
   section[data-screen-label="Hero"] #hero-media{object-position:50% 0}
 }

@@ -52,7 +52,7 @@ const DEFAULT_ANNOUNCE = 'Every drive, camp and open day is free to attend';
    test/header-consistency.test.js still sees one header everywhere. */
 const PAGES = {
   'index.html':        { current: null,               announce: 'Every donation funds rescue, treatment, and lifelong care', to: { 'pfa-shop.html': 'shop.html' } },
-  'shop.html':         { current: 'pfa-shop.html',    announce: 'Every order funds rescue, treatment, and lifelong care' },
+  'shop.html':         { current: 'pfa-shop.html',    announce: 'Every donation funds rescue, treatment, and lifelong care' },
   'founder.html':      { current: 'founder.html',     announce: DEFAULT_ANNOUNCE },
   'laws.html':         { current: 'laws.html',        announce: DEFAULT_ANNOUNCE },
   'units.html':        { current: 'units.html',       announce: DEFAULT_ANNOUNCE },
@@ -66,8 +66,8 @@ const PAGES = {
   'wall.html':         { current: 'wall.html',        announce: DEFAULT_ANNOUNCE },
   'get-involved.html': { current: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
   'cinekind.html':     { current: 'cinekind.html',    announce: 'CineKind 2026 · Mumbai · 4 October · World Animal Day' },
-  'pfa-shop.html':     { current: 'pfa-shop.html',    announce: 'Every order funds rescue, treatment, and lifelong care', cart: true },
-  'product.html':      { current: 'pfa-shop.html',    announce: 'Every order funds rescue, treatment, and lifelong care', cart: true, root: true },
+  'pfa-shop.html':     { current: 'pfa-shop.html',    announce: 'Every donation funds rescue, treatment, and lifelong care', cart: true },
+  'product.html':      { current: 'pfa-shop.html',    announce: 'Every donation funds rescue, treatment, and lifelong care', cart: true, root: true },
   'donate.html':       { current: 'donate.html',      announce: DEFAULT_ANNOUNCE },
   'events.html':       { current: null,               announce: DEFAULT_ANNOUNCE },
   'search.html':       { current: null,               announce: DEFAULT_ANNOUNCE },

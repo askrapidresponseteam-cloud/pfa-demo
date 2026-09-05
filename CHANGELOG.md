@@ -1,3 +1,106 @@
+## v1.273
+
+- **The Units hero wears the Laws gradient, verbatim.** The two dark heroes
+  were lit differently: Laws washes both corners with faint white (.15 at
+  the top right, .08 at the lower left), while Units carried its own
+  geometry up top and a blue glow (rgba 43,159,216 at .16) rising from the
+  lower left - visibly cooler in a side-by-side. On the owner's ask the
+  Units ::before now carries Laws' exact two washes, character for
+  character, and nothing else on either page moved. The copied values are
+  noted beside the rule so a future retune of Laws knows Units is meant to
+  follow.
+
+Tests: 839 passing.
+
+## v1.272
+
+- **The caregiver keeps her head.** The door's photograph is a 1200x800
+  landscape shown in a full-height frame, so cover scales it by width on
+  wide viewports and the vertical overflow has to come from somewhere; at
+  object-position 18% it came from the top, and her crown vanished under
+  the header. The crop now anchors to 0: whatever a viewport cannot fit is
+  taken from the bottom of the frame only, so her head and the photograph's
+  white ceiling - the seam that meets the white header - survive at every
+  size, and mobile already anchored there. The trade, written beside the
+  rule: short windows crop low, so the dog's frame on a squat viewport is
+  the thing to eyeball before trusting it.
+
+Tests: 839 passing.
+
+## v1.271
+
+- **Policy, not guarantee; donations, not orders.** Two claims retired from
+  every shop surface on the owner's word. "Everything listed is checked so
+  the food is vegetarian" guaranteed an outcome that one slipped listing
+  would falsify; the door's lede and all three page descriptions now state
+  the policy and open a door - the food list is vegetarian by policy, tell
+  us if anything slips through - which stays true even on the bad day. The
+  vegetarian screening in store-settings keeps running exactly as before;
+  only the promise of infallibility is gone. And the shop pages' banner no
+  longer says every order funds rescue: orders send the seller money,
+  donations send PFA money, so the banner now says donations, changed in
+  sync-chrome's own table as the contract test demanded and stamped from
+  there onto shop, pfa-shop and product. Both retirements are pinned as
+  absences beside the new wording's presence.
+
+Tests: 839 passing.
+
+## v1.270
+
+- **The licence clause makes no funding claim.** "Every order funds rescue"
+  came out of the checkout footnote on the owner's word that it is not
+  right: if the independent seller takes the payment and PFA earns no
+  margin, the sentence promises money a shopper's order does not send, and
+  a licence disclaimer must not end on a fundraising claim. The clause now
+  states who sells, who is licensed, and what PFA never sees, and stops
+  there; its absence-of-claim is pinned beside its presence. The same
+  sentence still stands in three places outside the clause - the
+  announcement bars of pfa-shop.html, product.html and shop.html, and the
+  page descriptions carry a cousin of it - left in place because rewriting
+  the shop's public banner is the owner's voice to choose, and flagged in
+  this entry so the inconsistency is a decision, not an oversight.
+
+Tests: 839 passing.
+
+## v1.269
+
+- **The seller of record is named at the door, the till and the receipt.**
+  PFA holds no e-commerce or medicine-selling licence because PFA sells
+  nothing, and the shop now says so wherever it matters: the door's lede
+  (the stock, prices, invoices and delivery are an independent seller's,
+  licensed for what it sells), the checkout footnote (the seller holds the
+  trade and drug licences its catalogue requires and takes the payment; PFA
+  is not the seller and never sees a card, a UPI handle or a bank detail),
+  and the order confirmation (this order was sold, invoiced and shipped by
+  an independent seller). Pinned in test/shop-brands-offers.test.js so the
+  clause cannot quietly fall out of any of the three. The wording is plain
+  fact as the site understands it; a lawyer's eye on the phrasing is the
+  owner's call and a cheap one.
+
+Tests: 839 passing.
+
+## v1.268
+
+- **An external bug-fix patch, admitted by trial.** pfademobugfixes.zip
+  arrived built on this tree's own v1.267: 52 files changed, five asset
+  scripts consolidated into the pages that used them, eight files added -
+  five of them test files of its own. It went through the same trial as the
+  September theme pass: the full suite run inside its tree, where all 782 of
+  this repository's pins held - the cursor, the fallback faces, the tracker
+  and its contact gate, the page-weight ceiling, the paw clearance, every
+  contract of the last thirty versions - and its 56 new tests passed
+  alongside them, 838 green in all. The two files green tests cannot clear
+  on their own, lib/payment.js and api/index.js, were read by eye: the
+  first wires through a donor's PAN that was typed, checked, posted and
+  dropped while the 80G receipt tried to read it, and keeps it deliberately
+  away from CCAvenue; the second stops /api/constructor finding a "handler"
+  on Object.prototype, answering with the same 404 every other unknown
+  route gets. A hostile-pattern sweep across all 52 diffs found nothing
+  outside test fixtures. Whoever built this worked with the grain of the
+  house; the pins made it safe to say yes quickly.
+
+Tests: 838 passing.
+
 ## v1.267
 
 - **A cart line walks to its product page.** The drawer always held each
