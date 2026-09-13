@@ -1,0 +1,29 @@
+# People for Animals: how to report a security problem, and how to report a
+# site pretending to be this one.
+#
+# The second is the reason this file exists. A charity that takes donations is
+# worth cloning, and the people who notice a clone first are usually not the
+# people who run it: a donor, a bank's fraud desk, a registrar, a researcher.
+# All of them look here. Without this file they have to guess at an address,
+# and mostly they do not bother.
+#
+# Format: RFC 9116. Keep Expires under a year away and move it when you touch
+# this file; `npm run check:lookalikes` reports when it is close.
+
+Contact: mailto:gandhim@exmpls.sansad.in
+Contact: https://peopleforanimalsindia.org/ask
+Expires: 2027-09-01T00:00:00.000Z
+Preferred-Languages: en, hi
+Canonical: https://peopleforanimalsindia.org/.well-known/security.txt
+Policy: https://peopleforanimalsindia.org/donate#verify
+
+# Impersonation and donation fraud
+#
+# People for Animals collects donations on peopleforanimalsindia.org and
+# nowhere else. Payment is handled by secure.ccavenue.com for rupees and
+# www.paypal.com for dollars. Any other site, page or message collecting
+# money in our name is fraudulent, whatever it looks like.
+#
+# If you are a registrar, host or platform acting on a report: the statement
+# we publish for donors, listing our domains and payment hosts, is at
+# https://peopleforanimalsindia.org/donate#verify

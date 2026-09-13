@@ -1,0 +1,16 @@
+{
+  "_comment": [
+    "Pins the project so `firebase deploy` cannot go somewhere else.",
+    "Without this the CLI uses whichever project it last had selected, which is",
+    "global to the machine and has nothing to do with this directory. On 27 Aug",
+    "that sent firestore.rules to pfa-wildlife-rescue-e70bf and overwrote that",
+    "project's rules with this site's.",
+    "",
+    "scripts/ship.sh additionally passes --project, taken from the service",
+    "account key, so the rules always land on the same project the API and the",
+    "sign-in use."
+  ],
+  "projects": {
+    "default": "pfa-new-website"
+  }
+}

@@ -1,0 +1,50 @@
+<!-- PFA site chrome: the one header. Do not edit the copy in a page;
+     edit this file and run `npm run sync:chrome`. Placeholders:
+       {{ANNOUNCE}}  the announcement bar, or nothing on pages without one
+       {{GROUP:x}}   a top-level nav item that owns a menu; sync-chrome gives
+                     it .in-section when the page belongs to that group, and
+                     never aria-current (the menu item below it carries that)
+       {{CURRENT:x}} a destination; sync-chrome marks the page's own
+       -->
+{{ANNOUNCE}}
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        {{GROUP:units.html|Our Work}}
+        <div class="menu">
+          {{CURRENT:units.html|Units: find help near you}}
+          {{CURRENT:newsroom.html|Newsroom and cases}}
+          {{CURRENT:achievements.html|The record}}
+        </div>
+      </div>
+      <div class="navitem">
+        {{GROUP:laws.html|Learn}}
+        <div class="menu">
+          {{CURRENT:laws.html|What the law says}}
+          {{CURRENT:academy.html|Academy}}
+          {{CURRENT:quiz.html|Test yourself}}
+        </div>
+      </div>
+      <div class="navitem">
+        {{GROUP:get-involved.html|Get Involved}}
+        <div class="menu">
+          {{CURRENT:get-involved.html|Volunteer}}
+          {{CURRENT:wall.html|The Wall}}
+          {{CURRENT:cinekind.html|CineKind}}
+          {{CURRENT:events.html|Events}}
+          {{CURRENT:careers.html|Careers}}
+        </div>
+      </div>
+      <div class="navitem">
+        {{GROUP:founder.html|About}}
+        <div class="menu right">
+          {{CURRENT:founder.html|The founder}}
+          {{CURRENT:ask.html|Contact}}
+        </div>
+      </div>
+      {{CURRENT:donate.html|Donate|donate}}
+    </div>
+  </nav>
+</header>

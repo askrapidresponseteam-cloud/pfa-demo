@@ -1,0 +1,241 @@
+/* The theatre: one player, two pages.
+ *
+ * Lifted verbatim out of wall.html, where it was written, so that the founder
+ * page can use the same player rather than a second one that looks like it.
+ * Two players that resemble each other drift the moment either is touched,
+ * and this one has a cursor rule, a dvh fix, a safe-area inset and a strip
+ * that took several passes to get right on a phone. There is one of it now.
+ *
+ * Nothing here was redesigned in the move. If a rule looks odd, its reason is
+ * in the comment beside it and predates this file.
+ */
+/* ---------- theatre: edge to edge player ---------- */
+.tile{position:relative;cursor:pointer;text-align:left;width:100%;padding:0;border:1px solid var(--line);background:#fff;font:inherit;color:inherit}
+.tile .frame{position:relative;overflow:hidden;background:var(--deep)}
+.tile .frame img,.tile .frame video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.tile:hover .frame img,.tile:hover .frame video{transform:scale(1.03)}
+.tile:hover{opacity:1}
+.tile .frame::after{content:"Play in theatre";position:absolute;left:14px;bottom:12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.tile:hover .frame::after,.tile:focus-visible .frame::after{opacity:1;transform:none}
+.tile .idx{position:absolute;right:14px;top:12px;font-size:10px;font-weight:700;letter-spacing:.14em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.wall__head .theatre-link{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:2px;white-space:nowrap}
+
+.theatre{position:fixed;inset:0;z-index:90;background:var(--deep);color:#fff;display:none;flex-direction:column;
+  font-family:var(--body);text-transform:uppercase;letter-spacing:.06em;font-size:12px;
+  --th-pad:clamp(16px,1.6vw,28px);--th-strip:clamp(96px,17vh,190px)}
+/* A fixed element with inset:0 is laid out against the large viewport, the
+   one that assumes the browser's own bars are hidden. On a phone they are
+   not, so the play, seek and full screen row sat underneath Safari's toolbar
+   and could not be reached at all. dvh is the viewport that is actually
+   visible and follows the bars as they come and go. */
+@supports (height:100dvh){.theatre{bottom:auto;height:100dvh}}
+.theatre.open{display:flex}
+/* Ink on paper is the selection everywhere except the surfaces that are
+   themselves ink, where it would read as nothing having been selected. */
+.theatre ::selection{background:#fff;color:var(--deep)}
+.theatre a,.theatre button{text-transform:inherit;letter-spacing:inherit}
+.theatre button{background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit}
+.theatre .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* env() keeps the clock out of the notch and the controls off the home
+   indicator; on everything else both insets are 0 and max() picks the pad. */
+.th-top{position:absolute;left:0;right:0;top:0;z-index:3;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;pointer-events:none;
+  padding:max(var(--th-pad),env(safe-area-inset-top)) max(var(--th-pad),env(safe-area-inset-right)) var(--th-pad) max(var(--th-pad),env(safe-area-inset-left));
+  transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .35s}
+.th-top.away{transform:translateY(-100%);opacity:0}
+.th-top.away > *{pointer-events:none}
+.th-top > *{pointer-events:auto}
+.th-top .l{display:flex;gap:clamp(20px,3vw,64px);align-items:center;color:rgba(255,255,255,.85)}
+.th-top .mark{font-family:var(--display);font-size:clamp(20px,2.2vw,30px);letter-spacing:.04em;line-height:1;text-align:center}
+.th-top .r{display:flex;justify-content:flex-end;align-items:center;gap:clamp(20px,2.4vw,40px)}
+.th-top .sound{margin-left:clamp(20px,3vw,64px)}
+.th-top .sound b{font-weight:400;opacity:.35;margin-left:8px}
+.th-top .sound b.on{opacity:1;border-bottom:1px solid currentColor;padding-bottom:1px}
+.th-top .close{font-weight:700;letter-spacing:.14em}
+
+.th-stage{position:relative;flex:1 1 auto;min-height:0;background:#000;overflow:hidden;cursor:pointer}
+.th-stage video,.th-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+/* Native frame by default: nothing is ever clipped. Fill is the visitor's
+   choice (the Frame control, or Z), remembered across visits; short films
+   are always native - a vertical film cover-cropped to a landscape screen
+   would lose most of itself. */
+.th-stage video{object-fit:contain}
+.theatre.is-fill:not(.is-short) .th-stage video{object-fit:cover}
+/* A bare embed carries no controls of its own, so it can be covered the way
+   a file is: sized past the stage on whichever axis falls short of 16:9 and
+   centred, the spill clipped by the stage. The film fills the screen - in
+   the theatre and in full screen - instead of sitting letterboxed. */
+/* A bare embed has no object-fit, so the box itself does the fitting:
+   native = the largest 16:9 box the stage holds (letterboxed past 16:9),
+   fill = past the stage on the short axis, spill clipped, as before. */
+.theatre.is-long .th-stage iframe.bare{left:50%;top:50%;width:min(100vw,177.78vh);height:min(100vh,56.25vw);transform:translate(-50%,-50%)}
+.theatre.is-long.is-fill .th-stage iframe.bare{width:max(100vw,177.78vh);height:max(100vh,56.25vw)}
+/* Those two measure the viewport, but the box they size sits in the stage,
+   which is the viewport less the top bar, the controls and the film strip.
+   On a desktop the difference is a few per cent and went unnoticed. On a
+   phone the stage is less than half the viewport, so Fill resolved to an
+   iframe half again wider and twice taller than the box holding it and the
+   film was cropped to a small square of its middle. Container units measure
+   the stage itself, which is what the arithmetic meant all along. */
+@supports (width:1cqw){
+  .th-stage{container-type:size}
+  .theatre.is-long .th-stage iframe.bare{width:min(100cqw,177.78cqh);height:min(100cqh,56.25cqw)}
+  .theatre.is-long.is-fill .th-stage iframe.bare{width:max(100cqw,177.78cqh);height:max(100cqh,56.25cqw)}
+}
+.theatre.is-short .fit{display:none}
+.theatre.is-short .th-strip button{aspect-ratio:9/16}
+.theatre.is-short .th-top .mark::after{content:" · Short"}
+.theatre.is-long .th-top .mark::after{content:" · Long"}
+.th-top .mark::after{font-family:var(--body);font-size:11px;letter-spacing:.14em;vertical-align:middle;margin-left:4px;opacity:.7}
+.th-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent 18%,transparent 80%,rgba(0,0,0,.45))}
+.th-caption{position:absolute;z-index:2;right:var(--th-pad);bottom:calc(var(--th-bottom,0px) + 12px);display:flex;gap:clamp(24px,5vw,120px);align-items:baseline;pointer-events:none;white-space:nowrap}
+.th-caption .t{letter-spacing:.06em}
+.th-caption .t em{font-style:normal;margin-right:14px}
+
+.th-strip{flex:0 0 auto;display:flex;gap:6px;padding:10px var(--th-pad) 0;height:calc(var(--th-strip) + 10px);overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;transition:height .18s ease}
+.th-strip::-webkit-scrollbar{display:none}
+.th-strip button{position:relative;flex:0 0 auto;height:100%;aspect-ratio:16/9;background:#000;overflow:hidden;opacity:.5;transition:opacity .25s;border:1px solid transparent}
+.th-strip button img,.th-strip button video{width:100%;height:100%;object-fit:cover;display:block}
+.th-strip button.is-now{opacity:1;border-color:rgba(255,255,255,.6)}
+.th-strip button:hover{opacity:1}
+.th-strip button:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+.th-strip button span{position:absolute;left:10px;bottom:8px;font-size:10px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+
+.th-rule{flex:0 0 auto;position:relative;height:56px;margin:14px var(--th-pad) 0;cursor:pointer}
+.th-rule svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.th-rule line{stroke:rgba(255,255,255,.5)}
+.th-rule text{fill:rgba(255,255,255,.55);font-size:11px;font-family:var(--body);letter-spacing:.06em}
+.th-rule .head{stroke:#fff;stroke-width:2}
+.th-rule .played{stroke:#fff;stroke-width:1}
+.th-rule .at{fill:#fff;font-size:11px;font-variant-numeric:tabular-nums}
+
+.th-foot{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:12px var(--th-pad) var(--th-pad)}
+.th-foot .l{display:flex;gap:clamp(18px,2.4vw,36px)}
+.th-foot a{border-bottom:1px solid currentColor;padding-bottom:2px}
+.th-foot .r{color:rgba(255,255,255,.85);text-align:right}
+
+@media (max-width:860px){
+  .th-top{grid-template-columns:1fr auto}
+  .th-top .mark{grid-column:1;grid-row:1;justify-self:start}
+  .th-top .r{grid-column:2;grid-row:1}
+  .th-top .l{grid-column:1 / -1;grid-row:2;margin-top:10px;font-size:11px}
+  .th-state{right:16px;top:auto;bottom:56px}
+  .th-caption{left:var(--th-pad);right:auto;flex-direction:column;gap:2px;white-space:normal}
+  .th-note{left:auto;right:var(--th-pad)}
+  .th-rule{display:none}
+  .th-foot .r{display:none}
+}
+
+/* the strip, ruler and foot sit over the stage and step out of the way while the mouse is on the film */
+.th-bottom{position:absolute;left:0;right:0;bottom:0;z-index:4;display:flex;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom);
+  background:linear-gradient(to top,rgba(10,10,10,.96) 70%,rgba(10,10,10,0));transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .35s}
+.th-bottom.away{transform:translateY(100%);opacity:0;pointer-events:none}
+.th-stage{position:absolute;inset:0}
+/* ---------- player controls, overlays and states ---------- */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.th-controls{display:grid;gap:6px;padding:10px var(--th-pad) 0}
+.th-seek{position:relative;height:22px;display:flex;align-items:center;cursor:pointer}
+.th-seek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.22)}
+.th-seek__buf,.th-seek__fill{position:absolute;left:0;height:3px;width:0;pointer-events:none}
+.th-seek__buf{background:rgba(255,255,255,.4)}
+.th-seek__fill{background:#fff}
+.th-seek__knob{position:absolute;left:0;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#fff;transform:scale(0);transition:transform .15s;pointer-events:none}
+.th-seek:hover .th-seek__knob,.th-seek:focus-within .th-seek__knob,.th-seek.is-drag .th-seek__knob{transform:scale(1)}
+.th-seek input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.th-seek input:focus-visible ~ .th-seek__knob{outline:2px solid #fff;outline-offset:3px}
+.th-seek__tip{position:absolute;top:calc(100% + 5px);transform:translateX(-50%);padding:4px 8px;background:#fff;color:#0a0a0a;font-size:11px;pointer-events:none;z-index:2}
+/* While the pointer is on the timeline, everything below the bar is pushed
+   down off the screen and the top bar and caption step away, so the film has
+   the whole screen with just the bar floating over it, and the time chip has
+   clear ground under the bar with nothing for it to cover. Transforms only:
+   the bar itself never moves under the pointer, so the state cannot flicker.
+   When the whole block hides, the pushed items snap back without animating -
+   the block is already faded, so nothing is seen moving twice. */
+.th-row,.th-strip,.th-rule,.th-foot{transition:transform .38s cubic-bezier(.2,.7,.2,1),opacity .3s}
+.th-bottom.is-scrub :is(.th-row,.th-strip,.th-rule,.th-foot){transform:translateY(110vh);opacity:0;pointer-events:none}
+.th-bottom.away :is(.th-row,.th-strip,.th-rule,.th-foot){transition:none}
+.th-bottom.is-scrub{background:linear-gradient(to top,rgba(10,10,10,.92) 0,rgba(10,10,10,.5) 64px,rgba(10,10,10,0) 150px)}
+.theatre.is-scrub .th-top{transform:translateY(-100%);opacity:0}
+.theatre.is-scrub .th-top > *{pointer-events:none}
+.th-caption{transition:opacity .25s}
+.theatre.is-scrub .th-caption{opacity:0}
+.th-seek__tip[hidden]{display:none}
+.th-row{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap}
+.th-row .l,.th-row .r{display:flex;align-items:center;gap:clamp(8px,1.2vw,18px)}
+.th-row button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:32px;min-height:32px;padding:0 4px;opacity:.85;transition:opacity .15s}
+.th-row button:hover,.th-row button:focus-visible{opacity:1}
+.th-row button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+/* Copy link, for the two seconds it is saying Copied. Full opacity and a
+   rule under the word, the same way Sound and Frame mark the setting that
+   is on, so the state reads as this row's own vocabulary. */
+#thShare.is-done{opacity:1;border-bottom:1px solid currentColor;padding-bottom:1px}
+.th-row svg{width:22px;height:22px;fill:currentColor;display:block}
+.th-row button[aria-pressed="true"]{border-bottom:1px solid currentColor}
+#thPlay .i-pause,#thPlay.is-playing .i-play{display:none}
+#thPlay.is-playing .i-pause{display:block}
+#thFull .i-off,#thFull[aria-pressed="true"] .i-on{display:none}
+#thFull[aria-pressed="true"] .i-off{display:block}
+.th-time{color:rgba(255,255,255,.85);white-space:nowrap}
+.th-time .sep{margin:0 6px;opacity:.5}
+.th-menu{position:relative}
+.th-menu__list{position:absolute;right:0;bottom:calc(100% + 10px);z-index:5;display:grid;min-width:132px;background:#0a0a0a;border:1px solid rgba(255,255,255,.3)}
+.th-menu__list[hidden]{display:none}
+.theatre .th-menu__list button{display:block;width:100%;padding:10px 14px;text-align:left;opacity:.85}
+.theatre .th-menu__list button:hover,.theatre .th-menu__list button:focus-visible{opacity:1;background:rgba(255,255,255,.1)}
+.theatre .th-menu__list button[aria-checked="true"]{background:#fff;color:#0a0a0a;opacity:1}
+.th-spin{position:absolute;left:50%;top:50%;z-index:2;width:48px;height:48px;margin:-24px 0 0 -24px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:thspin .8s linear infinite;pointer-events:none}
+.th-spin[hidden]{display:none}
+@keyframes thspin{to{transform:rotate(360deg)}}
+.th-flash{position:absolute;top:50%;z-index:2;transform:translateY(-50%);padding:12px 18px;font-size:14px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.4);pointer-events:none;animation:thflash .8s ease-out both}
+.th-flash[data-side="left"]{left:12%}
+.th-flash[data-side="right"]{right:12%}
+.th-flash[data-side="centre"]{left:50%;transform:translate(-50%,-50%)}
+.th-flash[hidden]{display:none}
+@keyframes thflash{0%{opacity:0;transform:translateY(-50%) scale(.9)}20%{opacity:1;transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-50%) scale(1)}}
+.th-flash[data-side="centre"]{animation-name:thflashc}
+@keyframes thflashc{0%{opacity:0;transform:translate(-50%,-50%) scale(.9)}20%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+.th-card{position:absolute;inset:0;z-index:3;display:grid;place-items:center;padding:24px;background:rgba(10,10,10,.74);text-align:center}
+.th-card[hidden]{display:none}
+.th-card .eyebrow{color:rgba(255,255,255,.6);margin:0 0 10px}
+.th-card h3{font-family:var(--display);font-weight:400;font-size:clamp(22px,3vw,40px);line-height:1.1;text-transform:none;letter-spacing:.01em;margin:0 0 10px;max-width:22ch}
+.th-card p{margin:0 0 22px;color:rgba(255,255,255,.75)}
+.th-card .acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.theatre .th-card .acts button{padding:12px 18px;border:1px solid rgba(255,255,255,.7);font-weight:700;letter-spacing:.12em}
+.theatre .th-card .acts button.primary{background:#fff;color:#0a0a0a;border-color:#fff}
+.theatre .th-card .acts button:hover,.theatre .th-card .acts button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.th-help{position:absolute;inset:0;z-index:6;display:grid;place-items:center;padding:24px;overflow:auto;background:rgba(10,10,10,.94);text-transform:none;letter-spacing:0}
+.th-help[hidden]{display:none}
+.th-help .eyebrow{text-align:center;margin:0 0 18px;color:rgba(255,255,255,.6)}
+.th-help dl{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;margin:0 0 22px;max-width:460px;font-size:13px;line-height:1.5}
+.th-help dt{text-align:right;white-space:nowrap}
+.th-help dd{margin:0;color:rgba(255,255,255,.8)}
+.th-help kbd{display:inline-block;min-width:22px;padding:2px 6px;border:1px solid rgba(255,255,255,.45);border-radius:4px;font:inherit;font-size:11px;text-align:center}
+.theatre .th-help > div > button{display:block;margin:0 auto;padding:10px 18px;border:1px solid rgba(255,255,255,.7);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+/* The shield sits over an embed this page drives through its API: clicks
+   pause and play here as they do on a file, and the pointer - and the drawn
+   cursor - never enter the frame. It is never put over an embed the API
+   could not reach, whose own controls are then the only controls. */
+.th-shield{position:absolute;inset:0;z-index:1}
+.th-shield[hidden]{display:none}
+.tile .prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.3)}
+.tile .prog i{display:block;height:100%;background:#fff}
+@media (max-width:860px){
+  .th-row .r #thShare,.th-row .r #thHelpBtn{display:none}
+  .th-row .l .th-time{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){
+  .th-spin{animation-duration:1.6s}
+  .th-flash{animation:none}
+}
+.th-caption,.th-note{transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+@media (hover:none){.th-bottom.away{transform:none;opacity:1;pointer-events:auto}}
+/* A phone turned sideways is 390px tall. The strip's 96px floor plus the top
+   bar and the control row left the film about a third of the screen, on the
+   one orientation anybody watches in. The strip goes; every film in it is
+   still reachable through Previous, Next and the ruler. */
+@media (max-height:500px){
+  .th-strip{display:none}
+  .theatre{--th-pad:12px}
+}
+body.theatre-lock{overflow:hidden}

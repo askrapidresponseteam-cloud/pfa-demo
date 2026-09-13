@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+
+.formstatus{margin:10px 0 0;font-size:13px;line-height:1.5}
+.formstatus[hidden]{display:none}
+.formstatus[data-state="bad"]{color:#b3261e}
+.formstatus[data-state="good"]{color:#1a7f4b}
+.field .opt{color:var(--muted);font-weight:400}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.299">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>The Wall | People for Animals</title>
+<meta name="description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
+<link rel="stylesheet" href="assets/theatre.css">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav is 80px and the header carries a 1px rule under it. This is
+     only what the first paint uses; assets/chrome.js measures the real height
+     into --nav and overwrites it. Wrong, the top of the page starts 11px too
+     high and drops when the script lands. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+/* currentColor, not the accent. With the palette down to ink and paper a
+   fixed ring colour can only be right on one of the two, and the ring has
+   to be found on the dark controls as well as the white page; taking the
+   element's own text colour it can never come out the shade of what it
+   surrounds. */
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+
+/* ---------- filter bar, same component as the shop ---------- */
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:220px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);margin-left:auto;padding-left:12px;white-space:nowrap}
+
+/* ---------- legs ---------- */
+.legs{padding:0 var(--gutter) var(--band)}
+.leg{margin-top:var(--band)}
+.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel > *{position:relative;z-index:1}
+.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+
+/* ---------- date rows ---------- */
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:150px minmax(0,1.5fr) minmax(0,.9fr) 104px auto;gap:20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.row.hidden{display:none}
+.row .d{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.row .v{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.row .c{font-size:13px;color:var(--muted);line-height:1.35}
+.row .b{display:flex}
+.row .b em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);padding:5px 9px;white-space:nowrap}
+.row .b em.soft{border-color:var(--line);color:var(--muted)}
+.row .a{display:flex;gap:20px;justify-content:flex-end}
+.row .a a{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:2px;white-space:nowrap}
+.row .a span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.leg.hidden{display:none}
+.empty{padding:64px 0;text-align:center;font-size:13px;color:var(--muted)}
+
+/* ---------- closing band ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band--bone{background:var(--bone)}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,48px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+.toast{position:fixed;left:16px;bottom:20px;z-index:75;background:var(--ink);color:#fff;font-size:12px;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .row{grid-template-columns:132px minmax(0,1.4fr) minmax(0,.9fr) auto;gap:16px}
+  .row .b{grid-column:2 / 4;margin-top:-6px}
+}
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .legs{padding-left:16px;padding-right:16px}
+  .row{grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0}
+  .row .d{grid-column:1;grid-row:1}
+  .row .b{grid-column:2;grid-row:1;justify-content:flex-end;margin-top:0}
+  .row .v{grid-column:1 / -1;grid-row:2;margin-top:4px}
+  .row .c{grid-column:1 / -1;grid-row:3}
+  .row .a{grid-column:1 / -1;grid-row:4;justify-content:flex-start;gap:24px;margin-top:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- the wall ---------- */
+.wall-hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+.wall-hero .actions{margin-top:36px}
+.wall-hero .btn--ghost{background:transparent;border-color:#fff;color:#fff}
+.wall-hero .btn--ghost:hover{background:#fff;color:var(--ink)}
+.subnav{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;border-bottom:1px solid var(--line);padding:0 var(--gutter)}
+.subnav div{display:flex;align-items:center;gap:28px;height:50px;overflow-x:auto;scrollbar-width:none}
+.subnav div::-webkit-scrollbar{display:none}
+/* An anchor arrival on this page must clear three bars, not two: the
+   announcement, the site header, and the wall's own sticky subnav (50px and
+   its rule). Without this, "Browse the wall" opened the section with LONG
+   FORM's title halfway under the subnav - arrived, but beheaded. Same
+   convention as cinekind, laws and get-involved, one bar deeper. */
+section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 63px)}
+.subnav a{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;padding:4px 0;border-bottom:1px solid transparent}
+.subnav a:hover{border-bottom-color:var(--ink)}
+.subnav a.end{margin-left:auto}
+.wall{padding:var(--band) var(--gutter)}
+.wall--stone{background:var(--stone)}
+.wall__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px;margin-bottom:40px}
+.wall__head h2{font-size:clamp(26px,3.2vw,48px)}
+.wall__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.wall__grid.is-long{grid-template-columns:repeat(3,minmax(0,1fr))}
+.wall__grid:empty{display:none}
+.tile{display:block;background:#fff;border:1px solid var(--line)}
+.tile .frame{aspect-ratio:16/9;background:var(--stone)}
+.wall__grid:not(.is-long) .tile .frame{aspect-ratio:9/16}
+.tile .cap{padding:14px 16px;font-size:13px;line-height:1.4}
+.tile .cap span{display:block;color:var(--muted);margin-top:4px}
+.submit{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(40px,6vw,96px);align-items:start}
+.steps{display:grid;gap:0;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:26px 0;border-bottom:1px solid var(--line)}
+.step span{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--muted);padding-top:3px}
+.step p{margin:0;font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.step p+p{margin-top:8px;font-size:14px;font-weight:400;line-height:1.6;color:var(--muted)}
+.form{display:grid;gap:22px}
+.field{display:grid;gap:8px}
+.field label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;padding:14px 14px;font-size:14px;font-family:inherit;outline:none;color:var(--ink);border-radius:0;-webkit-appearance:none;appearance:none}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ink)}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:40px}
+.field .hint{font-size:12px;color:var(--muted)}
+.field .error{display:none;font-size:12px;color:#b3261e}
+.field.is-bad input,.field.is-bad select{border-color:#b3261e}
+.field.is-bad .error{display:block}
+.consent{display:grid;grid-template-columns:18px 1fr;gap:12px;align-items:start;font-size:13px;line-height:1.55;color:var(--muted)}
+.consent input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--ink)}
+.consent.is-bad{color:#b3261e}
+.form .actions{margin-top:6px}
+.form-success{display:none;border:1px solid var(--ink);padding:24px;font-size:14px;line-height:1.6}
+.form-success.show{display:block}
+.wall-foot{padding:0 var(--gutter) 40px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 32px}
+@media (max-width:1000px){.wall__grid{grid-template-columns:repeat(3,minmax(0,1fr))}.wall__grid.is-long{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.submit{grid-template-columns:1fr}.wall__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wall__grid.is-long{grid-template-columns:1fr}}
+
+/* ---------- the waiting wall ----------
+   No film has been approved, and none is invented to fill the space. What was
+   here was a dashed rectangle, which is the drawing every interface uses for
+   a missing file, and three hairlines that ran straight through the headline.
+   Both said the same thing: something is supposed to be here and is not.
+
+   This says the opposite. The band is ink, which is how the rest of the site
+   marks the thing that matters, and the only motion is a slow sheen behind
+   the type that never crosses a letter. It reads as a page, and it is gone
+   the moment a film is approved. */
+.wall__empty{position:relative;overflow:hidden;margin:0 calc(var(--gutter) * -1);
+  padding:clamp(76px,13vw,170px) var(--gutter);
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:var(--deep);color:#fff}
+/* Brushed, not blinking. Eleven seconds, mostly spent off screen. */
+.wall__empty::before{content:"";position:absolute;top:-20%;bottom:-20%;left:-45%;width:45%;
+  pointer-events:none;transform:skewX(-14deg);
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.045) 42%,rgba(255,255,255,.085) 55%,transparent);
+  animation:wall-sheen 11s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes wall-sheen{0%,14%{left:-45%}68%,100%{left:125%}}
+@media (prefers-reduced-motion:reduce){.wall__empty::before{animation:none;opacity:.5;left:35%}}
+.wall__empty > *{position:relative;z-index:1}
+.waiting__kicker{margin:0;font-size:10px;font-weight:700;letter-spacing:.28em;
+  text-transform:uppercase;color:rgba(255,255,255,.45)}
+.waiting__head{margin:clamp(22px,3vw,34px) 0 0;font-family:var(--display);font-weight:400;
+  text-transform:uppercase;font-size:clamp(38px,7.6vw,108px);line-height:.94;letter-spacing:.01em}
+.waiting__line{margin:clamp(20px,2.6vw,30px) 0 0;font-size:clamp(15px,1.4vw,18px);line-height:1.5;
+  color:rgba(255,255,255,.72);max-width:30ch}
+.waiting__cta{display:inline-block;margin:clamp(32px,4vw,46px) 0 0;padding:19px 46px;
+  background:#fff;color:var(--deep);font-size:12px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;transition:box-shadow .3s,transform .3s}
+.waiting__cta:hover{opacity:1;transform:translateY(-2px);box-shadow:0 0 0 6px rgba(255,255,255,.14)}
+.waiting__note{margin:clamp(26px,3vw,34px) 0 0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);max-width:44ch}
+
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/wall">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Wall">
+  <meta property="og:description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/wall">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="The Wall">
+  <meta name="twitter:description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"The Wall","item":"https://peopleforanimalsindia.org/wall"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">The record</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
+        <div class="menu">
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="#top" data-nav="wall.html" class="current" aria-current="page">The Wall</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+<script src="assets/theatre.js"></script>
+<script src="assets/field-rules.js"></script>
+<script src="assets/field-validate.js"></script>
+
+<main>
+  <section class="hero wall-hero" id="top">
+    <div class="hero__in">
+      <p class="eyebrow">A community film wall, reviewed, then published</p>
+      <h1 class="display">The&nbsp;Wall</h1>
+      <p class="lede">Films, talks and thirty-second takes sent in by supporters, volunteers and units: awareness, the law in plain words, and how a case was actually handled. It is not a place to post cruelty. Share yours from Instagram, Facebook, YouTube or Vimeo. Every piece is read by an editor before it goes up.</p>
+      <div class="actions">
+        <a class="btn btn--light" href="#submit">Share your video</a>
+        <a class="btn btn--ghost" href="#longform">Browse the wall</a>
+      </div>
+      <div class="meta">
+        <span>Submissions read within 48 hours</span>
+        <span>Instagram, Facebook, YouTube, Vimeo</span>
+      </div>
+    </div>
+  </section>
+
+  <nav class="subnav" aria-label="Sections of the wall">
+    <div>
+      <a href="#longform">Long form</a>
+      <a href="#shortform">Short form</a>
+      <a href="#theatre-long" data-theatre-open="long">Theatre</a>
+      <a class="end" href="#submit">Share a video</a>
+    </div>
+  </nav>
+
+  <section class="wall" id="longform">
+    <div class="wall__head">
+      <h2 class="display">Long form</h2>
+      <p class="eyebrow">Talks, testimonials and documentary cuts over three minutes</p>
+      <a class="theatre-link" href="#theatre-long" data-theatre-open="long">Watch in theatre</a>
+    </div>
+    <div class="wall__grid is-long" data-wall="long"></div>
+    <div class="wall__empty" data-wall-empty="long">
+      <p class="waiting__kicker">Long form</p>
+      <h3 class="waiting__head">The Wall is<br>waiting for you.</h3>
+      <p class="waiting__line">Submit something worth putting on the wall.</p>
+      <a class="waiting__cta" href="#submit">Submit your work</a>
+      <p class="waiting__note">Every piece here is chosen by hand. Nothing appears until it has been looked at.</p>
+    </div>
+  </section>
+
+  <section class="wall wall--stone" id="shortform">
+    <div class="wall__head">
+      <h2 class="display">Short form</h2>
+      <p class="eyebrow">Reels and stories under a minute</p>
+      <a class="theatre-link" href="#theatre-short" data-theatre-open="short">Watch in theatre</a>
+    </div>
+    <div class="wall__grid" data-wall="short"></div>
+    <div class="wall__empty" data-wall-empty="short">
+      <p class="waiting__kicker">Short form</p>
+      <h3 class="waiting__head">The Wall is<br>waiting for you.</h3>
+      <p class="waiting__line">Under a minute. Make it count.</p>
+      <a class="waiting__cta" href="#submit">Submit your work</a>
+      <p class="waiting__note">Every piece here is chosen by hand. Nothing appears until it has been looked at.</p>
+    </div>
+  </section>
+
+  <section class="wall" id="submit">
+    <div class="wall__head">
+      <h2 class="display">Send us yours</h2>
+      <p class="eyebrow">Paste a public link, we do the rest</p>
+    </div>
+    <div class="submit">
+      <div class="steps">
+        <div class="step"><span>01</span><div><p>Paste the link</p><p>Copy the address of your reel, post or video. The post has to be public, or the wall cannot reach it.</p></div></div>
+        <div class="step"><span>02</span><div><p>An editor watches it</p><p>Someone at PFA watches every submission. Nothing that identifies a rescue address, nothing about a live case, and no footage of an animal being hurt. If you have that, it is evidence: <a href="report.html">report it</a> instead, where it stays private and reaches a named person.</p></div></div>
+        <div class="step"><span>03</span><div><p>It goes up on the wall</p><p>Approved pieces publish under your name with a link back to the original post. Ask us to take it down at any time and it comes down.</p></div></div>
+      </div>
+      <div>
+        <form class="form" id="wallForm" novalidate>
+          <div class="field">
+            <label for="wallUrl">Link to your video</label>
+            <input id="wallUrl" name="link" type="url" required placeholder="https://www.instagram.com/reel/">
+            <span class="error">Paste the full link to a public post.</span>
+            <span class="hint">Instagram, Facebook, YouTube or Vimeo. Awareness, the law, or how a case was handled, not footage of an animal being hurt.</span>
+          </div>
+          <div class="field">
+            <label for="wallWhich">Which wall</label>
+            <select id="wallWhich" name="wall" required>
+              <option value="long">Long form, over three minutes</option>
+              <option value="short">Short form, under a minute</option>
+            </select>
+            <span class="error">Choose a wall.</span>
+          </div>
+          <div class="field">
+            <label for="wallName">Name to publish it under</label>
+            <input id="wallName" name="name" type="text" required placeholder="Asha K.">
+            <span class="error">Add the name to credit.</span>
+          </div>
+          <div class="field">
+            <label for="wallContact">Email or phone</label>
+            <input id="wallContact" name="contact" type="text" required placeholder="So an editor can reach you">
+            <span class="error">Add a contact.</span>
+          </div>
+          <div class="field">
+            <label for="wallNote">Anything we should know</label>
+            <textarea id="wallNote" name="note" placeholder="Where it was filmed, who is in it, whether an animal in it is now safe."></textarea>
+          </div>
+          <label class="consent" for="wallConsent">
+            <input id="wallConsent" name="consent" type="checkbox" required>
+            <span>I filmed this or have the right to share it, and I am happy for People for Animals to publish it on the wall with credit.</span>
+          </label>
+          <div class="actions">
+            <button class="btn" type="submit">Send for review</button>
+          </div>
+        </form>
+        <p class="formstatus" id="wallStatus" data-form-status hidden></p>
+        <div class="form-success" id="wallSuccess">Sent. Your reference is <strong data-reference></strong>. Keep it: an editor at PFA picks it up from here and will use the contact you gave.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wall-foot">
+    <p class="eyebrow">People for Animals</p>
+    <p class="eyebrow">Ask us to remove yours at any time</p>
+  </div>
+</main>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Explore">
+      <p class="pfa-footer__label">Explore</p>
+      <ul>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="achievements.html">The record</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure.
+
+       No caption. An odometer in a footer reads as what it is without being
+       told, and every phrasing of the caption either restated the obvious or
+       claimed something the number does not support: a visit is not someone
+       who cared, or stood with us, or came for the animals. The aria-label
+       below still names it for a screen reader, which cannot see the shape. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<!-- The theatre is injected by assets/theatre.js, which owns its markup:
+     a page carrying a copy would be free to let it drift from the code that
+     drives it. -->
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="pfa-forms.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------- submission form: validated here, sent to /api/pfa-submissions ---------- */
+  (function form(){
+    var f = $('#wallForm'); if (!f) return;
+    /* The six platforms The Wall is for. Matched as a host and not as a
+       substring: the regex this replaced was unanchored, so
+       youtube.com.example.net satisfied it. The same list is enforced again in
+       lib/submission-fields.js, because this one is only a courtesy. */
+    var HOSTS = ['instagram.com', 'facebook.com', 'fb.watch', 'youtube.com', 'youtu.be', 'vimeo.com'];
+    function knownHost(value){
+      var host;
+      try { host = new URL(value).hostname.toLowerCase().replace(/^www\./, ''); } catch (err) { return false; }
+      return HOSTS.some(function(name){ return host === name || host.slice(-(name.length + 1)) === '.' + name; });
+    }
+    function bad(el, on){ var w = el.closest('.field') || el.closest('.consent'); if (w) w.classList.toggle('is-bad', on); return on; }
+    f.addEventListener('submit', function(e){
+      e.preventDefault();
+      var url = $('#wallUrl'), name = $('#wallName'), contact = $('#wallContact'), consent = $('#wallConsent'), which = $('#wallWhich');
+      var errs = 0;
+      var ok = knownHost(url.value);
+      errs += bad(url, !ok) ? 1 : 0;
+      errs += bad(which, !which.value) ? 1 : 0;
+      errs += bad(name, !name.value.trim()) ? 1 : 0;
+      errs += bad(contact, !contact.value.trim()) ? 1 : 0;
+      errs += bad(consent, !consent.checked) ? 1 : 0;
+      if (errs){ var first = f.querySelector('.is-bad input, .is-bad select'); if (first) first.focus(); return; }
+
+      /* This used to hide the form and show the success panel without sending
+         anything: someone submitting a rescue video was told it had arrived
+         when nothing was recorded. The panel now waits for a reference. */
+      if (!window.PFAForms){
+        var offline = $('#wallStatus');
+        if (offline){ offline.hidden = false; offline.setAttribute('data-state','bad');
+          offline.textContent = 'This form cannot be sent right now. Please reload the page.'; }
+        return;
+      }
+      var button = f.querySelector('[type="submit"]');
+      var label = button ? button.textContent : '';
+      if (button){ button.disabled = true; button.textContent = 'Sending\u2026'; }
+      var status = $('#wallStatus');
+      if (status){ status.hidden = true; status.textContent = ''; }
+
+      var digits = contact.value.replace(/\D/g, '');
+      var data = {
+        url: url.value.trim(),
+        /* which wall it is for: long or short. This travelled as "title",
+           which read in the panel as the film being called "long". */
+        wall: which.value === 'short' ? 'Short form, under a minute' : 'Long form, over three minutes',
+        name: name.value.trim(),
+        notes: 'Consent given for PFA to show this on The Wall.'
+      };
+      if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact.value.trim())) data.email = contact.value.trim();
+      else if (/^[6-9]\d{9}$/.test(digits)) data.mobile = digits;
+      else { bad(contact, true); contact.focus();
+             if (button){ button.disabled = false; button.textContent = label; }
+             return; }
+
+      window.PFAForms.submit('PFA-S', data)
+        .then(function(reference){
+          f.hidden = true;
+          var ok = $('#wallSuccess');
+          ok.classList.add('show');
+          var ref = ok.querySelector('[data-reference]');
+          if (ref) ref.textContent = reference;
+        })
+        .catch(function(error){
+          if (button){ button.disabled = false; button.textContent = label; }
+          if (status){ status.hidden = false; status.setAttribute('data-state','bad'); status.textContent = error.message; }
+        });
+    });
+    f.addEventListener('input', function(e){ var t = e.target; if (t && t.closest) bad(t, false); });
+  })();
+
+  /* ---------- the wall's films ----------
+     Empty, and loaded rather than typed. Every film here used to be written
+     into this array by hand, which meant "approved by an admin" was really
+     "edited by a developer", and meant the page shipped with placeholder
+     films standing in for submissions that had not arrived.
+
+     Both are gone. The films come from /api/wall, which returns only what an
+     admin has put on the wall, and until one has, the page shows what it
+     should show: an invitation, not an empty database. */
+  var WALL = [];
+
+  /* ---------- tiles on the two walls, and the theatre they open ----------
+     One player for three kinds of source: a file the site plays itself, a
+     YouTube embed through its player API, a Vimeo embed through its player
+     API. Every control on the screen works for all three - that is the whole
+     bar to be on the screen. Picture in picture failed it and is gone: no
+     page may reach the video inside YouTube's or Vimeo's frame, so the
+     button could only ever serve the placeholder files, and on the films the
+     wall is actually for it sat dead (reported 31 Aug 2026) or vanished,
+     which reads as broken either way. The iframes still declare
+     allow="picture-in-picture" on purpose: the browser's own media menu can
+     float an embedded film, and that door is the browser's, not this
+     page's. An embed whose API script is blocked still plays as a plain
+     embed; the readouts that need the API simply stay out of the way. */
+  (function walls(){
+    /* The tiles on the two walls, and the mounting of the player they open.
+       The player itself is assets/theatre.js now: it was written here, and
+       the founder page needed the same one rather than a second that looked
+       like it. What stays here is what is genuinely this page's, which is the
+       walls themselves. */
+    /* The films arrive from /api/wall rather than from this file, so the
+       page is built once they are here. An empty answer, a failed request and
+       a wall nobody has published to are the same thing to this page: the
+       waiting state stays up, which is a page rather than an error. */
+    var T = null;
+    function build(films){
+      WALL = Array.isArray(films) ? films : [];
+      if (!WALL.length) return;                 /* the invitation stays */
+      T = window.PFA_THEATRE && window.PFA_THEATRE.mount
+        ? window.PFA_THEATRE.mount({ films: WALL, progKey: 'pfa:wall:progress', onProgress: function(){ paintProgress(); } })
+        : null;
+      if (!T) return;
+      paint();
+    }
+    var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+    /* pad, thumb and esc stay: the tiles are drawn here. Everything the
+       progress store touched went with the player, which is the one that
+       knows the key a film is filed under, and is read back through T. */
+    var keyOf = function(it){ return T.keyOf(it); };
+    function thumb(item){
+      if (item.poster) return '<img src="' + item.poster + '" alt="" loading="lazy">';
+      if (item.yt) return '<img src="https://i.ytimg.com/vi/' + item.yt + '/hqdefault.jpg" alt="" loading="lazy">';
+      if (item.src) return '<video src="' + item.src + '#t=1" muted playsinline preload="metadata"></video>';
+      return '';
+    }
+    function esc(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    /* Called once the films are here, not at load: at load there are none. */
+    function paint(){
+    ['long','short'].forEach(function(w){
+      var grid = document.querySelector('[data-wall="' + w + '"]'), empty = document.querySelector('[data-wall-empty="' + w + '"]');
+      var items = WALL.map(function(it, i){ it.n = i; return it; }).filter(function(it){ return it.wall === w; });
+      if (!grid || !items.length) return;
+      grid.innerHTML = items.map(function(it){
+        return '<button type="button" class="tile" data-play="' + it.n + '" data-key="' + esc(keyOf(it)) + '"><div class="frame">' + thumb(it) + '<span class="idx num">' + pad(it.n + 1) + '</span><span class="prog" hidden><i></i></span></div><div class="cap">' + esc(it.title) + '<span>' + esc(it.credit) + '</span></div></button>';
+      }).join('');
+      if (empty) empty.hidden = true;
+    });
+    paintProgress();
+    }
+
+    /* Asked for last, after everything build() will reach for exists. A real
+       answer arrives long after this script has finished either way, but the
+       order is the honest one and it is what makes the page testable without
+       pretending the network is slow. */
+    fetch('/api/wall', { headers: { accept: 'application/json' } })
+      .then(function(r){ return r.ok ? r.json() : { films: [] }; })
+      .then(function(d){ build(d && d.films); })
+      .catch(function(){ build([]); });
+    /* A thin line along the foot of a tile says how far into it you got. */
+    function paintProgress(){
+      /* Through the api: the store itself is the player's, and it is the one
+         that knows the key a film is filed under. */
+      var p = T.progress();
+      Array.prototype.forEach.call(document.querySelectorAll('.tile[data-key]'), function(tile){
+        var s = p[tile.getAttribute('data-key')], bar = tile.querySelector('.prog');
+        if (!bar) return;
+        if (s && s.d > 0){ bar.hidden = false; bar.firstChild.style.width = Math.round(100 * s.t / s.d) + '%'; }
+        else bar.hidden = true;
+      });
+    }
+      })();
+})();
+</script>
+</body>
+</html>
