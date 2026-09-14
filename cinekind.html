@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+
+.formstatus{margin:10px 0 0;font-size:13px;line-height:1.5}
+.formstatus[hidden]{display:none}
+.formstatus[data-state="bad"]{color:#b3261e}
+.formstatus[data-state="good"]{color:#1a7f4b}
+.field .opt{color:var(--muted);font-weight:400}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.305">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>CineKind Awards 2026 | People for Animals</title>
+<meta name="description" content="CineKind is a collaborative initiative by the Film Federation of India and People for Animals. The national award for films that choose kindness.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#f4f3f1;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav is 80px and the header carries a 1px rule under it. This is
+     only what the first paint uses; assets/chrome.js measures the real height
+     into --nav and overwrites it. Wrong, the top of the page starts 11px too
+     high and drops when the script lands. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg,video{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+/* currentColor, not the accent. With the palette down to ink and paper a
+   fixed ring colour can only be right on one of the two, and the ring has
+   to be found on the dark controls as well as the white page; taking the
+   element's own text colour it can never come out the shade of what it
+   surrounds. */
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
+.btn--light:hover{background:transparent;color:#fff}
+.btn--ghost{background:transparent;border-color:#fff;color:#fff}
+.btn--ghost:hover{background:#fff;color:var(--ink)}
+
+.shot{position:relative;overflow:hidden;background:var(--stone)}
+.shot img,.shot video{width:100%;height:100%;object-fit:cover}
+.cap{margin:14px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+
+/* ---------- the hoarding ----------
+   The page opens the way a picture house does: on the poster wall. The
+   eleven honourees, and nothing else, pasted up as photographs, each in
+   two crops so the wall reads as posters of the same people and not as
+   one photograph repeated. The wall is hung a few degrees off level and
+   has no edge in any direction: laid out by the script as strips that
+   wrap, it goes by as the page does. The section is a track a little
+   over two screens long with the wall pinned under the header, and the
+   scroll is the camera: the wall glides across and up along its tilt,
+   leaning into the motion and settling out of it, until the track ends
+   and the roll arrives underneath. A mouse can take hold of it and throw
+   it. It sits in the dark: the face under the pointer comes up to full
+   light with its name and award, the rest stays washed back. Shuffle
+   pastes the wall up again.
+
+   Markup first. The thirty-three posters are written into the page in a
+   composed order and laid out by the stylesheet as flex rows, so the wall
+   stands without a script, is read by search, and is walked by a
+   keyboard, one poster per Tab. The script (is-live) turns the rows into
+   wrapping strips, tops them up with copies (aria-hidden and out of the
+   tab order, and no one pasted next to themselves), and drives the
+   camera. A reduced-motion request gets the strips standing still on a
+   section one screen tall: no track, no camera, no throw.
+
+   The wall is curved, the inside of a shallow dome: the stage has
+   perspective, the wall keeps its children in one 3D space, and each
+   poster is turned and set back by the script in proportion to how far
+   it stands from the middle of the screen, so a face is flat and near at
+   the centre and turns away and shrinks toward the edges, and turns as
+   it travels from one to the other. That turning is what the eye
+   follows when the wall moves. The bright wall is the resting state; the
+   wash comes down when the pointer is on the wall, and lifts off the
+   poster under it, whose name and award take the corner where the title
+   stood (the title's own markup stays; the caption is a mirror of the
+   poster's, which keeps its text for the accessible name).
+
+   The base rule reserves the announcement bar and the header the way
+   every first section on the site does, then takes the rest of the
+   viewport. The stage is sticky only when live, and the section, not the
+   stage, is what grows: overflow stays on the stage, because an overflow
+   on the sticky element's parent would make that parent the thing it
+   sticks to. inset:-30% oversizes the wall: the dome sets the outer
+   posters back, and the perspective draws what is set back toward the
+   middle, so the wall needs to run well past the stage for its edge
+   posters still to reach the stage's edge, and the tilt needs a little
+   more besides. The rows are tall for a wall of eleven: a face is the
+   whole point. */
+.hoarding{position:relative;background:var(--deep);color:#fff;
+  /* Full bleed. The wall used to start under the header the way every
+     first section on the site does, and that is exactly what made it read
+     as a section: a panel of photographs with a white bar over it. The
+     wall this was asked to match runs from the top edge of the window and
+     the chrome floats over it. So the reservation is dropped and the wall
+     takes the whole window; the header goes see-through while it is over
+     the wall (html.header-on-dark, below), and the announcement bar is ink on
+     ink already. */
+  margin-top:0;
+  height:100vh;height:100svh;
+  min-height:520px;
+  /* 22vh, not 30. The rows were a third of the screen tall, which made two
+     and a half of them visible and the same eleven faces come round again
+     at once; at a fifth there are four and a half rows and the wall reads
+     as a wall. 340px is where a face is as large as it needs to be. */
+  --row:clamp(150px,22vh,340px);--seam:6px;--tilt:0deg}
+.hoarding.is-live{height:calc(100vh * 2.2);height:calc(100svh * 2.2)}
+/* 1300px again. It went to 1040 on a misreading of the wall this matches -
+   the edge posters there looked strongly foreshortened, but most of that
+   is the wash and the crop, not the turn. Rendered, the shorter perspective
+   with the deeper dome below turned the wall into a globe: bare black in
+   all four corners and the edge posters squashed to slivers. The dome is
+   gentle. The middle is flat, the top and bottom rows lean back a little,
+   the ends turn a little, and nothing on the stage is ever bare. */
+.hoarding__stage{position:relative;height:100%;overflow:hidden;isolation:isolate;perspective:1300px;perspective-origin:50% 50%}
+.hoarding.is-live .hoarding__stage{position:sticky;top:0;
+  height:100vh;height:100svh;min-height:520px;
+  /* Down the screen and a pinch stay the browser's; across is the wall's.
+     Without this the browser keeps the sideways gesture too and the finger
+     drag in the script never sees a second event. */
+  touch-action:pan-y pinch-zoom}
+.hoarding.is-dragging{user-select:none;-webkit-user-select:none}
+.hoarding__wall{position:absolute;inset:-9%;margin:0;padding:0;list-style:none;
+  display:flex;flex-wrap:wrap;align-content:flex-start;gap:var(--seam);
+  transform:rotate(var(--tilt));transform-origin:50% 50%}
+/* pointer-events off the wall itself: in a 3D context its own plane sits
+   in front of every poster that is set back, and would take the pointer
+   before any of them could. The posters take it themselves. */
+.hoarding__wall.is-live{display:block;inset:-34%;transform-style:preserve-3d;pointer-events:none}
+.poster{position:relative;height:var(--row);
+  flex:var(--r,1) 1 calc(var(--row) * var(--r,1));
+  max-width:calc(var(--row) * var(--r,1) * 1.3)}
+.hoarding__wall.is-live .poster{position:absolute;left:0;top:0;max-width:none;will-change:transform;backface-visibility:hidden;pointer-events:auto}
+.poster>a{position:absolute;inset:0;display:block;color:inherit;overflow:hidden;background:#151515;
+  transform:rotate(var(--j,0deg));
+  transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s}
+.poster>a:hover{opacity:1}
+.poster>a:focus-visible{outline:2px solid #fff;outline-offset:-5px}
+.poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;
+  -webkit-user-drag:none;user-select:none;-webkit-user-select:none}
+/* The wash: one dark pane over each poster, down while a pointer is on
+   the wall (is-pointed), a poster is focused, or a finger has lit one, and
+   lifted off the poster in hand. A pane and not a filter, because sixty
+   filtered layers repaint on every frame the wall moves and a pane is one
+   compositor layer each. */
+.poster>a::after{content:"";position:absolute;inset:0;background:rgba(10,10,10,.66);pointer-events:none;
+  opacity:0;transition:opacity .45s ease}
+.hoarding.is-pointed .poster>a::after,.hoarding__wall:focus-within .poster>a::after{opacity:1}
+.poster:hover,.poster:focus-within,.poster.is-lit{z-index:2}
+/* The lift. Off the live wall - reduced motion, or before the script runs -
+   a scale is all there is, so it stays here. On the live wall the scale is
+   the script's, applied to the poster itself along the Z axis in place():
+   inside a preserve-3d wall, z-index is not what decides paint order,
+   distance from the viewer is, so a poster that only grew would still be
+   drawn under the neighbour overlapping it. Lifted toward the viewer it
+   comes out in front because it is in front, and the dome's own foreshortening
+   comes off it on the way, which is the pop. The shadow belongs to both. */
+.hoarding__wall:not(.is-live) .poster:hover>a,
+.hoarding__wall:not(.is-live) .poster:focus-within>a,
+.hoarding__wall:not(.is-live) .poster.is-lit>a{transform:rotate(var(--j,0deg)) scale(1.035)}
+.poster:hover>a,.poster:focus-within>a,.poster.is-lit>a{
+  box-shadow:0 30px 72px rgba(0,0,0,.78)}
+.hoarding.is-pointed .poster:hover>a::after,.poster:focus-within>a::after,.poster.is-lit>a::after{opacity:0!important}
+/* While the wall is being thrown, nothing lights up under the hand. */
+.hoarding.is-dragging .poster>a{transform:rotate(var(--j,0deg));box-shadow:none}
+.hoarding.is-dragging .poster>a::after{opacity:1!important}
+/* The poster's own caption is for the accessible name; what a visitor sees
+   is its mirror in the corner (hoarding__cap), so the caption itself is
+   kept off screen rather than hidden. */
+.poster__cap{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.poster__name,.poster__award{display:block}
+/* The stage furniture: the title at the foot of the wall, the three controls
+   at its side (shuffle the wall; PR, the film; go to the archive). The
+   title floats over the posters and takes no click meant for one; the
+   buttons do. The scrim is
+   a vignette, darker toward the edges where the dome turns away, with a
+   deeper pool under the title so it is read whichever poster the deal
+   leaves beneath it. The caption stands where the title stands and the
+   two trade places: title at rest, name and award for the poster in hand. */
+.hoarding__scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+  /* Three washes, all lighter than before. The pool under the title was
+     a stage light; at a quarter of its old depth it is enough to read a
+     line of small type by and no more. The vignette is the dome's own
+     dimming, kept modest so the edge posters stay posters. The band
+     across the top is new, for the header now floating there: its type
+     is white, and a white poster under it would eat the word. */
+  background:linear-gradient(180deg,rgba(10,10,10,.62),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 40px)),
+    radial-gradient(ellipse 40% 34% at 8% 100%,rgba(10,10,10,.55),rgba(10,10,10,0)),
+    radial-gradient(ellipse 62% 60% at 50% 50%,rgba(10,10,10,0) 60%,rgba(10,10,10,.42) 100%)}
+/* The corner. A small title now, where a poster-sized one stood: on the
+   wall this matches the corner holds a name in bold caps and a line of
+   small type beneath, and is empty until a hand is on the wall. The h1 is
+   still the h1 - the page has its title - but it sits like a caption, so
+   the wall is the picture and the corner is the label on it. */
+.hoarding__label{position:absolute;left:var(--gutter);bottom:clamp(20px,3vw,40px);z-index:3;max-width:min(62vw,560px);
+  pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.7),0 2px 18px rgba(0,0,0,.55)}
+.hoarding__label h1{font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em}
+.hoarding__label p{margin:8px 0 0;font-size:11.5px;line-height:1.55;letter-spacing:.04em;color:rgba(255,255,255,.8)}
+.hoarding__title,.hoarding__cap{transition:opacity .3s ease,transform .3s ease}
+.hoarding__cap{position:absolute;left:0;bottom:0;width:max-content;max-width:min(62vw,560px);opacity:0;transform:translateY(8px)}
+/* stated against the label's own p rule, which would otherwise size these */
+.hoarding__label .hoarding__cap-name{margin:0;font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em;text-wrap:balance;color:#fff}
+.hoarding__label .hoarding__cap-award{margin:8px 0 0;font-size:11.5px}
+.hoarding.is-captioned .hoarding__title{opacity:0;transform:translateY(-8px)}
+.hoarding.is-captioned .hoarding__cap{opacity:1;transform:none}
+
+/* ---------- the header, over the wall ----------
+   While any of the wall is under the header the page sets header-on-dark
+   on <html>; assets/chrome.css owns what that does to the header (glass
+   bar, white type, the dark-ground logo), so it is the same on any page
+   whose top runs dark. The hoarding script below sets and clears it. */
+.hoarding__ctl{position:absolute;right:clamp(14px,2vw,30px);top:50%;z-index:3;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.hoarding__ctl button,.hoarding__ctl a{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 18px 0 14px;
+  background:#fff;color:var(--deep);border:1px solid #fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+  transition:background .2s,color .2s}
+.hoarding__ctl svg{width:16px;height:16px;display:block;flex:none}
+/* opacity:1 restated: the page's own a:hover fades every link to .65, which
+   on a solid white control reads as a control going out rather than lighting
+   up. These answer the way the two buttons beside them do. */
+.hoarding__ctl button:hover,.hoarding__ctl a:hover{background:rgba(10,10,10,.6);color:#fff;opacity:1;backdrop-filter:blur(6px)}
+.hoarding__ctl button:focus-visible,.hoarding__ctl a:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+/* ---------- the map ----------
+   The whole wall at a glance, in the corner, and where the window is on
+   it. The wall has no edge in any direction, which is the point of it,
+   and also the one thing about it a visitor cannot see: the map is how a
+   canvas says how big it is. It shows one round of the wall - every
+   poster once, in the rows the script dealt - and a frame for the window,
+   which slides as the wall does and wraps where the wall wraps. Drawn
+   while the wall is moving, gone once it has been still for a moment, so
+   at rest the corner is the wall's. Hidden from the reader: it is a
+   picture of the layout, and the layout is already read poster by poster. */
+.hoarding__map{position:absolute;right:clamp(14px,2vw,30px);bottom:clamp(20px,3vw,40px);z-index:3;
+  width:clamp(120px,11vw,168px);aspect-ratio:16/10;
+  background:rgba(10,10,10,.55);border:1px solid rgba(255,255,255,.35);border-radius:4px;overflow:hidden;
+  pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hoarding.is-moving .hoarding__map{opacity:1;transform:none}
+.hoarding__map i{position:absolute;display:block;background-size:cover;background-position:50% 20%;opacity:.85}
+.hoarding__map b{position:absolute;display:block;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.3);
+  background:rgba(255,255,255,.12);border-radius:1px}
+.hoarding__map b[hidden]{display:none}
+/* A poster sends the reader to its line of the roll, and the line answers. */
+.roll li{transition:background .5s ease}
+.roll li.is-lit{background:var(--stone)}
+
+/* ---------- the screening ----------
+   The film's poster opens it: a fixed takeover at z-index 70, over the
+   announce bar (60) and the header (50), under the theatre (90), and under
+   the drawn cursor's own layer, which paints above every z-index there is.
+   Deliberately not the Fullscreen API, for that last reason: a fullscreened
+   element paints above the cursor layer too (chrome.css says so in as many
+   words) and would swallow the pointer. The embed mounts on the press and
+   is torn out on Exit, so the film starts with sound, as a gesture allows,
+   and stops when the room is left. The 16:9 frame overfills whichever way
+   the screen is taller or wider; pointer-events stay off so the only
+   controls are this page's own. */
+.screen{position:fixed;inset:0;z-index:70;background:#000}
+.screen[hidden]{display:none}
+.screen__frame,.screen__frame iframe{position:absolute;border:0}
+.screen__frame{inset:0}
+.screen__frame iframe{top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;
+  width:max(100vw,177.78vh);height:max(100vh,56.25vw)}
+/* The foot of the room: the clock, the seek bar, and the three buttons at
+   the end, on one line. The bar is the theatre's (assets/theatre.css,
+   .th-seek), redrawn here under this room's names because this page does
+   not load that stylesheet and half of it would be wrong for a room with
+   one film in it. The seek and the clock are hidden until the player has
+   said how long the film is: a bar that cannot be dragged anywhere is a
+   promise the room cannot keep. */
+.screen__bar{position:absolute;left:clamp(14px,2vw,30px);right:clamp(14px,2vw,30px);bottom:clamp(14px,2vw,30px);z-index:2;
+  display:flex;align-items:center;gap:18px;transition:opacity .45s ease}
+.screen__time{font-size:12px;letter-spacing:.06em;color:#fff;white-space:nowrap;visibility:hidden}
+.screen__time .sep{margin:0 6px;opacity:.5}
+.screen__seek{position:relative;flex:1;height:26px;display:flex;align-items:center;cursor:pointer;visibility:hidden}
+.screen__bar.is-live .screen__time,.screen__bar.is-live .screen__seek{visibility:visible}
+.screen__seek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.28)}
+.screen__seek-fill{position:absolute;left:0;height:3px;width:0;background:#fff;pointer-events:none}
+.screen__seek-knob{position:absolute;left:0;width:12px;height:12px;margin-left:-6px;background:#fff;transform:scale(0);transition:transform .15s;pointer-events:none}
+.screen__seek:hover .screen__seek-knob,.screen__seek:focus-within .screen__seek-knob,.screen__seek.is-drag .screen__seek-knob{transform:scale(1)}
+.screen__seek input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.screen__seek input:focus-visible ~ .screen__seek-knob{outline:2px solid #fff;outline-offset:3px}
+.screen__seek-tip{position:absolute;bottom:calc(100% + 2px);transform:translateX(-50%);padding:4px 8px;background:#fff;color:var(--deep);font-size:11px;letter-spacing:.06em;pointer-events:none;z-index:2}
+.screen__seek-tip[hidden]{display:none}
+.screen__ctl{display:flex;gap:8px;flex:none}
+.screen__ctl button{height:44px;padding:0 18px;background:rgba(10,10,10,.55);border:1px solid rgba(255,255,255,.55);
+  color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+  backdrop-filter:blur(6px);transition:background .2s,color .2s}
+.screen__ctl button:hover{background:#fff;color:var(--deep)}
+/* The sound control, when the browser refused the ask. The room is dark and
+   the film is running, so this points rather than explains: the button turns
+   to paper and breathes twice, which is enough to find in the corner of an
+   eye, and stops. A press of anything at all puts it back to a control among
+   controls. Reduced motion gets the paper without the breathing, because the
+   thing being said is "press this", not "look at this moving". */
+.screen.is-hushed #cineSound{background:#fff;color:var(--deep);animation:cine-hush 1.6s ease-in-out 2}
+@keyframes cine-hush{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 0 7px rgba(255,255,255,.22)}}
+@media (prefers-reduced-motion: reduce){
+  .screen.is-hushed #cineSound{animation:none}
+}
+/* During a screening, stillness clears the room: a moment without the
+   mouse and the controls fade, and the drawn cursor sleeps with them
+   (the native one is already hidden site-wide, so nothing is left on
+   the picture). Any movement, key or touch wakes both at once. */
+.screen.is-idle .screen__bar{opacity:0;pointer-events:none}
+html.pfa-screen-idle .cursor-layer{opacity:0;transition:opacity .45s ease}
+
+/* ---------- bands ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band--stone{background:var(--stone)}
+.band--bone{background:var(--bone)}
+.band--deep{background:var(--deep);color:#fff}
+/* Ink on paper is the selection everywhere except the surfaces that are
+   themselves ink, where it would read as nothing having been selected. */
+.band--deep ::selection{background:#fff;color:var(--deep)}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,50px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:56ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.band--deep .band__head p{color:rgba(255,255,255,.72)}
+.band--deep .eyebrow{color:rgba(255,255,255,.5)}
+section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 8px)}
+
+/* ---------- two column feature ---------- */
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,72px);align-items:center}
+.feature .shot{aspect-ratio:4/5}
+.feature__body h2{font-size:clamp(26px,3.2vw,50px);margin-top:14px;max-width:14ch}
+.feature__body p{margin:22px 0 0;max-width:44ch;font-size:14px;line-height:1.65;color:var(--muted)}
+
+/* ---------- facts ---------- */
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:48px;border-top:1px solid var(--line);padding-top:28px}
+.band--deep .facts{border-color:var(--line-dark)}
+.facts p.k{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.band--deep .facts p.k{color:rgba(255,255,255,.5)}
+.facts p.v{margin:8px 0 0;font-size:15px;line-height:1.4}
+
+/* ---------- honourees ---------- */
+.people{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px);margin-top:48px}
+.person .shot{aspect-ratio:4/5}
+.person .num{margin:16px 0 0;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.person .award{margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.person h3{margin:10px 0 0;font-size:16px;font-weight:700;letter-spacing:.01em;line-height:1.35}
+.person .note{margin:6px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
+.person a.src{display:inline-block;margin-top:12px;font-size:12px;border-bottom:1px solid var(--line);padding-bottom:1px;color:var(--muted)}
+
+/* ---------- honours list ---------- */
+.roll{margin-top:44px;border-top:1px solid var(--line)}
+.roll li{display:grid;grid-template-columns:64px minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+.roll .n{font-family:var(--display);font-size:15px;letter-spacing:.04em;color:var(--muted)}
+.roll .t{font-size:15px;font-weight:700;line-height:1.35}
+.roll .w{font-size:14px;line-height:1.45}
+.roll .s{font-size:13px;line-height:1.45;color:var(--muted)}
+
+/* ---------- galleries ---------- */
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:44px}
+.gallery .shot{aspect-ratio:3/2}
+.reel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:44px}
+.reel .shot{aspect-ratio:16/10;background:#181818}
+
+/* ---------- kind set tool ---------- */
+.tool{margin-top:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,3vw,56px);align-items:start}
+.tool h3{margin:0 0 16px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;border:1px solid var(--line);background:var(--paper);padding:16px 18px;font-size:14px;line-height:1.4;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.choice:hover{border-color:var(--ink)}
+.choice[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.answer{background:var(--paper);border:1px solid var(--line);padding:clamp(22px,2.4vw,34px);min-height:240px}
+.answer .verdict{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.answer h4{margin:12px 0 0;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(22px,2.2vw,32px);line-height:1.05}
+.answer p.body{margin:18px 0 0;font-size:14px;line-height:1.65;color:var(--muted);max-width:44ch}
+.answer .fine{margin:22px 0 0;font-size:12px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;max-width:44ch}
+/* ---------- the three acts after the wall ----------
+   The wall is full bleed, dark, photographic and in motion, and the page
+   used to step off it into fourteen-point type on white: a list, a
+   paragraph, a form. These three now keep the wall's register - the same
+   ink ground, headings at the scale of the wall's own title, and the eleven
+   honourees as photographs again, since they are the only pictures this
+   page owns. The roll is a wall of its own: eleven posters in the order of
+   the honours, each carrying its number, award and name the way the wall's
+   corner does, and lifting under the hand the way the wall's posters do.
+   Everything eases in as it arrives; without the script nothing is hidden. */
+.band--grand{padding:clamp(88px,10vw,160px) var(--gutter)}
+.band--grand .band__head h2,.band--grand .feature__body h2{font-size:clamp(40px,6.4vw,104px);max-width:12ch;margin-top:22px;line-height:.98}
+.band--grand .band__head p,.band--grand .feature__body p{font-size:clamp(15px,1.25vw,19px);max-width:44ch;margin-top:30px;line-height:1.6;color:rgba(255,255,255,.72)}
+.band--grand .eyebrow{color:rgba(255,255,255,.55)}
+.honours .roll{margin-top:clamp(40px,5vw,72px);border:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.honours .roll li{position:relative;display:block;padding:0;border:0;aspect-ratio:3/4;overflow:hidden;background:#151515;
+  transition:transform .55s cubic-bezier(.2,.7,.2,1),opacity .55s ease,outline-color .3s}
+.honours .roll img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 14%;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.honours .roll li::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,0) 42%,rgba(10,10,10,.9) 100%)}
+.honours .roll .n{position:absolute;left:18px;top:16px;z-index:1;font-family:var(--display);font-size:14px;letter-spacing:.06em;color:rgba(255,255,255,.7)}
+.honours .roll .cap{position:absolute;left:18px;right:18px;bottom:18px;z-index:1;display:flex;flex-direction:column;gap:8px}
+.honours .roll .t{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75);line-height:1.35}
+.honours .roll .w{font-family:var(--display);text-transform:uppercase;font-size:clamp(17px,1.5vw,24px);line-height:1.05;letter-spacing:.02em;color:#fff}
+/* the wash and the lift, as on the wall */
+.honours .roll:hover li{opacity:.5}
+.honours .roll li:hover,.honours .roll li.is-lit{opacity:1!important;transform:scale(1.035);z-index:2;background:#151515}
+.honours .roll li:hover img{transform:scale(1.06)}
+.honours .roll li.is-lit{outline:2px solid #fff;outline-offset:-2px}
+.about .facts{margin-top:clamp(48px,6vw,88px);border-top:1px solid rgba(255,255,255,.22);padding-top:clamp(28px,3vw,44px);gap:24px}
+.about .facts p.k{color:rgba(255,255,255,.5)}
+.about .facts p.v{font-family:var(--display);text-transform:uppercase;font-size:clamp(22px,2.6vw,40px);line-height:1.05;margin-top:12px;color:#fff}
+.trophy .feature:not(:has(.shot)){grid-template-columns:minmax(0,1fr)}
+.kindset .tool{margin-top:clamp(48px,6vw,80px)}
+.kindset .tool h3{color:rgba(255,255,255,.5)}
+.kindset .tool__hint{margin:18px 0 0;font-size:12px;color:rgba(255,255,255,.5)}
+.kindset .choice{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;font-size:15px;padding:20px 22px}
+.kindset .choice:hover{border-color:#fff}
+.kindset .choice[aria-pressed="true"]{background:#fff;color:var(--deep);border-color:#fff}
+.kindset .answer{background:transparent;border:1px solid rgba(255,255,255,.22);color:#fff}
+.kindset .answer .verdict,.kindset .answer p.body,.kindset .answer .fine{color:rgba(255,255,255,.72)}
+.kindset .answer .fine{border-color:rgba(255,255,255,.2)}
+.kindset .answer h4{font-size:clamp(26px,3vw,44px)}
+/* the ease-in: applied by the script, so a page without it hides nothing */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.is-in{opacity:1;transform:none}
+.honours .roll li.reveal{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.honours .roll li.reveal.is-in{transition:transform .55s cubic-bezier(.2,.7,.2,1),opacity .55s ease,outline-color .3s}
+@media (max-width:860px){.honours .roll{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.honours .roll{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.honours .roll .cap{left:12px;right:12px;bottom:12px;gap:5px}.honours .roll .t{font-size:9.5px}}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.honours .roll li,.honours .roll img{transition:none}}
+
+
+/* ---------- closing ---------- */
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.close__note{margin:28px 0 0;font-size:12px;color:rgba(255,255,255,.5)}
+.nomform{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.nomform input{flex:1 1 300px;max-width:460px;border:1px solid var(--line);background:#fff;padding:15px 16px;font-size:14px;outline:none}
+.nomform input:focus{border-color:var(--ink)}
+
+.toast{position:fixed;left:16px;bottom:20px;z-index:75;background:var(--ink);color:#fff;font-size:12px;padding:11px 16px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .people,.gallery,.reel{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px}
+  .roll li{grid-template-columns:48px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .roll .s{grid-column:2 / -1}
+}
+@media (max-width:860px){
+  .feature,.tool{grid-template-columns:1fr}
+  .feature .shot{aspect-ratio:3/2}
+}
+@media (max-width:720px){
+  .hoarding{--row:clamp(120px,16vh,150px);--seam:4px;min-height:440px}
+  .hoarding__label{left:16px;right:16px;max-width:none;bottom:74px}
+  .hoarding__when{display:none}
+  .hoarding__label h1,.hoarding__label .hoarding__cap-name{font-size:clamp(20px,5.6vw,26px)}
+  .hoarding__label p,.hoarding__label .hoarding__cap-award{font-size:11px;margin-top:6px}
+  .hoarding__cap{max-width:none;width:auto;right:0}
+  .hoarding__ctl{top:auto;bottom:18px;right:14px;transform:none;flex-direction:row;gap:6px}
+  .hoarding__ctl button,.hoarding__ctl a{height:40px;padding:0 14px 0 12px}
+  .hoarding__map{display:none}
+  .poster{max-width:calc(var(--row) * var(--r,1) * 1.6)}
+  .poster__cap{padding:26px 10px 8px;font-size:11px}
+  .poster__cap .poster__award{font-size:10px}
+  .roll li{grid-template-columns:44px minmax(0,1fr);gap:10px}
+  .roll .w,.roll .s{grid-column:2 / -1}
+}
+@media (max-width:560px){
+  .people,.gallery,.reel{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr;gap:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- the two acts ----------
+   Only the deck gets a full screen, because only the deck is full-bleed
+   media; a screen of text is mostly a screen of nothing. The rest of the
+   page keeps the site's own band rhythm. 2026 is the page; the whole 2025
+   season sits behind one gate and enters only when asked for. */
+.gate .display{font-size:clamp(60px,9.5vw,132px);line-height:.9}
+.gate .band__head p{max-width:44ch}
+.gate .btn{margin-top:26px}
+#act2025[hidden]{display:none}
+.act__close{display:flex;justify-content:center;padding:0 var(--gutter) var(--band);background:var(--paper)}
+.shot__note{margin:10px 0 0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<!-- The editorial layer from the Sep 2026 theme pass: labels, display
+     leading, the band head, the call-to-action control, square corners,
+     hairlines. Loads after chrome.css so the theme wins ties; carries no
+     markup changes of its own. -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/cinekind">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CineKind Awards 2026">
+  <meta property="og:description" content="CineKind is a collaborative initiative by the Film Federation of India and People for Animals. The national award for films that choose kindness.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/cinekind">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="CineKind Awards 2026">
+  <meta name="twitter:description" content="CineKind is a collaborative initiative by the Film Federation of India and People for Animals. The national award for films that choose kindness.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"CineKind Awards 2026","item":"https://peopleforanimalsindia.org/cinekind"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>CineKind 2026 · Mumbai · 4 October · World Animal Day</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="enforce.html" data-nav="enforce.html">At the counter</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
+        <div class="menu">
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="caregiver-card.html" data-nav="caregiver-card.html">Colony caregiver card</a>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="#top" data-nav="cinekind.html" class="current" aria-current="page">CineKind</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+  <!-- The poster wall: the eleven honourees, each in three crops - a tall
+       one, a wide one across the eyes, and a close square on the face - and
+       nothing else on it. Three, because eleven faces have to fill a wall
+       that has no edge, and the same photograph framed three ways reads as
+       three posters where the same photograph twice reads as a repeat.
+       One poster per Tab; the copies the script
+       pastes up to fill the wall are aria-hidden and skipped. Each poster
+       leads to the honouree's line on the roll below. The stage is what
+       pins under the header while the section scrolls by. -->
+  <section class="hoarding" id="top" data-cursor="light" aria-label="The 2026 honourees, as a poster wall">
+  <div class="hoarding__stage">
+    <ul class="hoarding__wall" id="wall">
+      <li class="poster" data-who="anant-ambani" style="--r:.72"><a href="#h26-01"><img src="media/cinekind-2026/anant-ambani.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Anant Ambani</span><span class="poster__award">Change of Heart / Heart of Gold</span></span></a></li>
+      <li class="poster" data-who="amit-rai" style="--r:.72"><a href="#h26-02"><img src="media/cinekind-2026/amit-rai.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Amit Rai</span><span class="poster__award">Director of Change</span></span></a></li>
+      <li class="poster" data-who="nitin-jain" style="--r:.7"><a href="#h26-03"><img src="media/cinekind-2026/nitin-jain.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Nitin Jain</span><span class="poster__award">Voice of the Voiceless</span></span></a></li>
+      <li class="poster" data-who="john-abraham" style="--r:.72"><a href="#h26-04"><img src="media/cinekind-2026/john-abraham.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">John Abraham</span><span class="poster__award">Champion for Animals</span></span></a></li>
+      <li class="poster" data-who="raveena-tandon" style="--r:.7"><a href="#h26-05"><img src="media/cinekind-2026/raveena-tandon.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Raveena Tandon</span><span class="poster__award">Kindness Catalyst</span></span></a></li>
+      <li class="poster" data-who="wamiqa-gabbi" style="--r:.78"><a href="#h26-06"><img src="media/cinekind-2026/wamiqa-gabbi.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Wamiqa Gabbi</span><span class="poster__award">Beacon of Hope</span></span></a></li>
+      <li class="poster" data-who="kalyan-varma" style="--r:.72"><a href="#h26-07"><img src="media/cinekind-2026/kalyan-varma.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Kalyan Varma</span><span class="poster__award">Kindness in Frame</span></span></a></li>
+      <li class="poster" data-who="riteish-genelia" style="--r:.85"><a href="#h26-08"><img src="media/cinekind-2026/riteish-genelia.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Riteish and Genelia Deshmukh</span><span class="poster__award">Innovation for Compassion</span></span></a></li>
+      <li class="poster" data-who="yoda-priya-pooja" style="--r:.8"><a href="#h26-09"><img src="media/cinekind-2026/yoda-priya-pooja.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">YODA: Priya Hebbar and Pooja Sakpal</span><span class="poster__award">Compassionate Care</span></span></a></li>
+      <li class="poster" data-who="nikhar-juneja" style="--r:.72"><a href="#h26-10"><img src="media/cinekind-2026/nikhar-juneja.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Nikhar Juneja</span><span class="poster__award">Ray of Sunshine</span></span></a></li>
+      <li class="poster" data-who="rajan-shahi" style="--r:1"><a href="#h26-11"><img src="media/cinekind-2026/rajan-shahi.webp" alt="" decoding="async" style="object-position:50% 30%"><span class="poster__cap"><span class="poster__name">Rajan Shahi</span><span class="poster__award">Values in Action</span></span></a></li>
+      <li class="poster" data-who="anant-ambani" style="--r:1.5"><a href="#h26-01"><img src="media/cinekind-2026/anant-ambani.webp" alt="" decoding="async" style="object-position:50% 4%"><span class="poster__cap"><span class="poster__name">Anant Ambani</span><span class="poster__award">Change of Heart / Heart of Gold</span></span></a></li>
+      <li class="poster" data-who="amit-rai" style="--r:.62"><a href="#h26-02"><img src="media/cinekind-2026/amit-rai.webp" alt="" decoding="async" style="object-position:50% 14%"><span class="poster__cap"><span class="poster__name">Amit Rai</span><span class="poster__award">Director of Change</span></span></a></li>
+      <li class="poster" data-who="nitin-jain" style="--r:1.35"><a href="#h26-03"><img src="media/cinekind-2026/nitin-jain.webp" alt="" decoding="async" style="object-position:50% 5%"><span class="poster__cap"><span class="poster__name">Nitin Jain</span><span class="poster__award">Voice of the Voiceless</span></span></a></li>
+      <li class="poster" data-who="john-abraham" style="--r:1"><a href="#h26-04"><img src="media/cinekind-2026/john-abraham.webp" alt="" decoding="async" style="object-position:50% 12%"><span class="poster__cap"><span class="poster__name">John Abraham</span><span class="poster__award">Champion for Animals</span></span></a></li>
+      <li class="poster" data-who="raveena-tandon" style="--r:1.5"><a href="#h26-05"><img src="media/cinekind-2026/raveena-tandon.webp" alt="" decoding="async" style="object-position:50% 4%"><span class="poster__cap"><span class="poster__name">Raveena Tandon</span><span class="poster__award">Kindness Catalyst</span></span></a></li>
+      <li class="poster" data-who="wamiqa-gabbi" style="--r:.8"><a href="#h26-06"><img src="media/cinekind-2026/wamiqa-gabbi.webp" alt="" decoding="async" style="object-position:50% 12%"><span class="poster__cap"><span class="poster__name">Wamiqa Gabbi</span><span class="poster__award">Beacon of Hope</span></span></a></li>
+      <li class="poster" data-who="kalyan-varma" style="--r:1.45"><a href="#h26-07"><img src="media/cinekind-2026/kalyan-varma.webp" alt="" decoding="async" style="object-position:50% 5%"><span class="poster__cap"><span class="poster__name">Kalyan Varma</span><span class="poster__award">Kindness in Frame</span></span></a></li>
+      <li class="poster" data-who="riteish-genelia" style="--r:.66"><a href="#h26-08"><img src="media/cinekind-2026/riteish-genelia.webp" alt="" decoding="async" style="object-position:50% 12%"><span class="poster__cap"><span class="poster__name">Riteish and Genelia Deshmukh</span><span class="poster__award">Innovation for Compassion</span></span></a></li>
+      <li class="poster" data-who="yoda-priya-pooja" style="--r:1.2"><a href="#h26-09"><img src="media/cinekind-2026/yoda-priya-pooja.webp" alt="" decoding="async" style="object-position:50% 8%"><span class="poster__cap"><span class="poster__name">YODA: Priya Hebbar and Pooja Sakpal</span><span class="poster__award">Compassionate Care</span></span></a></li>
+      <li class="poster" data-who="nikhar-juneja" style="--r:1.5"><a href="#h26-10"><img src="media/cinekind-2026/nikhar-juneja.webp" alt="" decoding="async" style="object-position:50% 4%"><span class="poster__cap"><span class="poster__name">Nikhar Juneja</span><span class="poster__award">Ray of Sunshine</span></span></a></li>
+      <li class="poster" data-who="rajan-shahi" style="--r:1"><a href="#h26-11"><img src="media/cinekind-2026/rajan-shahi.webp" alt="" decoding="async" style="object-position:50% 30%"><span class="poster__cap"><span class="poster__name">Rajan Shahi</span><span class="poster__award">Values in Action</span></span></a></li>
+      <li class="poster" data-who="anant-ambani" style="--r:1.05"><a href="#h26-01"><img src="media/cinekind-2026/anant-ambani.webp" alt="" decoding="async" style="object-position:50% 6%"><span class="poster__cap"><span class="poster__name">Anant Ambani</span><span class="poster__award">Change of Heart / Heart of Gold</span></span></a></li>
+      <li class="poster" data-who="amit-rai" style="--r:.95"><a href="#h26-02"><img src="media/cinekind-2026/amit-rai.webp" alt="" decoding="async" style="object-position:50% 6%"><span class="poster__cap"><span class="poster__name">Amit Rai</span><span class="poster__award">Director of Change</span></span></a></li>
+      <li class="poster" data-who="nitin-jain" style="--r:1.1"><a href="#h26-03"><img src="media/cinekind-2026/nitin-jain.webp" alt="" decoding="async" style="object-position:50% 8%"><span class="poster__cap"><span class="poster__name">Nitin Jain</span><span class="poster__award">Voice of the Voiceless</span></span></a></li>
+      <li class="poster" data-who="john-abraham" style="--r:.9"><a href="#h26-04"><img src="media/cinekind-2026/john-abraham.webp" alt="" decoding="async" style="object-position:50% 6%"><span class="poster__cap"><span class="poster__name">John Abraham</span><span class="poster__award">Champion for Animals</span></span></a></li>
+      <li class="poster" data-who="raveena-tandon" style="--r:1"><a href="#h26-05"><img src="media/cinekind-2026/raveena-tandon.webp" alt="" decoding="async" style="object-position:50% 8%"><span class="poster__cap"><span class="poster__name">Raveena Tandon</span><span class="poster__award">Kindness Catalyst</span></span></a></li>
+      <li class="poster" data-who="wamiqa-gabbi" style="--r:1.05"><a href="#h26-06"><img src="media/cinekind-2026/wamiqa-gabbi.webp" alt="" decoding="async" style="object-position:50% 6%"><span class="poster__cap"><span class="poster__name">Wamiqa Gabbi</span><span class="poster__award">Beacon of Hope</span></span></a></li>
+      <li class="poster" data-who="kalyan-varma" style="--r:.92"><a href="#h26-07"><img src="media/cinekind-2026/kalyan-varma.webp" alt="" decoding="async" style="object-position:50% 8%"><span class="poster__cap"><span class="poster__name">Kalyan Varma</span><span class="poster__award">Kindness in Frame</span></span></a></li>
+      <li class="poster" data-who="riteish-genelia" style="--r:1.15"><a href="#h26-08"><img src="media/cinekind-2026/riteish-genelia.webp" alt="" decoding="async" style="object-position:50% 10%"><span class="poster__cap"><span class="poster__name">Riteish and Genelia Deshmukh</span><span class="poster__award">Innovation for Compassion</span></span></a></li>
+      <li class="poster" data-who="yoda-priya-pooja" style="--r:1.1"><a href="#h26-09"><img src="media/cinekind-2026/yoda-priya-pooja.webp" alt="" decoding="async" style="object-position:50% 10%"><span class="poster__cap"><span class="poster__name">YODA: Priya Hebbar and Pooja Sakpal</span><span class="poster__award">Compassionate Care</span></span></a></li>
+      <li class="poster" data-who="nikhar-juneja" style="--r:.95"><a href="#h26-10"><img src="media/cinekind-2026/nikhar-juneja.webp" alt="" decoding="async" style="object-position:50% 6%"><span class="poster__cap"><span class="poster__name">Nikhar Juneja</span><span class="poster__award">Ray of Sunshine</span></span></a></li>
+      <li class="poster" data-who="rajan-shahi" style="--r:1"><a href="#h26-11"><img src="media/cinekind-2026/rajan-shahi.webp" alt="" decoding="async" style="object-position:50% 24%"><span class="poster__cap"><span class="poster__name">Rajan Shahi</span><span class="poster__award">Values in Action</span></span></a></li>
+    </ul>
+    <div class="hoarding__scrim" aria-hidden="true"></div>
+    <div class="hoarding__label">
+      <div class="hoarding__title">
+        <h1 class="display">CineKind 2026</h1>
+        <p>The national award for films that choose kindness.<span class="hoarding__when"><br>Eleven honours. Mumbai, 4 October, World Animal Day.</span></p>
+      </div>
+      <div class="hoarding__cap" id="wallCap" aria-hidden="true">
+        <p class="display hoarding__cap-name"></p>
+        <p class="hoarding__cap-award"></p>
+      </div>
+    </div>
+    <div class="hoarding__ctl">
+      <button type="button" id="shuffle" aria-controls="wall"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 4h3.5l6 8h4.5M1 12h3.5l1.8-2.4M9.2 6.4L10.5 4h4.5M13 2l2.5 2-2.5 2M13 10l2.5 2-2.5 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Shuffle</button>
+      <button type="button" id="film" data-film><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2l11 6-11 6z" fill="currentColor"/></svg>PR</button>
+      <!-- A link, not a button, because it goes somewhere: the 2025 act is on
+           this page behind its gate, and the gate script below already opens
+           the act for any in-page link that lands inside it. So this needs no
+           handler of its own, it works with the script blocked, and it offers
+           the usual right-click and middle-click a link owes a reader. -->
+      <a href="#archive" id="archive-link"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.6 4.4h12.8M2.8 4.4V13a.6.6 0 0 0 .6.6h9.2a.6.6 0 0 0 .6-.6V4.4M4.4 4.4V3a.6.6 0 0 1 .6-.6h6a.6.6 0 0 1 .6.6v1.4M6.4 7.6h3.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Archive</a>
+    </div>
+    <div class="hoarding__map" id="wallMap" aria-hidden="true"></div>
+  </div>
+  </section>
+
+  <section class="band band--deep band--grand honours" id="honours-2026">
+    <div class="band__head">
+      <p class="eyebrow">This year</p>
+      <h2 class="display">The 2026 honours.</h2>
+      <p>Announced ahead of Mumbai, 4 October 2026. Eleven honours for films and people who leave the frame kinder than they found it.</p>
+    </div>
+    <ol class="roll">
+      <li id="h26-01"><img src="media/cinekind-2026/anant-ambani.webp" alt="" loading="lazy" decoding="async"><span class="n">01</span><span class="cap"><span class="t">Change of Heart / Heart of Gold</span><span class="w">Anant Ambani</span></span></li>
+      <li id="h26-02"><img src="media/cinekind-2026/amit-rai.webp" alt="" loading="lazy" decoding="async"><span class="n">02</span><span class="cap"><span class="t">Director of Change</span><span class="w">Amit Rai</span></span></li>
+      <li id="h26-03"><img src="media/cinekind-2026/nitin-jain.webp" alt="" loading="lazy" decoding="async"><span class="n">03</span><span class="cap"><span class="t">Voice of the Voiceless</span><span class="w">Nitin Jain</span></span></li>
+      <li id="h26-04"><img src="media/cinekind-2026/john-abraham.webp" alt="" loading="lazy" decoding="async"><span class="n">04</span><span class="cap"><span class="t">Champion for Animals</span><span class="w">John Abraham</span></span></li>
+      <li id="h26-05"><img src="media/cinekind-2026/raveena-tandon.webp" alt="" loading="lazy" decoding="async"><span class="n">05</span><span class="cap"><span class="t">Kindness Catalyst</span><span class="w">Raveena Tandon</span></span></li>
+      <li id="h26-06"><img src="media/cinekind-2026/wamiqa-gabbi.webp" alt="" loading="lazy" decoding="async"><span class="n">06</span><span class="cap"><span class="t">Beacon of Hope</span><span class="w">Wamiqa Gabbi</span></span></li>
+      <li id="h26-07"><img src="media/cinekind-2026/kalyan-varma.webp" alt="" loading="lazy" decoding="async"><span class="n">07</span><span class="cap"><span class="t">Kindness in Frame</span><span class="w">Kalyan Varma</span></span></li>
+      <li id="h26-08"><img src="media/cinekind-2026/riteish-genelia.webp" alt="" loading="lazy" decoding="async"><span class="n">08</span><span class="cap"><span class="t">Innovation for Compassion</span><span class="w">Riteish Deshmukh and Genelia Deshmukh</span></span></li>
+      <li id="h26-09"><img src="media/cinekind-2026/yoda-priya-pooja.webp" alt="" loading="lazy" decoding="async"><span class="n">09</span><span class="cap"><span class="t">Compassionate Care</span><span class="w">YODA (Priya Hebbar and Pooja Sakpal)</span></span></li>
+      <li id="h26-10"><img src="media/cinekind-2026/nikhar-juneja.webp" alt="" loading="lazy" decoding="async"><span class="n">10</span><span class="cap"><span class="t">Ray of Sunshine</span><span class="w">Nikhar Juneja</span></span></li>
+      <li id="h26-11"><img src="media/cinekind-2026/rajan-shahi.webp" alt="" loading="lazy" decoding="async" style="object-position:50% 30%"><span class="n">11</span><span class="cap"><span class="t">Values in Action</span><span class="w">Rajan Shahi</span></span></li>
+    </ol>
+  </section>
+
+  <section class="band band--deep band--grand trophy" id="trophy">
+    <div class="feature">
+      <div class="shot" data-shot>
+        <img src="media/cinekind-2025/ffi/5.jpg" alt="The CineKind trophies at the inaugural edition, Kolkata 2025" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();">
+        <p class="shot__note">The trophies at the inaugural edition &middot; Kolkata 2025</p>
+      </div>
+      <div class="feature__body">
+        <p class="eyebrow">The CineKind trophy</p>
+        <h2 class="display">A&nbsp;sculpture by Paresh&nbsp;Maity.</h2>
+        <p>Each trophy is a sculpture by Paresh Maity. Winners are chosen by the CineKind National Awards Committee.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--deep band--grand about" id="about">
+    <div class="band__head">
+      <p class="eyebrow">About</p>
+      <h2 class="display">What the award&nbsp;is.</h2>
+      <p>A roll of honours, given once a year by the Film Federation of India with People for Animals, for films and people who leave the frame kinder than they found it.</p>
+      <div class="facts">
+        <div><p class="k">Presented by</p><p class="v">FFI with PFA</p></div>
+        <div><p class="k">First edition</p><p class="v">Kolkata 2025</p></div>
+        <div><p class="k">Date</p><p class="v">20 December</p></div>
+        <div><p class="k">Honours</p><p class="v">21 across two editions</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--deep band--grand kindset" id="kindset">
+    <div class="band__head">
+      <p class="eyebrow">Before the camera rolls</p>
+      <h2 class="display">Filming a real animal needs permission&nbsp;first.</h2>
+      <p>A real animal in a directed shot needs pre-shoot permission from the Animal Welfare Board of India. CineKind puts the process in plain language, before a production learns it too late.</p>
+    </div>
+    <div class="tool">
+      <div>
+        <h3>What is in the scene?</h3>
+        <div class="choices" id="choices" role="group" aria-label="Select the closest description of the scene"></div>
+        <p class="tool__hint">Select the closest description of the scene.</p>
+      </div>
+      <div class="answer" id="answer" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- Act II. The whole 2025 season sits behind this gate: on the page for
+       search and for anyone who follows an old link, but folded away so the
+       2026 story reads clean. Opening it is one click; deep links into any
+       2025 section open it on arrival. -->
+  <section class="band band--deep gate" id="act2025gate">
+    <div class="band__head">
+      <p class="eyebrow">Act II &middot; Only if you want it</p>
+      <h2 class="display">2025</h2>
+      <p>The inaugural edition. Kolkata, 20 December 2025. Ten honours, the first roll call, the first ceremony. Kept whole, one act back.</p>
+      <button type="button" class="btn btn--light" id="act2025open" aria-expanded="false" aria-controls="act2025">Open the 2025 archive</button>
+    </div>
+  </section>
+
+  <div id="act2025" hidden>
+  <section class="band band--deep" id="cinekind-2025">
+    <div class="band__head">
+      <p class="eyebrow">Last year</p>
+      <h2 class="display">CineKind 2025. The&nbsp;inaugural edition.</h2>
+      <p>Film Federation of India with People for Animals. Kolkata, 20 December 2025. Ten honours for films and people who made the case for animals on a national stage.</p>
+    </div>
+    <div class="reel">
+      <div class="shot" data-shot><video src="media/cinekind-elephant.mp4" muted loop autoplay playsinline aria-hidden="true" onerror="var s=this.closest('[data-shot]'); if (s) s.remove();"></video></div>
+      <div class="shot" data-shot><video src="media/cinekind-langur.mp4" muted loop autoplay playsinline aria-hidden="true" onerror="var s=this.closest('[data-shot]'); if (s) s.remove();"></video></div>
+      <div class="shot" data-shot><video src="media/cinekind-lion.mp4" muted loop autoplay playsinline aria-hidden="true" onerror="var s=this.closest('[data-shot]'); if (s) s.remove();"></video></div>
+    </div>
+  </section>
+
+  <section class="band band--bone" id="winners">
+    <div class="band__head">
+      <p class="eyebrow">Roll of honour</p>
+      <h2 class="display">Selected honourees.</h2>
+      <p>Six of the ten honours from the inaugural edition. The full list follows below.</p>
+    </div>
+    <div class="people">
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/harsha.webp" alt="Dr Harsha Atmakuri with his camera" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">001</p>
+        <p class="award">CineKind Compassion</p>
+        <h3>Dr Harsha Atmakuri</h3>
+        <p class="note">Maa Ka Doodh. Courageous, truth-driven filmmaking.</p>
+        <a class="src" href="https://maakadoodh.in/" target="_blank" rel="noopener">Film source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/dolly.webp" alt="Dolly Vyas Ahuja at a screening of The Land of Ahimsa" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">002</p>
+        <p class="award">Director of Change</p>
+        <h3>Dolly Vyas Ahuja</h3>
+        <p class="note">With Aryeman Ramsay. The Land of Ahimsa.</p>
+        <a class="src" href="https://timesofindia.indiatimes.com/entertainment/events/jaipur/documentary-the-land-of-ahimsa-shows-the-importance-of-non-violence/articleshow/94121090.cms" target="_blank" rel="noopener">Film source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/rupali.webp" alt="Rupali Ganguly embracing a rescued dog" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">003</p>
+        <p class="award">Actor for Kindness</p>
+        <h3>Rupali Ganguly</h3>
+        <p class="note">Animal rescue and adoption. Compassion beyond the screen.</p>
+        <a class="src" href="https://timesofindia.indiatimes.com/tv/news/hindi/rupali-ganguly-celebrates-supreme-courts-revised-order-on-stray-dogs-writes-a-big-win-for-compassion/articleshow/123451811.cms" target="_blank" rel="noopener">Photo source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/pooja.webp" alt="Pooja Bhatt, filmmaker and animal advocate" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">004</p>
+        <p class="award">Innovation for Compassion</p>
+        <h3>Pooja Bhatt</h3>
+        <p class="note">Fish Eye Network. Animal-free filmmaking.</p>
+        <a class="src" href="https://www.filmfare.com/news/bollywood/pooja-bhatt-honoured-by-peta-for-pledging-not-to-use-animals-in-films-53921.html" target="_blank" rel="noopener">Photo source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/sandhya.webp" alt="Dr Sandhya Sekar on a forest trail" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">005</p>
+        <p class="award">Visual Storyteller</p>
+        <h3>Dr Sandhya Sekar</h3>
+        <p class="note">Mongabay India. Environmental journalism.</p>
+        <a class="src" href="https://india.mongabay.com/2025/06/sandhya-sekar-on-how-mongabay-india-took-root-interview/" target="_blank" rel="noopener">Photo source</a>
+      </article>
+      <article class="person">
+        <div class="shot" data-shot><img src="media/cinekind-2025/mohit.webp" alt="Mohit Chauhan caring for two street dogs" loading="lazy" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+        <p class="num">006</p>
+        <p class="award">Humane Influence</p>
+        <h3>Mohit Chauhan</h3>
+        <p class="note">A public voice for street animals. Care, vaccination and coexistence.</p>
+        <a class="src" href="https://timesofindia.indiatimes.com/entertainment/hindi/music/news/caring-for-animals-is-about-coexistence-not-cruelty-mohit-chauhan/articleshow/126368343.cms" target="_blank" rel="noopener">Photo source</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="band" id="honours">
+    <div class="band__head">
+      <p class="eyebrow">The 2025 honours</p>
+      <h2 class="display">The full&nbsp;list.</h2>
+    </div>
+    <ol class="roll">
+      <li><span class="n">01</span><span class="t">CineKind Compassion Award</span><span class="w">Dr Harsha Atmakuri</span><span class="s">Maa Ka Doodh</span></li>
+      <li><span class="n">02</span><span class="t">Director of Change</span><span class="w">Dolly Vyas Ahuja and Aryeman Ramsay</span><span class="s">The Land of Ahimsa</span></li>
+      <li><span class="n">03</span><span class="t">Actor for Kindness</span><span class="w">Rupali Ganguly</span><span class="s">Animal protection and adoption</span></li>
+      <li><span class="n">04</span><span class="t">Cinematic Impact for Animal Welfare</span><span class="w">Nirmal Verma</span><span class="s">Keeper of the Last Herd</span></li>
+      <li><span class="n">05</span><span class="t">Kindness in Frame</span><span class="w">Nitin Vemupati and S. A. Chandrasekhar</span><span class="s">Kooran</span></li>
+      <li><span class="n">06</span><span class="t">Voice for the Voiceless</span><span class="w">Kushagra Dixit</span><span class="s">Times of India</span></li>
+      <li><span class="n">07</span><span class="t">Innovation for Compassion</span><span class="w">Pooja Bhatt</span><span class="s">Fish Eye Network</span></li>
+      <li><span class="n">08</span><span class="t">Visual Storyteller for Animals</span><span class="w">Dr Sandhya Sekar</span><span class="s">Mongabay India</span></li>
+      <li><span class="n">09</span><span class="t">Guardians of Kindness</span><span class="w">Ashish Goswami</span><span class="s">PFA Wardha</span></li>
+      <li><span class="n">10</span><span class="t">Humane Influence</span><span class="w">Mohit Chauhan</span><span class="s">Animal welfare advocacy</span></li>
+    </ol>
+  </section>
+
+  <section class="band band--stone" id="ceremony">
+    <div class="band__head">
+      <p class="eyebrow">The ceremony</p>
+      <h2 class="display">The&nbsp;first edition.</h2>
+      <p>Kolkata, 20 December 2025. Ten honours presented by the Film Federation of India with People for Animals.</p>
+    </div>
+    <div class="gallery">
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/29.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/28.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/27.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/26.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/25.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/24.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/23.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/22.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/21.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/20.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/19.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+      <div class="shot" data-shot><img src="media/cinekind-2025/ffi/18.jpg" alt="CineKind National Awards 2025, Kolkata" loading="lazy" referrerpolicy="no-referrer" onerror="var s=this.closest('[data-shot]'); if (s) s.remove(); else this.remove();"></div>
+    </div>
+    <p class="cap">Ceremony photographs by the Film Federation of India, from the <a href="https://filmfederation.in/events.php" rel="noopener">CineKind Award 2025 event page</a>. Used with the Federation’s permission as co-presenter of the award.</p>
+  </section>
+
+  <section class="band band--deep" id="archive">
+    <div class="band__head">
+      <p class="eyebrow">CineKind 2025</p>
+      <h2 class="display">The official record of the first&nbsp;edition.</h2>
+      <p>The inaugural awards put humane storytelling on the national film industry's record. Explore the official event archive or read the government broadcaster's report from the ceremony.</p>
+      <div class="actions">
+        <a class="btn btn--light" href="https://filmfederation.in/events.php" target="_blank" rel="noopener">Official FFI archive</a>
+        <a class="btn btn--ghost" href="https://newsonair.gov.in/cinema-can-drive-wildlife-awareness-maneka-gandhi-at-cinekind-awards/" target="_blank" rel="noopener">Ceremony report</a>
+      </div>
+      <p class="close__note">Film Federation of India with People for Animals · Inaugural edition · Kolkata</p>
+    </div>
+  </section>
+    <div class="act__close">
+      <button type="button" class="btn" id="act2025close">Close the 2025 archive</button>
+    </div>
+  </div>
+</main>
+
+<!-- The screening. Empty until the film button is pressed; the embed is
+     mounted then and torn out on Exit, so nothing plays behind the wall. -->
+<div class="screen" id="cineScreen" hidden data-cursor="light">
+  <div class="screen__frame" id="cineFrame"></div>
+  <div class="screen__bar" id="cineBar">
+    <span class="screen__time num"><span id="cineT">00:00</span><span class="sep">/</span><span id="cineD">00:00</span></span>
+    <div class="screen__seek" id="cineSeekWrap">
+      <i class="screen__seek-fill" id="cineFill"></i><i class="screen__seek-knob" id="cineKnob"></i>
+      <input type="range" id="cineSeek" min="0" max="1000" value="0" step="1" aria-label="Seek" aria-valuetext="00:00">
+      <span class="screen__seek-tip num" id="cineTip" hidden></span>
+    </div>
+    <div class="screen__ctl">
+      <button type="button" id="cineSound" aria-pressed="true">Sound on</button>
+      <button type="button" id="cinePause" aria-pressed="false">Pause</button>
+      <button type="button" id="cineExit">Exit</button>
+    </div>
+  </div>
+</div>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- The same four groups the header uses, in the same order, with the same
+       labels. They used to differ: the header put Careers under Get Involved
+       and Policies under Our Work, while this listed Careers under About,
+       Policies under About, and Academy, Events, CineKind and The Wall under
+       an "Explore" that existed nowhere else. Six items sat in one group at
+       the top of a page and a different one at the bottom. -->
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="enforce.html">At the counter</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure.
+
+       No caption. An odometer in a footer reads as what it is without being
+       told, and every phrasing of the caption either restated the obvious or
+       claimed something the number does not support: a visit is not someone
+       who cared, or stood with us, or came for the animals. The aria-label
+       below still names it for a screen reader, which cannot see the shape. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="pfa-forms.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* ---------- kind set guide ---------- */
+  var CASES = [
+    {
+      label:'A real animal, directed on set',
+      verdict:'Permission needed',
+      title:'Apply before you shoot',
+      body:'A live animal performing to direction needs pre-shoot permission from the Animal Welfare Board of India. Apply well ahead of the shoot date, name the animals and their handlers, and expect a Board representative on set. Permission obtained after filming does not cover footage already shot.'
+    },
+    {
+      label:'Computer graphics only',
+      verdict:'No permission needed',
+      title:'Nothing to file',
+      body:'A rendered animal is not a live performer, so the pre-shoot permission does not apply. Carry the declaration that no animals were used and keep your vendor documentation, in case certification asks how the shot was made.'
+    },
+    {
+      label:'Stock footage',
+      verdict:'Usually no fresh permission',
+      title:'Check the original licence',
+      body:'Footage you did not film yourself does not need a new application. Confirm it was captured lawfully, keep the licence on file, and declare its use. If the stock house cannot evidence how it was shot, treat that as a reason to drop the clip.'
+    },
+    {
+      label:'An animal in the background',
+      verdict:'Depends on direction',
+      title:'The test is whether it was handled',
+      body:'An animal that wanders through a public location on its own is incidental. The moment one is placed, fed, lured, restrained or cued for the frame, it is being directed, and permission applies. Where it is borderline, file anyway.'
+    },
+    {
+      label:'Shot outside India',
+      verdict:'Local law applies',
+      title:'Different jurisdiction, same paper trail',
+      body:'The Board governs filming within India. For a foreign shoot, follow that country\'s animal welfare law and keep the permits. Indian certification will still ask you to declare how animals were used, so bring the documentation home with you.'
+    }
+  ];
+
+  var choices = $('#choices'), answer = $('#answer'), picked = -1;
+
+  function paintChoices(){
+    choices.innerHTML = CASES.map(function(c,i){
+      return '<button class="choice" type="button" data-i="' + i + '" aria-pressed="' + (i === picked) + '">' + c.label + '</button>';
+    }).join('');
+  }
+  function paintAnswer(){
+    if (picked < 0){
+      answer.innerHTML = '<p class="verdict">Guide</p>' +
+        '<h4>Pick the closest description</h4>' +
+        '<p class="body">Productions most often get caught out by the fourth option. An animal that reads as incidental on the page is frequently directed on the day.</p>';
+      return;
+    }
+    var c = CASES[picked];
+    answer.innerHTML = '<p class="verdict">' + c.verdict + '</p>' +
+      '<h4>' + c.title + '</h4>' +
+      '<p class="body">' + c.body + '</p>' +
+      '<p class="fine">A plain-language summary, not legal advice. Confirm current requirements with the Animal Welfare Board of India before you shoot.</p>';
+  }
+  choices.addEventListener('click', function(e){
+    var b = e.target.closest('.choice');
+    if (!b) return;
+    picked = parseInt(b.getAttribute('data-i'), 10);
+    paintChoices(); paintAnswer();
+    var again = choices.querySelector('[data-i="' + picked + '"]');
+    if (again) again.focus();
+  });
+  paintChoices(); paintAnswer();
+
+  /* ---------- the hoarding: a wall that goes by ----------
+     The posters are in the page already. Live, the script lays them out
+     as strips: each row a closed loop of posters wide enough to wrap
+     without a seam, the rows a closed loop tall enough to do the same,
+     so the wall has no edge in any direction. The section is a track two
+     screens long with the wall pinned under the header, and the page's
+     own scroll is the camera: as the page goes by, the wall climbs and
+     drifts a little across, eased so it moves like something with weight.
+     The wall is a shallow dome, so every poster turns and sets back in
+     proportion to its distance from the middle of the screen, and turns
+     again as it travels: that is the motion the eye follows. A mouse can
+     also take hold of the wall and throw it, and it runs on until it
+     stops. Nothing here hijacks the wheel: the wall answers the scroll,
+     and the page still arrives where it always did.
+
+     Each poster meets the keyboard once: the thirty-three originals are the
+     first pass of the strips, in tab order, and everything after is an
+     aria-hidden copy. No one is pasted next to themselves, not even at a
+     row's wrap. A photograph that does not arrive takes its poster off
+     the deck and the wall is laid out again. A reduced-motion request
+     gets the wall laid out and standing still, on a section one screen
+     tall, with no camera and no throw. On a screen with no hover the
+     first touch lights a poster and the second follows it. */
+  (function hoarding(){
+    var section = $('.hoarding'), stage = $('.hoarding__stage'), wall = $('#wall'), btn = $('#shuffle');
+    var cap = $('#wallCap'), capName = cap && cap.querySelector('.hoarding__cap-name'), capAward = cap && cap.querySelector('.hoarding__cap-award');
+    if (!section || !stage || !wall || !btn || !cap || !capName || !capAward) return;
+    var still = false, coarse = false;
+    try {
+      still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      coarse = window.matchMedia('(hover: none)').matches;
+    } catch (_) { /* an engine without matchMedia: motion on, a hover assumed */ }
+    var deck = [].slice.call(wall.children);
+    var order = deck.slice();
+    /* Level. The wall used to hang at -2.4 degrees, and a wall hung off level
+       reads as hung off level, not as grand; the wall this matches is dead
+       level and gets its pasted-up look from the posters' own small turns.
+       The machinery for a tilt stays - the drag maths and the shuffle turn
+       go through it - and a shuffle still nudges it by a fraction of a
+       degree, which is the difference between a re-deal and a reload. */
+    var tilt = 0;
+    /* the dome: degrees of turn at the stage's edge, and how far back the
+       edge stands, in px; the middle is flat and near. Gentle, and less
+       than the 30/20/200 it opened with: rendered against the wall this
+       matches, that was already a touch strong, and an attempt at 46/32/330
+       turned the stage into a globe with bare corners. What makes the wall
+       read as a dome is the top and bottom rows leaning back and the ends
+       turning a little as they go by; at these numbers that is all it does. */
+    var TURN_Y = 26, TURN_X = 19, DEPTH = 140;
+    /* How far the poster in hand comes toward the viewer, and how much it
+       grows on the way. The lift is what puts it in front of its neighbours;
+       see the note on .poster:hover in the stylesheet. Grow measured off the
+       matching wall's poster in hand, about a twentieth. */
+    var LIFT = 80, GROW = 0.055;
+    var rows = [], wallW = 0, wallH = 0, stageW = 0, stageH = 0, rowH = 0, seam = 6, maxW = 0, blockH = 0;
+    var cam = { x: 0, y: 0 }, target = { x: 0, y: 0 }, drag = { x: 0, y: 0 }, mom = { x: 0, y: 0 };
+    /* Where the pointer stands on the stage, as a small lean of the wall
+       away from it: the wall this matches drifts a few dozen pixels against
+       the hand as it crosses the screen, which is what makes it feel hung
+       rather than printed. Eased through the camera like everything else. */
+    var par = { x: 0, y: 0 }, PARALLAX = 0.045;
+    var map = $('#wallMap'), mapFrame = [], stillT = null, travelUntil = 0;
+    var running = false, dragging = null, thrown = false;
+    /* The poster under the hand or the focus ring, and whether any poster is
+       still easing toward or away from its lifted state. The second is what
+       keeps the frame loop alive for a pop that happens on a still wall. */
+    var hot = null, popping = false;
+
+    function between(a, b){ return a + Math.random() * (b - a); }
+    function clamp(v, lo, hi){ return v < lo ? lo : v > hi ? hi : v; }
+    function mod(v, m){ return ((v % m) + m) % m; }
+    function who(p){ return p.getAttribute('data-who') || ''; }
+    function ratio(p){ return parseFloat(p.style.getPropertyValue('--r')) || 1; }
+    function shuffled(list){
+      var out = list.slice(), i, j, t;
+      for (i = out.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        t = out[i]; out[i] = out[j]; out[j] = t;
+      }
+      return out;
+    }
+    /* No one twice in a short stretch: where a poster comes within three of
+       another of the same person, the next poster that fits swaps in. One
+       pass; a stretch it cannot mend is left, and the row builder still
+       keeps the same person off adjacent frames. */
+    function near(list, i, name){
+      var k;
+      for (k = Math.max(0, i - 3); k < i; k++) if (who(list[k]) === name) return true;
+      return false;
+    }
+    function spread(list){
+      var i, k, t;
+      for (i = 1; i < list.length; i++) {
+        if (!near(list, i, who(list[i]))) continue;
+        for (k = i + 1; k < list.length; k++) {
+          if (near(list, i, who(list[k]))) continue;
+          t = list[i]; list[i] = list[k]; list[k] = t;
+          break;
+        }
+      }
+      return list;
+    }
+
+    function measure(){
+      wallW = wall.clientWidth;
+      wallH = wall.clientHeight;
+      stageW = stage.clientWidth;
+      stageH = stage.clientHeight;
+      var narrow = window.innerWidth <= 720, vh = window.innerHeight;
+      /* A fifth of the window, not a third: see --row in the stylesheet. */
+      rowH = narrow ? clamp(vh * 0.16, 120, 150) : clamp(vh * 0.22, 150, 340);
+      seam = narrow ? 4 : 6;
+      /* the widest poster on the deck: the row builder runs each row past
+         the wall by this much so the one crossing the seam is whole */
+      maxW = rowH * 1.85;
+    }
+
+    /* The strips. Posters are dealt from one round of the order: the first
+       time a poster comes up it is the original, after that a copy. Each
+       row runs until it is wider than the wall plus the widest poster, so
+       a poster leaving one side is back on the other before a gap shows;
+       the rows run until they are taller than the wall plus a row, for
+       the same reason. Rows take alternate speeds, so the wall has a
+       little depth as it goes by. */
+    function build(){
+      var alive = order.filter(function(p){ return !p.hasAttribute('data-dead'); });
+      if (!alive.length) return;
+      wall.classList.add('is-live');       /* before measuring: live, the wall is the larger box */
+      measure();
+      var n = alive.length, used = new Set(), i = 0, y = 0, k = 0, frag = document.createDocumentFragment();
+      rows = [];
+      /* The next poster of the round that is not the person named, found by
+         looking ahead and bringing that one forward, so the one passed over
+         is still dealt later in the round rather than lost from it. */
+      function take(avoid){
+        var a = i % n, b = a, t, p, el;
+        while (n > 1 && who(alive[b]) === avoid && b - a < n) b = (b + 1) % n;
+        if (b !== a) { t = alive[a]; alive[a] = alive[b]; alive[b] = t; }
+        p = alive[a];
+        i++;
+        if (!used.has(p)) { used.add(p); el = p; }
+        else {
+          el = p.cloneNode(true);
+          el.setAttribute('data-clone', '');
+          el.setAttribute('aria-hidden', 'true');
+          [].slice.call(el.querySelectorAll('a')).forEach(function(x){ x.setAttribute('tabindex', '-1'); });
+        }
+        el.style.setProperty('--j', between(-0.9, 0.9).toFixed(2) + 'deg');
+        el.style.height = rowH + 'px';
+        el.style.width = Math.round(rowH * ratio(p)) + 'px';
+        return el;
+      }
+      while (y < wallH + rowH && rows.length < 40) {
+        var row = { y: y, W: 0, tiles: [], speed: [1, 0.96, 1.04][k++ % 3] }, x = 0, el, w, last = null;
+        for (;;) {
+          el = take(last ? who(last) : '');
+          w = parseFloat(el.style.width);
+          el.setAttribute('data-speed', String(row.speed));
+          row.tiles.push({ el: el, x: x, w: w, pop: 0 });
+          frag.appendChild(el);
+          x += w + seam;
+          last = el;
+          /* closed once it is wider than the wall plus a poster, provided the
+             wrap does not put the same person on both sides of the seam */
+          if (x >= wallW + maxW && row.tiles.length > 1 && who(row.tiles[0].el) !== who(el)) break;
+          if (row.tiles.length > 80) break;
+        }
+        row.W = x;
+        rows.push(row);
+        y += rowH + seam;
+      }
+      blockH = y;
+      [].slice.call(wall.children).forEach(function(c){ c.remove(); });
+      wall.appendChild(frag);
+      chart();
+      place();
+    }
+
+    /* The map: one round of the wall, each row across the full width of
+       the box on its own loop, each poster a thumbnail of itself. Redrawn
+       only when the wall is dealt; the frame for the window is the only
+       thing that moves, and it moves in place(). */
+    function chart(){
+      if (!map) return;
+      var i, r, j, t, el, img, k, out = document.createDocumentFragment();
+      map.textContent = '';
+      mapFrame = [];
+      for (i = 0; i < rows.length; i++) {
+        r = rows[i];
+        for (j = 0; j < r.tiles.length; j++) {
+          t = r.tiles[j];
+          img = t.el.querySelector('img');
+          el = document.createElement('i');
+          el.style.left = (t.x / r.W * 100).toFixed(2) + '%';
+          el.style.top = (r.y / blockH * 100).toFixed(2) + '%';
+          el.style.width = (t.w / r.W * 100).toFixed(2) + '%';
+          el.style.height = (rowH / blockH * 100).toFixed(2) + '%';
+          if (img) el.style.backgroundImage = 'url("' + img.getAttribute('src') + '")';
+          out.appendChild(el);
+        }
+      }
+      /* the frame, in four pieces, so it can cross the map's edge and come
+         back on the other side the way the window crosses the wall's */
+      for (k = 0; k < 4; k++) { el = document.createElement('b'); el.hidden = true; out.appendChild(el); mapFrame.push(el); }
+      map.appendChild(out);
+    }
+    /* Where the window is on the round. The wall's left edge stands a
+       little outside the stage's (inset:-34%), so the stage begins part
+       way along the wall; the camera moves the content the other way;
+       and each row loops on its own width, so the first row, which runs
+       at the camera's own speed, stands for all of them. */
+    function frameMap(){
+      if (!map || !rows.length || !mapFrame.length) return;
+      var r0 = rows[0], W = r0.W || wallW, H = blockH || wallH;
+      var x0 = mod((wallW - stageW) / 2 - cam.x * r0.speed, W) / W, w = Math.min(1, stageW / W);
+      var y0 = mod((wallH - stageH) / 2 - cam.y, H) / H, h = Math.min(1, stageH / H);
+      var xs = [[x0, Math.min(w, 1 - x0)]], ys = [[y0, Math.min(h, 1 - y0)]], k = 0, a, b;
+      if (x0 + w > 1) xs.push([0, x0 + w - 1]);
+      if (y0 + h > 1) ys.push([0, y0 + h - 1]);
+      for (a = 0; a < 2; a++) for (b = 0; b < 2; b++) {
+        var el = mapFrame[k++];
+        if (!xs[a] || !ys[b]) { el.hidden = true; continue; }
+        el.hidden = false;
+        el.style.left = (xs[a][0] * 100).toFixed(2) + '%'; el.style.width = (xs[a][1] * 100).toFixed(2) + '%';
+        el.style.top = (ys[b][0] * 100).toFixed(2) + '%'; el.style.height = (ys[b][1] * 100).toFixed(2) + '%';
+      }
+    }
+
+    /* Where everything stands for the camera's current position. Each row
+       wraps on its own loop; the block of rows wraps on its own. Both are
+       shifted a poster back so the one crossing the seam is drawn on the
+       near side, never missing on the far one. Then the dome: a poster's
+       turn and set-back follow how far its centre stands from the middle
+       of the stage, as a share of the stage's half-width and half-height,
+       so the middle is flat and the edges turn away. The set-back is
+       capped a little past the edge, or the outermost posters would
+       recede until the corners showed bare ground. */
+    function place(){
+      var i, r, j, t, ry, cx, x, nx, ny, ay, ax, z, want, s;
+      var hw = wallW / 2, hh = wallH / 2, sx = stageW / 2 || 1, sy = stageH / 2 || 1;
+      popping = false;
+      for (i = 0; i < rows.length; i++) {
+        r = rows[i];
+        ry = mod(r.y + cam.y + rowH, blockH) - rowH;
+        cx = cam.x * r.speed;
+        for (j = 0; j < r.tiles.length; j++) {
+          t = r.tiles[j];
+          x = mod(t.x + cx + maxW, r.W) - maxW;
+          nx = clamp((x + t.w / 2 - hw) / sx, -1.35, 1.35);
+          ny = clamp((ry + rowH / 2 - hh) / sy, -1.35, 1.35);
+          ay = nx * TURN_Y;
+          ax = -ny * TURN_X;
+          z = -(Math.min(nx * nx, 1) * 0.7 + Math.min(ny * ny, 1) * 0.55) * DEPTH;
+          /* The lift, eased rather than switched, so a hand crossing the wall
+             leaves a swell behind it instead of a row of jumps. Settled
+             exactly at the ends: an asymptote left every poster on the wall
+             holding a millionth of a pixel and the frame loop running for it
+             all night. */
+          want = t.el === hot ? 1 : 0;
+          t.pop += (want - t.pop) * 0.2;
+          if (Math.abs(want - t.pop) < 0.004) t.pop = want; else popping = true;
+          if (t.pop) {
+            /* The turn comes off as it rises: a poster in hand ends up square
+               to the viewer wherever on the dome it was standing. */
+            s = 1 - t.pop;
+            ay *= s; ax *= s;
+            z += t.pop * (LIFT - z);
+          }
+          t.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(' + ay.toFixed(2) + 'deg) rotateX(' + ax.toFixed(2) + 'deg)'
+            + (t.pop ? ' scale(' + (1 + t.pop * GROW).toFixed(4) + ')' : '');
+        }
+      }
+    }
+    /* Who is in hand. Called from the pointer, the focus ring and the touch
+       light; the easing above does the rest, and start() is needed because a
+       pop on a still wall has no other reason to run a frame. */
+    function lift(el){
+      if (hot === el) return;
+      hot = el || null;
+      start();
+    }
+    function hang(){
+      wall.style.transform = 'rotate(' + tilt.toFixed(2) + 'deg)';
+    }
+
+    /* The camera. How far the page has come through the track sets where
+       the wall should be, mostly up and a little across; the wall eases
+       toward it. */
+    function aim(){
+      if (still) { target.x = drag.x; target.y = drag.y; return; }
+      var s = section.getBoundingClientRect(), g = stage.getBoundingClientRect();
+      var range = section.offsetHeight - stage.offsetHeight;
+      var p = range > 0 ? clamp((g.top - s.top) / range, 0, 1) : 0;
+      target.x = -p * wallW * 0.22 + drag.x + par.x;
+      target.y = -p * wallH * 1.1 + drag.y + par.y;
+    }
+    /* 0.972 a frame, not 0.94. A throw at 0.94 was spent in about half a
+       second, which is a wall that stops rather than one that glides; the
+       decay here was read off the wall this was asked to match, where a hard
+       throw is still visibly travelling two seconds later. Anything much
+       slower stops feeling like weight and starts feeling like drift, so the
+       pair of numbers - this and the clamp on the throw below - are what set
+       how heavy the wall is, and they belong together. */
+    var GLIDE = 0.972;
+    function frame(){
+      if (!dragging && (Math.abs(mom.x) > 0.05 || Math.abs(mom.y) > 0.05)) {
+        drag.x += mom.x; drag.y += mom.y;
+        mom.x *= GLIDE; mom.y *= GLIDE;
+      } else { mom.x = 0; mom.y = 0; }
+      aim();
+      var dx = target.x - cam.x, dy = target.y - cam.y;
+      var ease = still ? 1 : dragging ? 0.35 : 0.11;
+      cam.x += dx * ease; cam.y += dy * ease;
+      place();
+      var moving = Math.abs(dx) > 0.2 || Math.abs(dy) > 0.2 || !!dragging || Math.abs(mom.x) + Math.abs(mom.y) > 0.05;
+      if (moving) frameMap();
+      /* The map is up while the wall travels - a drag, a throw, the page
+         scrolling - and goes a beat after it stops. Not for the lean under
+         a resting hand: that is motion too, but a map that came up every
+         time the mouse crossed the screen would be a map nobody looked at. */
+      var travelling = !!dragging || Math.abs(mom.x) + Math.abs(mom.y) > 0.05 || Date.now() < travelUntil;
+      if (travelling) {
+        if (!section.classList.contains('is-moving')) section.classList.add('is-moving');
+        if (stillT) { clearTimeout(stillT); stillT = null; }
+      } else if (section.classList.contains('is-moving') && !stillT) {
+        stillT = setTimeout(function(){ stillT = null; section.classList.remove('is-moving'); }, 900);
+      }
+      var busy = moving || popping;
+      if (busy) window.requestAnimationFrame(frame); else running = false;
+    }
+    function start(){
+      if (running) return;
+      running = true;
+      window.requestAnimationFrame(frame);
+    }
+
+    /* Taking hold. Five pixels of travel turn a press into a drag, and a drag
+       is not a click on whatever it let go over.
+
+       A finger may take hold too, which it could not before. The line it may
+       not cross is down the screen: that gesture is how this section is left,
+       and a wall that swallowed it would strand a reader on the hoarding with
+       no way past. So a touch is watched for its first ten pixels and only
+       kept if it is going across, where nothing else on this page wants it;
+       the moment it reads as vertical the wall lets go and the page scrolls,
+       which drives the wall anyway. touch-action in the stylesheet says the
+       same thing to the browser, so it hands the sideways gesture over
+       instead of scrolling with it. A mouse has no such rule: the page has
+       other ways to scroll. */
+    if (!still) {
+      stage.addEventListener('pointerdown', function(e){
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        if (e.target.closest && e.target.closest('.hoarding__ctl')) return;
+        dragging = { x: e.clientX, y: e.clientY, vx: 0, vy: 0, moved: false, soft: e.pointerType !== 'mouse' };
+        mom.x = 0; mom.y = 0;
+      });
+      window.addEventListener('pointermove', function(e){
+        if (!dragging) return;
+        var dx = e.clientX - dragging.x, dy = e.clientY - dragging.y;
+        if (!dragging.moved) {
+          if (Math.abs(dx) + Math.abs(dy) < (dragging.soft ? 10 : 5)) return;
+          if (dragging.soft && Math.abs(dy) >= Math.abs(dx)) { dragging = null; return; }
+          dragging.moved = true;
+          section.classList.add('is-dragging');
+          /* The wash and the shadow are taken off by is-dragging, but the
+             lift is a transform this script owns and no stylesheet can
+             reach, so it is put down here. A wall in hand holds nothing
+             out of itself. */
+          caption(null);
+        }
+        /* screen travel, turned into the wall's own tilted frame */
+        var rad = tilt * Math.PI / 180, c = Math.cos(rad), s = Math.sin(rad);
+        var lx = dx * c + dy * s, ly = dy * c - dx * s;
+        drag.x += lx; drag.y += ly;
+        dragging.vx = lx; dragging.vy = ly;
+        dragging.x = e.clientX; dragging.y = e.clientY;
+        start();
+      }, { passive: true });
+      function letGo(){
+        if (!dragging) return;
+        if (dragging.moved) {
+          mom.x = clamp(dragging.vx, -90, 90);
+          mom.y = clamp(dragging.vy, -90, 90);
+          thrown = true;
+          setTimeout(function(){ thrown = false; }, 0);
+        }
+        dragging = null;
+        section.classList.remove('is-dragging');
+        start();
+      }
+      window.addEventListener('pointerup', letGo);
+      window.addEventListener('pointercancel', letGo);
+      window.addEventListener('blur', letGo);
+      wall.addEventListener('click', function(e){
+        if (thrown) { e.preventDefault(); e.stopPropagation(); }
+      }, true);
+      [].slice.call(wall.querySelectorAll('a')).forEach(function(a){ a.setAttribute('draggable', 'false'); });
+      /* A sideways swipe on a trackpad has nowhere to go on this page, so
+         it goes to the wall. Up and down stay the page's own. */
+      stage.addEventListener('wheel', function(e){
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        drag.x -= e.deltaX;
+        start();
+      }, { passive: true });
+    }
+
+    /* Focus. The browser brings a focused poster into view by scrolling the
+       nearest thing that scrolls, which is the stage, and a scrolled stage
+       is a wall knocked off its pins. That scroll is undone, and the wall
+       moves instead: a poster that is not wholly on the stage is brought
+       to the middle of it, where the dome is flat and the face is largest.
+       A poster already in view stays put, so a click, which also focuses,
+       does not move the wall under the hand. The measured box is the
+       projected one, smaller than the poster's own where the dome sets it
+       back, so the move is scaled up by that much to land. */
+    wall.addEventListener('focusin', function(e){
+      var p = e.target.closest ? e.target.closest('.poster') : null;
+      if (!p) return;
+      caption(p);
+      stage.scrollTo(0, 0);
+      var r = p.getBoundingClientRect(), g = stage.getBoundingClientRect(), m = 16;
+      if (r.left >= g.left + m && r.right <= g.right - m && r.top >= g.top + m && r.bottom <= g.bottom - m) return;
+      var dx = (g.left + g.width / 2) - (r.left + r.width / 2);
+      var dy = (g.top + g.height / 2) - (r.top + r.height / 2);
+      var scale = Math.max(0.5, r.width / (parseFloat(p.style.width) || r.width));
+      dx /= scale; dy /= scale;
+      /* into the wall's tilted frame, and scaled for the row's own speed */
+      var rad = tilt * Math.PI / 180, c = Math.cos(rad), sn = Math.sin(rad);
+      var speed = parseFloat(p.getAttribute('data-speed')) || 1;
+      drag.x += (dx * c + dy * sn) / speed;
+      drag.y += dy * c - dx * sn;
+      start();
+    });
+
+    /* A missing photograph comes off the deck, and the wall is laid out
+       again around the gap. The portraits are local files, so this is for
+       the day one is renamed or lost, not for an ordinary load. */
+    var pending = null;
+    function relay(){
+      if (pending) clearTimeout(pending);
+      pending = setTimeout(function(){ pending = null; build(); }, 80);
+    }
+    function bury(img){
+      var src = img.getAttribute('src');
+      deck.forEach(function(p){
+        var own = p.querySelector('img');
+        if (own && own.getAttribute('src') === src) p.setAttribute('data-dead', '');
+      });
+      relay();
+    }
+    wall.addEventListener('error', function(e){
+      var img = e.target;
+      if (img && img.tagName === 'IMG') bury(img);
+    }, true);
+    [].slice.call(wall.querySelectorAll('img')).forEach(function(img){
+      if (img.complete && img.naturalWidth === 0) bury(img);
+    });
+
+    /* The corner. A poster in hand, by pointer, by focus or by touch, puts
+       its name and award where the title stands; the title comes back when
+       the hand moves off. The wash comes down while a pointer is on the
+       stage at all, so the wall is bright until someone reaches for it. */
+    /* One notion, not two: the poster whose name is in the corner is the
+       poster that stands out of the wall, so every path that names one -
+       pointer, focus ring, the touch light below - lifts the same one, and
+       none of them has to remember to do both. */
+    function caption(p){
+      lift(p);
+      if (!p) { section.classList.remove('is-captioned'); return; }
+      var n = p.querySelector('.poster__name'), a = p.querySelector('.poster__award');
+      capName.textContent = n ? n.textContent : '';
+      capAward.textContent = a ? a.textContent : '';
+      section.classList.add('is-captioned');
+    }
+    var lit = null;
+    stage.addEventListener('pointerenter', function(e){
+      if (e.pointerType === 'mouse') section.classList.add('is-pointed');
+    });
+    stage.addEventListener('pointerleave', function(e){
+      if (e.pointerType !== 'mouse') return;
+      section.classList.remove('is-pointed');
+      if (!lit) caption(null);
+      /* the hand is gone: the wall settles back to where the scroll and the
+         drag have it, through the same easing that took it away */
+      if (!still && (par.x || par.y)) { par.x = 0; par.y = 0; start(); }
+    });
+    /* The lean. A mouse only, and never while a drag is in hand - the drag
+       is the hand's own motion and the lean would double it. */
+    if (!still) stage.addEventListener('pointermove', function(e){
+      if (e.pointerType !== 'mouse' || dragging) return;
+      var g = stage.getBoundingClientRect();
+      par.x = -(e.clientX - g.left - g.width / 2) * PARALLAX;
+      par.y = -(e.clientY - g.top - g.height / 2) * PARALLAX;
+      start();
+    }, { passive: true });
+    wall.addEventListener('pointerover', function(e){
+      if (e.pointerType !== 'mouse' || dragging) return;
+      var p = e.target.closest ? e.target.closest('.poster') : null;
+      if (p) caption(p);
+    });
+    wall.addEventListener('pointerout', function(e){
+      if (e.pointerType !== 'mouse' || lit) return;
+      var p = e.target.closest ? e.target.closest('.poster') : null;
+      var to = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest('.poster') : null;
+      if (p && to !== p) caption(null);
+    });
+    wall.addEventListener('focusout', function(e){
+      if (lit || (e.relatedTarget && wall.contains(e.relatedTarget))) return;
+      caption(null);
+    });
+
+    /* A poster in hand. On a screen with no hover the first touch lights it
+       and shows its caption; the second follows the link. */
+    function light(p){
+      if (lit && lit !== p) lit.classList.remove('is-lit');
+      lit = p;
+      if (p) { p.classList.add('is-lit'); caption(p); }
+      else caption(null);
+    }
+    wall.addEventListener('click', function(e){
+      var a = e.target.closest('a'), p = a && a.closest('.poster');
+      if (!p) return;
+      if (coarse && lit !== p) { e.preventDefault(); light(p); return; }
+      light(null);
+      var href = a.getAttribute('href') || '';
+      if (href.charAt(0) !== '#') return;
+      var t = document.getElementById(href.slice(1));
+      if (!t) return;
+      var act = document.getElementById('act2025');
+      if (act && act.contains(t)) return;             /* the act opens itself first: see below */
+      e.preventDefault();
+      t.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: t.matches('li') ? 'center' : 'start' });
+      if (t.matches('.roll li')) {
+        t.classList.add('is-lit');
+        setTimeout(function(){ t.classList.remove('is-lit'); }, 2400);
+      }
+    });
+
+    /* Shuffle: a new order, a new tilt, and the posters pasted up again one
+       after another, the wall turning under them. */
+    btn.addEventListener('click', function(){
+      light(null);
+      var was = tilt;
+      tilt = between(-0.45, 0.45);
+      order = spread(shuffled(deck));
+      build();
+      if (still) { hang(); return; }
+      try {
+        wall.animate([
+          { transform: 'rotate(' + was.toFixed(2) + 'deg)' },
+          { transform: 'rotate(' + tilt.toFixed(2) + 'deg)' }
+        ], { duration: 760, easing: 'cubic-bezier(.2,.7,.2,1)' });
+        var n = 0;
+        rows.forEach(function(r){
+          r.tiles.forEach(function(t){
+            var a = t.el.firstElementChild;
+            if (!a) return;
+            var j = t.el.style.getPropertyValue('--j') || '0deg';
+            a.animate([
+              { opacity: 0, transform: 'rotate(' + j + ') scale(.94)' },
+              { opacity: 1, transform: 'rotate(' + j + ') scale(1)' }
+            ], { duration: 420, delay: Math.min(n++ * 14, 640), easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'backwards' });
+          });
+        });
+      } catch (_) { /* no Web Animations: the wall is dealt all the same */ }
+      hang();
+      start();
+    });
+
+    /* The wall is sized to the window. A phone's address bar coming and
+       going is not a new window, so the height has to move a good way. */
+    var size = [stage.clientWidth, stage.clientHeight], resizeTimer = null;
+    window.addEventListener('resize', function(){
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function(){
+        var w = stage.clientWidth, h = stage.clientHeight;
+        if (Math.abs(w - size[0]) < 24 && Math.abs(h - size[1]) < 90) return;
+        size = [w, h];
+        build();
+        start();
+      }, 160);
+    });
+    window.addEventListener('scroll', function(){ travelUntil = Date.now() + 240; start(); }, { passive: true });
+
+    /* The header goes glass while any of the wall is behind it and back to
+       paper the moment the next section reaches it. Measured, not assumed:
+       the header's own height is whatever assets/chrome.js says it is, and
+       the announcement bar may have been closed. Checked on scroll and on
+       resize, and once now; cheap enough to run bare, since it is a single
+       rect read and a class that only changes at one scroll position. */
+    var over = null;
+    function underHeader(){
+      var ann = document.querySelector('.announce'), head = document.querySelector('header.site');
+      var line = (ann && !ann.hidden ? ann.offsetHeight : 0) + (head ? head.offsetHeight : 0);
+      var on = stage.getBoundingClientRect().bottom > line + 1;
+      if (on === over) return;
+      over = on;
+      document.documentElement.classList.toggle('header-on-dark', on);
+    }
+    window.addEventListener('scroll', underHeader, { passive: true });
+    window.addEventListener('resize', underHeader);
+    underHeader();
+
+    if (!still) section.classList.add('is-live');
+    build();
+    hang();
+    start();
+  })();
+
+
+  /* ---------- the acts after the wall ease in as they arrive ----------
+     Marked from here rather than in the markup, so that without a script
+     nothing on the page is hidden. Each poster of the roll comes up a beat
+     after the one before it. */
+  (function reveal(){
+    if (!('IntersectionObserver' in window)) return;
+    var still = false;
+    try { still = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) {}
+    if (still) return;
+    var items = [].slice.call(document.querySelectorAll('.band--grand .band__head, .band--grand .feature__body, .honours .roll li, .about .facts, .kindset .tool'));
+    var k = 0;
+    items.forEach(function(el){ el.classList.add('reveal'); if (el.matches('.honours .roll li')) el.style.transitionDelay = (k++ % 4) * 90 + 'ms'; });
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    items.forEach(function(el){ io.observe(el); });
+  })();
+
+  /* ---------- the screening: the film over the wall ----------
+     The film button beside the wall is the way in, and a press is a
+     gesture, so the embed is mounted on the press and not before: nothing
+     autoplays behind the wall, muted or otherwise. Looped, because a
+     ceiling has no ending; the player's own controls are off and the frame
+     takes no pointer, so the only controls are this page's own three -
+     sound, pause, exit - the Escape key and M. Exit tears the embed out,
+     which is how the film stops, and hands the focus back to the poster
+     that opened it. Whether the sound arrives with the picture is not this
+     page's to decide; see the long note below. */
+  (function screen(){
+    var FILM = 'GgrFF97F8_s';
+    var ORIGIN = 'https://www.youtube-nocookie.com';
+    var API = 'https://www.youtube.com/iframe_api';
+    var room = $('#cineScreen'), frame = $('#cineFrame'),
+        pauseBtn = $('#cinePause'), exitBtn = $('#cineExit'), soundBtn = $('#cineSound');
+    if (!room || !frame || !pauseBtn || !exitBtn || !soundBtn) return;
+    var iframe = null, player = null, api = null;
+    var bar = $('#cineBar'), seekWrap = $('#cineSeekWrap'), seek = $('#cineSeek'), fill = $('#cineFill'), knob = $('#cineKnob'), tip = $('#cineTip'), tT = $('#cineT'), tD = $('#cineD');
+    var dragging = false, pollT = null, SKIP = 10;
+    var paused = false, muted = false, open = false, scrollAt = 0, opener = null, hushT = null;
+
+    function send(func, args){
+      if (!iframe || !iframe.contentWindow) return;
+      try {
+        iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: func, args: args || [] }), ORIGIN);
+      } catch (_) { /* a player that cannot hear cannot be paused either */ }
+    }
+
+    /* ---- the sound ----
+       mute=0 in the address was the whole of it, and the whole of it was a
+       request. A browser grants unmuted playback to a frame it believes a
+       person asked for, and the press on The film is that ask - but the
+       press lands on this page and the film plays in a frame belonging to
+       someone else, so what crosses the boundary is permission to autoplay,
+       not a guarantee of sound. Chrome weighs the site's own history as
+       well, and where the scales come down the wrong way YouTube does the
+       only thing left that is not silence: it starts the film muted. No
+       error, no event, a picture and nothing to hear. That is what was
+       happening, and no spelling of the address fixes it, because nothing
+       was wrong with the address.
+
+       What answers it is a handle on the player. The frame is built inside
+       the click, where the permission is strongest, and the API is fetched
+       alongside to take hold of that same frame once it lands. Then the
+       player is told, in as many words, to unmute - and a moment later
+       asked whether it did, because a refusal here is silent and a button
+       that claims sound the room does not have is worse than no button.
+       Whatever the answer, the control below says the truth and one press
+       of it is a gesture in its own right, which no browser refuses. */
+    function loadApi(){
+      if (window.YT && window.YT.Player) return Promise.resolve(true);
+      if (api) return api;
+      api = new Promise(function(resolve){
+        var prev = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = function(){
+          if (prev) { try { prev(); } catch (_) {} }
+          resolve(!!(window.YT && window.YT.Player));
+        };
+        var sc = document.createElement('script');
+        sc.src = API; sc.async = true;
+        sc.onerror = function(){ resolve(false); };
+        document.head.appendChild(sc);
+        /* A blocked script never errors and never loads. The film is already
+           playing by then; only the handle is missing, and postMessage
+           still carries every command this room sends. */
+        window.setTimeout(function(){ resolve(!!(window.YT && window.YT.Player)); }, 6000);
+      });
+      return api;
+    }
+    function paintSound(){
+      soundBtn.textContent = muted ? 'Sound off' : 'Sound on';
+      soundBtn.setAttribute('aria-pressed', muted ? 'false' : 'true');
+    }
+    /* Said to the player if there is one, posted through the wall if not. */
+    function tellSound(){
+      if (player && player.unMute) {
+        try {
+          if (muted) player.mute();
+          else { player.unMute(); player.setVolume(100); }
+          return;
+        } catch (_) { /* fall through to the message */ }
+      }
+      send(muted ? 'mute' : 'unMute');
+      if (!muted) send('setVolume', [100]);
+    }
+    /* What the player actually did, which is not always what it was told. */
+    function readSound(){
+      if (!open || !player || !player.isMuted) return;
+      var m;
+      try { m = player.isMuted(); } catch (_) { return; }
+      if (typeof m !== 'boolean' || m === muted) return;
+      muted = m;
+      paintSound();
+      /* Refused. The control is pointed at rather than explained: the room
+         is dark, the film is running, and a sentence is more than anyone
+         wants to read. It stops asking after a few seconds. */
+      if (muted) {
+        room.classList.add('is-hushed');
+        wake();                          /* the room may already have gone dark */
+        if (hushT) clearTimeout(hushT);
+        hushT = window.setTimeout(function(){ room.classList.remove('is-hushed'); }, 6000);
+      }
+    }
+    /* ---- the seek ----
+       The same bar the theatre has, driven the same way: the player is asked
+       for its time and length four times a second, the bar is drawn from the
+       answer, and a drag on the bar is turned back into a seek. YouTube
+       answers these calls synchronously once the API has hold of the frame,
+       which is why the bar waits for that and not for the film. */
+    function pad(n){ return (n < 10 ? '0' : '') + n; }
+    function tc(sec){ sec = Math.max(0, Math.floor(sec || 0)); var h = Math.floor(sec / 3600), m = Math.floor(sec / 60) % 60, x = sec % 60; return (h ? pad(h) + ':' : '') + pad(m) + ':' + pad(x); }
+    function clock(){
+      var d = 0, t = 0;
+      if (player && player.getDuration) { try { d = Number(player.getDuration()) || 0; t = Number(player.getCurrentTime()) || 0; } catch (_) {} }
+      return { d: d, t: t, known: d > 0 };
+    }
+    function paintSeek(f, t, d){
+      fill.style.width = (f * 100) + '%'; knob.style.left = (f * 100) + '%';
+      seek.value = Math.round(f * 1000); seek.setAttribute('aria-valuetext', tc(t) + ' of ' + tc(d));
+      tT.textContent = tc(t); tD.textContent = tc(d);
+    }
+    function tick(){
+      var c = clock();
+      bar.classList.toggle('is-live', c.known);
+      if (!c.known || dragging) return;
+      paintSeek(c.t / c.d, c.t, c.d);
+    }
+    function seekTo(t){
+      var c = clock(); if (!c.known) return;
+      t = Math.max(0, Math.min(c.d, t));
+      try { player.seekTo(t, true); } catch (_) {}
+      paintSeek(t / c.d, t, c.d);
+    }
+    function skip(delta){ var c = clock(); if (c.known) seekTo(c.t + delta); wake(); }
+    seek.addEventListener('input', function(){
+      dragging = true; seekWrap.classList.add('is-drag');
+      var f = Number(seek.value) / 1000, c = clock();
+      fill.style.width = (f * 100) + '%'; knob.style.left = (f * 100) + '%';
+      if (c.known) tT.textContent = tc(f * c.d);
+    });
+    seek.addEventListener('change', function(){
+      dragging = false; seekWrap.classList.remove('is-drag');
+      var c = clock(); if (c.known) seekTo(Number(seek.value) / 1000 * c.d);
+    });
+    /* Arrow keys on the bar are the bar's: ten seconds a press, not a
+       thousandth of the film. */
+    seek.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); e.stopPropagation(); skip(e.key === 'ArrowLeft' ? -SKIP : SKIP); }
+    });
+    seekWrap.addEventListener('pointermove', function(e){
+      var c = clock(); if (!c.known || e.pointerType === 'touch') { tip.hidden = true; return; }
+      var r = seekWrap.getBoundingClientRect(), f = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      tip.textContent = tc(f * c.d); tip.style.left = (f * 100) + '%'; tip.hidden = false;
+    });
+    seekWrap.addEventListener('pointerleave', function(){ tip.hidden = true; });
+    function hold(f){
+      loadApi().then(function(ok){
+        if (!ok || f !== iframe || !open) return;
+        try {
+          player = new window.YT.Player(f, {
+            events: {
+              onReady: function(){
+                if (f !== iframe) return;
+                tellSound();
+                if (!paused) { try { player.playVideo(); } catch (_) {} }
+                window.setTimeout(readSound, 1200);
+                if (pollT) clearInterval(pollT);
+                pollT = setInterval(tick, 250);
+                tick();
+              },
+              onStateChange: function(){ if (f === iframe) readSound(); }
+            }
+          });
+        } catch (_) { player = null; }
+      });
+    }
+    function mount(){
+      var org = '';
+      try { org = /^https?:$/.test(location.protocol) ? '&origin=' + encodeURIComponent(location.origin) : ''; } catch (_) {}
+      iframe = document.createElement('iframe');
+      iframe.id = 'cinePlayer';
+      iframe.src = ORIGIN + '/embed/' + FILM
+        + '?autoplay=1&mute=0&loop=1&playlist=' + FILM
+        + '&controls=0&disablekb=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1' + org;
+      /* setAttribute, not .allow = . This attribute is the whole hinge of the
+         sound: it is what hands this page's permission to autoplay across
+         the origin boundary into YouTube's frame, and without it the film is
+         muted no matter what anything below asks for. The property that
+         mirrors it is not reflected everywhere, and a silent failure here
+         looks exactly like the bug this was written to fix. */
+      iframe.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+      iframe.title = 'CineKind film';
+      iframe.setAttribute('tabindex', '-1');
+      frame.appendChild(iframe);
+      hold(iframe);
+    }
+    /* The projectionist's rule: 2.6 seconds of stillness and the room goes
+       dark around the picture. Listeners are cheap and guarded, so outside
+       a screening this whole block is inert. */
+    var idleTimer = null;
+    function sleep(){
+      if (!open) return;
+      /* Not while the sound control is asking to be pressed. A nudge that
+         fades out two seconds after it appears is a nudge nobody sees, and
+         the API can easily take longer than that to land and report back. */
+      if (room.classList.contains('is-hushed')) { idleTimer = setTimeout(sleep, 1200); return; }
+      room.classList.add('is-idle');
+      document.documentElement.classList.add('pfa-screen-idle');
+    }
+    function wake(){
+      if (!open) return;
+      room.classList.remove('is-idle');
+      document.documentElement.classList.remove('pfa-screen-idle');
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(sleep, 2600);
+    }
+    ['mousemove', 'pointerdown', 'keydown', 'touchstart'].forEach(function(type){
+      document.addEventListener(type, wake, { passive: true });
+    });
+    function enter(from){
+      if (open) return;
+      open = true;
+      opener = from || null;
+      paused = false;
+      muted = false;                     /* every screening starts asking for sound */
+      paintSound();
+      room.classList.remove('is-hushed');
+      pauseBtn.textContent = 'Pause';
+      pauseBtn.setAttribute('aria-pressed', 'false');
+      scrollAt = window.pageYOffset || 0;
+      mount();
+      room.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      exitBtn.focus();
+      wake();
+    }
+    function exit(){
+      if (!open) return;
+      open = false;
+      if (idleTimer) clearTimeout(idleTimer);
+      if (hushT) { clearTimeout(hushT); hushT = null; }
+      room.classList.remove('is-idle');
+      room.classList.remove('is-hushed');
+      document.documentElement.classList.remove('pfa-screen-idle');
+      send('stopVideo');
+      /* destroy() takes the frame out with it, so the frame is only removed
+         if it is somehow still standing. Either way the room is emptied:
+         a film left mounted behind a shut door is a film still playing. */
+      if (pollT) { clearInterval(pollT); pollT = null; }
+      dragging = false; bar.classList.remove('is-live'); seekWrap.classList.remove('is-drag'); tip.hidden = true; paintSeek(0, 0, 0);
+      if (player) { try { player.destroy(); } catch (_) {} player = null; }
+      if (iframe && iframe.parentNode) iframe.remove();
+      iframe = null;
+      frame.textContent = '';
+      room.hidden = true;
+      document.documentElement.style.overflow = '';
+      window.scrollTo(0, scrollAt);
+      if (opener && opener.focus) opener.focus();
+      opener = null;
+    }
+    function pauseToggle(){
+      paused = !paused;
+      if (player && player.pauseVideo) {
+        try { if (paused) player.pauseVideo(); else player.playVideo(); }
+        catch (_) { send(paused ? 'pauseVideo' : 'playVideo'); }
+      } else send(paused ? 'pauseVideo' : 'playVideo');
+      pauseBtn.textContent = paused ? 'Play' : 'Pause';
+      pauseBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    }
+    /* A press here is a gesture of its own, which is the one thing no
+       autoplay policy argues with: wherever the film started, this turns
+       the sound on. */
+    function soundToggle(){
+      muted = !muted;
+      tellSound();
+      paintSound();
+      room.classList.remove('is-hushed');
+      if (hushT) { clearTimeout(hushT); hushT = null; }
+    }
+    document.addEventListener('click', function(e){
+      var a = e.target.closest ? e.target.closest('[data-film]') : null;
+      if (!a || e.defaultPrevented) return;
+      e.preventDefault();
+      enter(a);
+    });
+    exitBtn.addEventListener('click', exit);
+    pauseBtn.addEventListener('click', pauseToggle);
+    soundBtn.addEventListener('click', soundToggle);
+    document.addEventListener('keydown', function(e){
+      if (!open) return;
+      if (e.key === 'Escape' || e.key === 'Esc') { exit(); return; }
+      /* The same key the theatre uses, so the one habit works in both rooms.
+         Not while a control holds focus and the key is a space or an enter:
+         those belong to the button. */
+      if (e.key === 'm' || e.key === 'M') { e.preventDefault(); soundToggle(); }
+      /* the theatre's keys for the same things, so one habit works in both rooms */
+      if (e.target === seek) return;
+      if (e.key === 'ArrowRight' || e.key === 'l' || e.key === 'L') { e.preventDefault(); skip(SKIP); }
+      if (e.key === 'ArrowLeft' || e.key === 'j' || e.key === 'J') { e.preventDefault(); skip(-SKIP); }
+      if (e.key === ' ' || e.key === 'k' || e.key === 'K') { if (e.target.closest && e.target.closest('button') && e.key === ' ') return; e.preventDefault(); pauseToggle(); }
+    });
+  })();
+
+  /* ---------- page chrome, shared with the other pages ---------- */
+  /* A nomination form used to sit on this page, and at its worst it showed
+     "Nomination received, thank you" while sending nothing. The form was
+     removed when the 2026 awards went invite-only, so today this page sends
+     nothing and claims nothing. If a public entry form ever returns, wire
+     it through pfa-forms.js with its own kind so the reference comes from
+     the server, and check the admin register lists it before shipping.
+     (test/forms-wired.test.js keeps a tripwire on this page for exactly
+     that day, which is also why this comment names no kind.) */
+})();
+</script>
+
+<script>
+/* The 2025 act. The gate opens it, the close folds it away, and a deep
+   link into any 2025 section opens it on arrival so old links stay good. */
+(function(){
+  'use strict';
+  var act = document.getElementById('act2025');
+  var gateBtn = document.getElementById('act2025open');
+  var closeBtn = document.getElementById('act2025close');
+  var gate = document.getElementById('act2025gate');
+  if (!act || !gateBtn) return;
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function go(el){ if (el && el.scrollIntoView) el.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' }); }
+  function openAct(){
+    if (!act.hidden) return;
+    act.hidden = false;
+    gateBtn.setAttribute('aria-expanded', 'true');
+    gateBtn.textContent = 'Go to the 2025 archive';
+  }
+  gateBtn.addEventListener('click', function(){
+    openAct();
+    go(act.querySelector('section') || act.firstElementChild);
+  });
+  if (closeBtn) closeBtn.addEventListener('click', function(){
+    if (act.hidden) return;
+    act.hidden = true;
+    gateBtn.setAttribute('aria-expanded', 'false');
+    gateBtn.textContent = 'Open the 2025 archive';
+    go(gate);
+  });
+  /* An in-page link into the act, from the wall or anywhere else on the
+     page, opens it first: a poster of last year's ceremony leads to the
+     ceremony, not to a hidden section. */
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a || e.defaultPrevented) return;
+    var target = document.getElementById(a.getAttribute('href').slice(1));
+    if (!target || !act.contains(target)) return;
+    e.preventDefault();
+    openAct();
+    window.setTimeout(function(){ go(target); }, 30);
+  });
+  var h = window.location.hash.replace('#', '');
+  if (h) {
+    var target = document.getElementById(h);
+    if (target && act.contains(target)) {
+      openAct();
+      window.setTimeout(function(){ go(target); }, 60);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>

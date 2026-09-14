@@ -1,0 +1,7 @@
+# The panel is not a public page. The API already sends X-Robots-Tag on every
+# /api/admin/* response; this covers the page itself.
+User-agent: *
+Disallow: /admin.html
+Disallow: /api/
+
+Sitemap: https://peopleforanimalsindia.org/sitemap.xml
