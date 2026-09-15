@@ -1,3 +1,16 @@
+## v1.308
+
+- **The founder's corner blooms into colour as it arrives.** The same
+  mechanism the hero carries - the photograph held in grayscale by a
+  filter, lifted over two seconds - now on the founder band, woken by an
+  IntersectionObserver when a third of the band is on screen rather than
+  by the hero's first-touch wake, which fires while this band is still
+  below the fold and would spend the bloom unseen. One thing to know:
+  the two founder-portrait jpgs on disk are themselves monochrome (mean
+  saturation 0, measured), so the filter is inert until a colour
+  original of the photograph replaces them under the same filenames.
+  The mechanism ships ready; the colour file is the missing piece.
+
 ## v1.307
 
 - **The founder's corner is the second door on the landing page.** The
