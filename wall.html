@@ -232,7 +232,19 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    its rule). Without this, "Browse the wall" opened the section with LONG
    FORM's title halfway under the subnav - arrived, but beheaded. Same
    convention as cinekind, laws and get-involved, one bar deeper. */
-section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 63px)}
+/* 44, not 63. The subnav sits exactly 51px above #longform in the flow, so
+   an anchor jump lands its top at (ann + nav + N) - 51. At 63 that is 127
+   against a dock point of 114: thirteen pixels short, which leaves the
+   header's border showing above the bar and the subnav's own below it. Two
+   rules on long form, one on short form, because short form is far enough
+   down that the bar has already docked. At 44 it lands at 108 and docks on
+   every jump.
+
+   63 was chosen on 1 Sep 2026 to stop the LONG FORM title landing under the
+   bar, but the section's own --band does that: 76px at its smallest against
+   the 6px of section top that the docked bar covers. The margin was never
+   the thing holding the title clear. */
+section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 44px)}
 .subnav a{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;padding:4px 0;border-bottom:1px solid transparent}
 .subnav a:hover{border-bottom-color:var(--ink)}
 .subnav a.end{margin-left:auto}

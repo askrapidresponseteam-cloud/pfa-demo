@@ -1,3 +1,24 @@
+## v1.346
+
+- **One line on long form too, not just on short form.** v1.345 had the
+  subnav cover the header's rule when it docks, which fixed the pages where
+  it had already docked and missed the one place it had not. The bar sits
+  exactly 51px above #longform in the flow, so an anchor jump lands its top
+  at (ann + nav + N) - 51. N was 63, putting it at 127 against a dock point
+  of 114: thirteen pixels short, header rule above the links and its own
+  below. Short form is far enough down the page that the bar has docked
+  before you arrive, which is why one screen showed two lines and the other
+  one.
+
+  N is 44, so every jump docks it. The 63 came from 1 Sep 2026, to stop the
+  LONG FORM title landing under the bar, and the two requirements are in
+  direct conflict: clearing the bar with the scroll margin is what stops the
+  bar reaching its dock. The title is held clear by the section's own --band
+  instead, 76px at its smallest against the 6px of section top the docked bar
+  covers. Measured at all three anchors: bar docked at 114, section top 159,
+  title 281, one rule on the strip. The test now checks both halves, and
+  fails on the old 63 naming the reason.
+
 ## v1.345
 
 - **One line under the wall's bar, not two.** The header carries a bottom

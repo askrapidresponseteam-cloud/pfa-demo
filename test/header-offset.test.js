@@ -84,15 +84,39 @@ const testW = require('node:test');
 const assertW = require('node:assert/strict');
 const fsW = require('node:fs');
 
-testW('the wall clears its own third bar when an anchor arrives', () => {
-  /* Every page clears the announcement and the header on an anchor jump;
-     the wall alone stacks a third sticky bar (the 50px subnav) on top, and
-     without its own margin "Browse the wall" landed the LONG FORM title
-     halfway under it (reported 1 Sep 2026). The constant must at least
-     cover the subnav and its rule. */
+testW('an anchor jump lands the wall\u2019s third bar on its dock, and the title clear of it', () => {
+  /* The wall alone stacks a third sticky bar on top of the announcement and
+     the header. Two things have to be true when an anchor arrives, and the
+     first fix for one of them broke the other.
+
+     1 Sep 2026: "Browse the wall" landed the LONG FORM title halfway under
+     the bar, so the margin was pushed to 63px to clear it. But the bar sits
+     exactly 51px above #longform in the flow, so a jump lands its top at
+     (ann + nav + N) - 51. At N=63 that is 127 against a dock point of
+     ann + nav - 1 = 114: thirteen pixels short. An undocked bar does not
+     cover the header's border, so long form showed a rule above the links
+     and a rule below them while short form, far enough down to have docked
+     already, showed one (reported 15 Sep 2026).
+
+     So N must be small enough to dock the bar, and the title is held clear
+     by the section's own --band instead, which is what has the room for it.
+     Measured at N=44: bar docked at 114, section top at 159, title at 281,
+     one rule on the strip. */
   const wall = fsW.readFileSync(`${__dirname}/../wall.html`, 'utf8');
   const m = /section\[id\]\{scroll-margin-top:calc\(var\(--ann\) \+ var\(--nav\) \+ (\d+)px\)\}/.exec(wall);
   assertW.ok(m, 'wall.html gives its anchor targets a scroll margin');
-  assertW.ok(Number(m[1]) > 51, `the margin (${m && m[1]}px) must clear the 50px subnav and its border`);
-  assertW.match(wall, /\.subnav div\{[^}]*height:50px/, 'the 50px this accounts for is still the subnav\u2019s height');
+  const N = Number(m[1]);
+
+  const barH = Number(/\.subnav div\{[^}]*height:(\d+)px/.exec(wall)[1]) + 1;   // 50 and its rule
+  assertW.equal(barH, 51, 'the bar is still 50px and a rule; the sums below assume it');
+  const dockedAt = N + 64;        // (ann + nav + N) - barH, with ann + nav = 115
+  assertW.ok(dockedAt <= 114,
+    `a jump parks the bar at ${dockedAt}, past its dock at 114, so the header's rule shows above it and the bar's below: two lines`);
+
+  /* What the docked bar covers of the section it jumped to, and what the
+     section's own top padding has to beat for the title to stay below it. */
+  const hidden = 165 - (115 + N);
+  const bandMin = Number(/--band:clamp\((\d+)px/.exec(wall)[1]);
+  assertW.ok(bandMin > hidden,
+    `the bar covers ${hidden}px of the section and --band only offers ${bandMin}px, so the title lands under it`);
 });
