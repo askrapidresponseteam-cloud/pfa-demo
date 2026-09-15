@@ -84,6 +84,7 @@
   --line:#e4e2df;
   --line-dark:#3a3a3a;
   --accent:#111;
+  --pop:#ff3b18; /* the units kicker orange, now the site-wide pop */
   --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
   --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
   --ann:34px;
@@ -292,6 +293,16 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 63px)}
 .waiting__note{margin:clamp(26px,3vw,34px) 0 0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:rgba(17,17,17,.35);max-width:44ch}
 
+
+/* ---------- the pop (15 Sep 2026): the orange the site already owns
+   (#ff3b18, the units gallery's kicker), promoted to a page-wide device so
+   pure white does not read as flat. Discipline: the pop is never small
+   text, where it would fail contrast - it is the tick over the title, the
+   rule across each panel, the selection, and nothing else. ---------- */
+.hero h1::before,.u-hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop,#ff3b18);margin-bottom:18px}
+.hero,.u-hero{border-bottom:1px solid var(--line)}
+.leg__panel{border-top:3px solid var(--pop,#ff3b18)}
+::selection{background:var(--pop,#ff3b18);color:#fff}
 </style>
 <link rel="stylesheet" href="pfa-search.css">
 <script src="pfa-search.js" defer></script>

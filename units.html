@@ -76,6 +76,7 @@
   --line:#e4e2df;
   --line-dark:#2a2a2a;
   --accent:#111;
+  --pop:#ff3b18; /* the units kicker orange, now the site-wide pop */
   --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
   --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
   --ann:34px;
@@ -98,9 +99,6 @@ a:hover{opacity:.65}
 img,svg{display:block}
 ul,ol{margin:0;padding:0;list-style:none}
 ::selection{background:var(--accent);color:#fff}
-/* Ink on paper is the selection everywhere except the two surfaces that are
-   themselves ink: on those it would read as nothing having been selected. */
-.u-hero ::selection,.u-cta ::selection{background:#fff;color:var(--ink)}
 /* currentColor, not the accent. The ring now has to work on white bands and
    on the two black ones, and a fixed colour can only be right on one of
    them; taking the element's own text colour it is ink on paper and paper
@@ -129,7 +127,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .u-hero__in{position:relative;z-index:1}
 .u-hero__copy{min-width:0}
 .u-hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
-.u-hero h1{font-size:clamp(26px,3vw,44px);max-width:13ch}
+.u-hero h1{font-size:clamp(34px,4.4vw,62px);max-width:13ch}
 .u-hero__lede{margin:26px 0 0;max-width:44ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.76)}
 
 
@@ -308,6 +306,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   .ugal__art{width:min(250px,68vw)}
   .ugal__info{width:100%;max-width:none}
 }
+
+/* ---------- the pop (15 Sep 2026): the orange the site already owns
+   (#ff3b18, the units gallery's kicker), promoted to a page-wide device so
+   pure white does not read as flat. Discipline: the pop is never small
+   text, where it would fail contrast - it is the tick over the title, the
+   rule across each panel, the selection, and nothing else. ---------- */
+.hero h1::before,.u-hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop,#ff3b18);margin-bottom:18px}
+.hero,.u-hero{border-bottom:1px solid var(--line)}
+.leg__panel{border-top:3px solid var(--pop,#ff3b18)}
+::selection{background:var(--pop,#ff3b18);color:#fff}
 </style>
 <link rel="stylesheet" href="pfa-search.css">
 <script src="pfa-search.js" defer></script>
@@ -422,6 +430,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       <div id="uchips"></div>
       <span class="u-count" id="ucount"></span>
     </div>
+  </div>
 
   <section class="ugal" aria-label="The network, one unit at a time">
     <div class="ugal__stage">
@@ -430,8 +439,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     </div>
     <div class="ugal__strip" id="galStrip"></div>
   </section>
-
-  </div>
 
   <div class="u-body">
     <div class="u-list" id="ulist"></div>

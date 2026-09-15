@@ -204,6 +204,16 @@ body.hide-slot-captions .pfa-slot-empty{display:none}
 .pfa-hv3:hover{background:transparent !important;color:var(--ink) !important;opacity:1 !important}
 .pfa-hv4:hover{background:transparent !important;color:#111 !important;opacity:1 !important}
 .pfa-hv5:hover{background:#fff !important;color:#111 !important;opacity:1 !important}
+
+/* ---------- the pop (15 Sep 2026): the orange the site already owns
+   (#ff3b18, the units gallery's kicker), promoted to a page-wide device so
+   pure white does not read as flat. Discipline: the pop is never small
+   text, where it would fail contrast - it is the tick over the title, the
+   rule across each panel, the selection, and nothing else. ---------- */
+.hero h1::before,.u-hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop,#ff3b18);margin-bottom:18px}
+.hero,.u-hero{border-bottom:1px solid var(--line)}
+.leg__panel{border-top:3px solid var(--pop,#ff3b18)}
+::selection{background:var(--pop,#ff3b18);color:#fff}
 </style><link rel="stylesheet" href="pfa-search.css">
 <script src="pfa-search.js" defer></script>
 <link rel="icon" href="img/logo.png">

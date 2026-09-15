@@ -78,6 +78,7 @@
   --line:#e4e2df;
   --line-dark:#3a3a3a;
   --accent:#111;
+  --pop:#ff3b18; /* the units kicker orange, now the site-wide pop */
   --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
   --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
   --ann:34px;
@@ -162,7 +163,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:none}
 .hero__in{position:relative;z-index:1;width:100%}
 .hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
-.hero h1{font-size:clamp(26px,3vw,44px);max-width:15ch}
+.hero h1{font-size:clamp(34px,4.4vw,62px);max-width:15ch}
 .hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
 .hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(17,17,17,.85)}
 
@@ -236,6 +237,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
 }
+
+/* ---------- the pop (15 Sep 2026): the orange the site already owns
+   (#ff3b18, the units gallery's kicker), promoted to a page-wide device so
+   pure white does not read as flat. Discipline: the pop is never small
+   text, where it would fail contrast - it is the tick over the title, the
+   rule across each panel, the selection, and nothing else. ---------- */
+.hero h1::before,.u-hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop,#ff3b18);margin-bottom:18px}
+.hero,.u-hero{border-bottom:1px solid var(--line)}
+.leg__panel{border-top:3px solid var(--pop,#ff3b18)}
+::selection{background:var(--pop,#ff3b18);color:#fff}
 </style>
 <link rel="stylesheet" href="pfa-search.css">
 <script src="pfa-search.js" defer></script>

@@ -1,9 +1,16 @@
-## v1.329
+## v1.330
 
-- **Search leads the units page.** The search-and-regions bar moves
-  above the photograph gallery, so finding a unit is the first thing
-  the page offers rather than something discovered by scrolling past
-  the pictures. The bar was already sticky; from its new seat it rides
-  under the header past gallery and list alike. Markup move only -
-  every id, style and behaviour is untouched.
+- **The pop, and a rescue.** Two things. First the rescue: the v1.329
+  bar move had closed its wrapper after the gallery instead of before
+  it, nesting the whole gallery inside the sticky filter bar; the
+  gallery is back outside, and the bar sticks alone as intended.
+  Then the answer to flat: the orange the site already owns - #ff3b18,
+  the units gallery's kicker - is promoted to a page-wide device with
+  strict discipline. It is never small text, where it would fail
+  contrast; it is the 34px tick that now stands over every page title,
+  the 3px rule across the head of every case panel, and the text
+  selection site-wide. The titles also get their voice back, up to
+  62px from the timid 44, with the compact height untouched. One
+  colour the system owned all along, three places it may appear, and
+  the white pages stop reading as blank paper.
 
