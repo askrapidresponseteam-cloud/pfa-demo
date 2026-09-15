@@ -376,6 +376,7 @@ button.vtile__go{background:none;border:0;padding:0;font-family:inherit;cursor:p
 body.th-open .vtile__apps{display:none}
 :fullscreen .vtile__apps{display:none}
 .vtile__play{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(17,17,17,.55);transition:background .25s,border-color .25s}
+.vtile__play svg{width:10px;height:12px;fill:currentColor;margin-left:2px} /* was invisible: the glyph had no fill of its own on the light tile (15 Sep 2026) */
 .vtile__play svg{width:12px;height:14px;fill:#fff;margin-left:2px}
 .vtile:hover .vtile__play{background:#fff;border-color:var(--ink)}
 .vtile:hover .vtile__play svg{fill:var(--deep)}
@@ -391,6 +392,21 @@ body.th-open .vtile__apps{display:none}
 .reel{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:22px;
   aspect-ratio:4/5;padding:22px;border:1px solid rgba(17,17,17,.28);color:var(--ink);
   transition:background .25s,border-color .25s,transform .25s}
+/* The owner's stills (15 Sep 2026): img/watch-01..04.jpg, cropped from the
+   reels themselves. A reel that has its still wears it full-bleed with the
+   film wall's own grade - grayscale at rest, colour on hover - the type
+   moving onto a bottom scrim; a reel without one stays the type tile, so a
+   missing file is a quieter tile rather than a broken frame. */
+.reel > *{position:relative;z-index:2}
+.reel__bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:50% 22%;filter:grayscale(.55) brightness(.82);transform:scale(1.02);transition:filter .5s,transform .8s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+.reel--photo:hover .reel__bg{filter:none;transform:scale(1.06)}
+.reel--photo{border-color:transparent;color:#fff;overflow:hidden}
+.reel--photo::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(10,10,10,.8),rgba(10,10,10,.28) 46%,rgba(10,10,10,.14))}
+.reel--photo .vtile__src{color:rgba(255,255,255,.8)}
+.reel--photo .reel__ttl{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.55)}
+.reel--photo .vtile__go{color:#fff}
+.reel--photo .vtile__play{border-color:rgba(255,255,255,.85)}
+.reel--photo .vtile__apps a{border-color:rgba(255,255,255,.65);color:#fff}
 .reel:hover{background:rgba(17,17,17,.08);border-color:rgba(17,17,17,.55);transform:translateY(-3px);opacity:1}
 .reel__ttl{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;
   font-size:clamp(15px,1.3vw,19px);line-height:1.1}
@@ -1078,6 +1094,24 @@ body.th-open{overflow:hidden}
                    '</span>Play</button>' +
                '</span></div>';
     }).join('');
+    if (reels) VIDEOS.forEach(function(v, i){
+      if (!v.poster) return;
+      var probe = new Image();
+      probe.onload = function(){
+        var t = reels.children[i];
+        if (!t) return;
+        var bg = document.createElement('span');
+        bg.className = 'reel__bg';
+        bg.style.backgroundImage = 'url("' + v.poster + '")';
+        bg.addEventListener('click', function(){
+          var go = t.querySelector('[data-reel]');
+          if (go) go.click();
+        });
+        t.insertBefore(bg, t.firstChild);
+        t.classList.add('reel--photo');
+      };
+      probe.src = v.poster;
+    });
 
     /* ---------- the reel player ----------
        A reel cannot be driven from here, so it gets no transport bar. That is

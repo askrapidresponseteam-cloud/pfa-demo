@@ -429,10 +429,12 @@ html{scroll-behavior:smooth}
    (owner, 15 Sep 2026). The marquee now runs under the header like the
    wall it precedes, and borrows the wall's own top band so the white
    type reads over the sky. */
-.marquee{position:relative;isolation:isolate;overflow:hidden;height:100vh;height:100svh;min-height:540px;padding-top:calc(var(--ann) + var(--nav));background:var(--stone);display:flex}
-.marquee__plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
-.marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,10,10,.62),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 40px)),linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
-.marquee__in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:100%;padding:clamp(20px,3.5svh,40px) var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
+.marquee{position:relative;isolation:isolate;overflow:hidden;height:100vh;height:100svh;min-height:540px;padding-top:calc(var(--ann) + var(--nav));background:#0a0a0a;display:flex;flex-direction:column}
+.marquee__credit{flex:none;margin:0;padding:15px var(--gutter);text-align:center;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+.marquee__stage{position:relative;flex:1;min-height:0;overflow:hidden}
+.marquee__plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
+.marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
+.marquee__in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
 .marquee__foot{display:flex;flex-direction:column;align-items:center;gap:20px}
 .marquee__eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72)}
 .marquee__word{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(44px,7.5vw,120px);line-height:.95;text-shadow:0 2px 10px rgba(0,0,0,.55)}
@@ -2159,5 +2161,54 @@ html{scroll-behavior:smooth}
 })();
 </script>
 
+
+<script>
+/* The film leader (owner, 15 Sep 2026): the page opens the way a print
+   does, with the Academy countdown - crosshairs, two circles, the sweep,
+   3-2-1 at 700ms a beat, "CINEKIND \u00b7 PICTURE START" at the foot -
+   then the frame burns off into the marquee. Injected here so a browser
+   without scripts never meets it, skipped whole for reduced motion, and
+   torn out of the DOM when done. Black is the film leader's own colour
+   and the loader is transient; it does not join the page's surfaces. */
+(function(){
+  'use strict';
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var BEAT = 700, COUNT = 3;
+  var wrap = document.createElement('div');
+  wrap.setAttribute('aria-hidden', 'true');
+  wrap.style.cssText = 'position:fixed;inset:0;z-index:300;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .45s ease';
+  wrap.innerHTML =
+    '<div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.22)"></div>' +
+    '<div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.22)"></div>' +
+    '<div id="ckSweep" style="position:absolute;left:50%;top:50%;width:min(52vmin,560px);height:min(52vmin,560px);transform:translate(-50%,-50%);border-radius:50%"></div>' +
+    '<div style="position:absolute;left:50%;top:50%;width:min(52vmin,560px);height:min(52vmin,560px);transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.3);border-radius:50%"></div>' +
+    '<div style="position:absolute;left:50%;top:50%;width:min(38vmin,410px);height:min(38vmin,410px);transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.25);border-radius:50%"></div>' +
+    '<div id="ckNum" style="position:relative;font-family:var(--display);font-size:min(30vmin,300px);line-height:1">3</div>' +
+    '<p style="position:absolute;left:0;right:0;bottom:clamp(28px,6svh,64px);margin:0;text-align:center;font-size:12px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.75)">Cinekind \u00b7 Picture start</p>';
+  document.body.appendChild(wrap);
+  document.documentElement.style.overflow = 'hidden';
+  var sweep = wrap.querySelector('#ckSweep');
+  var num = wrap.querySelector('#ckNum');
+  var t0 = null;
+  function frame(t){
+    if (t0 === null) t0 = t;
+    var el = t - t0;
+    var n = COUNT - Math.floor(el / BEAT);
+    if (n < 1) { out(); return; }
+    num.textContent = String(n);
+    var a = ((el % BEAT) / BEAT) * 360;
+    sweep.style.background = 'conic-gradient(rgba(90,120,95,.28) ' + a + 'deg, transparent ' + a + 'deg)';
+    requestAnimationFrame(frame);
+  }
+  function out(){
+    wrap.style.opacity = '0';
+    setTimeout(function(){
+      if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+      document.documentElement.style.overflow = '';
+    }, 480);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
