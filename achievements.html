@@ -836,39 +836,73 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 
   /* Visual subjects for each achievement. Long legal titles are mapped to
      concrete photographic subjects so the cards do not fill with document scans. */
-  function imageTags(d){
-    var t = (d.title + ' ' + d.body).toLowerCase();
-    if (/shark|seal|wildlife skin/.test(t)) return 'shark,sea,wildlife';
-    if (/camel/.test(t)) return 'camel,rajasthan,india';
-    if (/pig|piggery/.test(t)) return 'pig,farm,animal';
-    if (/poultry|egg|cage-free|cage free|chicken/.test(t)) return 'chicken,free-range,farm';
-    if (/dairy|milk|gaushala|cattle|oxytocin/.test(t)) return 'cow,dairy,farm';
-    if (/horse|equine|mule|kedarnath|char dham|racehorse/.test(t)) return 'horse,india,mountain';
-    if (/dog|street dog|community dog|abc/.test(t)) return 'dog,india,street';
-    if (/elephant/.test(t)) return 'elephant,india,wildlife';
-    if (/bull|bullock/.test(t)) return 'bull,india,animal';
-    if (/laborator|testing|dissection|toxicity|pesticide|schedule y/.test(t)) return 'laboratory,science,animal';
-    if (/police|prosecut|law enforcement|magistrate|judge/.test(t)) return 'police,court,india';
-    if (/school|university|college|curriculum|teaching|training|fellowship/.test(t)) return 'students,education,india';
-    if (/film|television|broadcast|circus|performer|zoo|fair/.test(t)) return 'wildlife,india,conservation';
-    if (/flood|disaster|evacuat/.test(t)) return 'flood,rescue,india';
-    if (/fish|aquaculture/.test(t)) return 'fish,aquaculture,farm';
-    if (/transport|vehicle|motor|road|public transport/.test(t)) return 'animal,transport,india';
-    if (/sanctuary|rescue centre|rescue center|rehabilitation/.test(t)) return 'animal,sanctuary,rescue';
-    if (/court|rules|law|directive|order|regulation|policy|standards/.test(t)) return 'court,law,india';
-    if (d.front === 'Working animals') return 'working,animal,india';
-    if (d.front === 'Community dogs') return 'dog,india,animal';
-    if (d.front === 'Farmed animals') return 'farm,animal,india';
-    if (d.front === 'Wildlife & shows') return 'wildlife,india,animal';
-    if (d.front === 'Testing & labs') return 'science,laboratory,animal';
-    if (d.front === 'Teaching') return 'education,india,students';
-    if (d.front === 'Policy & systems') return 'india,government,policy';
-    return 'animal,welfare,india';
+  /*
+   * Semantic artwork: each achievement is mapped to a visual subject from its
+   * actual title/body. This intentionally avoids generic stock-photo queries.
+   */
+  function sceneFor(d){
+    var t=(d.title+' '+d.body).toLowerCase();
+    if(/shark fin/.test(t)) return ['shark','Shark-fin export ban'];
+    if(/camel.*beach|beach.*camel/.test(t)) return ['camelbeach','Camels removed from beach rides'];
+    if(/camel/.test(t)) return ['camel','Camel protection'];
+    if(/pig|piggery/.test(t)) return ['pig','Pig welfare'];
+    if(/poultry|egg|cage-free|cage free|chicken/.test(t)) return ['poultry','Cage-free poultry'];
+    if(/dairy|milk|gaushala|cattle|oxytocin/.test(t)) return ['cow','Dairy and cattle welfare'];
+    if(/horse|equine|mule|kedarnath|char dham|racehorse/.test(t)) return ['horse','Working equines'];
+    if(/dog|street dog|community dog|abc/.test(t)) return ['dog','Community dogs and ABC'];
+    if(/elephant/.test(t)) return ['elephant','Elephant protection'];
+    if(/bull|bullock/.test(t)) return ['bull','Bull and bullock welfare'];
+    if(/laborator|testing|dissection|toxicity|pesticide|schedule y/.test(t)) return ['lab','Animal testing reform'];
+    if(/police|prosecut|law enforcement|magistrate|judge/.test(t)) return ['justice','Law enforcement'];
+    if(/school|university|college|curriculum|teaching|training|fellowship/.test(t)) return ['education','Animal-law education'];
+    if(/film|television|broadcast|circus|performer|zoo|fair/.test(t)) return ['filmwild','Animals in media and shows'];
+    if(/flood|disaster|evacuat/.test(t)) return ['rescue','Disaster animal rescue'];
+    if(/fish|aquaculture/.test(t)) return ['fish','Fish welfare'];
+    if(/transport|vehicle|motor|road|public transport/.test(t)) return ['transport','Animal transport'];
+    if(/sanctuary|rescue centre|rescue center|rehabilitation/.test(t)) return ['sanctuary','Rescue and rehabilitation'];
+    if(/court|rules|law|directive|order|regulation|policy|standards/.test(t)) return ['law','Animal-welfare law and policy'];
+    return ['paw','Animal welfare'];
   }
-
+  function escSvg(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function sceneSvg(kind,label,seed){
+    seed = Number(seed) || 1;
+    var hue = (seed * 47) % 360;
+    var bg = 'hsl(' + hue + ',28%,91%)', ink='#111', accent='hsl(' + ((hue+18)%360) + ',68%,48%)', blue='hsl(' + ((hue+205)%360) + ',58%,45%)';
+    var common='<rect width="640" height="420" fill="'+bg+'"/><circle cx="540" cy="82" r="48" fill="#fff" opacity=".55"/><path d="M0 330 Q160 285 320 325 T640 310 V420H0Z" fill="#d0c1aa"/>';
+    var art='';
+    if(kind==='shark') art='<path d="M90 245 Q245 120 480 220 Q520 240 575 235 Q520 285 435 272 Q300 320 160 285Z" fill="'+blue+'"/><path d="M290 177 l45-65 20 75" fill="'+blue+'"/><path d="M180 225 l-45-65 75 45" fill="'+blue+'"/>';
+    else if(kind==='camelbeach') art='<path d="M0 285 Q170 245 340 282 T640 270 V420H0Z" fill="#d9b77c"/><path d="M175 285 q-25-80 25-100 q38-20 55 28 q20-40 55-5 q35-35 70 10 q18 25 5 67 h-18 v65 h-18 v-65 h-90 v65 h-18 v-65 h-66Z" fill="#9b653d"/><path d="M145 350 H500" stroke="'+accent+'" stroke-width="12" stroke-dasharray="18 14"/>';
+    else if(kind==='camel') art='<path d="M165 300 q-28-90 25-115 q45-22 65 32 q30-52 66 0 q38-50 70 10 q18 32 0 73 h-18 v75 h-20 v-75 h-85 v75 h-20 v-75 h-62Z" fill="#a66b3f"/><path d="M300 180 q10-65 38-88 l24 92" fill="#a66b3f"/>';
+    else if(kind==='pig') art='<ellipse cx="320" cy="270" rx="145" ry="88" fill="#e99aa1"/><circle cx="445" cy="240" r="55" fill="#e99aa1"/><ellipse cx="470" cy="255" rx="22" ry="16" fill="#b65e69"/><circle cx="465" cy="238" r="5" fill="'+ink+'"/><path d="M220 335v55 M280 340v50 M370 340v50 M420 330v55" stroke="'+ink+'" stroke-width="14"/>';
+    else if(kind==='poultry') art='<ellipse cx="320" cy="275" rx="110" ry="80" fill="#fff"/><circle cx="415" cy="225" r="52" fill="#fff"/><path d="M450 228 l48 16-48 18" fill="'+accent+'"/><circle cx="425" cy="215" r="5"/><path d="M245 330v58 M325 330v58" stroke="#d69b3c" stroke-width="13"/>';
+    else if(kind==='cow') art='<path d="M165 300 q-20-90 45-105 q55-18 95 20 q45-35 100 0 q55 35 22 92 h-20 v65 h-20 v-65 h-80 v65 h-20 v-65 h-70Z" fill="#fff"/><circle cx="425" cy="225" r="5"/><path d="M450 190 l30-30 M450 190 l-25-30" stroke="'+ink+'" stroke-width="9"/><path d="M250 235 q45 35 80 0 M330 270 q35 28 75 0" stroke="#777" stroke-width="28" fill="none"/>';
+    else if(kind==='horse') art='<path d="M185 315 q-25-120 45-155 q70-35 125 15 q75-20 105 42 q22 48-18 98 h-20 v55 h-18 v-55 h-92 v55 h-18 v-55 h-75Z" fill="#6f4937"/><path d="M235 175 q-35-70 18-105 q50 20 30 78" fill="#6f4937"/><circle cx="425" cy="190" r="5"/><path d="M90 355 Q320 300 560 350" fill="none" stroke="#8ca06c" stroke-width="28"/>';
+    else if(kind==='dog') art='<path d="M175 300 q-30-100 55-130 q70-25 120 35 q70-35 120 20 q42 58-10 105 h-25 v50 h-20 v-50 h-90 v50 h-20 v-50 h-105Z" fill="#c88b55"/><path d="M205 195 l-55-60 q-10 80 42 95 M430 190 l50-70 q15 70-30 105" fill="#9a623b"/><circle cx="380" cy="220" r="6"/><path d="M400 255 q25 18 45 0" fill="none" stroke="'+ink+'" stroke-width="6"/>';
+    else if(kind==='elephant') art='<path d="M120 300 Q100 180 230 150 Q380 110 455 205 Q485 240 465 300 h-30 v70 h-25 v-70 h-75 v70 h-25 v-70 h-115Z" fill="#777"/><path d="M455 245 q85 15 55 100 q-15 38-45 15" fill="#777" stroke="'+ink+'" stroke-width="7"/>';
+    else if(kind==='bull') art='<path d="M155 310 q-25-105 65-135 q100-28 175 38 q65 58 10 112 h-22 v60 h-22 v-60 h-85 v60 h-22 v-60 h-77Z" fill="#6b4938"/><path d="M205 185 q-70-65-100-10 q55-15 90 30 M420 185 q70-65 100-10 q-55-15-90 30" fill="none" stroke="#eee" stroke-width="18"/>';
+    else if(kind==='lab') art='<rect x="245" y="85" width="150" height="210" rx="12" fill="#fff" stroke="'+ink+'" stroke-width="8"/><path d="M280 115h80 M280 150h80 M280 185h55" stroke="'+blue+'" stroke-width="12"/><circle cx="210" cy="315" r="48" fill="#d8e6f0"/><path d="M185 300 q25-40 55 0 v40 h-55Z" fill="#fff"/>';
+    else if(kind==='justice') art='<path d="M320 90v250 M190 150h260 M230 150l-50 100h100Z M410 150l-50 100h100Z" stroke="'+ink+'" stroke-width="10" fill="none"/><path d="M250 350h140" stroke="'+blue+'" stroke-width="22"/><circle cx="520" cy="100" r="45" fill="'+blue+'"/><path d="M500 100l15 15 28-35" stroke="#fff" stroke-width="9" fill="none"/>';
+    else if(kind==='education') art='<path d="M120 190 L320 105 L520 190 L320 275Z" fill="'+blue+'"/><path d="M175 215v95 q145 75 290 0v-95" fill="#fff" stroke="'+ink+'" stroke-width="8"/><circle cx="320" cy="195" r="25" fill="'+accent+'"/>';
+    else if(kind==='filmwild') art='<rect x="120" y="120" width="400" height="230" fill="#222"/><rect x="145" y="145" width="350" height="180" fill="#d8d0c2"/><circle cx="320" cy="235" r="55" fill="#7a8f55"/><path d="M290 255 q30-70 65 0" stroke="#fff" stroke-width="14" fill="none"/>';
+    else if(kind==='rescue') art='<path d="M0 300 Q100 230 200 300 T400 300 T640 300 V420H0Z" fill="#7ea6c4"/><path d="M120 310 q35-90 80 0 q35-90 80 0 q35-90 80 0" fill="none" stroke="#fff" stroke-width="14"/><path d="M460 180 q45-55 90 0 v70 h-90Z" fill="'+accent+'"/><path d="M505 135v80 M470 175h70" stroke="#fff" stroke-width="14"/>';
+    else if(kind==='fish') art='<path d="M100 250 Q250 120 470 240 Q250 360 100 250Z" fill="#4e91b7"/><path d="M470 240 l90-65 v130Z" fill="#4e91b7"/><circle cx="165" cy="235" r="7"/>';
+    else if(kind==='transport') art='<rect x="100" y="160" width="440" height="160" rx="18" fill="'+blue+'"/><rect x="135" y="190" width="95" height="60" fill="#d9e9f1"/><rect x="250" y="190" width="95" height="60" fill="#d9e9f1"/><rect x="365" y="190" width="95" height="60" fill="#d9e9f1"/><circle cx="190" cy="330" r="32" fill="#222"/><circle cx="450" cy="330" r="32" fill="#222"/>';
+    else if(kind==='sanctuary') art='<path d="M120 320 Q320 110 520 320 V370 H120Z" fill="#7a9b64"/><path d="M185 300 q30-75 80 0 q35-75 85 0" fill="none" stroke="#fff" stroke-width="20"/>';
+    else art='<circle cx="320" cy="235" r="95" fill="#fff" stroke="'+blue+'" stroke-width="12"/><path d="M275 235 q45-75 90 0 q45 75 90 0" fill="none" stroke="'+accent+'" stroke-width="15"/>';
+    /* Every achievement gets its own deterministic visual fingerprint. The
+       underlying subject stays semantically relevant, while the composition
+       changes per record so no two globe cards ever reuse the same image. */
+    var cx = 70 + ((seed * 83) % 500);
+    var cy = 55 + ((seed * 61) % 280);
+    var r = 10 + (seed % 18);
+    var angle = (seed * 29) % 360;
+    var fingerprint = '<g opacity=".22" transform="rotate('+angle+' '+cx+' '+cy+')"><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+accent+'"/><circle cx="'+(cx+28)+'" cy="'+(cy-18)+'" r="'+(r/2)+'" fill="'+blue+'"/><path d="M'+(cx-r*2)+' '+(cy+r*2)+' L'+(cx+r*3)+' '+(cy-r*2)+'" stroke="'+ink+'" stroke-width="5"/></g>';
+    var badge = '<g transform="translate(520 335)"><rect width="78" height="38" rx="19" fill="#111" opacity=".82"/><text x="39" y="25" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#fff">#'+String(seed).padStart(3,'0')+'</text></g>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" aria-label="'+escSvg(label)+'">'+common+fingerprint+art+badge+'</svg>';
+  }
   function imageUrl(d){
-    return 'https://loremflickr.com/640/420/' + encodeURIComponent(imageTags(d)) +
-      '?lock=' + encodeURIComponent(String(parseInt(d.no,10) || 1));
+    var x=sceneFor(d);
+    return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(sceneSvg(x[0],x[1],d.no));
   }
 
   var cards = [];
@@ -903,7 +937,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       photo.loading = 'lazy';
       photo.decoding = 'async';
       photo.referrerPolicy = 'no-referrer';
-      photo.onerror = function(){ this.style.display = 'none'; };
       art.appendChild(photo);
 
       /* no number chip: the record is longer than its count, and a numbered card reads as one of a finished set */
