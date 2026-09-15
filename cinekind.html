@@ -692,7 +692,10 @@ html{scroll-behavior:smooth}
       <p class="marquee__eyebrow">People for Animals and the Film Federation of India present</p>
       <div class="marquee__foot">
         <p class="marquee__word" aria-hidden="true">CineKind</p>
-        <a class="marquee__door" href="#top">Enter CineKind</a>
+        <!-- Just the verb (owner, 15 Sep 2026): the word CINEKIND stands at full
+           display scale directly above, so the door repeating it read as a
+           stutter. Screen readers still hear the full destination. -->
+      <a class="marquee__door" href="#top" aria-label="Enter CineKind">Enter</a>
       </div>
     </div>
   </section>
