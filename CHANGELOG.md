@@ -1,10 +1,12 @@
-## v1.317
+## v1.318
 
-- **The first film speaks its title again.** Film 1's fetched YouTube
-  title begins with a literal double quote, and the page's esc() helper
-  escaped angle brackets but not quotes - so the quote closed
-  data-title at its first character, the attribute came out empty, and
-  the hover stage had nothing to say for that one tile. esc() now
-  escapes double quotes too, which also mends the tile's aria-label.
-  One character of escaping; every title on the wall survives it.
+- **CineKind opens on the trophy raised against the storm.** A marquee
+  now fills the first screen of the CineKind page edge to edge - the
+  golden reel-and-elephants trophy over the blurred march, the one gold
+  thing on a monochrome site, centred so cover-cropping at any viewport
+  spends sky and crowd and never the statue. Over its foot: "People for
+  Animals presents", the word CineKind in the display voice, and one
+  door rimmed in the statue's own gold that fills gold and spreads its
+  letters on hover, stepping down to the poster wall the page always
+  opened on.
 
