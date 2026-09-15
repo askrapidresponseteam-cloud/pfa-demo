@@ -1,3 +1,20 @@
+## v1.342
+
+- **The hovered poster says whose face it is.** Putting a hand on the wall
+  swapped the corner title for the honouree's name, and the name was set to
+  color:var(--ink) - #111, on a wall of dark posters - so the one thing the
+  hover exists to tell you was the one thing you could not read. The award
+  line under it stayed legible the whole time, because it inherits from the
+  label's own white p rule and was never given a colour of its own. The name
+  is #fff now, which is what the title it replaces has always been.
+
+  Third time this has shipped: the membership tier in v1.339, the chosen
+  donate amount in v1.340, this. So there is a check for it now. It names
+  the grounds that are dark and fails on any rule standing on one that sets
+  ink type without setting a background of its own, which is the shape all
+  three had. It does not guess: a rule that makes its own ground, like the
+  gold Enter button holding #0a0a0a, is left alone.
+
 ## v1.341
 
 - **CineKind gets its whole frame back, and its opening line.** The marquee

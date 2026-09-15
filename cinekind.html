@@ -285,8 +285,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .hoarding__label p{margin:8px 0 0;font-size:11.5px;line-height:1.55;letter-spacing:.04em;color:rgba(255,255,255,.8)}
 .hoarding__title,.hoarding__cap{transition:opacity .3s ease,transform .3s ease}
 .hoarding__cap{position:absolute;left:0;bottom:0;width:max-content;max-width:min(62vw,560px);opacity:0;transform:translateY(8px)}
-/* stated against the label's own p rule, which would otherwise size these */
-.hoarding__label .hoarding__cap-name{margin:0;font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em;text-wrap:balance;color:var(--ink)}
+/* stated against the label's own p rule, which would otherwise size these.
+   Colour is stated too, and deliberately: the name trades places with the
+   h1 directly above, which is #fff, and it stands on the poster wall with
+   no background of its own. It read color:var(--ink) - #111 on a dark wall -
+   so hovering a poster produced a name nobody could see while the award line
+   under it, which inherits from the label's p, stayed white and readable.
+   Third time this exact fault has shipped: the membership tiers in v1.339,
+   the selected donate amount in v1.340, and here. Anything inside
+   .hoarding__label is over the wall and must be light. */
+.hoarding__label .hoarding__cap-name{margin:0;font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em;text-wrap:balance;color:#fff}
 .hoarding__label .hoarding__cap-award{margin:8px 0 0;font-size:11.5px}
 .hoarding.is-captioned .hoarding__title{opacity:0;transform:translateY(-8px)}
 .hoarding.is-captioned .hoarding__cap{opacity:1;transform:none}
