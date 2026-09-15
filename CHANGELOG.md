@@ -1,11 +1,12 @@
-## v1.336
+## v1.337
 
-- **A build you can interrogate.** No layout change: the CineKind
-  credit has stood in its black letterbox above the trophy since
-  v1.334, full white since v1.335. But the live site has been
-  ping-ponging between builds - the marks of old deploy commands
-  re-run from terminal history, each pinned to its own old zip - so
-  this version exists to be checked: the deploy now ends by asking
-  the live page which build it serves, and the answer must read
-  v1.336 before anyone judges the layout.
+- **The letterbox lands for real.** v1.334's markup swap failed
+  silently on a whitespace mismatch: its CSS applied and its HTML did
+  not, so the credit sat at the foot of the picture on the owner's
+  screen while two changelogs claimed otherwise. The marquee section
+  is now replaced whole, by position rather than by string match, and
+  the structure is asserted in the build script itself: exactly one
+  credit, standing before the picture's stage, the image inside it -
+  the black strip above the trophy, at last, in the file and not just
+  in the stylesheet.
 
