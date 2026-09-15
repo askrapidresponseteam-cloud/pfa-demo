@@ -52,6 +52,12 @@ header.site nav{position:relative;display:flex;align-items:center;justify-conten
 .navitem:hover .menu,.navitem:focus-within .menu{display:flex}
 .menu a:hover{opacity:.6}
 .menu a.current{opacity:1;text-decoration:underline;text-underline-offset:4px}
+/* Group furniture inside a menu: a small caption over the entries that
+   belong together ("Join the tribe" over the three ways in), and a hairline
+   before the ones that do not. Both draw from currentColor, so they survive
+   the on-dark header variant without their own override. */
+.menu .menu-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.45}
+.menu .menu-sep{height:1px;background:currentColor;opacity:.15;margin:2px 0}
 
 .wordmark{display:block;padding:0;background:none}
 .wordmark img{height:42px;width:auto;display:block;filter:none;

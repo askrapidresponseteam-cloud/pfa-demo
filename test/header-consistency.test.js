@@ -52,7 +52,7 @@ const NAV = [
   'get-involved.html|Get Involved',
   'get-involved.html|Volunteer',
   'get-involved.html#membership|Become a member',
-  'caregiver-card.html|Colony caregiver card',
+  'get-involved.html#caregiver|Colony caregiver', /* leads to applying; the card page itself left the nav, 15 Sep 2026 */
   'wall.html|The Wall',
   'events.html|Events',
   'cinekind.html|CineKind',
@@ -93,7 +93,7 @@ const EXPECTED = {
   'cinekind.html':     ['CineKind',                  'get-involved.html'],
   'events.html':       ['Events',                    'get-involved.html'],
   'careers.html':      ['Careers',                   'founder.html'],
-  'caregiver-card.html': ['Colony caregiver card',   'get-involved.html'],
+  'caregiver-card.html': [null,                       'get-involved.html'], /* in the section, no longer a destination in it */
   'donate.html':       ['Donate',                    null]
 };
 
