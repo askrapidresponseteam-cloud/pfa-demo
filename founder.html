@@ -216,11 +216,15 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .pull q{display:block;quotes:none;font-family:var(--display);font-weight:400;font-size:clamp(20px,2.1vw,31px);line-height:1.18;text-transform:uppercase;letter-spacing:.01em}
 .pull cite{display:block;margin-top:14px;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
 
-/* full-bleed plate: 3:2 until it would grow taller than the screen, then it crops
-   from the top and bottom only, so nothing is lost left or right */
+/* full-bleed plate: 3:2 until it would grow taller than the screen, then it
+   crops vertically only, so nothing is lost left or right. The crop is
+   anchored to the top for the same reason the home hero is: 40% let a wide
+   viewport's overflow reach her crown and cut it against the header (owner,
+   15 Sep 2026). Anchored to 0, the crop can only take from the desk at the
+   foot of the frame, so her head survives at every viewport width. */
 .plate{margin:0;background:var(--deep)}
 .plate .frame{aspect-ratio:3/2;max-height:min(80svh,780px);width:100%}
-.plate .frame img{object-position:50% 40%}
+.plate .frame img{object-position:50% 0}
 .plate figcaption{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;
   padding:16px var(--gutter-lg) 0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .plate figcaption small{font-size:10px;font-weight:400;letter-spacing:.06em;text-transform:none;color:var(--muted)}
