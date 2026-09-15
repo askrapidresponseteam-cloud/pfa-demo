@@ -1,3 +1,12 @@
+## v1.350
+
+- **The leader counts, and says nothing.** "CINEKIND · PICTURE START" is
+  off the foot of the countdown. The rest of it is unchanged: crosshairs, two
+  circles, the sweep, 3-2-1 at 700ms a beat, then the frame burns off into
+  the marquee. A real leader carries that line for the projectionist; this
+  one is two seconds of black in front of a page that says the name in 100px
+  type immediately afterwards.
+
 ## v1.349
 
 - **A bigger mark in the header.** 56px, up from 42, and 46 from 38 at narrow
