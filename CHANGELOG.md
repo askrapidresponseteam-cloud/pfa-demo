@@ -1,16 +1,18 @@
-## v1.310
+## v1.311
 
-- **Get Involved opens with Join the tribe.** The menu now carries a
-  small caption, "Join the tribe", over the three ways in - Volunteer,
-  Become a member, Colony caregiver - with a hairline before The Wall,
-  Events and CineKind, which are things the tribe does rather than doors
-  into it. The get-involved page's headline follows: "Join the tribe."
-  where "Three ways in." stood, and the panels' back buttons now read
-  "Back to the tribe". The colony caregiver door stops describing and
-  starts doing: "About the card" is now "Apply for the card", weighted
-  solid like the other two doors, and both it and the nav entry lead
-  straight to the application (the page opens the caregiver panel from
-  the #caregiver hash). The card page itself stays where it was, linked
-  from the panel and the footer, for the day someone needs to verify
-  a card rather than apply for one.
+- **The landing page is re-set to her order, and the founder's corner
+  is supreme.** MG's brief, band by band: her picture and her films
+  open the page; the units take three quarters of it, with a standing
+  slot for one unit a week to tell its own story once the heads' films
+  arrive; the policies follow in six dark boxes out of the hundred-plus,
+  each a door into the full record; then the tribe's three doors -
+  volunteer, member, colony caregiver - each landing on its application;
+  then the law and the Wall side by side. Every band is a door into a
+  page that already existed; nothing was rebuilt, only re-ordered. The
+  mis-set text is fixed at the root: the old page centred some
+  containers to 1560px while the gutter itself centres to 1440px, so
+  different bands started on different verticals. No band carries its
+  own max-width now - one gutter, one left edge, everywhere. The hero's
+  veil, wake and colour bloom carried over to the founder unchanged,
+  and the units photograph blooms on arrival.
 

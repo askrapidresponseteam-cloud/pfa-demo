@@ -48,3 +48,14 @@ and carry `aria-hidden`, so nothing depends on what is in them.
 
 If PFA does not have them, delete that strip from `cinekind.html` rather than
 leaving three empty frames.
+
+## Founder film stills on the home page
+
+The home page's "Her, in motion" band shows three stills that
+`npm run media:films` downloads into `media/founder-films/` (the deploy
+runs it before shipping). Until that runs, these three are absent and the
+tiles drop their image and stand as type only, per each `onerror`:
+
+- `KzUJG-EUS4M.jpg`
+- `qJ90k2QxPB8.jpg`
+- `YCq7BBDZGJw.jpg`

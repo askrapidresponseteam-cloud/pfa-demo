@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.310">
+<meta name="pfa-build" content="v1.311">
 <title>People for Animals | India’s largest animal welfare organisation</title>
 <meta name="description" content="Report cruelty, find your nearest unit, read what the law actually says, or give. People for Animals turns moments of crisis into second chances for animals across the country.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -69,38 +69,6 @@ a:hover{opacity:.65}
 *{box-sizing:border-box}
 ::selection{background:#111;color:#fff}
 
-/* ---------- hero: fits the viewport below the pinned bar. One photo, one surface: it fills the frame edge to edge
-   (cover), framed a little above centre so the subject stays in view; anchored to the top on small screens. ---------- */
-section[data-screen-label="Hero"]{margin-top:var(--bar,115px)!important;height:calc(100svh - var(--bar,115px))!important;min-height:520px!important;background:#0a0a0a}
-section[data-screen-label="Hero"] .hero-fill{display:none}
-/* 18% anchored the crop below her crown: on a wide viewport, cover scales
-   this portrait frame by width and the vertical overflow ate the top of her
-   head against the header (owner, 5 Sep 2026). Anchoring to 0 means the
-   crop can only take from the bottom of the frame, so her head - and the
-   photograph's white ceiling that meets the white header - survive at every
-   viewport. Verify the dog stays whole on a short window before trusting
-   this: the trade of a top anchor is that short viewports crop low. */
-/* Monochrome until the person stirs: the page loads black and white, and
-   the first movement of the mouse (or a touch, or a scroll, on screens
-   without one) blooms the photograph into colour over two seconds. The
-   filter is the whole mechanism; remove it and the photo is simply colour. */
-section[data-screen-label="Hero"] #hero-media{position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block;filter:grayscale(1);transition:filter 2s ease}
-section[data-screen-label="Hero"].is-colour #hero-media{filter:grayscale(0)}
-/* The words arrive with the colour. The veil is put on by the script, so a
-   page with no JavaScript shows everything from the start; and the veil
-   carries transition:none, so putting it on is invisible even if a slow
-   load paints the text for a frame first. Waking swaps veil for waking:
-   the headline rises and its tracking settles as the photograph warms,
-   and the rule, the line and the doors follow half a beat later. */
-section[data-screen-label="Hero"].is-veiled h1{opacity:0;transform:translateY(28px);letter-spacing:.06em;transition:none}
-section[data-screen-label="Hero"].is-veiled .pfa-heroin > div{opacity:0;transform:translateY(18px);transition:none}
-section[data-screen-label="Hero"].is-waking h1{transition:opacity 1.3s ease .3s,transform 1.3s cubic-bezier(.2,.7,.2,1) .3s,letter-spacing 1.8s ease .3s}
-section[data-screen-label="Hero"].is-waking .pfa-heroin > div{transition:opacity 1.1s ease .85s,transform 1.1s cubic-bezier(.2,.7,.2,1) .85s}
-@media (max-width:860px){
-  section[data-screen-label="Hero"] #hero-media{object-position:50% 0}
-}
-
-/* ---------- breathing room: one vertical scale for the whole page ---------- */
 :root{
   /* The same four names the other eighteen pages use, so the palette is one
      edit rather than nineteen. The values are identical to what this page
@@ -117,90 +85,94 @@ section[data-screen-label="Hero"].is-waking .pfa-heroin > div{transition:opacity
   --g:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
   --g-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
 }
-.pfa-heroin,.pfa-g-urgent,.pfa-g-rescued,.pfa-g4,.pfa-sechead{max-width:1440px}
-.pfa-storyhead{max-width:calc(1440px + 32px)}
-.pfa-storyhead,ul[data-stories-track]{padding-left:var(--g)!important;padding-right:var(--g)!important}
-.pfa-sechead{margin-bottom:30px!important}
-.pfa-heroin{gap:36px!important}
 
-.pfa-heroin,.pfa-g-urgent,.pfa-g-rescued,.pfa-g4,.pfa-sechead{max-width:1560px;margin-left:auto;margin-right:auto}
-.pfa-storyhead{max-width:calc(1560px + 32px)}
-@media (min-width:1240px){
-  .pfa-heroin p{max-width:44ch!important}
-}
-/* ---------- quiz card: "UNDERESTIMATE?" is a single unbreakable word, so the
-   headline has to be measured against its own column rather than the viewport.
-   The copy column is a size container; the headline scales with it and can
-   never spill onto the portraits sitting beside it. ---------- */
-.pfa-quizcopy{flex:1 1 340px;min-width:0;max-width:460px;container-type:inline-size}
-.pfa-quiztiles{flex:0 1 440px;min-width:0}
-.pfa-quizcopy h2{font-size:clamp(28px,3.1vw,42px)}   /* no container-query support */
-.pfa-quizcopy h2{font-size:clamp(28px,10cqi,46px)}   /* everything current */
-.pfa-quizcopy h2{overflow-wrap:break-word}           /* last-resort guard */
 
-/* ---------- Split panels: white copy sits directly on the photograph. A flat
-   dim either leaves the text unreadable or kills the picture, so the scrim is
-   weighted to the bottom, where the words are: ~85% black under the copy holds
-   roughly 4.8:1 against white even over a pale sky, while the top of the frame
-   stays untouched. The text-shadow covers bright hotspots inside the copy. */
-.pfa-split .pfa-scrim{background:linear-gradient(to top,
-  rgba(0,0,0,.85) 0%,rgba(0,0,0,.78) 30%,rgba(0,0,0,.55) 46%,
-  rgba(0,0,0,.22) 62%,rgba(0,0,0,0) 80%)}
-.pfa-splitcopy{text-shadow:0 1px 3px rgba(0,0,0,.55)}
-.pfa-splitcopy a{border-bottom-color:rgba(255,255,255,.92)}
+/* ---------- one left edge (owner, 15 Sep 2026). The old page centred some
+   containers to 1560px while --g itself centres to 1440px, so the hero's
+   words and the founder band's words started on different verticals and the
+   whole page looked mis-set. Now no band carries a max-width of its own:
+   every band pads inline with the same --g, and --g alone decides the
+   margin at every viewport. One number, one edge, everywhere. ---------- */
+
+/* ---------- the founder's corner, supreme: the page opens on her. Fits the
+   viewport below the pinned bar; grayscale until the person stirs, then two
+   seconds into colour; the words rise off a bottom-weighted scrim. The
+   selectors are the ones the veil/wake script and CSS already speak
+   (data-screen-label="Hero", #hero-media, .pfa-heroin), so the whole
+   entrance came along without a line of the mechanism changing. ---------- */
+section[data-screen-label="Hero"]{margin-top:var(--bar,115px)!important;height:calc(100svh - var(--bar,115px))!important;min-height:560px!important;background:#0a0a0a}
+section[data-screen-label="Hero"] #hero-media{position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block;filter:grayscale(1);transition:filter 2s ease}
+section[data-screen-label="Hero"].is-colour #hero-media{filter:grayscale(0)}
+section[data-screen-label="Hero"].is-veiled h1{opacity:0;transform:translateY(28px);letter-spacing:.06em;transition:none}
+section[data-screen-label="Hero"].is-veiled .pfa-heroin > div{opacity:0;transform:translateY(18px);transition:none}
+section[data-screen-label="Hero"].is-waking h1{transition:opacity 1.3s ease .3s,transform 1.3s cubic-bezier(.2,.7,.2,1) .3s,letter-spacing 1.8s ease .3s}
+section[data-screen-label="Hero"].is-waking .pfa-heroin > div{transition:opacity 1.1s ease .85s,transform 1.1s cubic-bezier(.2,.7,.2,1) .85s}
 @media (max-width:860px){
-  /* panels are shorter once stacked, so the copy occupies more of the frame */
-  .pfa-split .pfa-scrim{background:linear-gradient(to top,
-    rgba(0,0,0,.88) 0%,rgba(0,0,0,.8) 40%,rgba(0,0,0,.5) 60%,rgba(0,0,0,0) 86%)}
+  /* narrow frames crop the 3:2 sides; biased right so she and the dog stay */
+  section[data-screen-label="Hero"] #hero-media{object-position:62% 0}
 }
 
-@media (max-width:1000px){
-  .pfa-g4{grid-template-columns:repeat(3,1fr)!important}
-}
-@media (max-width:860px){
-  .pfa-g-urgent,.pfa-g-rescued,.pfa-g4{grid-template-columns:1fr 1fr!important}
-  .pfa-feature{grid-column:1 / -1!important;min-height:420px!important}
-  .pfa-split{grid-template-columns:1fr!important}
-  .pfa-quizcard{padding:32px 20px!important;gap:28px!important}
-  .pfa-card>div{display:block!important}
-  .pfa-card span{display:block;white-space:normal!important}
-}
+/* ---------- the shared band grammar ---------- */
+.lb{padding:var(--rhythm) var(--g)}
+.lb--deep{background:var(--deep);color:#fff}
+.lb--stone{background:var(--stone)}
+.lb__eyebrow{margin:0 0 18px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lb--deep .lb__eyebrow{color:rgba(255,255,255,.6)}
+.lb__title{margin:0;font-family:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em;font-size:clamp(28px,3.8vw,58px);line-height:1.05}
+.lb__lede{margin:20px 0 0;max-width:52ch;font-size:15px;line-height:1.7;color:var(--muted)}
+.lb--deep .lb__lede{color:rgba(255,255,255,.75)}
+.lb__door{display:inline-block;margin-top:32px;padding:15px 33px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid #111;background:#111;color:#fff}
+.lb--deep .lb__door,.lb--photo .lb__door{border-color:#fff;background:#fff;color:#111}
+.arrive-bloom img{filter:grayscale(1);transition:filter 2s ease}
+.arrive-bloom.is-colour img{filter:grayscale(0)}
 
-/* ---------- founder's corner: the second door. The first cut was a card -
-   a small photograph beside copy on a black slab - and between two
-   full-bleed panels it read as an advertisement (owner, 15 Sep 2026).
-   Rebuilt to the hero's own construction, so the page is two doors deep:
-   the movement, then the woman who started it. Photograph edge to edge,
-   scrim weighted to the foot where the words are, the display voice over
-   it, one door that inverts on hover. The photograph is anchored to its
-   top so no viewport can crop her head - the founder plate's lesson,
-   carried over. ---------- */
-.pfa-fndr{position:relative;isolation:isolate;display:flex;min-height:min(92svh,920px);background:#0a0a0a;color:#fff;overflow:hidden}
-.pfa-fndr__media{position:absolute;inset:0;z-index:0}
-/* The hero's own bloom, on the hero's own terms: grayscale until woken, then
-   two seconds into colour. The wake here is arrival - the band blooms when
-   it scrolls into view - because the hero's first-touch wake would have
-   spent this bloom while the band was still below the fold. NOTE: the two
-   founder-portrait jpgs currently on disk are themselves monochrome (mean
-   saturation 0), so this filter is inert until a colour original replaces
-   them under the same filenames. The mechanism is ready; the file is not. */
-.pfa-fndr__media img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0;filter:grayscale(1);transition:filter 2s ease}
-.pfa-fndr.is-colour .pfa-fndr__media img{filter:grayscale(0)}
-.pfa-fndr__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.86) 0%,rgba(0,0,0,.68) 26%,rgba(0,0,0,.32) 52%,rgba(0,0,0,.05) 76%,rgba(0,0,0,0) 90%)}
-.pfa-fndr__in{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;gap:26px;width:100%;max-width:1560px;margin:0 auto;padding:140px var(--g) 52px}
-.pfa-fndr__eyebrow{margin:0;font-size:11px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75);text-shadow:0 1px 3px rgba(0,0,0,.5)}
-.pfa-fndr__quote{margin:0;padding:0}
-.pfa-fndr__quote q{quotes:none;display:block;font-family:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',serif;font-weight:400;text-transform:uppercase;font-size:clamp(36px,5.6vw,96px);line-height:1;letter-spacing:.01em;max-width:15ch;text-shadow:0 1px 4px rgba(0,0,0,.4)}
-.pfa-fndr__foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;border-top:1px solid rgba(255,255,255,.45);padding-top:24px}
-.pfa-fndr__who{margin:0;max-width:46ch;font-size:15px;line-height:1.65;color:rgba(255,255,255,.92);text-shadow:0 1px 3px rgba(0,0,0,.5)}
-.pfa-fndr__who b{display:block;margin-bottom:8px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff}
-.pfa-fndr__door{flex:none;background:#fff;border:1px solid #fff;color:#111;padding:15px 33px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+/* ---------- her films: three frames under the founder, same dark ground,
+   posters fetched by media:films into media/founder-films/ ---------- */
+.lb--films{padding-top:56px;padding-bottom:64px}
+.lb__films{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}
+.lb__film{display:block;background:#161616}
+.lb__film img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.lb__film figcaption{padding:14px 2px 0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.85)}
+
+/* ---------- the units: three quarters of the page, as she asked. The sheet
+   takes 3fr and the photograph 1fr; each week the sheet will carry one unit
+   telling its own story, once the heads' films arrive. ---------- */
+.lb--units{padding:0;display:grid;grid-template-columns:3fr 1fr;background:var(--stone)}
+.lb--units .lb__sheet{padding:var(--rhythm) var(--g)}
+.lb--units figure{margin:0;overflow:hidden}
+.lb--units figure img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.lb__note{margin:26px 0 0;max-width:52ch;padding:18px 22px;border-left:2px solid #111;font-size:14px;line-height:1.65;color:var(--muted);background:#fff}
+
+/* ---------- policies: the hundred-plus, in boxes ---------- */
+.lb__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.16);margin-top:36px}
+.lb__box{display:flex;flex-direction:column;justify-content:space-between;gap:26px;padding:26px 24px;background:var(--deep);min-height:170px}
+.lb__box:hover{background:#161616;opacity:1}
+.lb__box b{font-family:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',serif;font-weight:400;font-size:clamp(17px,1.5vw,21px);line-height:1.3}
+.lb__box span{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+
+/* ---------- join the tribe: the three doors ---------- */
+.lb__trio{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:36px}
+.lb__way{display:flex;flex-direction:column;gap:16px;padding:30px 26px;background:var(--paper)}
+.lb__way h3{margin:0;font-family:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',serif;font-weight:400;font-size:clamp(20px,2vw,28px)}
+.lb__way p{margin:0;flex:1;font-size:14px;line-height:1.65;color:var(--muted)}
+.lb__way .lb__door{margin-top:8px;align-self:flex-start}
+
+/* ---------- laws and the wall: a split ---------- */
+.lb--duo{padding:0;display:grid;grid-template-columns:1fr 1fr}
+.lb--duo > div{padding:var(--rhythm) var(--g)}
+.lb--duo .duo--law{background:var(--stone)}
+.lb--duo .duo--wall{background:var(--deep);color:#fff}
+
+@media (max-width:960px){
+  .lb__films,.lb__grid,.lb__trio{grid-template-columns:1fr 1fr}
+}
 @media (max-width:860px){
-  .pfa-fndr{min-height:80svh}
-  /* narrow frames crop the sides of the 3:2 photograph; biased right so she
-     and the dog both stay in the frame */
-  .pfa-fndr__media img{object-position:62% 0}
-  .pfa-fndr__in{padding:96px var(--g) 40px}
+  .lb--units{grid-template-columns:1fr}
+  .lb--units figure{max-height:340px}
+  .lb--duo{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .lb__films,.lb__grid,.lb__trio{grid-template-columns:1fr}
 }
 </style>
 
@@ -294,62 +266,130 @@ section[data-screen-label="Hero"].is-waking .pfa-heroin > div{transition:opacity
 </header>
 <script src="assets/chrome.js"></script>
 
-<!-- The door, recomposed to the owner's reference of 4 Sep 2026. The
-     photograph's own white top meets the white header with nothing between
-     them - the old flat 40% dim greyed the seam - so the scrim is weighted to
-     the bottom, where the words are, the same reasoning the split panels
-     carry. Title on three lines, a hairline under it, the introduction
-     lower-left and the one door lower-right as an outline, filling on hover.
-     No data-cursor hint any more: the top of this frame is white and the foot
-     is black, and reading the pixels is what the cursor is for. -->
-<section data-screen-label="Hero" style="position:relative;height:100svh;min-height:640px;display:flex;overflow:hidden;isolation:isolate">
+<!-- The landing, re-set to her order (owner, 15 Sep 2026). MG: "Start with
+     my picture and videos in it. Next PFA units which take up 3/4 of the
+     page horizontally... Next page is policies... presented in boxes...
+     Next page is membership and colony caregiver applications... Then come
+     laws... Then comes the wall." That is the scroll below, band by band,
+     each one a door into the full page that already exists. Every band pads
+     with the same --g, which is the whole alignment fix: one number, one
+     left edge. -->
+
+<section data-screen-label="Hero" aria-labelledby="fndr-name" style="position:relative;display:flex;overflow:hidden;isolation:isolate">
   <div style="position:absolute;inset:0;z-index:0">
-    <img class="hero-fill" aria-hidden="true" src="img/hero-caregiver.webp" alt="">
-    <img id="hero-media" src="img/hero-caregiver.webp" alt="A caregiver holding a rescued dog">
+    <img id="hero-media" src="img/founder-portrait-1536.jpg"
+         srcset="img/founder-portrait-960.jpg 960w, img/founder-portrait-1536.jpg 1536w"
+         sizes="100vw" width="1536" height="1024"
+         alt="Smt. Maneka Sanjay Gandhi at her desk, a rescued dog beside her">
   </div>
-  <!-- The scrim was tuned in Sep 2026 for a three-line headline that climbed
-       past a shorter one and left white type on the pale sari with nothing
-       behind it. The headline is two lines now and does not reach that far,
-       so these are the home page's own stops: still ~4.8:1 under the copy at
-       the foot, and clear of the photograph a quarter earlier, which returns
-       the white ceiling that meets the white header. Lengthen the headline
-       and the deeper five-stop pair in the history is what to go back to. -->
-  <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.62) 26%,rgba(0,0,0,.28) 52%,rgba(0,0,0,0) 74%);pointer-events:none"></div>
+  <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.84) 0%,rgba(0,0,0,.64) 26%,rgba(0,0,0,.3) 52%,rgba(0,0,0,0) 76%);pointer-events:none"></div>
   <div style="position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;width:100%;padding:40px var(--g) 44px;color:#fff;pointer-events:none">
-    <div class="pfa-heroin" style="display:flex;flex-direction:column;gap:28px">
-      <h1 style="margin:0;font-family:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',serif;font-weight:400;text-transform:uppercase;font-size:clamp(40px,7vw,110px);line-height:.98;letter-spacing:.01em;text-shadow:0 1px 4px rgba(0,0,0,.4)">A kinder world<br>for every animal</h1>
+    <div class="pfa-heroin" style="display:flex;flex-direction:column;gap:26px">
+      <div><p style="margin:0;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75);text-shadow:0 1px 3px rgba(0,0,0,.5)">Founder&rsquo;s corner</p></div>
+      <h1 style="margin:0;font-family:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',serif;font-weight:400;text-transform:uppercase;font-size:clamp(38px,6.2vw,100px);line-height:1;letter-spacing:.01em;max-width:15ch;text-shadow:0 1px 4px rgba(0,0,0,.4)">Compassion without action is evil</h1>
       <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;border-top:1px solid rgba(255,255,255,.45);padding-top:24px">
-        <p style="margin:0;max-width:44ch;font-size:15px;line-height:1.65;text-shadow:0 1px 3px rgba(0,0,0,.5)">Rooted in compassion, rescue and everyday care, People for Animals turns moments of crisis into second chances across the country.</p>
+        <p style="margin:0;max-width:44ch;font-size:15px;line-height:1.65;text-shadow:0 1px 3px rgba(0,0,0,.5)"><b id="fndr-name" style="display:block;margin-bottom:8px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">Smt. Maneka Sanjay Gandhi</b>She started People for Animals and built it into India&rsquo;s largest animal welfare body. Her story, her argument, and what she set out to build.</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;pointer-events:auto">
-          <a href="search.html" data-open-search style="background:#fff;color:#111;padding:16px 34px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Enter PFA</a>
-          <a href="units.html" class="pfa-hv5" style="border:1px solid rgba(255,255,255,.85);color:#fff;padding:15px 34px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Find a unit</a>
+          <a href="founder.html" class="pfa-hv1" style="background:#fff;border:1px solid #fff;color:#111;padding:15px 33px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Enter the founder&rsquo;s corner</a>
+          <a href="search.html" data-open-search class="pfa-hv5" style="border:1px solid rgba(255,255,255,.85);color:#fff;padding:15px 33px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Enter PFA</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- The founder's corner: the second door (owner, 15 Sep 2026). The
-     photograph fills the frame like the hero above it; the words sit at the
-     foot on the same scrim reasoning; the one door inverts on hover. No
-     data-cursor hint, for the hero's own reason: the top of this frame is
-     pale and the foot is black, and reading the pixels is what the cursor
-     is for. The image is aria-hidden with the name carried in the text, so
-     a screen reader meets her once, at the door. -->
-<section class="pfa-fndr" data-screen-label="Founder" aria-labelledby="fndr-name">
-  <div class="pfa-fndr__media" aria-hidden="true">
-    <img src="img/founder-portrait-1536.jpg"
-         srcset="img/founder-portrait-960.jpg 960w, img/founder-portrait-1536.jpg 1536w"
-         sizes="100vw" width="1536" height="1024" loading="lazy" alt="">
+<!-- Her films. The posters land in media/founder-films/ when media:films
+     runs (it runs in the deploy, before ship); each frame opens the
+     founder page's theatre, where the films actually play. -->
+<section class="lb lb--deep lb--films" data-screen-label="Films" aria-label="The founder, in motion">
+  <p class="lb__eyebrow">Her, in motion</p>
+  <div class="lb__films">
+    <a class="lb__film" href="founder.html#watch"><figure style="margin:0">
+      <img src="media/founder-films/KzUJG-EUS4M.jpg" alt="" loading="lazy" width="1280" height="720" onerror="this.remove()">
+      <figcaption>Reducing suffering: on animals, compassion and courage</figcaption>
+    </figure></a>
+    <a class="lb__film" href="founder.html#watch"><figure style="margin:0">
+      <img src="media/founder-films/qJ90k2QxPB8.jpg" alt="" loading="lazy" width="1280" height="720" onerror="this.remove()">
+      <figcaption>India&rsquo;s voice for animals: politics, compassion and change</figcaption>
+    </figure></a>
+    <a class="lb__film" href="founder.html#watch"><figure style="margin:0">
+      <img src="media/founder-films/YCq7BBDZGJw.jpg" alt="" loading="lazy" width="1280" height="720" onerror="this.remove()">
+      <figcaption>The power of kindness and human connection</figcaption>
+    </figure></a>
   </div>
-  <div class="pfa-fndr__scrim"></div>
-  <div class="pfa-fndr__in">
-    <p class="pfa-fndr__eyebrow">Founder&rsquo;s corner</p>
-    <blockquote class="pfa-fndr__quote"><q>Compassion without action is evil</q></blockquote>
-    <div class="pfa-fndr__foot">
-      <p class="pfa-fndr__who"><b id="fndr-name">Smt. Maneka Sanjay Gandhi</b>She started People for Animals and built it into India&rsquo;s largest animal welfare body. Her story, her argument, and what she set out to build.</p>
-      <a class="pfa-fndr__door pfa-hv1" href="founder.html">Enter the founder&rsquo;s corner</a>
+</section>
+
+<!-- The units, at three quarters of the page as she asked: the sheet is 3fr,
+     the photograph 1fr. The note is the standing slot for the week's unit -
+     when the heads' films arrive, one unit tells its own story here and the
+     admin swaps it weekly. -->
+<section class="lb--units arrive-bloom" data-screen-label="Units" aria-labelledby="units-title">
+  <div class="lb__sheet">
+    <p class="lb__eyebrow">PFA units</p>
+    <h2 class="lb__title" id="units-title">Someone near you is already doing this.</h2>
+    <p class="lb__lede">The aim is an animal welfare centre in every one of India&rsquo;s roughly 800 districts. Every unit is run by people who live in the place it covers, with a name, a number and an address attached.</p>
+    <p class="lb__note">Each week this space will carry one unit telling its own story, in a film by the people who run it. The first films from unit heads are on their way; until then, every unit is a search away.</p>
+    <a class="lb__door" href="units.html">Find a unit</a>
+    <a class="lb__door" href="units.html#setup" style="background:transparent;color:#111;margin-left:10px">Start the next one</a>
+  </div>
+  <figure><img src="img/hero-caregiver.webp" alt="A caregiver holding a rescued dog" loading="lazy" width="1200" height="800"></figure>
+</section>
+
+<!-- Policies, in boxes: six of the hundred-plus, each a door into the full
+     record. Powerful is the brief, so the boxes are dark, terse and dated. -->
+<section class="lb lb--deep" data-screen-label="Policies" aria-labelledby="pol-title">
+  <p class="lb__eyebrow">Policies and achievements</p>
+  <h2 class="lb__title" id="pol-title">Not what we said. What changed.</h2>
+  <p class="lb__lede">More than a hundred changes to India&rsquo;s animal law and the systems that run it, most of them sitting in statute rather than in memory. Six of them:</p>
+  <div class="lb__grid">
+    <a class="lb__box" href="achievements.html#rec-001"><b>Helped end cosmetic testing on animals in India</b><span>Courts &amp; law &middot; 2014</span></a>
+    <a class="lb__box" href="achievements.html#rec-004"><b>School dissection banned nationwide</b><span>Testing &amp; labs &middot; 1998</span></a>
+    <a class="lb__box" href="achievements.html#rec-005"><b>Shaped India&rsquo;s community-dog (ABC) framework</b><span>Courts &amp; law &middot; 2001&ndash;2023</span></a>
+    <a class="lb__box" href="achievements.html#rec-002"><b>Secured the ban on shark-fin exports</b><span>Wildlife &middot; 2015</span></a>
+    <a class="lb__box" href="achievements.html#rec-007"><b>Put animals into India&rsquo;s disaster response</b><span>Policy &amp; systems &middot; 2013</span></a>
+    <a class="lb__box" href="achievements.html#rec-011"><b>The Gadhimai precedent at the Supreme Court</b><span>Courts &amp; law &middot; 2014</span></a>
+  </div>
+  <a class="lb__door" href="achievements.html">All policies and achievements</a>
+</section>
+
+<!-- Membership and colony caregiver applications: the tribe's three doors,
+     each landing directly on its application. -->
+<section class="lb" data-screen-label="Tribe" aria-labelledby="tribe-title">
+  <p class="lb__eyebrow">Get involved</p>
+  <h2 class="lb__title" id="tribe-title">Join the tribe.</h2>
+  <div class="lb__trio">
+    <div class="lb__way">
+      <h3>Volunteer</h3>
+      <p>Give PFA your time. Read what each area actually involves, pick the ones that fit, and apply. Nobody is put in front of an animal without knowing what the work is.</p>
+      <a class="lb__door" href="get-involved.html">Volunteer with PFA</a>
     </div>
+    <div class="lb__way">
+      <h3>Member</h3>
+      <p>Five memberships, from &#8377;500 for a student to a lifetime one. Every member is an active working member: someone PFA can call on, and someone who can call on it.</p>
+      <a class="lb__door" href="get-involved.html#membership">Join PFA</a>
+    </div>
+    <div class="lb__way">
+      <h3>Colony caregiver</h3>
+      <p>If you already feed and look after the animals in your colony, the card is a document that says so, recognised by the ABC Rules and useful when someone asks what you are doing.</p>
+      <a class="lb__door" href="get-involved.html#caregiver">Apply for the card</a>
+    </div>
+  </div>
+</section>
+
+<!-- Laws and the Wall, side by side: what the law says, and what the
+     movement films. -->
+<section class="lb--duo" data-screen-label="Laws and Wall">
+  <div class="duo--law">
+    <p class="lb__eyebrow">The law</p>
+    <h2 class="lb__title">What the law actually says.</h2>
+    <p class="lb__lede">Two hundred questions on animal law in India, answered in plain language, every answer naming the section it rests on, because a complaint that cites the section is far harder to refuse.</p>
+    <a class="lb__door" href="laws.html">Read the law</a>
+  </div>
+  <div class="duo--wall">
+    <p class="lb__eyebrow">The Wall</p>
+    <h2 class="lb__title">Post your work on the Wall.</h2>
+    <p class="lb__lede">Films, talks and thirty-second takes sent in by supporters, volunteers and units. Every piece is read by an editor, then published under your name. Your achievements belong here.</p>
+    <a class="lb__door" href="wall.html">Share yours</a>
   </div>
 </section>
 
@@ -482,24 +522,21 @@ section[data-screen-label="Hero"].is-waking .pfa-heroin > div{transition:opacity
     events.forEach(function (type) { document.addEventListener(type, wake, { passive: true, once: true }); });
   })();
 
-  /* The founder's corner blooms the same way, but its wake is arrival:
-     the moment a third of the band is on screen, it warms into colour.
-     Tied to visibility rather than the hero's first-touch wake, which
-     fires while this band is still below the fold and would spend the
-     bloom unseen. Without IntersectionObserver (or without JavaScript,
-     since the class is script-applied) the band simply stays as the
-     photograph is - which today is monochrome either way; see the note
-     beside .pfa-fndr__media img. */
-  (function bloomFounder() {
-    var band = document.querySelector('.pfa-fndr');
-    if (!band) return;
-    if (!('IntersectionObserver' in window)) { band.classList.add('is-colour'); return; }
+  /* Bands marked .arrive-bloom warm from grayscale into colour when a
+     third of the band reaches the screen - the hero's bloom, keyed to
+     arrival instead of first touch, because the hero's wake fires while
+     these bands are still below the fold and would spend the bloom
+     unseen. Without IntersectionObserver, colour from the start. */
+  (function arrive() {
+    var bands = [].slice.call(document.querySelectorAll('.arrive-bloom'));
+    if (!bands.length) return;
+    if (!('IntersectionObserver' in window)) { bands.forEach(function (b) { b.classList.add('is-colour'); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) { band.classList.add('is-colour'); io.disconnect(); }
+        if (entry.isIntersecting) { entry.target.classList.add('is-colour'); io.unobserve(entry.target); }
       });
     }, { threshold: 0.35 });
-    io.observe(band);
+    bands.forEach(function (b) { io.observe(b); });
   })();
 
 })();
