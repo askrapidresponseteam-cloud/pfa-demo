@@ -123,7 +123,12 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* ---------- hero ---------- */
 .hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
-  min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
+  /* Was clamp(380px,56svh,600px), sized for a hero that had more in it: the
+     .meta row under the title is still styled and no longer in the markup,
+     and ::before below is an empty picture layer. Until those come back the
+     cap only buys white, and on a tall window it bought 388px of it under
+     two buttons. */
+  min-height:clamp(340px,44svh,470px);overflow:hidden;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:none}
 .hero__in{position:relative;z-index:1;width:100%}
 .hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
@@ -268,30 +273,39 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 63px)}
    marks the thing that matters, and the only motion is a slow sheen behind
    the type that never crosses a letter. It reads as a page, and it is gone
    the moment a film is approved. */
+/* The panel is dark, and was built dark: the button inside it is
+   background:#fff;color:var(--deep), which is a white chip meant to be
+   struck against black, and --deep is used nowhere else on this page. It
+   had been flipped to background:var(--stone);color:var(--ink) - #fff on
+   #fff - so the button had no edge at all, the sheen behind the type was a
+   dark wash on white that read as a smudge, and the two largest things on
+   the page were white panels on a white page. The whole page is white; this
+   is the thing that is not. */
 .wall__empty{position:relative;overflow:hidden;margin:0 calc(var(--gutter) * -1);
   padding:clamp(76px,13vw,170px) var(--gutter);
   display:flex;flex-direction:column;align-items:center;text-align:center;
-  background:var(--stone);color:var(--ink)}
-/* Brushed, not blinking. Eleven seconds, mostly spent off screen. */
+  background:var(--deep);color:#fff}
+/* Brushed, not blinking. Eleven seconds, mostly spent off screen. Light
+   across a dark surface, which is the way round a sheen works. */
 .wall__empty::before{content:"";position:absolute;top:-20%;bottom:-20%;left:-45%;width:45%;
   pointer-events:none;transform:skewX(-14deg);
-  background:linear-gradient(100deg,transparent,rgba(17,17,17,.045) 42%,rgba(17,17,17,.085) 55%,transparent);
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.05) 42%,rgba(255,255,255,.1) 55%,transparent);
   animation:wall-sheen 11s cubic-bezier(.6,0,.3,1) infinite}
 @keyframes wall-sheen{0%,14%{left:-45%}68%,100%{left:125%}}
 @media (prefers-reduced-motion:reduce){.wall__empty::before{animation:none;opacity:.5;left:35%}}
 .wall__empty > *{position:relative;z-index:1}
 .waiting__kicker{margin:0;font-size:10px;font-weight:700;letter-spacing:.28em;
-  text-transform:uppercase;color:rgba(17,17,17,.45)}
+  text-transform:uppercase;color:rgba(255,255,255,.5)}
 .waiting__head{margin:clamp(22px,3vw,34px) 0 0;font-family:var(--display);font-weight:400;
   text-transform:uppercase;font-size:clamp(38px,7.6vw,108px);line-height:.94;letter-spacing:.01em}
 .waiting__line{margin:clamp(20px,2.6vw,30px) 0 0;font-size:clamp(15px,1.4vw,18px);line-height:1.5;
-  color:rgba(17,17,17,.72);max-width:30ch}
+  color:rgba(255,255,255,.75);max-width:30ch}
 .waiting__cta{display:inline-block;margin:clamp(32px,4vw,46px) 0 0;padding:19px 46px;
   background:#fff;color:var(--deep);font-size:12px;font-weight:700;letter-spacing:.16em;
   text-transform:uppercase;transition:box-shadow .3s,transform .3s}
-.waiting__cta:hover{opacity:1;transform:translateY(-2px);box-shadow:0 0 0 6px rgba(17,17,17,.14)}
+.waiting__cta:hover{opacity:1;transform:translateY(-2px);box-shadow:0 0 0 6px rgba(255,255,255,.16)}
 .waiting__note{margin:clamp(26px,3vw,34px) 0 0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(17,17,17,.35);max-width:44ch}
+  color:rgba(255,255,255,.58);max-width:44ch}
 
 
 /* ---------- the pop (15 Sep 2026): the orange the site already owns

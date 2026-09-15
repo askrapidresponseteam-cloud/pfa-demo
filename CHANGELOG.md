@@ -1,3 +1,25 @@
+## v1.343
+
+- **The Wall gets its dark panel back.** The waiting panel, which is the
+  largest thing on that page and stands on it twice, had been flipped to
+  background:var(--stone) with color:var(--ink): a white panel on a white
+  page. The button inside it is background:#fff;color:var(--deep), a white
+  chip built to be struck against black, and --deep is used nowhere else on
+  wall.html, so on white it had no edge and Submit your work read as bare
+  floating text. The sheen behind the type was a dark wash on white, which
+  is a smudge rather than a brushed light. The panel is var(--deep) again,
+  its type is white, and the sheen runs light across it.
+
+  Fourth instance of the sweep of 15 Sep 2026, and the first where the
+  background was flipped rather than the type, so the v1.342 check did not
+  see it. The panel is on that check's list now.
+
+- **The hero stops buying white it has nothing to put in.** It was capped at
+  56svh, which on a tall window left 388px of nothing under two buttons. The
+  cap is lower. It was sized for a hero with more in it: .wall-hero .meta is
+  still styled with nothing in the markup using it, and .hero::before is an
+  empty picture layer at background:none. Both are noted where they sit.
+
 ## v1.342
 
 - **The hovered poster says whose face it is.** Putting a hand on the wall
