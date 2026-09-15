@@ -214,10 +214,34 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .seg button{background:none;border:none;padding:14px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
 .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
 .amts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
-.amts button{border:1px solid var(--line);background:#fff;padding:18px 8px;font-size:15px;font-weight:700;letter-spacing:.02em;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
-.amts button small{display:block;margin-top:6px;font-size:11px;font-weight:400;color:var(--muted);letter-spacing:.02em}
+/* The figure is the thing being chosen, so it gets the display face and the
+   size to match. It used to be 15px bold beside an 11px caption, which read
+   as a form control rather than a decision. */
+.amts button{position:relative;border:1px solid var(--line);background:#fff;
+  padding:22px 12px 18px;cursor:pointer;text-align:left;
+  transition:border-color .15s,background .15s,color .15s,transform .15s}
+.amts button b{display:block;font-family:var(--display);font-weight:400;
+  font-size:clamp(22px,2.6vw,30px);line-height:1;letter-spacing:.01em}
+.amts button small{display:block;margin-top:9px;font-size:12px;font-weight:400;
+  color:var(--muted);letter-spacing:.01em;line-height:1.45}
+.amts button::after{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:2px;
+  background:var(--ink);transform:scaleY(0);transform-origin:top;transition:transform .2s}
+.amts button[aria-pressed="true"]::after{transform:scaleY(1)}
+
+/* ---------- the meter ---------- */
+.gift{margin:20px 0 0;padding:20px 0 0;border-top:1px solid var(--line)}
+.gift__marks{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;min-height:18px}
+.gift__marks i{display:block;width:13px;height:18px;background:var(--ink);
+  border-radius:7px 7px 3px 3px;opacity:0;transform:translateY(4px);
+  animation:giftIn .32s ease forwards}
+.gift__marks i.is-part{opacity:.28!important}
+.gift__cap{font-size:14px;color:var(--muted)}
+.gift__cap span:first-child:not(:empty){font-family:var(--display);font-size:19px;color:var(--ink);margin-right:2px}
+@keyframes giftIn{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.gift__marks i{animation:none;opacity:1;transform:none}}
 .amts button:hover{border-color:var(--ink)}
 .amts button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.amts button[aria-pressed="true"]::after{background:#fff}
 .amts button[aria-pressed="true"] small{color:rgba(255,255,255,.7)}
 /* other amount is a fourth choice in the same group, not a second live field.
    Closed it is a chip; open it becomes the field, and the chips let go. */
@@ -454,6 +478,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
             </div>
           </div>
           <p class="amt-err" id="amtErr" role="alert" hidden></p>
+
+          <!-- What the figure buys, counted out. The numbers behind it are the
+               ones already checked against 2026 tenders at the top of this
+               script; the meter only draws what they say, so it cannot flatter
+               a gift. It fills as the amount changes, which is the whole point:
+               a donor should watch the thing they are buying arrive. -->
+          <figure class="gift" id="gift" hidden>
+            <div class="gift__marks" id="giftMarks" aria-hidden="true"></div>
+            <figcaption class="gift__cap"><span id="giftN"></span> <span id="giftWhat"></span></figcaption>
+          </figure>
           <button class="btn btn--full" type="button" id="next1">Continue</button>
           <p class="fine">Donations to People for Animals are eligible for tax deduction under Section 80G. A receipt follows by email.</p>
         </div>
@@ -716,8 +750,50 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     /* ---------- render ---------- */
     function chips(){
       $('#amts').innerHTML = AMTS[freq].map(function(a){
-        return '<button type="button" data-amt="' + a[0] + '" aria-pressed="' + (!custom && a[0] === amt) + '">' + fmt(a[0]) + '<small>' + a[1] + '</small></button>';
+        return '<button type="button" data-amt="' + a[0] + '" aria-pressed="' + (!custom && a[0] === amt) + '"><b>' + fmt(a[0]) + '</b><small>' + a[1] + '</small></button>';
       }).join('');
+    }
+    /* How many of the thing the gift actually buys. One table, read by both
+       the meter and the sentence, so the picture and the words can never
+       disagree about the same rupees. */
+    var COUNT = {
+      once:    {step:500, one:'week of food and care',   many:'weeks of food and care'},
+      monthly: {step:300, one:'animal fed every month',  many:'animals fed every month'}
+    };
+    function counted(){
+      var u = COUNT[freq];
+      var preset = AMTS[freq].filter(function(a){ return a[0] === amt; })[0];
+      /* A preset says what it buys in its own words and its own units, so the
+         marks follow its sentence when there is a number in it. */
+      var said = preset && /(\d+|one|two|three|four|five)/i.exec(preset[1]);
+      var words = {one:1, two:2, three:3, four:4, five:5};
+      if (preset && said){
+        var n = words[String(said[1]).toLowerCase()] || +said[1];
+        /* The preset already counts in its own sentence, so the numeral is
+           dropped rather than printed beside it: "5 Rabies shots for five
+           street dogs" said it twice. */
+        return { n: n, whole: n, said: preset[1] };
+      }
+      return { n: amt / u.step, whole: Math.floor(amt / u.step), what: '' };
+    }
+    function meter(){
+      var box = $('#gift');
+      if (amt < MIN){ box.hidden = true; return; }
+      var c = counted(), whole = Math.min(c.whole, 40), part = c.n - c.whole;
+      var marks = '';
+      for (var i = 0; i < whole; i++) marks += '<i style="animation-delay:' + Math.min(i * 22, 500) + 'ms"></i>';
+      if (part > 0.15 && whole < 40) marks += '<i class="is-part"></i>';
+      $('#giftMarks').innerHTML = marks;
+      if (c.said){
+        $('#giftN').textContent = '';
+        $('#giftWhat').textContent = c.said + '.';
+      } else {
+        $('#giftN').textContent = c.whole > 40 ? '40+' : (c.whole || '');
+        $('#giftWhat').textContent = c.whole
+          ? (c.whole === 1 ? COUNT[freq].one : COUNT[freq].many)
+          : 'Straight to food and treatment.';
+      }
+      box.hidden = false;
     }
     function line(){
       if (amt < MIN) return 'Choose an amount.';
@@ -737,6 +813,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     function render(){
       chips();
       $('#impact').textContent = line();
+      meter();
       $('#payBtn').textContent = amt >= MIN ? 'Pay ' + fmt(amt) + (freq === 'monthly' ? ' monthly' : '') : 'Pay';
       $('#sumLine').innerHTML = '<b>' + fmt(amt) + '</b> ' + (freq === 'monthly' ? 'every month' : 'once');
       /* The server re-checks this against its own bounds; sending it keeps the

@@ -84,6 +84,10 @@
   --band:clamp(64px,7vw,112px);
 }
 *{box-sizing:border-box}
+/* A class that sets display beats the UA rule for [hidden], which is how the
+   district pickers stayed on screen while the script believed it had put
+   them away. */
+[hidden]{display:none!important}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
   font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;line-height:1.06;letter-spacing:.005em}
@@ -110,7 +114,11 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
 /* On a phone the strip wraps to two rows, and two rows pinned to the top is
    a tenth of the screen gone for the whole scroll. It stays put there. */
 @media (max-width:640px){.locate{position:static}}
-.locate__state{display:flex;align-items:center;gap:9px;color:var(--muted)}
+.locate__read{display:flex;align-items:center;gap:9px;margin:0;font-variant:none}
+.locate[data-state="fixed"] .locate__read{color:var(--ink)}
+.locate[data-state="asking"] .locate__read,
+.locate[data-state="lost"] .locate__read{color:var(--muted)}
+.locate__pick{display:flex;flex-wrap:wrap;gap:10px}
 .dot{width:7px;height:7px;background:var(--muted);flex:none}
 .dot--live{background:var(--cog)}
 .locate select{border:1px solid var(--line);background:var(--paper);padding:9px 11px;
@@ -123,23 +131,23 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
    different site: the deep band, the eyebrow over the display line and the
    narrow lede are the shared opening, and skipping them skips the site. */
 .hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
-  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
-  min-height:clamp(340px,48svh,540px);overflow:hidden;isolation:isolate}
+  padding:calc(var(--ann) + var(--nav) + 44px) var(--gutter) 44px;
+  min-height:clamp(200px,30svh,320px);overflow:hidden;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:
   radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
   radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
 .hero__in{position:relative;z-index:1;width:100%}
 .hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
-.hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
+.hero h1{font-size:clamp(30px,4.2vw,62px);max-width:17ch}
 .hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
 .hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
 
 /* ---------- the counter card: the tool ---------- */
-.counter{padding-block:clamp(44px,6vw,76px)}
+.counter{padding-block:clamp(26px,3.4vw,42px)}
 /* Stacked, not columned: the five animals and the eleven acts are lists of
    very different lengths, and side by side the shorter one leaves a hole the
    width of half the page. Full measure each, and the chips wrap tight. */
-.pick{display:grid;gap:28px;margin-bottom:38px;max-width:980px}
+.pick{display:grid;gap:20px;margin-bottom:26px;max-width:980px}
 .pick__label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--muted);margin-bottom:14px;display:block}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -152,8 +160,8 @@ textarea:focus-visible,.btn:focus-visible{outline:2px solid var(--cog);outline-o
 
 /* the answer */
 .finding{border:1px solid var(--ink);background:var(--paper)}
-.finding__empty{border:1px dashed var(--line);padding:44px 26px;color:var(--muted);
-  max-width:56ch}
+.finding__empty{border:1px dashed var(--line);padding:22px 20px;color:var(--muted);
+  max-width:56ch;font-size:15px}
 .finding__top{padding:26px;border-bottom:1px solid var(--line)}
 .finding__what{font-family:var(--display);font-size:clamp(20px,2.4vw,30px);margin-bottom:10px}
 .tagline{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:12px;
@@ -186,6 +194,43 @@ textarea:focus-visible,.btn:focus-visible{outline:2px solid var(--cog);outline-o
 .draft textarea{width:100%;border:0;padding:22px;min-height:340px;resize:vertical;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;
   line-height:1.7;background:var(--paper)}
+
+/* ---------- the folded rows ----------
+   A summary that reads as a line of the page, not as a widget: the title,
+   one sentence, and a mark that turns. Closed, the four of them are about
+   the height of one of the bands they replaced. */
+.steps{padding-block:clamp(30px,4vw,54px) clamp(40px,5vw,72px)}
+.steps .band__head{margin-bottom:6px;padding-top:0;border-top:0}
+.steps .band__head h2{font-size:clamp(20px,2.1vw,27px)}
+.step{border-bottom:1px solid var(--line)}
+.step:first-of-type{border-top:1px solid var(--line)}
+.step > summary{list-style:none;cursor:pointer;display:grid;
+  grid-template-columns:minmax(0,26ch) 1fr 22px;gap:6px 28px;align-items:baseline;
+  padding:18px 0}
+.step > summary::-webkit-details-marker{display:none}
+.step__t{font-family:var(--display);font-size:clamp(17px,1.7vw,21px)}
+.step__s{color:var(--muted);font-size:15px}
+.step__m{position:relative;justify-self:end;align-self:center;width:13px;height:13px}
+.step__m::before,.step__m::after{content:"";position:absolute;background:var(--ink);
+  transition:transform .25s}
+.step__m::before{left:0;top:6px;width:13px;height:1px}
+.step__m::after{left:6px;top:0;width:1px;height:13px}
+.step[open] .step__m::after{transform:scaleY(0)}
+.step > summary:hover .step__t{text-decoration:underline;text-underline-offset:4px}
+.step__body{padding:4px 0 42px}
+.step__h{font-family:var(--display);font-weight:400;font-size:clamp(22px,2.6vw,34px);
+  max-width:22ch;margin:6px 0 14px;line-height:1.06}
+.step__lede{max-width:64ch;color:var(--muted);margin:0 0 26px}
+.step--deep .step__lede{color:rgba(255,255,255,.66)}
+.step__body > .stats:first-child{margin-top:8px}
+@media (max-width:720px){
+  .step > summary{grid-template-columns:1fr 20px;gap:6px 14px}
+  .step__s{grid-column:1}
+}
+/* The intake keeps its dark ground, now as the body of a row rather than a
+   full band, so it still reads as the one place you hand something over. */
+.step--deep .step__body{background:var(--deep);color:#fff;
+  margin:0 calc(var(--gutter) * -1);padding:38px var(--gutter) 46px}
 
 /* ---------- escalation: a real sequence, so numbered ---------- */
 .ladder{list-style:none;margin:0;padding:0;counter-reset:rung}
@@ -228,6 +273,7 @@ tr[data-here="true"] td{background:var(--stone)}
 .field textarea{min-height:120px;resize:vertical}
 .field .hint{font-size:13px;color:var(--muted);margin:8px 0 0}
 .two{display:grid;gap:22px;grid-template-columns:1fr 1fr}
+.fixedplace{margin:0;font-family:var(--display);font-size:20px}
 @media (max-width:640px){.two{grid-template-columns:1fr}}
 .drop{border:1px dashed var(--line);padding:30px 24px;text-align:center}
 .drop strong{display:block;font-family:var(--display);font-size:19px;font-weight:400;margin-bottom:8px}
@@ -240,18 +286,17 @@ tr[data-here="true"] td{background:var(--stone)}
 .notice{border-left:2px solid var(--ink);padding:2px 0 2px 18px;color:var(--muted);
   font-size:14px;max-width:64ch;margin:0 0 26px}
 .deep{background:var(--deep);color:#fff}
-.deep .band__head{border-top-color:rgba(255,255,255,.3)}
-.deep .eyebrow,.deep .sub,.deep .rung p{color:rgba(255,255,255,.66)}
-.deep .notice{border-left-color:#fff;color:rgba(255,255,255,.66)}
-.deep .btn{border-color:#fff;background:#fff;color:var(--deep)}
-.deep .btn:hover{background:transparent;color:#fff}
-.deep .field input,.deep .field select,.deep .field textarea{
+.deep .rung p{color:rgba(255,255,255,.66)}
+.step--deep .notice{border-left-color:#fff;color:rgba(255,255,255,.66)}
+.step--deep .btn{border-color:#fff;background:#fff;color:var(--deep)}
+.step--deep .btn:hover{background:transparent;color:#fff}
+.step--deep .field input,.step--deep .field select,.step--deep .field textarea{
   background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.28)}
-.deep .field select option{color:var(--ink)}
-.deep .field .hint,.deep .drop p,.deep .filelist .size{color:rgba(255,255,255,.55)}
-.deep .drop{border-color:rgba(255,255,255,.28)}
-.deep .filelist li{border-top-color:rgba(255,255,255,.18)}
-.deep .over{color:#ff8a7a}
+.step--deep .field select option{color:var(--ink)}
+.step--deep .field .hint,.step--deep .drop p,.step--deep .filelist .size{color:rgba(255,255,255,.55)}
+.step--deep .drop{border-color:rgba(255,255,255,.28)}
+.step--deep .filelist li{border-top-color:rgba(255,255,255,.18)}
+.step--deep .over{color:#ff8a7a}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -338,25 +383,29 @@ tr[data-here="true"] td{background:var(--stone)}
   <div class="hero__in">
     <p class="eyebrow">At the counter</p>
     <h1 class="display">Name the&nbsp;section, or the complaint dies.</h1>
-    <p class="lede">A complaint that cites the provision is far harder to refuse than one
-    that does not. Pick the animal and what was done to it, and this gives you what to say
-    at the window, whether the officer is obliged to register it, and what to do if he
-    still will not.</p>
-    <div class="meta">
-      <span>Every section cited</span>
-      <span>Holds in every State</span>
-    </div>
+    <p class="lede">Pick the animal and what was done to it. You get the sections to name,
+    and what to do if the station still will not write it.</p>
   </div>
 </section>
 
 <!-- ===== where you are ======================================== -->
-<section class="wrap locate" aria-label="Your location">
-  <span class="locate__state"><span class="dot" id="geoDot" aria-hidden="true"></span><span id="geoWord">Finding your district…</span></span>
-  <label class="sr" for="stateSel">State</label>
-  <select id="stateSel"><option value="">Choose your state</option></select>
-  <label class="sr" for="distSel">District</label>
-  <select id="distSel"><option value="">Choose the state first</option></select>
-  <button type="button" class="link" id="geoBtn">Use my location</button>
+<section class="wrap locate" aria-label="Where you are" data-state="asking">
+  <p class="locate__read">
+    <span class="dot" id="geoDot" aria-hidden="true"></span>
+    <span id="geoWord">Finding your district</span>
+  </p>
+  <button type="button" class="link" id="geoFix" hidden>Not where you are?</button>
+  <button type="button" class="link" id="geoRetry" hidden>Try again</button>
+
+  <!-- Only ever shown when the device cannot say, or when the reading is
+       wrong and the visitor says so. A locked field with no way out would
+       file a Mumbai VPN's cases against Mumbai. -->
+  <div class="locate__pick" id="geoPick" hidden>
+    <label class="sr" for="stateSel">State</label>
+    <select id="stateSel"><option value="">Choose your state</option></select>
+    <label class="sr" for="distSel">District</label>
+    <select id="distSel"><option value="">Choose the state first</option></select>
+  </div>
 </section>
 
 <!-- ===== the counter card ==================================== -->
@@ -375,8 +424,7 @@ tr[data-here="true"] td{background:var(--stone)}
   </div>
 
   <div id="finding" aria-live="polite">
-    <div class="finding__empty">Choose an animal and what happened. Nothing is sent anywhere
-    by choosing; this is a reference, and it works offline once the page has loaded.</div>
+    <div class="finding__empty">Pick the two above and the sections appear here.</div>
   </div>
 
   <div class="draft" id="draft">
@@ -389,16 +437,27 @@ tr[data-here="true"] td{background:var(--stone)}
   </div>
 </section>
 
-<!-- ===== escalation ========================================== -->
-<section class="wrap band" aria-labelledby="h-esc">
+
+<!-- ===== what comes next, folded ===============================
+     The page used to run to four full bands below the tool: the ladder,
+     the intake form, the register and the letter, all open, all the time.
+     Somebody standing at a counter needs the sections and nothing else, so
+     the rest is one line each until it is asked for. <details> because that
+     is what laws.html uses for the same job, and because it opens with no
+     script and survives a printer. -->
+<section class="wrap steps" aria-labelledby="h-next">
   <div class="band__head">
-    <p class="eyebrow">If the station will not write it</p>
-    <h2 id="h-esc">A refusal is a step, not the end.</h2>
-    <p class="sub">Each rung has a provision behind it and a paper trail that carries to the
+    <p class="eyebrow">After the section</p>
+    <h2 id="h-next">Four things that follow, when you need them.</h2>
+  </div>
+  <details class="step" id="step-esc">
+    <summary><span class="step__t">If the station will not write it</span><span class="step__s">Six rungs, each with a provision behind it</span><span class="step__m" aria-hidden="true"></span></summary>
+    <div class="step__body">
+      <h3 class="step__h">A refusal is a step, not the end.</h3>
+      <p class="step__lede">Each rung has a provision behind it and a paper trail that carries to the
     next. Take the acknowledgement at every stage, however grudgingly it is given: the refusal
     is what makes the following step available.</p>
-  </div>
-  <ol class="ladder">
+<ol class="ladder">
     <li class="rung">
       <div>
         <h3>The station house officer</h3>
@@ -456,19 +515,16 @@ tr[data-here="true"] td{background:var(--stone)}
       </div>
     </li>
   </ol>
-</section>
-
-<!-- ===== document it ========================================= -->
-<section class="wrap band band--deep deep" aria-labelledby="h-doc">
-  <div class="band__head">
-    <p class="eyebrow">Put it on the record</p>
-    <h2 id="h-doc">One case is an incident. Four hundred is a pattern a State has to answer.</h2>
-    <p class="sub">What you file here joins the district's count. The count is the argument:
+    </div>
+  </details>
+  <details class="step step--deep" id="step-doc">
+    <summary><span class="step__t">Put it on the record</span><span class="step__s">Your case joins the district's count</span><span class="step__m" aria-hidden="true"></span></summary>
+    <div class="step__body">
+      <h3 class="step__h">One case is an incident. Four hundred is a pattern a State has to answer.</h3>
+      <p class="step__lede">What you file here joins the district's count. The count is the argument:
     a District Magistrate can dismiss a complaint, and cannot as easily dismiss the number of
     them from his own district with no ABC centre to show against it.</p>
-  </div>
-
-  <p class="notice">Your report stays private to PFA, as every report on this site does. Only
+<p class="notice">Your report stays private to PFA, as every report on this site does. Only
   the district totals are ever published - never the footage, the address, your name, or the
   name of anyone you accuse. Nobody has been convicted at the point you file, and a public
   allegation would put both of you at risk.</p>
@@ -484,15 +540,12 @@ tr[data-here="true"] td{background:var(--stone)}
         <select id="fAct"></select>
       </div>
     </div>
-    <div class="two">
-      <div class="field">
-        <label for="fState">State</label>
-        <select id="fState"></select>
-      </div>
-      <div class="field">
-        <label for="fDistrict">District</label>
-        <select id="fDistrict"></select>
-      </div>
+    <div class="field">
+      <label>Where</label>
+      <p class="fixedplace" id="fPlace">Being read from your device</p>
+      <p class="hint">Taken from your device, and used to decide which district the
+      case is counted against. If it is wrong, correct it at the top of the page.</p>
+      <input type="hidden" id="fState"><input type="hidden" id="fDistrict">
     </div>
     <div class="field">
       <label for="fWhen">When it happened</label>
@@ -546,19 +599,16 @@ tr[data-here="true"] td{background:var(--stone)}
       <span id="formMsg" style="font-size:14px;color:rgba(255,255,255,.66)"></span>
     </div>
   </form>
-</section>
-
-<!-- ===== the register ======================================== -->
-<section class="wrap band" aria-labelledby="h-reg">
-  <div class="band__head">
-    <p class="eyebrow">The register</p>
-    <h2 id="h-reg">What each State has to answer for.</h2>
-    <p class="sub">Cases filed here, by State, with how many reached an FIR and how many the
+    </div>
+  </details>
+  <details class="step" id="step-reg">
+    <summary><span class="step__t">The register</span><span class="step__s">Refusal rates, State by State</span><span class="step__m" aria-hidden="true"></span></summary>
+    <div class="step__body">
+      <h3 class="step__h">What each State has to answer for.</h3>
+      <p class="step__lede">Cases filed here, by State, with how many reached an FIR and how many the
     police declined to register. The refusal rate is the number that travels: it is a
     statement about a system rather than about any one complaint.</p>
-  </div>
-
-  <div class="stats" id="stats"></div>
+<div class="stats" id="stats"></div>
 
   <table id="regTable">
     <caption id="regCaption"></caption>
@@ -573,20 +623,17 @@ tr[data-here="true"] td{background:var(--stone)}
     </thead>
     <tbody id="regBody"></tbody>
   </table>
-</section>
-
-<!-- ===== pressure pack ======================================= -->
-<section class="wrap band" aria-labelledby="h-rep" style="border-top:1px solid var(--line)">
-  <div class="band__head">
-    <p class="eyebrow">Take it upward</p>
-    <h2 id="h-rep">A letter with your district's own numbers in it.</h2>
-    <p class="sub">Addressed to the District Magistrate and copied to the sitting MLA. It asks
+    </div>
+  </details>
+  <details class="step" id="step-rep">
+    <summary><span class="step__t">Take it upward</span><span class="step__s">A letter to the DC and your MLA</span><span class="step__m" aria-hidden="true"></span></summary>
+    <div class="step__body">
+      <h3 class="step__h">A letter with your district's own numbers in it.</h3>
+      <p class="step__lede">Addressed to the District Magistrate and copied to the sitting MLA. It asks
     for the three things a district is actually obliged to have, and it cites what obliges them.
     Fill in the two names and send it; a letter that names the provision gets a file opened,
     where a letter that expresses concern gets a receipt.</p>
-  </div>
-
-  <div class="two" style="max-width:760px;margin-bottom:26px">
+<div class="two" style="max-width:760px;margin-bottom:26px">
     <div class="field">
       <label for="repDm">District Magistrate / Deputy Commissioner</label>
       <input id="repDm" placeholder="Name and office address">
@@ -607,6 +654,8 @@ tr[data-here="true"] td{background:var(--stone)}
   <textarea id="repText" style="width:100%;min-height:360px;border:1px solid var(--line);
     padding:22px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     font-size:13.5px;line-height:1.7;border-radius:0" spellcheck="false"></textarea>
+    </div>
+  </details>
 </section>
 
 <section class="wrap" style="padding-bottom:var(--band)">
@@ -905,37 +954,66 @@ tr[data-here="true"] td{background:var(--stone)}
     });
   }
 
-  function setPlace(state, district, live) {
+  /* Where the device says you are, and whether anybody overrode it.
+     The register exists to hold a district to account, so a case filed
+     against the wrong district is worse than no case: `detected` is kept
+     alongside `stated` and travels with the report, so an override is
+     visible to whoever reads it rather than silently replacing the truth. */
+  var place = { detected: null, overridden: false };
+
+  function strip(state) { document.querySelector('.locate').setAttribute('data-state', state); }
+  function show(id, on) { var el = $(id); if (el) el.hidden = !on; }
+
+  function setPlace(state, district, fromDevice) {
     chosen.state = state || ''; chosen.district = district || '';
-    [$('stateSel'), $('fState')].forEach(function (s) { if (s) s.value = chosen.state; });
-    [[$('distSel')], [$('fDistrict')]].forEach(function (pair) {
-      fillDistricts(pair[0], chosen.state); pair[0].value = chosen.district;
-    });
-    $('geoWord').textContent = chosen.district
-      ? chosen.district + ', ' + chosen.state
+    if (fromDevice) place.detected = { state: chosen.state, district: chosen.district };
+    else if (place.detected) place.overridden =
+      place.detected.state !== chosen.state || place.detected.district !== chosen.district;
+
+    if ($('stateSel')) $('stateSel').value = chosen.state;
+    if ($('distSel')) { fillDistricts($('distSel'), chosen.state); $('distSel').value = chosen.district; }
+    if ($('fState')) $('fState').value = chosen.state;
+    if ($('fDistrict')) $('fDistrict').value = chosen.district;
+    if ($('fPlace')) $('fPlace').textContent = (chosen.district && chosen.state)
+      ? chosen.district + ', ' + chosen.state : 'Not known yet';
+
+    var named = chosen.district && chosen.state;
+    $('geoWord').textContent = named ? chosen.district + ', ' + chosen.state
       : (chosen.state || 'Choose your district');
-    $('geoDot').className = 'dot' + (live ? ' dot--live' : '');
+    $('geoDot').className = 'dot' + (fromDevice ? ' dot--live' : '');
+    if (named) { strip('fixed'); show('geoFix', !place.overridden); show('geoRetry', false); }
     render(); renderRegister();
   }
 
-  /* ---------- auto-detect ---------- */
+  /* ---------- the device answers, not a pair of dropdowns ---------- */
+  function lost(word) {
+    strip('lost');
+    $('geoWord').textContent = word;
+    show('geoPick', true); show('geoRetry', true); show('geoFix', false);
+  }
+
   function locate() {
-    if (!navigator.geolocation) { $('geoWord').textContent = 'Choose your district'; return; }
-    $('geoWord').textContent = 'Finding your district\u2026';
+    if (!navigator.geolocation) return lost('This browser cannot say where you are. Pick your district.');
+    strip('asking');
+    $('geoWord').textContent = 'Finding your district';
+    show('geoPick', false); show('geoFix', false); show('geoRetry', false);
     navigator.geolocation.getCurrentPosition(function (pos) {
       var q = '?lat=' + pos.coords.latitude.toFixed(5) + '&lng=' + pos.coords.longitude.toFixed(5);
       fetch('/api/location-lookup' + q, { headers: { Accept: 'application/json' } })
         .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('lookup')); })
         .then(function (d) {
           var state = matchState(d.state), district = matchDistrict(state, d.district || d.city);
-          if (state) setPlace(state, district, true);
-          else $('geoWord').textContent = 'Choose your district';
+          if (state && district) setPlace(state, district, true);
+          else lost('Your district could not be read from that position. Pick it.');
         })
-        .catch(function () { $('geoWord').textContent = 'Choose your district'; });
-    }, function () {
-      $('geoWord').textContent = 'Choose your district';
-    }, { timeout: 8000, maximumAge: 600000 });
+        .catch(function () { lost('That could not be looked up. Pick your district.'); });
+    }, function (err) {
+      lost(err && err.code === 1
+        ? 'Location is switched off for this page, so the district has to be picked.'
+        : 'Your position could not be read. Pick your district.');
+    }, { timeout: 9000, maximumAge: 300000, enableHighAccuracy: true });
   }
+
   function norm(s) { return String(s || '').toLowerCase().replace(/[^a-z]/g, ''); }
   function matchState(name) {
     var n = norm(name); if (!n) return '';
@@ -962,7 +1040,21 @@ tr[data-here="true"] td{background:var(--stone)}
       b.addEventListener('click', function () {
         chosen.animal = x.id;
         if (ACT_BY_ANIMAL[x.id].indexOf(chosen.act) === -1) chosen.act = '';
-        drawChips(); render();
+        Array.prototype.forEach.call(document.querySelectorAll('.step'), function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) return;
+      /* A row that opens below the fold leaves you reading its middle. Bring
+         its own line to the top, allowing for the bar and the header that
+         are fixed over it. */
+      var top = d.getBoundingClientRect().top + window.pageYOffset;
+      var css = getComputedStyle(document.documentElement);
+      var off = (parseInt(css.getPropertyValue('--ann'), 10) || 34)
+              + (parseInt(css.getPropertyValue('--nav'), 10) || 81) + 56;
+      window.scrollTo({ top: Math.max(0, top - off), behavior: 'smooth' });
+    });
+  });
+
+  drawChips(); render();
       });
       a.appendChild(b);
     });
@@ -993,9 +1085,7 @@ tr[data-here="true"] td{background:var(--stone)}
   function render() {
     var box = $('finding');
     if (!chosen.animal || !chosen.act) {
-      box.innerHTML = '<div class="finding__empty">Choose an animal and what happened. ' +
-        'Nothing is sent anywhere by choosing; this is a reference, and it works offline ' +
-        'once the page has loaded.</div>';
+      box.innerHTML = '<div class="finding__empty">Pick the two above and the sections appear here.</div>';
       $('draft').setAttribute('data-open', 'false');
       return;
     }
@@ -1221,7 +1311,9 @@ tr[data-here="true"] td{background:var(--stone)}
       state: row.state, district: row.district, when: row.when,
       what: row.what, policeStage: row.stage,
       sections: sectionsFor(row.animal, row.act).map(function (s) { return s.cite; }).join(', '),
-      name: row.name, mobile: row.mobile
+      name: row.name, mobile: row.mobile,
+      locatedBy: place.detected ? (place.overridden ? 'device, corrected by hand' : 'device') : 'chosen by hand',
+      deviceDistrict: place.detected ? place.detected.district + ', ' + place.detected.state : ''
     };
 
     fetch('/api/pfa-submissions', {
@@ -1312,22 +1404,40 @@ tr[data-here="true"] td{background:var(--stone)}
   }
 
   /* ---------- wiring ---------- */
-  fillStates($('stateSel')); fillStates($('fState'));
-  fillDistricts($('distSel'), ''); fillDistricts($('fDistrict'), '');
+  fillStates($('stateSel'));
+  fillDistricts($('distSel'), '');
   fillSelect($('fAnimal'), ANIMALS, 'id', 'label');
   fillSelect($('fAct'), ACTS, 'id', 'label');
 
   $('stateSel').addEventListener('change', function () { setPlace(this.value, '', false); });
   $('distSel').addEventListener('change', function () { setPlace(chosen.state, this.value, false); });
-  $('fState').addEventListener('change', function () { setPlace(this.value, '', false); });
-  $('fDistrict').addEventListener('change', function () { setPlace(chosen.state, this.value, false); });
-  $('geoBtn').addEventListener('click', locate);
+  $('geoRetry').addEventListener('click', locate);
+  $('geoFix').addEventListener('click', function () {
+    /* Deliberately a second action rather than an open field: the reading is
+       right nearly always, and the few times it is not are worth one tap. */
+    show('geoPick', true); this.hidden = true;
+    $('stateSel').focus();
+  });
   $('fFiles').addEventListener('change', showFiles);
   $('copyDraft').addEventListener('click', function () { copyFrom($('draftText'), this); });
   $('makeRep').addEventListener('click', function () { $('repText').value = representation(); });
   $('copyRep').addEventListener('click', function () {
     if (!$('repText').value) $('repText').value = representation();
     copyFrom($('repText'), this);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.step'), function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) return;
+      /* A row that opens below the fold leaves you reading its middle. Bring
+         its own line to the top, allowing for the bar and the header that
+         are fixed over it. */
+      var top = d.getBoundingClientRect().top + window.pageYOffset;
+      var css = getComputedStyle(document.documentElement);
+      var off = (parseInt(css.getPropertyValue('--ann'), 10) || 34)
+              + (parseInt(css.getPropertyValue('--nav'), 10) || 81) + 56;
+      window.scrollTo({ top: Math.max(0, top - off), behavior: 'smooth' });
+    });
   });
 
   drawChips();
