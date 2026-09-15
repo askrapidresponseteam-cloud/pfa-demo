@@ -224,7 +224,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    foot of the frame, so her head survives at every viewport width. */
 .plate{margin:0;background:var(--deep)}
 .plate .frame{aspect-ratio:3/2;max-height:min(80svh,780px);width:100%}
-.plate .frame img{object-position:50% 0}
+/* The portrait file is now colour (15 Sep 2026). The plate holds it in
+   grayscale and lets it bloom over two seconds when the plate arrives on
+   screen - the home page's treatment of the same photograph, so she warms
+   into colour the same way wherever she appears. Without JavaScript the
+   filter stays on and the plate is simply a black-and-white photograph,
+   which is how this page always was. */
+.plate .frame img{object-position:50% 0;filter:grayscale(1);transition:filter 2s ease}
+.plate.is-colour .frame img{filter:grayscale(0)}
 .plate figcaption{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;
   padding:16px var(--gutter-lg) 0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .plate figcaption small{font-size:10px;font-weight:400;letter-spacing:.06em;text-transform:none;color:var(--muted)}
@@ -833,6 +840,21 @@ body.th-open{overflow:hidden}
 <script>
 (function(){
   'use strict';
+
+  /* The plate blooms into colour when it arrives on screen - the same
+     mechanism as the founder band on the home page. See the note beside
+     .plate .frame img in the styles above. */
+  (function bloomPlate(){
+    var plate = document.querySelector('.plate');
+    if (!plate) return;
+    if (!('IntersectionObserver' in window)) { plate.classList.add('is-colour'); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { plate.classList.add('is-colour'); io.disconnect(); }
+      });
+    }, { threshold: 0.35 });
+    io.observe(plate);
+  })();
 
   /* ---------- watch: three clips, loaded only on demand ----------
      Edit VIDEOS to change the films. `title` is what shows on the tile.

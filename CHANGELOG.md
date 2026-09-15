@@ -1,3 +1,15 @@
+## v1.309
+
+- **She is in colour now.** The colour original of the founder's
+  portrait arrived and replaced the monochrome jpgs under the same
+  filenames, same 1536x1024 frame, same crop (framing correlation 0.987
+  against the old scan). The bloom shipped in v1.308 starts working the
+  moment this deploys: the founder band on the home page warms from
+  grayscale into colour over two seconds as it scrolls into view. The
+  founder page's own plate gets the identical treatment, so she warms
+  into colour the same way wherever she appears; without JavaScript both
+  stay black-and-white, which is how they always were.
+
 ## v1.308
 
 - **The founder's corner blooms into colour as it arrives.** The same
