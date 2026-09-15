@@ -1,3 +1,21 @@
+## v1.349
+
+- **A bigger mark in the header.** 56px, up from 42, and 46 from 38 at narrow
+  widths: 164x56 against 123x42 on a desktop. It grows into slack the nav
+  already had rather than taking any new room, because the nav is a fixed
+  80px and --nav is measured from the header's rendered height. Every sticky
+  offset on the site is keyed to --nav - the header's own top, the wall's
+  subnav dock and its anchor margin, the cinekind overlay's reserve - so a
+  taller header would have moved all of them at once. It is still 81px with
+  its border, and the mark now leaves 12px above and below.
+
+  The on-dark variant needed no second number: it is a background on the
+  anchor at background-size:contain with the image held at visibility:hidden,
+  so it sizes from the same rule. Checked on both.
+
+  A test holds the relationship, so the next bump fails rather than quietly
+  driving the header height and every offset under it.
+
 ## v1.348
 
 - **Both halves of the academy's view toggle are visible, and two more found

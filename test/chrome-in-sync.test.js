@@ -137,3 +137,22 @@ test('the logo is animated by the stylesheet, not by changing the artwork', () =
   assert.ok(anchor, 'the wordmark rule is gone');
   assert.doesNotMatch(anchor[0], /transform:/, 'the anchor must never carry a transform of its own');
 });
+
+test('the logo grows into the nav, not past it', () => {
+  /* --nav is measured from the header's rendered height by chrome.js, and
+     every sticky offset on the site is keyed to it: the header's own top,
+     the wall's subnav dock and its anchor margin, the cinekind overlay's
+     reserve. A logo taller than the nav can hold would push the header down
+     and move all of them at once, which is a site-wide change disguised as
+     a logo tweak. The nav is a fixed 80px; the mark lives inside that. */
+  const css = fs.readFileSync(path.join(ROOT, 'assets', 'chrome.css'), 'utf8');
+  const nav = Number(/header\.site nav\{[^}]*height:(\d+)px/.exec(css)[1]);
+  const mark = Number(/\.wordmark img\{[^}]*height:(\d+)px/.exec(css)[1]);
+  assert.equal(nav, 80, 'the nav height is the budget the mark is spent from');
+  assert.ok(mark < nav - 16,
+    `a ${mark}px mark in an ${nav}px nav leaves ${nav - mark}px of air; past this it drives the header height`);
+
+  const small = /@media \(max-width:560px\)\{[\s\S]*?\.wordmark img\{height:(\d+)px\}/.exec(css);
+  assert.ok(small, 'the narrow-width size is still set');
+  assert.ok(Number(small[1]) < mark, 'and is still the smaller of the two');
+});
