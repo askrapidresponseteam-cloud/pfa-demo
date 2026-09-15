@@ -7,7 +7,11 @@
      display face arrived a beat late and swapped in over the fallback. Only the latin
      file: latin-ext covers characters these pages do not use. -->
 <link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
-<style>/* latin-ext */
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
 @font-face {
   font-family: 'Marcellus';
   font-style: normal;
@@ -156,17 +160,17 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 }
 
 /* ---------- hero ---------- */
-.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
   min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
-  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+  radial-gradient(115% 85% at 80% 10%,rgba(17,17,17,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(17,17,17,.08),transparent 65%)}
 .hero__in{position:relative;z-index:1;width:100%}
-.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
 .hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
-.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
-.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(17,17,17,.85)}
 
 /* ---------- filter bar, same component as the shop ---------- */
 .filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
@@ -184,13 +188,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* ---------- legs ---------- */
 .legs{padding:0 var(--gutter) var(--band)}
 .leg{margin-top:var(--band)}
-.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
-.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel{background:var(--stone);color:var(--ink);padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(17,17,17,.13),transparent 60%)}
 .leg__panel > *{position:relative;z-index:1}
-.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel .eyebrow{color:rgba(17,17,17,.5)}
 .leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
-.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
-.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(17,17,17,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid rgba(17,17,17,.18);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(17,17,17,.8)}
 
 /* ---------- date rows ---------- */
 .rows{border-top:1px solid var(--line)}
@@ -249,16 +253,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    by construction, so the pop cannot clip anything either. The section stays
    hidden until the script builds it from the list below, which remains the
    one source of the entries. */
-.sph{background:var(--deep);color:#fff;padding:0 var(--gutter);overflow:hidden}
+.sph{background:var(--stone);color:var(--ink);padding:0 var(--gutter);overflow:hidden}
 .sph__in{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:clamp(14px,2.2vw,36px);min-height:clamp(500px,80vh,780px)}
 .sph__fronts{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(5px,1vh,10px);z-index:5;max-height:100%;overflow:auto;scrollbar-width:none;padding:10px 0}
-.sph__cap{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
-.sph__pill{border:1px solid #fff;background:transparent;color:#fff;padding:clamp(7px,1.3vh,11px) clamp(13px,1.8vh,20px);font-size:clamp(10px,1.5vh,12px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s}
+.sph__cap{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.5)}
+.sph__pill{border:1px solid var(--ink);background:transparent;color:var(--ink);padding:clamp(7px,1.3vh,11px) clamp(13px,1.8vh,20px);font-size:clamp(10px,1.5vh,12px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s}
 .sph__pill:hover{background:#fff;color:var(--ink);opacity:1}
 .sph__pill.is-on{background:#fff;color:var(--ink)}
 .sph__stage{position:relative;height:clamp(500px,80vh,780px);min-width:0;perspective:2400px;cursor:grab;touch-action:none;overflow:hidden}
 .sph__stage.is-drag{cursor:grabbing}
-.sph__ghost{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(40px,6vw,104px);text-align:center;color:#fff;pointer-events:none}
+.sph__ghost{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(40px,6vw,104px);text-align:center;color:var(--ink);pointer-events:none}
 .sph__scale{position:absolute;left:50%;top:50%;transform-style:preserve-3d}
 .sph__globe{position:relative;width:0;height:0;transform-style:preserve-3d;will-change:transform}
 .sphcard{position:absolute;left:0;top:0;transform-style:preserve-3d}
@@ -276,7 +280,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .m4 .sphcard__art{background-image:repeating-radial-gradient(circle at 32% 36%,rgba(255,255,255,.32) 0 3px,transparent 3px 12px)}
 .m5 .sphcard__art{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0 5px,transparent 5px 14px)}
 .sphcard__chip{display:none;position:absolute;top:8px;left:8px;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;font-family:var(--display);font-size:12.5px;box-shadow:0 2px 8px rgba(0,0,0,.25);font-variant-numeric:tabular-nums}
-.sphcard__tag{position:absolute;right:8px;bottom:7px;font-size:10px;font-weight:700;letter-spacing:.08em;color:#fff;font-variant-numeric:tabular-nums;text-shadow:0 1px 4px rgba(0,0,0,.35)}
+.sphcard__tag{position:absolute;right:8px;bottom:7px;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--ink);font-variant-numeric:tabular-nums;text-shadow:0 1px 4px rgba(0,0,0,.35)}
 .sphcard__bd{display:flex;flex-direction:column;gap:5px;padding:9px 10px 8px;flex:1;min-height:0}
 .sphcard__t{font-family:var(--display);font-size:12.5px;line-height:1.16;text-transform:uppercase;letter-spacing:.01em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .sphcard__c{margin-top:auto;display:flex;align-items:center;gap:5px;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -287,9 +291,9 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .sphcard.is-off .sphcard__face{opacity:.08;filter:grayscale(1) brightness(.55);pointer-events:none}
 .sph__pill{display:inline-flex;align-items:center;gap:8px}
 .sph__dot{width:8px;height:8px;border-radius:50%;flex:none}
-.sph__aside{display:flex;flex-direction:column;align-items:center;gap:14px;z-index:5;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);writing-mode:vertical-rl}
-.sph__rule{width:1px;height:56px;background:rgba(255,255,255,.35)}
-.sphlay{position:fixed;inset:0;z-index:120;background:rgba(10,10,10,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;display:grid;place-items:center;padding:clamp(24px,5vw,80px);overflow:auto}
+.sph__aside{display:flex;flex-direction:column;align-items:center;gap:14px;z-index:5;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(17,17,17,.6);writing-mode:vertical-rl}
+.sph__rule{width:1px;height:56px;background:rgba(17,17,17,.35)}
+.sphlay{position:fixed;inset:0;z-index:120;background:rgba(10,10,10,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);display:grid;place-items:center;padding:clamp(24px,5vw,80px);overflow:auto}
 /* display:grid above beats the browser's [hidden]{display:none}, which is
    exactly how the overlay once opened itself on page load and blacked out
    the whole record. Author styles outrank the user-agent sheet whatever the
@@ -320,16 +324,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .sphlay.is-in .sphlay__info > :nth-child(5){transition-delay:.2s}
 .sphlay.is-swap .sphlay__print{opacity:0;transform:rotate(-3.5deg) scale(.96)}
 .sphlay.is-swap .sphlay__info{opacity:0}
-.sphlay__meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.sphlay__meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.55)}
 .sphlay__meta b{font-weight:700;color:var(--a,#fff)}
-.sphlay__go{background:var(--a,#fff);border-color:var(--a,#fff);color:#fff}
-.sphlay__go:hover{background:transparent;border-color:#fff;color:#fff}
-.sphlay__t{font-size:clamp(26px,3.8vw,54px);line-height:1.04;color:#fff}
-.sphlay__p{margin:0;max-width:58ch;font-size:16px;line-height:1.65;color:rgba(255,255,255,.78)}
-.sphlay__specs{display:grid;gap:6px;padding-top:16px;border-top:1px solid var(--line-dark);font-size:13px;line-height:1.5;color:rgba(255,255,255,.6)}
-.sphlay__specs b{font-weight:700;color:#fff}
+.sphlay__go{background:var(--a,#fff);border-color:var(--a,#fff);color:var(--ink)}
+.sphlay__go:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+.sphlay__t{font-size:clamp(26px,3.8vw,54px);line-height:1.04;color:var(--ink)}
+.sphlay__p{margin:0;max-width:58ch;font-size:16px;line-height:1.65;color:rgba(17,17,17,.78)}
+.sphlay__specs{display:grid;gap:6px;padding-top:16px;border-top:1px solid rgba(17,17,17,.18);font-size:13px;line-height:1.5;color:rgba(17,17,17,.6)}
+.sphlay__specs b{font-weight:700;color:var(--ink)}
 .sphlay__row{display:flex;gap:12px;flex-wrap:wrap;margin-top:2px}
-.sphlay__row .btn--ghost{background:transparent;border-color:#fff;color:#fff}
+.sphlay__row .btn--ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
 .sphlay__row .btn--ghost:hover{background:#fff;color:var(--ink)}
 @media (max-width:760px){
   .sphlay__card{grid-template-columns:1fr;gap:26px}

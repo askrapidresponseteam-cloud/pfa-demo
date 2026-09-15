@@ -7,7 +7,11 @@
      display face arrived a beat late and swapped in over the fallback. Only the latin
      file: latin-ext covers characters these pages do not use. -->
 <link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
-<style>/* latin-ext */
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
 @font-face {
   font-family: 'Marcellus';
   font-style: normal;
@@ -114,17 +118,17 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .btn--outline:hover{background:var(--ink);color:#fff}
 
 /* ---------- hero ---------- */
-.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
   min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
-  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+  radial-gradient(115% 85% at 80% 10%,rgba(17,17,17,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(17,17,17,.08),transparent 65%)}
 .hero__in{position:relative;z-index:1;width:100%}
-.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
 .hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
-.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
-.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(17,17,17,.85)}
 
 /* ---------- filter bar, same component as the shop ---------- */
 .filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
@@ -142,13 +146,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* ---------- legs ---------- */
 .legs{padding:0 var(--gutter) var(--band)}
 .leg{margin-top:var(--band)}
-.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
-.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel{background:var(--stone);color:var(--ink);padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(17,17,17,.13),transparent 60%)}
 .leg__panel > *{position:relative;z-index:1}
-.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel .eyebrow{color:rgba(17,17,17,.5)}
 .leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
-.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
-.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(17,17,17,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid rgba(17,17,17,.18);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(17,17,17,.8)}
 
 /* ---------- date rows ---------- */
 .rows{border-top:1px solid var(--line)}
@@ -205,13 +209,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 
 /* The founder photograph is a 3:2 landscape, so the hero is a dark text band with
    the picture full-bleed beneath it rather than a tall side-by-side crop. */
-.fhero{background:var(--deep);color:#fff;position:relative;isolation:isolate;overflow:hidden;
+.fhero{background:var(--stone);color:var(--ink);position:relative;isolation:isolate;overflow:hidden;
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter-lg) clamp(44px,4.6vw,76px)}
-.fhero::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(112% 90% at 88% 0%,rgba(255,255,255,.16),transparent 62%),radial-gradient(70% 70% at 0% 100%,rgba(255,255,255,.07),transparent 65%)}
+.fhero::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(112% 90% at 88% 0%,rgba(17,17,17,.16),transparent 62%),radial-gradient(70% 70% at 0% 100%,rgba(17,17,17,.07),transparent 65%)}
 .fhero__in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,84px);align-items:end}
-.fhero .eyebrow{color:rgba(255,255,255,.55)}
+.fhero .eyebrow{color:rgba(17,17,17,.55)}
 .fhero h1{font-size:clamp(38px,5.4vw,88px);margin-top:20px;max-width:9ch}
-.fhero__role{margin:0;max-width:46ch;font-size:14px;line-height:1.68;color:rgba(255,255,255,.78)}
+.fhero__role{margin:0;max-width:46ch;font-size:14px;line-height:1.68;color:rgba(17,17,17,.78)}
 .pull{margin:26px 0 0;padding-top:26px;border-top:1px solid var(--line-dark)}
 .pull q{display:block;quotes:none;font-family:var(--display);font-weight:400;font-size:clamp(20px,2.1vw,31px);line-height:1.18;text-transform:uppercase;letter-spacing:.01em}
 .pull cite{display:block;margin-top:14px;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
@@ -222,7 +226,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    viewport's overflow reach her crown and cut it against the header (owner,
    15 Sep 2026). Anchored to 0, the crop can only take from the desk at the
    foot of the frame, so her head survives at every viewport width. */
-.plate{margin:0;background:var(--deep)}
+.plate{margin:0;background:var(--stone)}
 .plate .frame{aspect-ratio:3/2;max-height:min(80svh,780px);width:100%}
 /* The portrait file is now colour (15 Sep 2026). The plate holds it in
    grayscale and lets it bloom over two seconds when the plate arrives on
@@ -248,14 +252,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .figs b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(28px,3.4vw,54px);line-height:1;letter-spacing:.01em}
 .figs span{display:block;margin-top:12px;font-size:12px;line-height:1.5;color:var(--muted)}
 
-.msg{background:var(--deep);color:#fff;padding:var(--band) var(--gutter-lg)}
+.msg{background:var(--stone);color:var(--ink);padding:var(--band) var(--gutter-lg)}
 /* Ink on paper is the selection everywhere except the surfaces that are
    themselves ink, where it would read as nothing having been selected. */
 .msg ::selection,.watch ::selection{background:#fff;color:var(--deep)}
 .msg__in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,84px);align-items:start}
 .msg h2{font-size:clamp(27px,3.5vw,52px);max-width:13ch}
-.msg .eyebrow{color:rgba(255,255,255,.55);margin-bottom:18px}
-.msg p{margin:0 0 22px;max-width:64ch;font-size:15px;line-height:1.72;color:rgba(255,255,255,.8)}
+.msg .eyebrow{color:rgba(17,17,17,.55);margin-bottom:18px}
+.msg p{margin:0 0 22px;max-width:64ch;font-size:15px;line-height:1.72;color:rgba(17,17,17,.8)}
 .msg p:last-of-type{margin-bottom:0}
 
 .aims{padding:var(--band) var(--gutter-lg) clamp(40px,4vw,64px)}
@@ -278,7 +282,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    The embeds are not loaded with the page. Three social iframes cost megabytes
    of third-party script and set Meta tracking cookies before anyone has asked
    to watch, so each tile is an inert poster until it is clicked. */
-.watch{background:var(--deep);color:#fff;padding:var(--band) var(--gutter-lg)}
+.watch{background:var(--stone);color:var(--ink);padding:var(--band) var(--gutter-lg)}
 /* ---------- Rapid Response (see the note on the section) ----------
    A poster: the app's red as the field, the lens as the object, the
    site's display face as the headline. The dots are the poster's halftone,
@@ -320,7 +324,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 }
 
 .watch__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:clamp(28px,3.4vw,48px)}
-.watch .eyebrow{color:rgba(255,255,255,.55);margin-bottom:16px}
+.watch .eyebrow{color:rgba(17,17,17,.55);margin-bottom:16px}
 .watch h2{font-size:clamp(27px,3.6vw,56px);max-width:14ch}
 /* The films as a constellation, after www.offforum.com. The brief here
    reversed on 13 Sep 2026: these tiles were typography-first with the still
@@ -334,26 +338,26 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .vgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(26px,4vw,64px) clamp(20px,3vw,48px);padding:clamp(10px,2vw,26px) clamp(4px,3vw,54px) 0}
 @media(max-width:1100px){.vgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.vgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px}}
-.vtile{position:relative;display:block;padding:0;background:none;border:0;color:#fff;font:inherit;cursor:pointer;text-align:left;will-change:transform}
-.vtile__no{display:block;margin:0 0 8px;font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.45);font-variant-numeric:tabular-nums}
-.vtile__frame{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:#161616}
+.vtile{position:relative;display:block;padding:0;background:none;border:0;color:var(--ink);font:inherit;cursor:pointer;text-align:left;will-change:transform}
+.vtile__no{display:block;margin:0 0 8px;font-size:10px;font-weight:700;letter-spacing:.18em;color:rgba(17,17,17,.45);font-variant-numeric:tabular-nums}
+.vtile__frame{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:#e8e6df}
 .vtile__bg{position:absolute;inset:0;background-size:cover;background-position:50% 40%;filter:grayscale(.55) brightness(.82);transform:scale(1.02);transition:filter .5s,transform .8s cubic-bezier(.2,.7,.2,1)}
 .vtile:hover .vtile__bg,.vtile:focus-visible .vtile__bg{filter:none;transform:scale(1.08)}
-.vtile__chip{position:absolute;right:8px;bottom:8px;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#fff;color:#111;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
+.vtile__chip{position:absolute;right:8px;bottom:8px;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#111;color:#fff;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
 .vtile__chip svg{width:10px;height:12px;fill:currentColor;margin-left:2px}
 .vtile:hover .vtile__chip,.vtile:focus-visible .vtile__chip{opacity:1;transform:none}
 .vtile:focus-visible{outline:2px solid #fff;outline-offset:4px}
 .watch__stage{margin:clamp(30px,4.4vw,60px) auto 0;max-width:30ch;text-align:center;font-size:clamp(19px,2.5vw,38px);line-height:1.12;min-height:2.4em;transition:opacity .22s,transform .22s}
 .watch__stage.is-swap{opacity:0;transform:translateY(8px)}
-.watch__hint{margin:14px 0 0;text-align:center;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.watch__hint{margin:14px 0 0;text-align:center;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(17,17,17,.45)}
 /* The reels strip below still wears these two, so they keep their type
    even though the film tiles carry no text of their own: the owner chose
    the hover-spoken stage over per-tile captions (15 Sep 2026), so the
    title of whichever film the cursor or the keyboard rests on appears
    once, large, under the wall. */
 .vtile__top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.vtile__src{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
-.vtile__go{display:flex;align-items:center;gap:12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.vtile__src{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.5)}
+.vtile__go{display:flex;align-items:center;gap:12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.72)}
 /* the play control is a real button on the tile that also carries store links,
    so the browser's own button styling has to be cleared off it */
 button.vtile__go{background:none;border:0;padding:0;font-family:inherit;cursor:pointer;text-align:left}
@@ -372,9 +376,9 @@ button.vtile__go{background:none;border:0;padding:0;font-family:inherit;cursor:p
    over either. */
 body.th-open .vtile__apps{display:none}
 :fullscreen .vtile__apps{display:none}
-.vtile__play{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,255,255,.55);transition:background .25s,border-color .25s}
+.vtile__play{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(17,17,17,.55);transition:background .25s,border-color .25s}
 .vtile__play svg{width:12px;height:14px;fill:#fff;margin-left:2px}
-.vtile:hover .vtile__play{background:#fff;border-color:#fff}
+.vtile:hover .vtile__play{background:#fff;border-color:var(--ink)}
 .vtile:hover .vtile__play svg{fill:var(--deep)}
 
 /* theatre: the same idea as the wall's player, scoped to one clip */
@@ -396,26 +400,26 @@ body.th-open .vtile__apps{display:none}
    but a strip of links out was the wrong reading of that: a reel is a film
    and a film on this page plays on this page. This is the smallest frame that
    does it, and nothing is fetched from Instagram until Play is pressed. */
-.rbox{position:fixed;inset:0;z-index:120;display:none;background:rgba(6,6,6,.97);
-  padding:clamp(14px,3vw,40px);color:#fff;font-family:var(--body)}
+.rbox{position:fixed;inset:0;z-index:120;display:none;background:rgba(244,243,241,.98);
+  padding:clamp(14px,3vw,40px);color:var(--ink);font-family:var(--body)}
 @supports (height:100dvh){.rbox{bottom:auto;height:100dvh}}
 .rbox.open{display:flex;flex-direction:column;gap:14px}
 .rbox__bar{display:flex;align-items:center;justify-content:space-between;gap:16px;
   font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
-.rbox__src{color:rgba(255,255,255,.55)}
+.rbox__src{color:rgba(17,17,17,.55)}
 .rbox__ttl{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  font-weight:400;letter-spacing:.06em;color:rgba(255,255,255,.8)}
+  font-weight:400;letter-spacing:.06em;color:rgba(17,17,17,.8)}
 .rbox__x{background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,.5)}
-.rbox__x:hover{border-bottom-color:#fff;opacity:1}
+  border-bottom:1px solid rgba(17,17,17,.5)}
+.rbox__x:hover{border-bottom-color:var(--ink);opacity:1}
 .rbox__stage{flex:1 1 auto;min-height:0;display:grid;place-items:center}
 /* 9:16, the shape a reel is, fitted to whichever side runs out first. */
 .rbox__frame{position:relative;width:min(100%,calc((100% - 0px)));max-width:min(460px,56vh);
-  aspect-ratio:9/16;max-height:100%;background:#000}
+  aspect-ratio:9/16;max-height:100%;background:var(--stone)}
 .rbox__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 .rbox__foot{display:flex;justify-content:flex-end;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
-.rbox__foot a{color:rgba(255,255,255,.6);border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:2px}
-.rbox__foot a:hover{color:#fff;border-bottom-color:#fff;opacity:1}
+.rbox__foot a{color:rgba(17,17,17,.6);border-bottom:1px solid rgba(17,17,17,.35);padding-bottom:2px}
+.rbox__foot a:hover{color:var(--ink);border-bottom-color:var(--ink);opacity:1}
 @media (max-width:900px){.reels{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.reels{grid-template-columns:1fr}}
 body.th-open{overflow:hidden}
@@ -553,7 +557,7 @@ body.th-open{overflow:hidden}
        Ideal sizes: portrait 1200x1600 or larger, gallery 1600x1100 or larger.
   -------------------------------------------------------------------------- -->
 
-  <section class="fhero" id="top" data-cursor="light">
+  <section class="fhero" id="top">
     <div class="fhero__in">
       <div>
         <p class="eyebrow">Founder</p>
@@ -584,7 +588,7 @@ body.th-open{overflow:hidden}
   <!-- Re-ordered 15 Sep 2026, to her brief: "start with my picture and
        videos in it". The films follow the portrait directly; the numbers,
        her words and the aims read after you have seen and heard her. -->
-  <section class="watch" id="watch" data-cursor="light">
+  <section class="watch" id="watch">
     <div class="watch__head">
       <div>
         <p class="eyebrow">Watch</p>
@@ -604,7 +608,7 @@ body.th-open{overflow:hidden}
     <div><b>1M+</b><span>Lives touched</span></div>
   </section>
 
-  <section class="msg" data-cursor="light">
+  <section class="msg">
     <div class="msg__in">
       <div>
         <p class="eyebrow">In her words</p>

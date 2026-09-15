@@ -7,7 +7,11 @@
      display face arrived a beat late and swapped in over the fallback. Only the latin
      file: latin-ext covers characters these pages do not use. -->
 <link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
-<style>/* latin-ext */
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
 @font-face {
   font-family: 'Marcellus';
   font-style: normal;
@@ -113,7 +117,7 @@ input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit
 .btn[disabled]:hover{background:var(--ink);color:#fff}
 
 /* ---------- hero ---------- */
-.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
   min-height:clamp(380px,58svh,640px);overflow:hidden;isolation:isolate;
   /* Air between the dark block and the filter chips. It sits on the hero, not
@@ -122,12 +126,12 @@ input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit
      which is right, because the crowding only exists at rest against the hero. */
   margin-bottom:clamp(24px,3.2vw,44px)}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-   radial-gradient(120% 90% at 78% 15%,rgba(255,255,255,.16),transparent 60%),
-   radial-gradient(70% 70% at 8% 100%,rgba(255,255,255,.09),transparent 65%)}
+   radial-gradient(120% 90% at 78% 15%,rgba(17,17,17,.16),transparent 60%),
+   radial-gradient(70% 70% at 8% 100%,rgba(17,17,17,.09),transparent 65%)}
 .hero__in{position:relative;z-index:1;width:100%}
-.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
 .hero h1{font-size:clamp(34px,5.6vw,88px)}
-.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
 .hero 
 
 /* ---------- filter bar ---------- */

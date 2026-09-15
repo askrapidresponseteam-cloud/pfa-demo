@@ -1,12 +1,20 @@
-## v1.318
+## v1.321
 
-- **CineKind opens on the trophy raised against the storm.** A marquee
-  now fills the first screen of the CineKind page edge to edge - the
-  golden reel-and-elephants trophy over the blurred march, the one gold
-  thing on a monochrome site, centred so cover-cropping at any viewport
-  spends sky and crowd and never the statue. Over its foot: "People for
-  Animals presents", the word CineKind in the display voice, and one
-  door rimmed in the statue's own gold that fills gold and spreads its
-  letters on hover, stepping down to the poster wall the page always
-  opened on.
+- **No page stands on black.** Madam's instruction, carried through the
+  token system rather than around it: every solid near-black ground -
+  the shared dark heroes and leg panels on sixteen pages, founder's
+  fhero, message, watch wall and theatre, academy's films, triage and
+  card deck, the units hero, closing band and gallery, achievements'
+  spotlight, donate's side panel, CineKind's poster wall, deep bands
+  and player, the wall's empty state, the admin rail - now stands on
+  stone with ink type, its faint white washes become faint ink washes,
+  its hairlines re-cut for a light ground, its white doors returned to
+  the site's standard ink doors. What keeps its weight, deliberately:
+  photographs and the scrims that make type readable over them, the
+  black buttons, chips and tags that are the site's identity, and the
+  thin announcement bar. CineKind's glass header - white type over the
+  once-dark wall - is retired with its plumbing intact, since the same
+  trick over stone would recreate the invisibility it solved. Two
+  hundred and fifty-odd rules converted, all through paper, stone, ink
+  and line: the same site, standing in daylight.
 

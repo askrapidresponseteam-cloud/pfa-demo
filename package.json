@@ -29,7 +29,8 @@
     "build:firebase": "node scripts/build-firebase.js",
     "deploy:firebase": "node scripts/build-firebase.js && firebase deploy --project pfa-new-website",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "media:units": "node scripts/fetch-unit-photos.js"
   },
   "dependencies": {
     "firebase-admin": "^13.4.0"

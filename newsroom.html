@@ -7,7 +7,11 @@
      display face arrived a beat late and swapped in over the fallback. Only the latin
      file: latin-ext covers characters these pages do not use. -->
 <link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
-<style>/* latin-ext */
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
 @font-face {
   font-family: 'Marcellus';
   font-style: normal;
@@ -109,17 +113,17 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .btn--light:hover{background:transparent;color:#fff}
 
 /* ---------- hero ---------- */
-.hero{position:relative;display:flex;align-items:flex-start;background:var(--deep);color:#fff;
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
   min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
-  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+  radial-gradient(115% 85% at 80% 10%,rgba(17,17,17,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(17,17,17,.08),transparent 65%)}
 .hero__in{position:relative;z-index:1;width:100%}
-.hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
 .hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
-.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
-.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(255,255,255,.85)}
+.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(17,17,17,.85)}
 
 /* ---------- filter bar, same component as the shop ---------- */
 .filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
@@ -137,13 +141,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* ---------- legs ---------- */
 .legs{padding:0 var(--gutter) var(--band)}
 .leg{margin-top:var(--band)}
-.leg__panel{background:var(--deep);color:#fff;padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
-.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(255,255,255,.13),transparent 60%)}
+.leg__panel{background:var(--stone);color:var(--ink);padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(17,17,17,.13),transparent 60%)}
 .leg__panel > *{position:relative;z-index:1}
-.leg__panel .eyebrow{color:rgba(255,255,255,.5)}
+.leg__panel .eyebrow{color:rgba(17,17,17,.5)}
 .leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
-.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(255,255,255,.72)}
-.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.leg__panel p{margin:20px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:rgba(17,17,17,.72)}
+.leg__meta{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:32px;padding-top:22px;border-top:1px solid rgba(17,17,17,.18);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(17,17,17,.8)}
 
 /* ---------- date rows ---------- */
 .rows{border-top:1px solid var(--line)}

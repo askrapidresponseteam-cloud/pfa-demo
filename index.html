@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.318">
+<meta name="pfa-build" content="v1.321">
 <title>People for Animals | India’s largest animal welfare organisation</title>
 <meta name="description" content="Report cruelty, find your nearest unit, read what the law actually says, or give. People for Animals turns moments of crisis into second chances for animals across the country.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -99,7 +99,7 @@ a:hover{opacity:.65}
 /* ---------- hero: fits the viewport below the pinned bar. One photo, cover,
    anchored to the top; monochrome until the person stirs, then two seconds
    into colour; the words rise off a bottom-weighted scrim. ---------- */
-section[data-screen-label="Hero"]{margin-top:var(--bar,115px)!important;height:calc(100svh - var(--bar,115px))!important;min-height:520px!important;background:#0a0a0a}
+section[data-screen-label="Hero"]{margin-top:var(--bar,115px)!important;height:calc(100svh - var(--bar,115px))!important;min-height:520px!important;background:var(--stone)}
 section[data-screen-label="Hero"] #hero-media{position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block;filter:grayscale(1);transition:filter 2s ease}
 section[data-screen-label="Hero"].is-colour #hero-media{filter:grayscale(0)}
 section[data-screen-label="Hero"].is-veiled h1{opacity:0;transform:translateY(28px);letter-spacing:.06em;transition:none}
@@ -114,7 +114,7 @@ section[data-screen-label="Hero"].is-waking .pfa-heroin > div{transition:opacity
    like the hero's - full width, padded with --g - which is the alignment
    fix. Grayscale until it arrives on screen, then the same two-second
    bloom (.arrive-bloom, woken by the IntersectionObserver below). ---------- */
-.pfa-fndr{position:relative;isolation:isolate;display:flex;min-height:min(92svh,920px);background:#0a0a0a;color:#fff;overflow:hidden}
+.pfa-fndr{position:relative;isolation:isolate;display:flex;min-height:min(92svh,920px);background:var(--stone);color:#fff;overflow:hidden}
 .pfa-fndr__media{position:absolute;inset:0;z-index:0}
 .pfa-fndr__media img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0}
 .arrive-bloom img{filter:grayscale(1);transition:filter 2s ease}

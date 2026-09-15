@@ -7,7 +7,11 @@
      display face arrived a beat late and swapped in over the fallback. Only the latin
      file: latin-ext covers characters these pages do not use. -->
 <link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
-<style>/* latin-ext */
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
 @font-face {
   font-family: 'Marcellus';
   font-style: normal;
@@ -167,7 +171,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    posters still to reach the stage's edge, and the tilt needs a little
    more besides. The rows are tall for a wall of eleven: a face is the
    whole point. */
-.hoarding{position:relative;background:var(--deep);color:#fff;
+.hoarding{position:relative;background:var(--stone);color:var(--ink);
   /* Full bleed. The wall used to start under the header the way every
      first section on the site does, and that is exactly what made it read
      as a section: a panel of photographs with a white bar over it. The
@@ -264,9 +268,9 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
      dimming, kept modest so the edge posters stay posters. The band
      across the top is new, for the header now floating there: its type
      is white, and a white poster under it would eat the word. */
-  background:linear-gradient(180deg,rgba(10,10,10,.62),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 40px)),
-    radial-gradient(ellipse 40% 34% at 8% 100%,rgba(10,10,10,.55),rgba(10,10,10,0)),
-    radial-gradient(ellipse 62% 60% at 50% 50%,rgba(10,10,10,0) 60%,rgba(10,10,10,.42) 100%)}
+  background:linear-gradient(180deg,rgba(244,243,241,.62),rgba(244,243,241,0) calc(var(--ann) + var(--nav) + 40px)),
+    radial-gradient(ellipse 40% 34% at 8% 100%,rgba(244,243,241,.55),rgba(244,243,241,0)),
+    radial-gradient(ellipse 62% 60% at 50% 50%,rgba(244,243,241,0) 60%,rgba(244,243,241,.42) 100%)}
 /* The corner. A small title now, where a poster-sized one stood: on the
    wall this matches the corner holds a name in bold caps and a line of
    small type beneath, and is empty until a hand is on the wall. The h1 is
@@ -275,11 +279,11 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .hoarding__label{position:absolute;left:var(--gutter);bottom:clamp(20px,3vw,40px);z-index:3;max-width:min(62vw,560px);
   pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.7),0 2px 18px rgba(0,0,0,.55)}
 .hoarding__label h1{font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em}
-.hoarding__label p{margin:8px 0 0;font-size:11.5px;line-height:1.55;letter-spacing:.04em;color:rgba(255,255,255,.8)}
+.hoarding__label p{margin:8px 0 0;font-size:11.5px;line-height:1.55;letter-spacing:.04em;color:rgba(17,17,17,.8)}
 .hoarding__title,.hoarding__cap{transition:opacity .3s ease,transform .3s ease}
 .hoarding__cap{position:absolute;left:0;bottom:0;width:max-content;max-width:min(62vw,560px);opacity:0;transform:translateY(8px)}
 /* stated against the label's own p rule, which would otherwise size these */
-.hoarding__label .hoarding__cap-name{margin:0;font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em;text-wrap:balance;color:#fff}
+.hoarding__label .hoarding__cap-name{margin:0;font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em;text-wrap:balance;color:var(--ink)}
 .hoarding__label .hoarding__cap-award{margin:8px 0 0;font-size:11.5px}
 .hoarding.is-captioned .hoarding__title{opacity:0;transform:translateY(-8px)}
 .hoarding.is-captioned .hoarding__cap{opacity:1;transform:none}
@@ -292,13 +296,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .hoarding__ctl{position:absolute;right:clamp(14px,2vw,30px);top:50%;z-index:3;transform:translateY(-50%);
   display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .hoarding__ctl button,.hoarding__ctl a{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 18px 0 14px;
-  background:#fff;color:var(--deep);border:1px solid #fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+  background:#fff;color:var(--deep);border:1px solid var(--ink);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
   transition:background .2s,color .2s}
 .hoarding__ctl svg{width:16px;height:16px;display:block;flex:none}
 /* opacity:1 restated: the page's own a:hover fades every link to .65, which
    on a solid white control reads as a control going out rather than lighting
    up. These answer the way the two buttons beside them do. */
-.hoarding__ctl button:hover,.hoarding__ctl a:hover{background:rgba(10,10,10,.6);color:#fff;opacity:1;backdrop-filter:blur(6px)}
+.hoarding__ctl button:hover,.hoarding__ctl a:hover{background:rgba(244,243,241,.6);color:var(--ink);opacity:1;backdrop-filter:blur(6px)}
 .hoarding__ctl button:focus-visible,.hoarding__ctl a:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
 /* ---------- the map ----------
@@ -313,13 +317,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    picture of the layout, and the layout is already read poster by poster. */
 .hoarding__map{position:absolute;right:clamp(14px,2vw,30px);bottom:clamp(20px,3vw,40px);z-index:3;
   width:clamp(120px,11vw,168px);aspect-ratio:16/10;
-  background:rgba(10,10,10,.55);border:1px solid rgba(255,255,255,.35);border-radius:4px;overflow:hidden;
+  background:rgba(244,243,241,.55);border:1px solid rgba(17,17,17,.35);border-radius:4px;overflow:hidden;
   pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease;
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .hoarding.is-moving .hoarding__map{opacity:1;transform:none}
 .hoarding__map i{position:absolute;display:block;background-size:cover;background-position:50% 20%;opacity:.85}
 .hoarding__map b{position:absolute;display:block;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.3);
-  background:rgba(255,255,255,.12);border-radius:1px}
+  background:rgba(17,17,17,.12);border-radius:1px}
 .hoarding__map b[hidden]{display:none}
 /* A poster sends the reader to its line of the roll, and the line answers. */
 .roll li{transition:background .5s ease}
@@ -336,7 +340,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    and stops when the room is left. The 16:9 frame overfills whichever way
    the screen is taller or wider; pointer-events stay off so the only
    controls are this page's own. */
-.screen{position:fixed;inset:0;z-index:70;background:#000}
+.screen{position:fixed;inset:0;z-index:70;background:var(--stone)}
 .screen[hidden]{display:none}
 .screen__frame,.screen__frame iframe{position:absolute;border:0}
 .screen__frame{inset:0}
@@ -351,11 +355,11 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    promise the room cannot keep. */
 .screen__bar{position:absolute;left:clamp(14px,2vw,30px);right:clamp(14px,2vw,30px);bottom:clamp(14px,2vw,30px);z-index:2;
   display:flex;align-items:center;gap:18px;transition:opacity .45s ease}
-.screen__time{font-size:12px;letter-spacing:.06em;color:#fff;white-space:nowrap;visibility:hidden}
+.screen__time{font-size:12px;letter-spacing:.06em;color:var(--ink);white-space:nowrap;visibility:hidden}
 .screen__time .sep{margin:0 6px;opacity:.5}
 .screen__seek{position:relative;flex:1;height:26px;display:flex;align-items:center;cursor:pointer;visibility:hidden}
 .screen__bar.is-live .screen__time,.screen__bar.is-live .screen__seek{visibility:visible}
-.screen__seek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.28)}
+.screen__seek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(17,17,17,.28)}
 .screen__seek-fill{position:absolute;left:0;height:3px;width:0;background:#fff;pointer-events:none}
 .screen__seek-knob{position:absolute;left:0;width:12px;height:12px;margin-left:-6px;background:#fff;transform:scale(0);transition:transform .15s;pointer-events:none}
 .screen__seek:hover .screen__seek-knob,.screen__seek:focus-within .screen__seek-knob,.screen__seek.is-drag .screen__seek-knob{transform:scale(1)}
@@ -364,8 +368,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .screen__seek-tip{position:absolute;bottom:calc(100% + 2px);transform:translateX(-50%);padding:4px 8px;background:#fff;color:var(--deep);font-size:11px;letter-spacing:.06em;pointer-events:none;z-index:2}
 .screen__seek-tip[hidden]{display:none}
 .screen__ctl{display:flex;gap:8px;flex:none}
-.screen__ctl button{height:44px;padding:0 18px;background:rgba(10,10,10,.55);border:1px solid rgba(255,255,255,.55);
-  color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+.screen__ctl button{height:44px;padding:0 18px;background:rgba(244,243,241,.55);border:1px solid rgba(17,17,17,.55);
+  color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
   backdrop-filter:blur(6px);transition:background .2s,color .2s}
 .screen__ctl button:hover{background:#fff;color:var(--deep)}
 /* The sound control, when the browser refused the ask. The room is dark and
@@ -390,16 +394,22 @@ html.pfa-screen-idle .cursor-layer{opacity:0;transition:opacity .45s ease}
 .band{padding:var(--band) var(--gutter)}
 .band--stone{background:var(--stone)}
 .band--bone{background:var(--bone)}
-.band--deep{background:var(--deep);color:#fff}
+.band--deep{background:var(--stone);color:var(--ink)}
 /* Ink on paper is the selection everywhere except the surfaces that are
    themselves ink, where it would read as nothing having been selected. */
 .band--deep ::selection{background:#fff;color:var(--deep)}
 .band__head{max-width:var(--max)}
 .band__head h2{font-size:clamp(26px,3.2vw,50px);margin-top:14px;max-width:17ch}
 .band__head p{margin:22px 0 0;max-width:56ch;font-size:14px;line-height:1.65;color:var(--muted)}
-.band--deep .band__head p{color:rgba(255,255,255,.72)}
-.band--deep .eyebrow{color:rgba(255,255,255,.5)}
+.band--deep .band__head p{color:rgba(17,17,17,.72)}
+.band--deep .eyebrow{color:rgba(17,17,17,.5)}
 section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 8px)}
+/* The wall is the one section that lands flush (15 Sep 2026): the marquee's
+   door promises the gallery full screen, the stage is built 100svh edge to
+   edge, and the header floats over it in its on-dark glass - so the
+   arrival offset that every other section needs would only shave the
+   picture here. */
+#top{scroll-margin-top:0}
 
 /* ---------- the marquee (15 Sep 2026): the page now opens on the trophy
    raised against the storm, full frame below the pinned bar, edge to edge -
@@ -409,9 +419,16 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 8px)}
    on the statue, so cover-cropping at any viewport spends sky and crowd,
    never the trophy. */
 html{scroll-behavior:smooth}
-.marquee{position:relative;isolation:isolate;overflow:hidden;margin-top:calc(var(--ann) + var(--nav));height:calc(100svh - var(--ann) - var(--nav));min-height:540px;background:#0a0a0a;display:flex}
+/* From y=0, under the glass: the page keeps header-on-dark while the wall
+   is beneath the header, which makes the header transparent with white
+   type. v1.318 started the marquee below the header instead, so the
+   transparent header sat over the white body - white type on white
+   (owner, 15 Sep 2026). The marquee now runs under the header like the
+   wall it precedes, and borrows the wall's own top band so the white
+   type reads over the sky. */
+.marquee{position:relative;isolation:isolate;overflow:hidden;height:100vh;height:100svh;min-height:540px;padding-top:calc(var(--ann) + var(--nav));background:var(--stone);display:flex}
 .marquee__plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
-.marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
+.marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,10,10,.62),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 40px)),linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
 .marquee__in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:20px;width:100%;padding:0 var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
 .marquee__eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72)}
 .marquee__word{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(44px,7.5vw,120px);line-height:.95;text-shadow:0 2px 10px rgba(0,0,0,.55)}
@@ -427,9 +444,9 @@ html{scroll-behavior:smooth}
 
 /* ---------- facts ---------- */
 .facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:48px;border-top:1px solid var(--line);padding-top:28px}
-.band--deep .facts{border-color:var(--line-dark)}
+.band--deep .facts{border-color:rgba(17,17,17,.18)}
 .facts p.k{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.band--deep .facts p.k{color:rgba(255,255,255,.5)}
+.band--deep .facts p.k{color:rgba(17,17,17,.5)}
 .facts p.v{margin:8px 0 0;font-size:15px;line-height:1.4}
 
 /* ---------- honourees ---------- */
@@ -678,7 +695,7 @@ html{scroll-behavior:smooth}
        pastes up to fill the wall are aria-hidden and skipped. Each poster
        leads to the honouree's line on the roll below. The stage is what
        pins under the header while the section scrolls by. -->
-  <section class="hoarding" id="top" data-cursor="light" aria-label="The 2026 honourees, as a poster wall">
+  <section class="hoarding" id="top" aria-label="The 2026 honourees, as a poster wall">
   <div class="hoarding__stage">
     <ul class="hoarding__wall" id="wall">
       <li class="poster" data-who="anant-ambani" style="--r:.72"><a href="#h26-01"><img src="media/cinekind-2026/anant-ambani.webp" alt="" decoding="async"><span class="poster__cap"><span class="poster__name">Anant Ambani</span><span class="poster__award">Change of Heart / Heart of Gold</span></span></a></li>
@@ -952,7 +969,7 @@ html{scroll-behavior:smooth}
 
 <!-- The screening. Empty until the film button is pressed; the embed is
      mounted then and torn out on Exit, so nothing plays behind the wall. -->
-<div class="screen" id="cineScreen" hidden data-cursor="light">
+<div class="screen" id="cineScreen" hidden>
   <div class="screen__frame" id="cineFrame"></div>
   <div class="screen__bar" id="cineBar">
     <span class="screen__time num"><span id="cineT">00:00</span><span class="sep">/</span><span id="cineD">00:00</span></span>
@@ -1723,7 +1740,11 @@ html{scroll-behavior:smooth}
     function underHeader(){
       var ann = document.querySelector('.announce'), head = document.querySelector('header.site');
       var line = (ann && !ann.hidden ? ann.offsetHeight : 0) + (head ? head.offsetHeight : 0);
-      var on = stage.getBoundingClientRect().bottom > line + 1;
+      /* Always off since the wall went to stone (owner's no-black rule,
+         15 Sep 2026): white glass type over a stone wall would be the same
+         invisibility this class once solved. The plumbing stays for the
+         day a dark surface returns. */
+      var on = false; void line;
       if (on === over) return;
       over = on;
       document.documentElement.classList.toggle('header-on-dark', on);

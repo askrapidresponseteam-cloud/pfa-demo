@@ -7,7 +7,11 @@
      display face arrived a beat late and swapped in over the fallback. Only the latin
      file: latin-ext covers characters these pages do not use. -->
 <link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
-<style>/* latin-ext */
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
 @font-face {
   font-family: 'Marcellus';
   font-style: normal;
@@ -116,19 +120,19 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    than tuned by eye, so the eyebrow starts on exactly the line it starts on
    everywhere else. align-items:start, not center: centred, the copy column
    floated against the taller plot and the eyebrow drifted down the page. */
-.u-hero{position:relative;background:var(--deep);color:#fff;overflow:hidden;isolation:isolate;
+.u-hero{position:relative;background:var(--stone);color:var(--ink);overflow:hidden;isolation:isolate;
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
   min-height:clamp(380px,56svh,600px)}
 /* The same two washes Laws carries, verbatim, so the two dark heroes read
    as one family: white at both corners, no blue (owner, 5 Sep 2026). */
 .u-hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-  radial-gradient(115% 85% at 80% 10%,rgba(255,255,255,.15),transparent 62%),
-  radial-gradient(70% 70% at 5% 100%,rgba(255,255,255,.08),transparent 65%)}
+  radial-gradient(115% 85% at 80% 10%,rgba(17,17,17,.15),transparent 62%),
+  radial-gradient(70% 70% at 5% 100%,rgba(17,17,17,.08),transparent 65%)}
 .u-hero__in{position:relative;z-index:1}
 .u-hero__copy{min-width:0}
-.u-hero .eyebrow{color:rgba(255,255,255,.55);margin:0 0 18px}
+.u-hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
 .u-hero h1{font-size:clamp(34px,5.6vw,86px);max-width:13ch}
-.u-hero__lede{margin:26px 0 0;max-width:44ch;font-size:15px;line-height:1.65;color:rgba(255,255,255,.76)}
+.u-hero__lede{margin:26px 0 0;max-width:44ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.76)}
 
 
 /* ============================================================ filter bar */
@@ -222,22 +226,22 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .u-work__what{margin:10px 0 0;font-size:14px;line-height:1.55}
 
 /* ============================================================ cta */
-.u-cta{background:var(--deep);color:#fff;padding:var(--band) var(--gutter);position:relative;overflow:hidden;isolation:isolate}
+.u-cta{background:var(--stone);color:var(--ink);padding:var(--band) var(--gutter);position:relative;overflow:hidden;isolation:isolate}
 .u-cta::before{content:"";position:absolute;inset:0;z-index:0;
-  background:radial-gradient(90% 130% at 92% 0%,rgba(255,255,255,.14),transparent 58%)}
+  background:radial-gradient(90% 130% at 92% 0%,rgba(17,17,17,.14),transparent 58%)}
 .u-cta__in{position:relative;z-index:1;max-width:var(--max)}
 .u-cta__in > p{max-width:62ch}
 .u-cta h2{font-size:clamp(26px,3.8vw,58px);margin-top:14px}
-.u-cta p{margin:22px 0 0;font-size:15px;line-height:1.65;color:rgba(255,255,255,.76)}
-.u-cta .eyebrow{color:rgba(255,255,255,.5)}
+.u-cta p{margin:22px 0 0;font-size:15px;line-height:1.65;color:rgba(17,17,17,.76)}
+.u-cta .eyebrow{color:rgba(17,17,17,.5)}
 .u-cta__acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
 .u-btn{display:inline-block;padding:16px 30px;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
   border:1px solid #fff;background:#fff;color:var(--ink);transition:background .2s,color .2s}
 .u-btn:hover{background:transparent;color:#fff}
 .u-btn--ghost{background:transparent;color:#fff}
 .u-btn--ghost:hover{background:#fff;color:var(--ink)}
-.u-cta__addr{margin:34px 0 0;padding-top:22px;border-top:1px solid var(--line-dark);
-  font-size:13px;line-height:1.7;color:rgba(255,255,255,.6);font-style:normal}
+.u-cta__addr{margin:34px 0 0;padding-top:22px;border-top:1px solid rgba(17,17,17,.18);
+  font-size:13px;line-height:1.7;color:rgba(17,17,17,.6);font-style:normal}
 
 /* ============================================================ responsive */
 @media (max-width:1080px){
@@ -260,10 +264,10 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    the dark stage, the cream mat in its dashed frame with the painting,
    the orange kicker, the dial pill, the strip of minis. No images: the
    paintings are drawn here, so the page's only image stays the wordmark. */
-.ugal{background:#0a0a0a;color:#f1f0eb}
+.ugal{background:var(--stone);color:var(--ink)}
 .ugal.ugal--none .ugal__stage{opacity:.25;transition:opacity .3s}
 .ugal__stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);align-items:center;gap:clamp(26px,4vw,70px);padding:clamp(44px,7vh,84px) clamp(20px,7vw,110px)}
-.ugal__art{position:relative;margin:0;justify-self:center;width:min(360px,70vw);aspect-ratio:3/4;background:#e8e6df;padding:11%;border:1px dashed rgba(255,255,255,.8);box-shadow:14px 14px 0 rgba(60,60,60,.9)}
+.ugal__art{position:relative;margin:0;justify-self:center;width:min(360px,70vw);aspect-ratio:3/4;background:#e8e6df;padding:11%;border:1px dashed rgba(17,17,17,.8);box-shadow:14px 14px 0 rgba(60,60,60,.9)}
 /* The swap: two paintings can share the frame for half a second, the old
    settling back as the new lands with a slow quarter-degree turn; the words
    cascade up with a small stagger. Transforms and opacity only, and the
@@ -285,13 +289,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .ugal__info.is-in > :nth-child(5){transition-delay:.2s}
 .ugal__info.is-in > :nth-child(n+6){transition-delay:.25s}
 .ugal__eyebrow{margin:0 0 14px;color:#ff3b18;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
-.ugal__eyebrow b{margin-left:12px;color:#f1f0eb;font-variant-numeric:tabular-nums}
+.ugal__eyebrow b{margin-left:12px;color:var(--ink);font-variant-numeric:tabular-nums}
 .ugal__name{margin:0 0 18px;font-family:var(--display);font-weight:400;font-size:clamp(32px,3.4vw,58px);line-height:1;text-transform:uppercase;letter-spacing:.01em;overflow-wrap:break-word}
 .ugal__body{margin:0 0 18px;font-size:16px;line-height:1.6;color:rgba(241,240,235,.85)}
 .ugal__rule{width:30px;height:1px;border:0;background:#666;margin:18px 0}
 .ugal__spec{margin:0 0 6px;font-size:14px;line-height:1.5;color:#8f8d86}
 .ugal__spec a{color:#b9b7b0;border-bottom:1px solid #555}
-.ugal__pill{display:block;width:100%;border:0;border-radius:0;background:#5b6cf6;color:#f1f0eb;margin-top:22px;padding:15px 20px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;text-align:center}
+.ugal__pill{display:block;width:100%;border:0;border-radius:0;background:#5b6cf6;color:var(--ink);margin-top:22px;padding:15px 20px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;text-align:center}
 .ugal__pill:hover{filter:brightness(1.1)}
 .ugal__strip{display:flex;background:#f2f1ec;overflow-x:auto;scrollbar-width:thin}
 .gth{position:relative;flex:0 0 auto;width:clamp(84px,6.8vw,110px);aspect-ratio:1/1.05;border:0;border-right:1px solid #ccc;background:#f2f1ec;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
@@ -1014,18 +1018,30 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   function slug(c){ return String(c || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
   function photoCss(url){ return 'url("' + url + '") center 18% / cover no-repeat #161616'; }
   function art(ix){ return photos[ix] ? photoCss(photos[ix]) : paintCss(ix); }
+  /* Extensions in the order of authority (15 Sep 2026): jpg and png are
+     what scripts/fetch-unit-photos.js saves from each unit's own page on
+     peopleforanimalsindia.org, so they win; webp is the hand-dropped
+     portrait the README has always accepted, kept as the fallback. Each
+     candidate is probed in turn and the first that loads is the one; a
+     unit with no file at all keeps its typographic plate, as ever. */
+  var PHOTO_EXTS = ['jpg', 'jpeg', 'png', 'webp'];
+  function probeOne(ix, s, k){
+    if (k >= PHOTO_EXTS.length) return;
+    var url = 'media/units/' + s + '.' + PHOTO_EXTS[k];
+    var im = new Image();
+    im.onload = function(){
+      photos[ix] = url;
+      var tile = stripEl.children[ix] && stripEl.children[ix].querySelector('.gth__p');
+      if (tile) tile.style.background = photoCss(url);
+      if (at === ix) { var live = artEl.querySelector('.ugal__paint.is-live, .ugal__paint.is-entering'); if (live) { live.style.background = photoCss(url); live.classList.add('is-photo'); } }
+    };
+    im.onerror = function(){ probeOne(ix, s, k + 1); };
+    im.src = url;
+  }
   function probePhotos(){
     rows.forEach(function(r, ix){
       var s = slug(r.city); if (!s) return;
-      var url = 'media/units/' + s + '.webp';
-      var im = new Image();
-      im.onload = function(){
-        photos[ix] = url;
-        var tile = stripEl.children[ix] && stripEl.children[ix].querySelector('.gth__p');
-        if (tile) tile.style.background = photoCss(url);
-        if (at === ix) { var live = artEl.querySelector('.ugal__paint.is-live, .ugal__paint.is-entering'); if (live) { live.style.background = photoCss(url); live.classList.add('is-photo'); } }
-      };
-      im.src = url;
+      probeOne(ix, s, 0);
     });
   }
 
