@@ -181,7 +181,10 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 .add{width:100%;border:1px solid var(--ink);background:none;color:var(--ink);height:40px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
 .add:hover{background:var(--ink);color:#fff}
 .stepper{display:flex;align-items:center;justify-content:space-between;height:40px;border:1px solid var(--ink);background:var(--ink);color:#fff}
-.stepper button{width:40px;height:100%;background:none;border:none;color:var(--ink);font-size:16px;line-height:1;cursor:pointer}
+/* The stepper is background:var(--ink) with white type, and these draw no
+   ground of their own, so color:var(--ink) made the minus and the plus
+   invisible: the two controls the thing exists to offer. */
+.stepper button{width:40px;height:100%;background:none;border:none;color:#fff;font-size:16px;line-height:1;cursor:pointer}
 .stepper button:hover{opacity:.6}
 .stepper span{font-size:12px;letter-spacing:.08em;font-weight:700}
 .empty{padding:56px 0;text-align:center;color:var(--muted);font-size:13px}

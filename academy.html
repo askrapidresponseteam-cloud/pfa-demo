@@ -606,7 +606,12 @@ a.modnav__a:hover{background:var(--stone);opacity:1}
 .deck__show{left:calc(50% + var(--cw) / 2 + clamp(28px,5vw,110px))}
 .deck.is-grid .deck__ctl,.deck.is-open .deck__ctl{opacity:0;pointer-events:none}
 .deck__view{position:relative;z-index:3;align-self:center;display:flex;gap:2px;margin-top:22px;padding:4px;background:#151515;border:1px solid rgba(17,17,17,.28)}
-.deck__view button{width:36px;height:30px;border:0;background:none;color:rgba(17,17,17,.6);cursor:pointer;display:grid;place-items:center}
+/* The strip behind these is #151515 and the button draws no ground of its
+   own, so an ink icon on the unpressed one is an icon nobody can see: the
+   view you are not in is invisible, which is the half of the control that
+   has something to tell you. Light, held back from the pressed one by its
+   alpha. */
+.deck__view button{width:36px;height:30px;border:0;background:none;color:rgba(255,255,255,.62);cursor:pointer;display:grid;place-items:center}
 .deck__view button[aria-pressed="true"]{background:#fff;color:var(--ink)}
 .deck__view svg{width:14px;height:14px;fill:currentColor}
 .deck__panel{position:absolute;left:50%;top:50%;z-index:40;width:min(1080px,100%);max-height:100%;overflow:auto;background:#fff;color:var(--ink);padding:clamp(24px,3.4vw,48px);box-shadow:0 30px 80px rgba(0,0,0,.6);transform:translate(-50%,-50%) scale(.28);opacity:0;transition:transform .5s cubic-bezier(.2,.7,.2,1),opacity .3s ease}

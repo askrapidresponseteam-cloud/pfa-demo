@@ -1,3 +1,28 @@
+## v1.348
+
+- **Both halves of the academy's view toggle are visible, and two more found
+  with them.** The strip behind that toggle is #151515 and its buttons draw
+  no ground of their own, so the unpressed icon sat at rgba(17,17,17,.6):
+  the view you are not in was the one you could not see, which is the half
+  of a toggle that has something to tell you.
+
+  The check added in v1.342 was a hand-written list of places this had
+  already happened, so it sat green while this one shipped. It finds the
+  grounds itself now: any rule declaring a dark background is a ground, and
+  anything under one that sets dark type without a real background of its own
+  is the fault. Its first draft still missed the toggle, because it read
+  background:none as "this rule owns its ground" when that is precisely the
+  fault case. With that closed it swept the site and found two more:
+
+  quiz.html's featured offer, background:var(--deep), had its description,
+  eyebrow, price note, Add button text and border, stepper and struck-out old
+  price all in ink. The card the page is pushing was a black rectangle with a
+  name and a price on it and nothing else legible.
+
+  get-involved.html's quantity stepper is background:var(--ink) with white
+  type, and its minus and plus were color:var(--ink). The two controls the
+  stepper exists to offer could not be seen at all.
+
 ## v1.347
 
 - **The credit reads above the word, not across the trophy.** v1.341 put it

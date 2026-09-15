@@ -258,13 +258,20 @@ a.offer__tile:hover{opacity:1;border-color:var(--ink)}
 /* Ink on paper is the selection everywhere except the surfaces that are
    themselves ink, where it would read as nothing having been selected. */
 .offer--lead ::selection{background:#fff;color:var(--deep)}
-.offer--lead .offer__why,.offer--lead .offer__price small,.offer--lead .eyebrow{color:rgba(17,17,17,.62)}
-.offer--lead .offer__tile{border-color:rgba(17,17,17,.28)}
-.offer--lead .offer__foot{border-top-color:rgba(17,17,17,.22)}
-.offer--lead .add,.offer--lead .stepper{border-color:var(--ink);color:var(--ink)}
-.offer--lead .stepper button{color:var(--ink)}
+/* Everything below stands on .offer--lead, which is background:var(--deep).
+   All of it read as ink: the description, the eyebrow, the price note, the
+   Add button's text and its border, the stepper's arrows and the struck-out
+   old price. The featured card - the one the page is pushing - was a black
+   rectangle with a name and a price on it and nothing else legible. Same
+   fault as the membership tier, the donate amount, the poster caption, the
+   wall panel and the academy toggle. Light, on a dark ground. */
+.offer--lead .offer__why,.offer--lead .offer__price small,.offer--lead .eyebrow{color:rgba(255,255,255,.62)}
+.offer--lead .offer__tile{border-color:rgba(255,255,255,.28)}
+.offer--lead .offer__foot{border-top-color:rgba(255,255,255,.22)}
+.offer--lead .add,.offer--lead .stepper{border-color:rgba(255,255,255,.55);color:#fff}
+.offer--lead .stepper button{color:#fff}
 .offer--lead .add:hover{background:#fff;color:var(--ink)}
-.offer--lead .was{color:rgba(17,17,17,.55)}
+.offer--lead .was{color:rgba(255,255,255,.5)}
 /* The old price, struck, in front of the new one. On a card and in the
    picker it is the only sign of a markdown beside the tag. */
 .was{color:var(--muted);text-decoration:line-through;margin-right:6px;font-weight:400}
