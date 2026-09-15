@@ -140,3 +140,23 @@ test('fields sharing a row share their box height and their top edge', () => {
   assert.match(html, /@supports \(grid-template-rows: subgrid\)\{\s*\.gi__fields > \.field:not\(\.gi__doc\)\{display:grid;grid-template-rows:subgrid;grid-row:span 3\}/,
     'paired fields share label, input and hint rows');
 });
+
+test('every journey starts its title on the same line', () => {
+  /* The guided flow shows one step at a time, in a section sized to the
+     window, and the step was a grid with align-content:center. A grid row is
+     as tall as its tallest column, so centring it put the title wherever the
+     column beside it happened to end: membership's five tier cards are 486px
+     and the caregiver card's prose is 215px, which landed the two titles
+     135px apart on the same screen in the same place. It moved between steps
+     inside one journey too, since About you and Pay are different heights.
+
+     Anchored to the top, all three journeys and all four steps start the
+     title on the same line, and the room a short step does not need falls
+     below it. Measured after the change: eyebrow at 195, h2 at 217, left at
+     58, identical for volunteer, membership and caregiver. */
+  const rule = /\.is-stepped \.gi__step\.is-current\{([^}]*)\}/.exec(html);
+  assert.ok(rule, 'the stepped rule is still where the flow reads it');
+  assert.match(rule[1], /align-content:start/,
+    'the step anchors to the top so the title does not follow the height of the column beside it');
+  assert.doesNotMatch(rule[1], /align-content:\s*center/);
+});

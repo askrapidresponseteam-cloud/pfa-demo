@@ -212,7 +212,19 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .wall-hero .actions{margin-top:36px}
 .wall-hero .btn--ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
 .wall-hero .btn--ghost:hover{background:#fff;color:var(--ink)}
-.subnav{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;border-bottom:1px solid var(--line);padding:0 var(--gutter)}
+/* One rule, not two. The header carries a bottom border and the subnav
+   carries its own, and when the subnav docks they land 51px apart with the
+   links fenced between them: a doubled divider where the page only needs to
+   say once where the chrome stops and the content starts.
+
+   The subnav docks a pixel higher and sits a layer above the header, so its
+   own opaque white covers the header's border while the two are touching
+   and the single remaining line is the one at the foot of the whole bar.
+   Undocked, the subnav is hundreds of pixels down the page and the header
+   keeps its edge over the hero as on every other page. 51 sits between the
+   header at 50 and the announcement at 60; the theatre is 90 and still
+   covers everything. */
+.subnav{position:sticky;top:calc(var(--ann) + var(--nav) - 1px);z-index:51;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 var(--gutter)}
 .subnav div{display:flex;align-items:center;gap:28px;height:50px;overflow-x:auto;scrollbar-width:none}
 .subnav div::-webkit-scrollbar{display:none}
 /* An anchor arrival on this page must clear three bars, not two: the

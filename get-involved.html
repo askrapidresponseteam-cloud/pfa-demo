@@ -339,7 +339,17 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
   padding-bottom:clamp(24px,3vw,48px)}
 .gi.is-guided .gi__section.is-open .gi__form{display:flex;flex-direction:column;flex:1}
 .is-stepped .gi__step{display:none}
-.is-stepped .gi__step.is-current{display:grid;flex:1;align-content:center}
+/* align-content was center, and centring a grid row whose height is the
+   taller of its two columns means the heading sits wherever the column
+   beside it happens to end. Membership's four tier cards are 486px, the
+   caregiver card's prose is 215px, so opening one journey put the title at
+   y=200 and the other at y=335: a 135px jump for type that says the same
+   thing in the same place on the same screen. It moved between steps within
+   a journey too, because About you and Pay are not the same height either.
+   Anchored to the top, every step of every journey starts its title on the
+   same line, and the space a short step does not need falls below it where
+   nobody is reading. */
+.is-stepped .gi__step.is-current{display:grid;flex:1;align-content:start}
 .is-stepped .gi__step + .gi__step{margin-top:0}
 .is-stepped .gi__nav{display:flex;align-items:center;justify-content:space-between;gap:16px;
   margin-top:clamp(20px,3vw,36px);padding-top:18px;border-top:1px solid var(--line)}

@@ -1,3 +1,34 @@
+## v1.345
+
+- **One line under the wall's bar, not two.** The header carries a bottom
+  border and the sticky subnav carried its own, so docking the subnav put two
+  rules 51px apart with the section links fenced between them. The subnav
+  docks a pixel higher now and sits a layer above the header, covering that
+  border with its own background, and the single remaining rule is the one at
+  the foot of the whole bar where the chrome stops and the page starts.
+
+  That only works if the two backgrounds match. A flat white subnav under the
+  header's 96% white put a visible tonal step over the black panels, which is
+  trading a line for a smudge, so the subnav takes the header's own
+  background and blur. Measured over a black panel: the covered border reads
+  252 against neighbours at 252 and 253, and the strip carries one rule.
+  51 sits above the header at 50, below the announcement at 60, and well
+  below the theatre at 90, which still covers everything.
+
+## v1.344
+
+- **Every journey starts its title on the same line.** The guided flow shows
+  one step at a time in a section sized to the window, and the step was a
+  grid set to align-content:center. A grid row is as tall as its tallest
+  column, so centring it put the title wherever the column beside it happened
+  to end: membership's five tier cards are 486px and the caregiver card's
+  prose is 215px, which landed Join PFA. at y=200 and The card. at y=335. The
+  same jump was happening between steps inside one journey, because About you
+  and Pay are not the same height either. The step anchors to the top now.
+  Measured after: eyebrow at 195, title at 217, left edge at 58, identical
+  across volunteer, membership and caregiver, and the same on step two. The
+  room a short step does not need falls below it, where nobody is reading.
+
 ## v1.343
 
 - **The Wall gets its dark panel back.** The waiting panel, which is the
