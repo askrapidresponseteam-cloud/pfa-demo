@@ -417,7 +417,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 .tier__name{font-size:15px;font-weight:700}
 .tier__amt{font-size:15px;font-weight:700;text-align:right;white-space:nowrap}
 .tier__kit{grid-column:1 / -1;font-size:13px;line-height:1.5;color:var(--muted)}
-.tier:has(input:checked) .tier__kit{color:rgba(17,17,17,.78)}
+.tier:has(input:checked) .tier__kit{color:rgba(255,255,255,.78)} /* the sweep of 15 Sep 2026 flipped this to ink because the rule carries no background of its own - the black lives on the parent - and the chosen tier's own description went dark on dark */
 .gi__note{margin:18px 0 0;font-size:12px;line-height:1.6;color:var(--muted)}
 /* the terms box, as the donate page draws its own: a checkbox and a line,
    not a text field. .field styles every input as a text field, which is

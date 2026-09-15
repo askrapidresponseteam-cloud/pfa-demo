@@ -1,15 +1,10 @@
-## v1.338
+## v1.339
 
-- **The photograph gets every pixel back; the credit moves to the
-  bar.** The owner's constraints, all at once: the picture edge to
-  edge with no compromise, no black strip, and the presenter credit
-  above the trophy and legible. Any placement on the image finds the
-  gold at some crop, and the letterbox stole from the frame - so the
-  credit joins the one line that is above the trophy by definition and
-  costs the photograph nothing: the announcement bar, ink on white,
-  now reading "People for Animals and the Film Federation of India
-  present CineKind 2026 · Mumbai · 4 October". The marquee carries
-  only the storm, the word and the gold door; the glass header regains
-  its soft band over the sky; and the file is asserted to hold no
-  credit inside the section at all.
+- **The chosen tier speaks its whole line.** Selecting a membership
+  turned its card ink, and the card's description - "A PFA T-shirt and
+  the book...", the reason to choose it - went dark on dark: the
+  visibility sweep had flipped that rule to ink because it carries no
+  background of its own, the black living on the parent. The selected
+  description is white again, at its old weight, and the note beside
+  the rule says why so the next sweep walks past it.
 
