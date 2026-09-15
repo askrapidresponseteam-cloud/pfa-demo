@@ -106,11 +106,11 @@ test('the shared chrome falls onto the matched face too, and the counter never a
 });
 
 test('a page that asks for Marcellus has actually declared it', () => {
-  /* enforce.html shipped naming Marcellus in --display with no @font-face and
-     no preload anywhere on the page, because CHROME.md says the Google Fonts
-     link was removed and the face is self-hosted - true, but self-hosted by
-     each page, in the block above. The headings quietly rendered in Georgia
-     and only a human eye caught it.
+  /* A page once shipped naming Marcellus in --display with no @font-face and
+     no preload anywhere on it, because CHROME.md says the Google Fonts link
+     was removed and the face is self-hosted - true, but self-hosted by each
+     page, in the block above. The headings quietly rendered in Georgia and
+     only a human eye caught it.
 
      The test above cannot: it skips any page that does not load the woff2,
      which is how admin.html is excused, and a page that declares nothing at

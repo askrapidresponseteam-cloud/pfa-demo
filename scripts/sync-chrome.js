@@ -70,8 +70,7 @@ const PAGES = {
   'donate.html':       { current: 'donate.html',      group: null,               announce: DEFAULT_ANNOUNCE },
   'events.html':       { current: 'events.html',      group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
   'search.html':       { current: null,               group: null,               announce: DEFAULT_ANNOUNCE },
-  'quiz.html':         { current: 'quiz.html',        group: 'laws.html',        announce: DEFAULT_ANNOUNCE },
-  'enforce.html':      { current: 'enforce.html',               group: 'laws.html',        announce: DEFAULT_ANNOUNCE }
+  'quiz.html':         { current: 'quiz.html',        group: 'laws.html',        announce: DEFAULT_ANNOUNCE }
 };
 
 /* submission-collage.html is a full-viewport piece with no site chrome.

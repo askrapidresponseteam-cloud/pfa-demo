@@ -242,7 +242,7 @@ test('a password, a search box and a file picker are left alone', () => {
 /* ---- and that the pages actually load it -------------------------------- */
 
 const WIRED = ['report.html', 'ask.html', 'careers.html', 'wall.html', 'get-involved.html',
-  'events.html', 'donate.html', 'track.html', 'caregiver-card.html', 'enforce.html'];
+  'events.html', 'donate.html', 'track.html', 'caregiver-card.html'];
 
 test('every page that takes an entry loads the rules, and loads them first', () => {
   for (const file of WIRED) {
