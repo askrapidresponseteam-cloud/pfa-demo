@@ -17,10 +17,13 @@
    ====================================================================== */
 
 /* ---------- announcement bar ---------- */
-.announce{position:fixed;left:0;right:0;top:0;z-index:60;min-height:34px;background:var(--deep,#0a0a0a);color:#fff;display:flex;align-items:center;justify-content:center;padding:0 48px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+/* Paper like everything else since 15 Sep 2026 (the owner's no-black rule
+   covers bars too); the hairline under it keeps it a strip rather than a
+   blank margin. */
+.announce{position:fixed;left:0;right:0;top:0;z-index:60;min-height:34px;background:#fff;border-bottom:1px solid var(--line,#e4e2df);color:#111;display:flex;align-items:center;justify-content:center;padding:0 48px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
 .announce p{margin:0;text-align:center}
-.announce button{position:absolute;right:20px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:12px;line-height:1;padding:4px;transition:color .25s}
-.announce button:hover{color:#fff}
+.announce button{position:absolute;right:20px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(17,17,17,.55);cursor:pointer;font-size:12px;line-height:1;padding:4px;transition:color .25s}
+.announce button:hover{color:#111}
 /* The bar is the one piece of chrome that is ink rather than paper, so the
    ink selection every page sets would be invisible on it. */
 .announce ::selection,.announce::selection{background:#fff;color:var(--deep,#0a0a0a)}

@@ -146,7 +146,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* ---------- legs ---------- */
 .legs{padding:0 var(--gutter) var(--band)}
 .leg{margin-top:var(--band)}
-.leg__panel{background:var(--stone);color:var(--ink);padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
+.legs > .leg:first-child{margin-top:clamp(24px,3.5vw,44px)} /* the band-sized gap was cut for the tall heroes; with heroes compacted (15 Sep 2026) the first case starts where the eye lands */
+.leg__panel{background:var(--paper);border:1px solid var(--line);color:var(--ink);padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
 .leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:none}
 .leg__panel > *{position:relative;z-index:1}
 .leg__panel .eyebrow{color:rgba(17,17,17,.5)}
