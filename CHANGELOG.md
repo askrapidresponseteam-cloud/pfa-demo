@@ -1,13 +1,18 @@
-## v1.327
+## v1.328
 
-- **A new trophy for the marquee, and a screens audit.** The CineKind
-  marquee's photograph is replaced with the new plate - the trophy on
-  its tall black pedestal, elephant head-on under the storm - written
-  over the same filename, same frame, old file gone. The statue sits
-  dead centre, so the cover crop at any width or height spends sky and
-  crowd, phones included. And a responsive pass over all twenty-two
-  pages: every page carries the viewport meta, every public page has
-  its media queries, no unguarded fixed width survives (the two
-  academy tables that exceed a phone sit inside their own scroll
-  wrappers, which is the pattern), and the suite holds at 624.
+- **Straight to content; the wall gets its black back; the plate gets
+  a name caches cannot cling to.** The hero intros - lede paragraphs
+  and meta rows under the page titles - are removed on sixteen pages,
+  so a page states its name and hands over at once (one line was
+  substance in disguise: "not issued on the spot", the fee promise the
+  tests guard, moved to sit beside the fee itself). The CineKind
+  poster wall returns to its black stage by the owner's word - the one
+  granted exception to the no-black rule, because the wall is the one
+  surface that renders properly on it - and the glass header comes
+  back on for exactly as long as the wall is under it. And the marquee
+  plate is saved under a new filename, img/cinekind-marquee.webp, with
+  the old file deleted: it was replaced twice under one name and
+  browser caches kept serving the ghost; a renamed file cannot be
+  stale. The plate remains an absolute, full-cover layer of a
+  100svh frame, edge to edge at every width, top strip to the door.
 

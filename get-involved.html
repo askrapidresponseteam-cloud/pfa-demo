@@ -512,9 +512,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
     <div class="gi__head">
       <p class="eyebrow">Get involved</p>
       <h1 class="gi__title">Join the tribe.</h1>
-      <p class="gi__lede">Give PFA your time, join it as a member, or be recognised for what you already
-        do where you live. Each starts with an application that a named person reads, and each keeps you told
-        of where it has got to.</p>
     </div>
 
     <div class="gi__paths">
@@ -552,8 +549,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">Learn first</p>
             <h2>What the work is.</h2>
-            <p class="gi__lede">Pick the areas you want to be considered for. Choosing one tells you what it
-              involves; what you choose is sent with the application.</p>
             <p class="gi__areahint" data-area-hint>Nothing selected yet. Choose at least one area.</p>
           </div>
           <div class="gi__body">
@@ -571,8 +566,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">About you</p>
             <h2>Who is applying.</h2>
-            <p class="gi__lede">A named person at PFA reads this and replies to the email you give. The mobile
-              number is for the unit nearest you.</p>
           </div>
           <div class="gi__body gi__fields">
             <div class="field"><label for="volName">Your name</label><input id="volName" type="text" autocomplete="name" required><span class="error">Add your name.</span></div>
@@ -624,7 +617,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">Member</p>
             <h2>Join PFA.</h2>
-            <p class="gi__lede">Pick a membership. Whichever it is, you become an active working member of People for Animals from the day it clears, and your card and kit follow in 20 to 25 days.</p>
           </div>
           <div class="gi__body">
             <div class="tiers" role="group" aria-label="Membership">
@@ -642,7 +634,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">About you</p>
             <h2>Who is joining.</h2>
-            <p class="gi__lede">The name goes on the card exactly as you write it here. The welcome letter goes to the email.</p>
           </div>
           <div class="gi__body">
             <div class="field"><label for="memName">Your name</label><input id="memName" name="name" type="text" autocomplete="name" required><span class="error">Add your name.</span></div>
@@ -655,7 +646,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">Your address</p>
             <h2>Where the card goes.</h2>
-            <p class="gi__lede">The card and kit are posted here.</p>
           </div>
           <div class="gi__body">
             <div class="field"><label for="memAddress">Address</label><input id="memAddress" name="address" type="text" autocomplete="street-address" required><span class="error">Enter the address your card and kit should go to.</span></div>
@@ -670,7 +660,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
             <p class="eyebrow">Where a membership goes</p>
             <h2>Pay and join.</h2>
             <ol class="gi__stages"><li>Paid</li><li>Kit dispatched</li><li>Kit delivered</li></ol>
-            <p class="gi__lede">The payment is taken by CCAvenue; PFA never sees your card, bank or UPI details. Your member number comes the moment it clears, with the welcome letter, and you can follow your card and kit with that number.</p>
           </div>
           <div class="gi__body">
             <div class="field"><label class="agree"><input type="checkbox" name="terms" value="yes" required><span>I accept the membership terms above, and that PFA may contact me as a member.</span></label><span class="error">Accept the membership terms to continue.</span></div>
@@ -700,8 +689,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">Colony caregiver</p>
             <h2>The card.</h2>
-            <p class="gi__lede">Applying costs &#8377;50 and the card is not issued on the spot: a named person at PFA
-              reads the application and decides. You get an application number the moment the fee clears.</p>
           </div>
           <div class="gi__body gi__prose">
             <p>Feeding community dogs is lawful. The ABC Rules 2023 recognise caregivers, and the courts have
@@ -716,7 +703,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">About you</p>
             <h2>Who is applying.</h2>
-            <p class="gi__lede">The name goes on the card exactly as you write it here.</p>
           </div>
           <div class="gi__body gi__fields">
             <div class="field"><label for="cgName">Your name</label><input id="cgName" name="name" type="text" autocomplete="name" required><span class="error">Add your name.</span></div>
@@ -734,8 +720,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__copy">
             <p class="eyebrow">Your colony</p>
             <h2>Where you feed.</h2>
-            <p class="gi__lede">The locality goes on the card too, so a guard or an association can see it
-              matches where they met you.</p>
           </div>
           <div class="gi__body gi__fields">
             <div class="field gi__wide"><label for="cgAddress">Colony or locality</label><input id="cgAddress" name="address" type="text" autocomplete="street-address" required><span class="error">Where do you feed?</span></div>
@@ -751,7 +735,11 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
             <p class="eyebrow">Where an application goes</p>
             <h2>Pay and apply.</h2>
             <ul class="gi__stages"><li class="gi__stage">Submitted</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Under review</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Verified</li><li class="gi__arrow" aria-hidden="true">&rarr;</li><li class="gi__stage">Card issued</li></ul>
-            <p class="fine">The fifty rupees confirms the application and gives it a number you can track it
+            <!-- "Not issued on the spot" is a promise the tests guard: paying
+                 must never read as buying. It lived in a hero meta row that
+                 fell in the intro cull of 15 Sep 2026; it belongs here, next
+                 to the fee, and here it stays. -->
+            <p class="fine">The card is not issued on the spot. The fifty rupees confirms the application and gives it a number you can track it
               with. It is not payment for a card: a named person at PFA reads every application and decides.
               If it is not approved, the fee is not refunded, because it pays for the reading rather than the
               card. Every application appears in PFA's admin record under Caregiver Cards.</p>

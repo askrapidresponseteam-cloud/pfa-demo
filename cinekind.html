@@ -171,7 +171,10 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    posters still to reach the stage's edge, and the tilt needs a little
    more besides. The rows are tall for a wall of eleven: a face is the
    whole point. */
-.hoarding{position:relative;background:var(--stone);color:var(--ink);
+/* Dark by the owner's word (15 Sep 2026): the poster wall is the one
+   surface that renders properly on black - the exception to the no-black
+   rule, granted for this stage alone. */
+.hoarding{position:relative;background:#0a0a0a;color:#fff;
   /* Full bleed. The wall used to start under the header the way every
      first section on the site does, and that is exactly what made it read
      as a section: a panel of photographs with a white bar over it. The
@@ -268,9 +271,9 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
      dimming, kept modest so the edge posters stay posters. The band
      across the top is new, for the header now floating there: its type
      is white, and a white poster under it would eat the word. */
-  background:linear-gradient(180deg,rgba(244,243,241,.62),rgba(244,243,241,0) calc(var(--ann) + var(--nav) + 40px)),
-    radial-gradient(ellipse 40% 34% at 8% 100%,rgba(244,243,241,.55),rgba(244,243,241,0)),
-    radial-gradient(ellipse 62% 60% at 50% 50%,rgba(244,243,241,0) 60%,rgba(244,243,241,.42) 100%)}
+  background:linear-gradient(180deg,rgba(10,10,10,.62),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 40px)),
+    radial-gradient(ellipse 40% 34% at 8% 100%,rgba(10,10,10,.55),rgba(10,10,10,0)),
+    radial-gradient(ellipse 62% 60% at 50% 50%,rgba(10,10,10,0) 60%,rgba(10,10,10,.42) 100%)}
 /* The corner. A small title now, where a poster-sized one stood: on the
    wall this matches the corner holds a name in bold caps and a line of
    small type beneath, and is empty until a hand is on the wall. The h1 is
@@ -278,8 +281,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    the wall is the picture and the corner is the label on it. */
 .hoarding__label{position:absolute;left:var(--gutter);bottom:clamp(20px,3vw,40px);z-index:3;max-width:min(62vw,560px);
   pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.7),0 2px 18px rgba(0,0,0,.55)}
-.hoarding__label h1{font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em}
-.hoarding__label p{margin:8px 0 0;font-size:11.5px;line-height:1.55;letter-spacing:.04em;color:rgba(17,17,17,.8)}
+.hoarding__label h1{font-size:clamp(22px,2.3vw,34px);letter-spacing:.04em;color:#fff}
+.hoarding__label p{margin:8px 0 0;font-size:11.5px;line-height:1.55;letter-spacing:.04em;color:rgba(255,255,255,.8)}
 .hoarding__title,.hoarding__cap{transition:opacity .3s ease,transform .3s ease}
 .hoarding__cap{position:absolute;left:0;bottom:0;width:max-content;max-width:min(62vw,560px);opacity:0;transform:translateY(8px)}
 /* stated against the label's own p rule, which would otherwise size these */
@@ -678,7 +681,8 @@ html{scroll-behavior:smooth}
 
 <main>
   <section class="marquee" aria-label="CineKind: the awards" data-cursor="light">
-    <img class="marquee__plate" src="img/cinekind-hero.webp" alt="" width="1559" height="1009" fetchpriority="high">
+    <!-- New filename on purpose (15 Sep 2026): the plate was replaced twice under one name and browser caches kept serving the old trophy; a renamed file cannot be stale. -->
+    <img class="marquee__plate" src="img/cinekind-marquee.webp" alt="" width="1558" height="1009" fetchpriority="high">
     <div class="marquee__scrim"></div>
     <div class="marquee__in">
       <!-- The credit stands at the head of the frame, and names both houses:
@@ -1747,11 +1751,10 @@ html{scroll-behavior:smooth}
     function underHeader(){
       var ann = document.querySelector('.announce'), head = document.querySelector('header.site');
       var line = (ann && !ann.hidden ? ann.offsetHeight : 0) + (head ? head.offsetHeight : 0);
-      /* Always off since the wall went to stone (owner's no-black rule,
-         15 Sep 2026): white glass type over a stone wall would be the same
-         invisibility this class once solved. The plumbing stays for the
-         day a dark surface returns. */
-      var on = false; void line;
+      /* Back on (15 Sep 2026, same day it was retired): the owner granted
+         the wall its black stage back, so the glass header earns its keep
+         again while any of the wall is under it. */
+      var on = stage.getBoundingClientRect().bottom > line + 1;
       if (on === over) return;
       over = on;
       document.documentElement.classList.toggle('header-on-dark', on);
