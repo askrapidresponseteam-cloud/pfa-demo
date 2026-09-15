@@ -1,18 +1,18 @@
-## v1.311
+## v1.312
 
-- **The landing page is re-set to her order, and the founder's corner
-  is supreme.** MG's brief, band by band: her picture and her films
-  open the page; the units take three quarters of it, with a standing
-  slot for one unit a week to tell its own story once the heads' films
-  arrive; the policies follow in six dark boxes out of the hundred-plus,
-  each a door into the full record; then the tribe's three doors -
-  volunteer, member, colony caregiver - each landing on its application;
-  then the law and the Wall side by side. Every band is a door into a
-  page that already existed; nothing was rebuilt, only re-ordered. The
-  mis-set text is fixed at the root: the old page centred some
-  containers to 1560px while the gutter itself centres to 1440px, so
-  different bands started on different verticals. No band carries its
-  own max-width now - one gutter, one left edge, everywhere. The hero's
-  veil, wake and colour bloom carried over to the founder unchanged,
-  and the units photograph blooms on arrival.
+- **The landing goes back to its two panels, now on one edge; the
+  re-ordering lives where it belonged, inside the founder page.**
+  v1.311 rebuilt the whole landing into a band scroll; the brief was
+  narrower: fix the alignment of the two panels, and do the
+  restructuring within the founder's corner. Reverted: the landing is
+  the caregiver hero and the founder's door again. The alignment is
+  fixed at the root - the hero once wrapped its words in a capped,
+  auto-centred container inside a padded frame while the founder band
+  put cap and padding on one element, so their text started on
+  different verticals; neither carries a max-width now, both are
+  full-width columns padded with the same gutter, whose own centring
+  term does the rest, identically. And founder.html is re-set to her
+  brief - "start with my picture and videos in it": the films section
+  now follows her portrait directly, with the numbers, her words and
+  the aims reading after you have seen and heard her.
 
