@@ -63,18 +63,17 @@ header.site nav{position:relative;display:flex;align-items:center;justify-conten
 .menu .menu-sep{height:1px;background:currentColor;opacity:.15;margin:2px 0}
 
 .wordmark{display:block;padding:0;background:none}
-/* 62. The supplied mark is 1.5 wide to tall where the old one was 2.92, so
-   it buys its presence in height rather than width, and 62 is as much as
-   the nav can give: 80px fixed, --nav measured from the header's height, and
-   every sticky offset on the site keyed to it - the header itself, the
-   wall's subnav dock and its anchor margin, the cinekind overlay - so a
-   taller header would move all of them at once. 62 leaves 9px above and
-   below.
+/* 56, up from 42. The nav around it is a fixed 80px, so the mark grows into
+   the slack it already had and the header stays 81px with its border: --nav
+   is measured from that height and every sticky offset on the site is keyed
+   to it - the header itself, the wall's subnav dock and its anchor margin,
+   the cinekind overlay - so a taller header would move all of them. 56
+   leaves 12px above and below.
 
    The on-dark variant is a background on the anchor at background-size:
    contain with this image held at visibility:hidden, so it sizes from this
    rule too and needs no second number. */
-.wordmark img{height:62px;width:auto;display:block;filter:none;
+.wordmark img{height:56px;width:auto;display:block;filter:none;
   /* The mark alights: it drops the last few pixels into place as the page
      paints, rather than simply being there. One pass, and nothing left running
      afterwards. The paw tracks under Shop are this header's only continuous
@@ -172,7 +171,7 @@ header.site{transition:background .35s ease,border-color .35s ease,color .35s ea
 }
 @media (max-width:560px){
   .announce{font-size:10px;padding:6px 34px 6px 10px;letter-spacing:0}
-  .wordmark img{height:52px}
+  .wordmark img{height:46px}
   .donate{padding:11px 18px;letter-spacing:.08em;text-indent:.08em}
 }
 
