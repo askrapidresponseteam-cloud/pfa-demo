@@ -1,9 +1,11 @@
-## v1.335
+## v1.336
 
-- **The credit goes to full white in its letterbox.** v1.334 already
-  moved the presenter line off the picture into a solid black strip
-  above the trophy's frame, where it cannot cross the gold at any
-  size; this turns the line itself up from soft grey to full white, a
-  step larger, so on its own black it reads at a glance from across
-  the room.
+- **A build you can interrogate.** No layout change: the CineKind
+  credit has stood in its black letterbox above the trophy since
+  v1.334, full white since v1.335. But the live site has been
+  ping-ponging between builds - the marks of old deploy commands
+  re-run from terminal history, each pinned to its own old zip - so
+  this version exists to be checked: the deploy now ends by asking
+  the live page which build it serves, and the answer must read
+  v1.336 before anyone judges the layout.
 
