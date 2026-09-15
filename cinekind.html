@@ -430,10 +430,9 @@ html{scroll-behavior:smooth}
    wall it precedes, and borrows the wall's own top band so the white
    type reads over the sky. */
 .marquee{position:relative;isolation:isolate;overflow:hidden;height:100vh;height:100svh;min-height:540px;padding-top:calc(var(--ann) + var(--nav));background:#0a0a0a;display:flex;flex-direction:column}
-.marquee__credit{flex:none;margin:0;padding:16px var(--gutter);text-align:center;font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#fff}
 .marquee__stage{position:relative;flex:1;min-height:0;overflow:hidden}
 .marquee__plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
-.marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
+.marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,10,10,.55),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 30px)),linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
 .marquee__in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
 .marquee__foot{display:flex;flex-direction:column;align-items:center;gap:20px}
 .marquee__eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72)}
@@ -629,7 +628,7 @@ html{scroll-behavior:smooth}
 <body>
 
 <div class="announce" id="announce" data-cursor="light">
-  <p>CineKind 2026 · Mumbai · 4 October · World Animal Day</p>
+  <p>People for Animals and the Film Federation of India present CineKind 2026 · Mumbai · 4 October</p>
   <button type="button" aria-label="Close" id="annClose">✕</button>
 </div>
 <header class="site" id="header" data-cursor="dark">
@@ -683,26 +682,17 @@ html{scroll-behavior:smooth}
 
 <main>
   <section class="marquee" aria-label="CineKind: the awards" data-cursor="light">
-    <!-- The letterbox (owner, 15 Sep 2026; landed for real on the second
-         attempt - the first swap failed silently on a whitespace mismatch
-         and only its CSS applied, which is why the credit sat at the foot
-         on the owner's screen while the changelog claimed otherwise). The
-         credit is a black strip of its own ABOVE the picture, in normal
-         flow: it wraps freely on a phone and the picture simply begins
-         below it, so it can never touch the trophy at any size. Two
-         presenters, so "present". -->
-    <p class="marquee__credit">People for Animals and the Film Federation of India present</p>
+    <!-- Full bleed, no compromise (owner, 15 Sep 2026): the photograph owns
+         every pixel of the frame below the bar. The presenter credit lives
+         in the announcement bar above - the topmost line of the page, ink
+         on white, above the trophy by definition - so nothing is ever
+         composed over the picture but the word and the door at its foot. -->
     <div class="marquee__stage">
-      <!-- New filename on purpose: the plate was replaced twice under one
-           name and browser caches kept serving the old trophy; a renamed
-           file cannot be stale. -->
       <img class="marquee__plate" src="img/cinekind-marquee.webp" alt="" width="1558" height="1009" fetchpriority="high">
       <div class="marquee__scrim"></div>
       <div class="marquee__in">
         <div class="marquee__foot">
           <p class="marquee__word" aria-hidden="true">CineKind</p>
-          <!-- Just the verb: the word stands at full display scale directly
-               above. Screen readers still hear the full destination. -->
           <a class="marquee__door" href="#top" aria-label="Enter CineKind">Enter</a>
         </div>
       </div>
