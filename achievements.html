@@ -56,7 +56,7 @@
 }
 </style>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.306">
+<meta name="pfa-build" content="v1.305">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Policies and achievements | People for Animals</title>
@@ -265,13 +265,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .sphcard__face,.sphcard__back{position:absolute;width:150px;height:190px;margin:-95px 0 0 -75px;backface-visibility:hidden}
 .sphcard__face{border:0;padding:0;background:var(--stone);color:var(--ink);text-align:left;display:flex;flex-direction:column;box-shadow:0 12px 34px rgba(0,0,0,.5);cursor:pointer;transition:transform .3s,opacity .35s,filter .35s;overflow:hidden}
 .sphcard__face:hover,.sphcard__face:focus-visible{background:#fff;transform:translateZ(150px) scale(2.6)}
-/* Each achievement now has its own documentary-style image, selected from
-   the achievement title/category. A subtle ink wash keeps the year readable
-   while the sphere becomes a visual record rather than a set of abstract cards. */
-.sphcard__art{position:relative;height:100px;flex:none;background:var(--a,#444);overflow:hidden}
-.sphcard__art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 35%,rgba(0,0,0,.52) 100%);pointer-events:none}
-.sphcard__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92) contrast(1.04);transition:transform .45s ease,filter .35s ease}
-.sphcard__face:hover .sphcard__img,.sphcard__face:focus-visible .sphcard__img{transform:scale(1.08);filter:saturate(1) contrast(1.06)}
+/* The artwork block: each front owns a colour (--a, set per card), and each
+   entry draws one of six motifs in white over it. Generative, so a hundred
+   cards read like a run of prints rather than one card repeated. */
+.sphcard__art{position:relative;height:100px;flex:none;background:var(--a,#444)}
+.m0 .sphcard__art{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.32) 0 7px,transparent 7px 16px)}
+.m1 .sphcard__art{background-image:radial-gradient(rgba(255,255,255,.42) 1.8px,transparent 2.1px);background-size:13px 13px}
+.m2 .sphcard__art{background-image:linear-gradient(rgba(255,255,255,.3) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(255,255,255,.3) 1.5px,transparent 1.5px);background-size:15px 15px}
+.m3 .sphcard__art{background-image:repeating-conic-gradient(rgba(255,255,255,.24) 0% 25%,transparent 0% 50%);background-size:22px 22px}
+.m4 .sphcard__art{background-image:repeating-radial-gradient(circle at 32% 36%,rgba(255,255,255,.32) 0 3px,transparent 3px 12px)}
+.m5 .sphcard__art{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0 5px,transparent 5px 14px)}
 .sphcard__chip{display:none;position:absolute;top:8px;left:8px;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;font-family:var(--display);font-size:12.5px;box-shadow:0 2px 8px rgba(0,0,0,.25);font-variant-numeric:tabular-nums}
 .sphcard__tag{position:absolute;right:8px;bottom:7px;font-size:10px;font-weight:700;letter-spacing:.08em;color:#fff;font-variant-numeric:tabular-nums;text-shadow:0 1px 4px rgba(0,0,0,.35)}
 .sphcard__bd{display:flex;flex-direction:column;gap:5px;padding:9px 10px 8px;flex:1;min-height:0}
@@ -302,7 +305,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .sphlay__fig::before{content:'';position:absolute;inset:0;background:#e7e5e1;transform:rotate(2.2deg) translate(9px,11px);box-shadow:0 18px 48px rgba(0,0,0,.4)}
 .sphlay__fly{transition:transform .52s cubic-bezier(.22,.75,.25,1)}
 .sphlay__print{position:relative;width:100%;height:100%;background:var(--stone);color:var(--ink);transform:rotate(-3.5deg);box-shadow:0 34px 90px rgba(0,0,0,.6);display:flex;flex-direction:column;overflow:hidden;transition:transform .18s,opacity .18s}
-.sphlay__print .sphcard__art{height:56%;flex:none}.sphlay__print .sphcard__img{filter:saturate(.96) contrast(1.04)}
+.sphlay__print .sphcard__art{height:56%;flex:none}
 .sphlay__print .sphcard__chip{width:52px;height:52px;font-size:19px;top:12px;left:12px}
 .sphlay__print .sphcard__tag{font-size:13px;right:12px;bottom:10px}
 .sphlay__pbody{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:14px 16px}
@@ -834,59 +837,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     return FRONTCOLOR[front];
   }
 
-  /* Visual subjects for each achievement. Long legal titles are mapped to
-     concrete photographic subjects so the cards do not fill with document scans. */
-  /* REAL PHOTOGRAPH SYSTEM
-     Every achievement receives a photographic search query derived from the
-     actual achievement, plus a unique lock number. No SVG/illustration is used.
-     The lock keeps the photo selection deterministic and prevents the same
-     requested photo from being intentionally reused across cards. */
-  function photoTags(d){
-    var n=parseInt(d.no,10)||1;
-    var t=(d.title+' '+d.body).toLowerCase();
-    var q='animal welfare India';
-
-    /* Highly specific achievements first. */
-    if(/shark fin/.test(t)) q='shark fin ocean conservation';
-    else if(/foie gras/.test(t)) q='duck goose animal welfare farm';
-    else if(/seal leather/.test(t)) q='seal wildlife conservation';
-    else if(/wildlife skin|wildlife skins/.test(t)) q='wildlife conservation animal rescue India';
-    else if(/air-gun/.test(t)) q='bird wildlife conservation India';
-    else if(/silver leaf|varakh/.test(t)) q='food silver leaf varak production India';
-    else if(/oxytocin/.test(t)) q='cow dairy farm India veterinary';
-    else if(/gadhimai|animal sacrifice/.test(t)) q='animal welfare India temple festival';
-    else if(/bull.?fighting/.test(t)) q='bull animal welfare India';
-    else if(/bullock.?cart/.test(t)) q='bullock cart India animal welfare';
-    else if(/racehorse|whipping|racecourse/.test(t)) q='racehorse horse welfare India';
-    else if(/beach horse|beach.*horse/.test(t)) q='horse beach India animal welfare';
-    else if(/camel.*beach|beach.*camel/.test(t)) q='camel beach India animal welfare';
-    else if(/camel/.test(t)) q='camel Rajasthan India animal welfare';
-    else if(/mule|equine|kedarnath|char dham/.test(t)) q='mule horse Himalayan India rescue';
-    else if(/army dog|retired.*dog|army.*horse/.test(t)) q='Indian Army dog horse animal welfare';
-    else if(/pig.*farm|piggery|pig welfare|pigs/.test(t)) q='pig farm India animal welfare';
-    else if(/poultry|cage.?free|egg|chicken/.test(t)) q='free range chicken poultry India';
-    else if(/dairy|milk|gaushala|cattle/.test(t)) q='Indian cow dairy farm animal welfare';
-    else if(/elephant/.test(t)) q='elephant India wildlife sanctuary';
-    else if(/fish|aquaculture/.test(t)) q='fish conservation India aquatic wildlife';
-    else if(/dog|street dog|community dog|abc/.test(t)) q='Indian street dog animal welfare rescue';
-    else if(/laborator|testing|dissection|toxicity|pesticide|schedule y/.test(t)) q='laboratory animal research India science';
-    else if(/circus|performer|mobile zoo|zoo|wild animal/.test(t)) q='wildlife rescue India sanctuary';
-    else if(/film|television|broadcast/.test(t)) q='film set animal welfare India';
-    else if(/flood|disaster|evacuat/.test(t)) q='animal rescue flood India disaster';
-    else if(/police|prosecut|law enforcement|magistrate|judge/.test(t)) q='Indian police animal welfare training';
-    else if(/court|judgement|judgment|rules|law|directive|order|regulation|policy|standards|enforcement/.test(t)) q='Indian court law justice documents';
-    else if(/school|university|college|curriculum|teaching|training|fellowship|nalsar/.test(t)) q='animal law education India students';
-    else if(/sanctuary|rescue centre|rescue center|rehabilitation/.test(t)) q='animal rescue rehabilitation sanctuary India';
-    else if(/transport|vehicle|motor|road|public transport|livestock market/.test(t)) q='animal transport India cattle vehicle';
-    return q;
-  }
-
-  function imageUrl(d){
-    var q=photoTags(d);
-    var lock=parseInt(d.no,10)||1;
-    return 'https://loremflickr.com/960/640/'+encodeURIComponent(q)+'?lock='+lock;
-  }
-
   var cards = [];
   var cursor = 0;
   rings.forEach(function(r, ringIdx){
@@ -911,16 +861,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       face.setAttribute('data-idx', String((cursor - 1) % data.length));
       var art = document.createElement('span');
       art.className = 'sphcard__art';
-
-      var photo = document.createElement('img');
-      photo.className = 'sphcard__img';
-      photo.src = imageUrl(d);
-      photo.alt = '';
-      photo.loading = 'lazy';
-      photo.decoding = 'async';
-      photo.referrerPolicy = 'no-referrer';
-      art.appendChild(photo);
-
       /* no number chip: the record is longer than its count, and a numbered card reads as one of a finished set */
       if (d.year) {
         var tag = document.createElement('span'); tag.className = 'sphcard__tag'; tag.textContent = d.year;
