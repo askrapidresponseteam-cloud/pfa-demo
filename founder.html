@@ -934,7 +934,12 @@ body.th-open{overflow:hidden}
        but the YouTube ones are whatever the channel called the film, so
        they are escaped rather than trusted. The caption uses textContent
        and needs none of this. */
-    function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    /* Escapes quotes as well as angle brackets (15 Sep 2026): film 1's
+       fetched YouTube title begins with a literal double quote, which
+       closed data-title at its first character and left the hover stage
+       with an empty string to speak. Any esc'd string may end up inside
+       a quoted attribute, so " is always &quot;. */
+    function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
     var SOURCE = { instagram:'Instagram', youtube:'YouTube', facebook:'Facebook' };
     var label = function(v){ return SOURCE[v.src] || 'Facebook'; };
 
