@@ -1,3 +1,18 @@
+## v1.307
+
+- **The founder's corner is the second door on the landing page.** The
+  first cut was a card: a small photograph beside copy on a black slab,
+  and between two full-bleed panels it read as an advertisement. Rebuilt
+  to the hero's own construction, so the page is now two doors deep: the
+  movement, then the woman who started it. Her photograph edge to edge,
+  the scrim weighted to the foot where the words are, "Compassion
+  without action is evil" in the display voice over it, her name and one
+  line under a hairline, and a single door into founder.html that
+  inverts on hover. The photograph is anchored to its top so no viewport
+  can crop her head, which is also the v1.306 fix on the founder page's
+  own plate: 40% let a wide window's overflow reach her crown; anchored
+  to 0, the crop can only take from the desk.
+
 ## v1.305
 
 - **CineKind opens on a wall of the honourees that goes by as you
