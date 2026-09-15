@@ -429,7 +429,8 @@ html{scroll-behavior:smooth}
 .marquee{position:relative;isolation:isolate;overflow:hidden;height:100vh;height:100svh;min-height:540px;padding-top:calc(var(--ann) + var(--nav));background:var(--stone);display:flex}
 .marquee__plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
 .marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,10,10,.62),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 40px)),linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
-.marquee__in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:20px;width:100%;padding:0 var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
+.marquee__in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:100%;padding:clamp(20px,3.5svh,40px) var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
+.marquee__foot{display:flex;flex-direction:column;align-items:center;gap:20px}
 .marquee__eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72)}
 .marquee__word{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(44px,7.5vw,120px);line-height:.95;text-shadow:0 2px 10px rgba(0,0,0,.55)}
 .marquee__door{display:inline-block;margin-top:6px;padding:16px 42px;border:1px solid #c9a227;color:#f0d47c;background:rgba(10,10,10,.35);font-family:var(--body);font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;transition:background .35s ease,color .35s ease,letter-spacing .35s ease}
@@ -680,9 +681,15 @@ html{scroll-behavior:smooth}
     <img class="marquee__plate" src="img/cinekind-hero.webp" alt="" width="1559" height="1009" fetchpriority="high">
     <div class="marquee__scrim"></div>
     <div class="marquee__in">
-      <p class="marquee__eyebrow">People for Animals presents</p>
-      <p class="marquee__word" aria-hidden="true">CineKind</p>
-      <a class="marquee__door" href="#top">Enter CineKind</a>
+      <!-- The credit stands at the head of the frame, and names both houses:
+           CineKind is presented by People for Animals with the Film
+           Federation of India, the apex body of the Indian film industry
+           (15 Sep 2026). Two presenters, so "present". -->
+      <p class="marquee__eyebrow">People for Animals and the Film Federation of India present</p>
+      <div class="marquee__foot">
+        <p class="marquee__word" aria-hidden="true">CineKind</p>
+        <a class="marquee__door" href="#top">Enter CineKind</a>
+      </div>
     </div>
   </section>
 
