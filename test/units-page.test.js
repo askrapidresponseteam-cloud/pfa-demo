@@ -140,7 +140,11 @@ test('the size of this list is never presented as a national figure', () => {
 test('the hero starts where every other section hero starts', () => {
   const rule = /\.u-hero\{[^}]*\}/.exec(HTML)[0];
   assert.match(rule, /padding:calc\(var\(--ann\) \+ var\(--nav\) \+ 72px\) var\(--gutter\) 64px/);
-  assert.match(rule, /min-height:clamp\(380px,56svh,600px\)/);
+  /* The reserved half-screen went with the owner's cut-to-the-chase pass
+     (15 Sep 2026): heroes state the page and hand over. What is shared now
+     is the 72px offset, not a minimum height. */
+  assert.ok(!/min-height:clamp\(380px,56svh,600px\)/.test(rule),
+    'the tall hero is gone by decision; do not reintroduce the min-height');
   for (const page of ['laws.html', 'newsroom.html', 'get-involved.html']) {
     const other = fs.readFileSync(path.join(ROOT, page), 'utf8');
     assert.match(other, /padding:calc\(var\(--ann\) \+ var\(--nav\) \+ 72px\) var\(--gutter\) 64px/,

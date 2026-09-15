@@ -72,7 +72,7 @@
   --ink:#111;
   --deep:#0a0a0a;
   --muted:#6a6a6a;
-  --stone:#f4f3f1;
+  --stone:#fff;
   --bone:#fff;
   --line:#e4e2df;
   --line-dark:#3a3a3a;
@@ -109,8 +109,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
 .btn:hover{background:transparent;color:var(--ink);opacity:1}
-.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
-.btn--light:hover{background:transparent;color:#fff}
+.btn--light{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn--light:hover{background:transparent;color:var(--ink)}
 
 /* ---------- the record ---------- */
 .band{padding:var(--band) var(--gutter)}
@@ -162,13 +162,11 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* ---------- hero ---------- */
 .hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
-  min-height:clamp(380px,56svh,600px);overflow:hidden;isolation:isolate}
-.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-  radial-gradient(115% 85% at 80% 10%,rgba(17,17,17,.15),transparent 62%),
-  radial-gradient(70% 70% at 5% 100%,rgba(17,17,17,.08),transparent 65%)}
+  overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:none}
 .hero__in{position:relative;z-index:1;width:100%}
 .hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
-.hero h1{font-size:clamp(32px,5.2vw,84px);max-width:15ch}
+.hero h1{font-size:clamp(26px,3vw,44px);max-width:15ch}
 .hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
 .hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(17,17,17,.85)}
 
@@ -189,7 +187,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .legs{padding:0 var(--gutter) var(--band)}
 .leg{margin-top:var(--band)}
 .leg__panel{background:var(--stone);color:var(--ink);padding:clamp(32px,4vw,64px);position:relative;overflow:hidden;isolation:isolate}
-.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(110% 120% at 88% 0%,rgba(17,17,17,.13),transparent 60%)}
+.leg__panel::before{content:"";position:absolute;inset:0;z-index:0;background:none}
 .leg__panel > *{position:relative;z-index:1}
 .leg__panel .eyebrow{color:rgba(17,17,17,.5)}
 .leg__panel h2{font-size:clamp(28px,4vw,64px);margin-top:14px;max-width:14ch}
@@ -273,12 +271,12 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    entry draws one of six motifs in white over it. Generative, so a hundred
    cards read like a run of prints rather than one card repeated. */
 .sphcard__art{position:relative;height:100px;flex:none;background:var(--a,#444)}
-.m0 .sphcard__art{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.32) 0 7px,transparent 7px 16px)}
-.m1 .sphcard__art{background-image:radial-gradient(rgba(255,255,255,.42) 1.8px,transparent 2.1px);background-size:13px 13px}
-.m2 .sphcard__art{background-image:linear-gradient(rgba(255,255,255,.3) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(255,255,255,.3) 1.5px,transparent 1.5px);background-size:15px 15px}
-.m3 .sphcard__art{background-image:repeating-conic-gradient(rgba(255,255,255,.24) 0% 25%,transparent 0% 50%);background-size:22px 22px}
-.m4 .sphcard__art{background-image:repeating-radial-gradient(circle at 32% 36%,rgba(255,255,255,.32) 0 3px,transparent 3px 12px)}
-.m5 .sphcard__art{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0 5px,transparent 5px 14px)}
+.m0 .sphcard__art{background-image:repeating-linear-gradient(45deg,rgba(17,17,17,.32) 0 7px,transparent 7px 16px)}
+.m1 .sphcard__art{background-image:radial-gradient(rgba(17,17,17,.42) 1.8px,transparent 2.1px);background-size:13px 13px}
+.m2 .sphcard__art{background-image:linear-gradient(rgba(17,17,17,.3) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(17,17,17,.3) 1.5px,transparent 1.5px);background-size:15px 15px}
+.m3 .sphcard__art{background-image:repeating-conic-gradient(rgba(17,17,17,.24) 0% 25%,transparent 0% 50%);background-size:22px 22px}
+.m4 .sphcard__art{background-image:repeating-radial-gradient(circle at 32% 36%,rgba(17,17,17,.32) 0 3px,transparent 3px 12px)}
+.m5 .sphcard__art{background-image:repeating-linear-gradient(90deg,rgba(17,17,17,.3) 0 5px,transparent 5px 14px)}
 .sphcard__chip{display:none;position:absolute;top:8px;left:8px;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;font-family:var(--display);font-size:12.5px;box-shadow:0 2px 8px rgba(0,0,0,.25);font-variant-numeric:tabular-nums}
 .sphcard__tag{position:absolute;right:8px;bottom:7px;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--ink);font-variant-numeric:tabular-nums;text-shadow:0 1px 4px rgba(0,0,0,.35)}
 .sphcard__bd{display:flex;flex-direction:column;gap:5px;padding:9px 10px 8px;flex:1;min-height:0}
@@ -293,7 +291,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .sph__dot{width:8px;height:8px;border-radius:50%;flex:none}
 .sph__aside{display:flex;flex-direction:column;align-items:center;gap:14px;z-index:5;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(17,17,17,.6);writing-mode:vertical-rl}
 .sph__rule{width:1px;height:56px;background:rgba(17,17,17,.35)}
-.sphlay{position:fixed;inset:0;z-index:120;background:rgba(10,10,10,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);display:grid;place-items:center;padding:clamp(24px,5vw,80px);overflow:auto}
+.sphlay{position:fixed;inset:0;z-index:120;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);display:grid;place-items:center;padding:clamp(24px,5vw,80px);overflow:auto}
 /* display:grid above beats the browser's [hidden]{display:none}, which is
    exactly how the overlay once opened itself on page load and blacked out
    the whole record. Author styles outrank the user-agent sheet whatever the
@@ -433,7 +431,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 <main>
   <section class="hero" id="top">
     <div class="hero__in">
-      <p class="eyebrow">Policies and achievements</p>
       <h1 class="display">Policies and&nbsp;achievements.</h1>
       <p class="lede">Rules rewritten, orders obtained, practices ended. Thirty years of it, on eight fronts. Every entry below is a thing that is different now because of work that was done, and most of it sits in law rather than in memory. What is here is a selection; the record is longer than any page.</p>
     </div>

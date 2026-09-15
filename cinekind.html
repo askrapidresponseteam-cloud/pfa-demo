@@ -78,7 +78,7 @@
   --ink:#111;
   --deep:#0a0a0a;
   --muted:#6a6a6a;
-  --stone:#f4f3f1;
+  --stone:#fff;
   --bone:#fff;
   --line:#e4e2df;
   --line-dark:#3a3a3a;
@@ -115,9 +115,9 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
 .btn:hover{background:transparent;color:var(--ink);opacity:1}
-.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
-.btn--light:hover{background:transparent;color:#fff}
-.btn--ghost{background:transparent;border-color:#fff;color:#fff}
+.btn--light{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn--light:hover{background:transparent;color:var(--ink)}
+.btn--ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
 .btn--ghost:hover{background:#fff;color:var(--ink)}
 
 .shot{position:relative;overflow:hidden;background:var(--stone)}
@@ -379,7 +379,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    controls. Reduced motion gets the paper without the breathing, because the
    thing being said is "press this", not "look at this moving". */
 .screen.is-hushed #cineSound{background:#fff;color:var(--deep);animation:cine-hush 1.6s ease-in-out 2}
-@keyframes cine-hush{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 0 7px rgba(255,255,255,.22)}}
+@keyframes cine-hush{0%,100%{box-shadow:0 0 0 0 rgba(17,17,17,0)}50%{box-shadow:0 0 0 7px rgba(17,17,17,.22)}}
 @media (prefers-reduced-motion: reduce){
   .screen.is-hushed #cineSound{animation:none}
 }
@@ -497,8 +497,8 @@ html{scroll-behavior:smooth}
    Everything eases in as it arrives; without the script nothing is hidden. */
 .band--grand{padding:clamp(88px,10vw,160px) var(--gutter)}
 .band--grand .band__head h2,.band--grand .feature__body h2{font-size:clamp(40px,6.4vw,104px);max-width:12ch;margin-top:22px;line-height:.98}
-.band--grand .band__head p,.band--grand .feature__body p{font-size:clamp(15px,1.25vw,19px);max-width:44ch;margin-top:30px;line-height:1.6;color:rgba(255,255,255,.72)}
-.band--grand .eyebrow{color:rgba(255,255,255,.55)}
+.band--grand .band__head p,.band--grand .feature__body p{font-size:clamp(15px,1.25vw,19px);max-width:44ch;margin-top:30px;line-height:1.6;color:rgba(17,17,17,.72)}
+.band--grand .eyebrow{color:rgba(17,17,17,.55)}
 .honours .roll{margin-top:clamp(40px,5vw,72px);border:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .honours .roll li{position:relative;display:block;padding:0;border:0;aspect-ratio:3/4;overflow:hidden;background:#151515;
   transition:transform .55s cubic-bezier(.2,.7,.2,1),opacity .55s ease,outline-color .3s}
@@ -513,19 +513,19 @@ html{scroll-behavior:smooth}
 .honours .roll li:hover,.honours .roll li.is-lit{opacity:1!important;transform:scale(1.035);z-index:2;background:#151515}
 .honours .roll li:hover img{transform:scale(1.06)}
 .honours .roll li.is-lit{outline:2px solid #fff;outline-offset:-2px}
-.about .facts{margin-top:clamp(48px,6vw,88px);border-top:1px solid rgba(255,255,255,.22);padding-top:clamp(28px,3vw,44px);gap:24px}
-.about .facts p.k{color:rgba(255,255,255,.5)}
-.about .facts p.v{font-family:var(--display);text-transform:uppercase;font-size:clamp(22px,2.6vw,40px);line-height:1.05;margin-top:12px;color:#fff}
+.about .facts{margin-top:clamp(48px,6vw,88px);border-top:1px solid rgba(17,17,17,.22);padding-top:clamp(28px,3vw,44px);gap:24px}
+.about .facts p.k{color:rgba(17,17,17,.5)}
+.about .facts p.v{font-family:var(--display);text-transform:uppercase;font-size:clamp(22px,2.6vw,40px);line-height:1.05;margin-top:12px;color:var(--ink)}
 .trophy .feature:not(:has(.shot)){grid-template-columns:minmax(0,1fr)}
 .kindset .tool{margin-top:clamp(48px,6vw,80px)}
-.kindset .tool h3{color:rgba(255,255,255,.5)}
-.kindset .tool__hint{margin:18px 0 0;font-size:12px;color:rgba(255,255,255,.5)}
-.kindset .choice{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;font-size:15px;padding:20px 22px}
-.kindset .choice:hover{border-color:#fff}
-.kindset .choice[aria-pressed="true"]{background:#fff;color:var(--deep);border-color:#fff}
-.kindset .answer{background:transparent;border:1px solid rgba(255,255,255,.22);color:#fff}
-.kindset .answer .verdict,.kindset .answer p.body,.kindset .answer .fine{color:rgba(255,255,255,.72)}
-.kindset .answer .fine{border-color:rgba(255,255,255,.2)}
+.kindset .tool h3{color:rgba(17,17,17,.5)}
+.kindset .tool__hint{margin:18px 0 0;font-size:12px;color:rgba(17,17,17,.5)}
+.kindset .choice{background:transparent;border:1px solid rgba(17,17,17,.3);color:var(--ink);font-size:15px;padding:20px 22px}
+.kindset .choice:hover{border-color:var(--ink)}
+.kindset .choice[aria-pressed="true"]{background:#fff;color:var(--deep);border-color:var(--ink)}
+.kindset .answer{background:transparent;border:1px solid rgba(17,17,17,.22);color:var(--ink)}
+.kindset .answer .verdict,.kindset .answer p.body,.kindset .answer .fine{color:rgba(17,17,17,.72)}
+.kindset .answer .fine{border-color:rgba(17,17,17,.2)}
 .kindset .answer h4{font-size:clamp(26px,3vw,44px)}
 /* the ease-in: applied by the script, so a page without it hides nothing */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
@@ -539,7 +539,7 @@ html{scroll-behavior:smooth}
 
 /* ---------- closing ---------- */
 .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
-.close__note{margin:28px 0 0;font-size:12px;color:rgba(255,255,255,.5)}
+.close__note{margin:28px 0 0;font-size:12px;color:rgba(17,17,17,.5)}
 .nomform{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 .nomform input{flex:1 1 300px;max-width:460px;border:1px solid var(--line);background:#fff;padding:15px 16px;font-size:14px;outline:none}
 .nomform input:focus{border-color:var(--ink)}

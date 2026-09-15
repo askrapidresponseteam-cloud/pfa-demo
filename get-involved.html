@@ -71,7 +71,7 @@
   --ink:#111;
   --deep:#0a0a0a;
   --muted:#6a6a6a;
-  --stone:#f4f3f1;
+  --stone:#fff;
   --bone:#fff;
   --line:#e4e2df;
   --line-dark:#3a3a3a;
@@ -111,26 +111,24 @@ input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit
 .eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
 .btn:hover{background:transparent;color:var(--ink);opacity:1}
-.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
-.btn--light:hover{background:transparent;color:#fff}
+.btn--light{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn--light:hover{background:transparent;color:var(--ink)}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
 .btn[disabled]:hover{background:var(--ink);color:#fff}
 
 /* ---------- hero ---------- */
 .hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
-  min-height:clamp(380px,58svh,640px);overflow:hidden;isolation:isolate;
+  overflow:hidden;isolation:isolate;
   /* Air between the dark block and the filter chips. It sits on the hero, not
      on .filters, deliberately: .filters is sticky, so space added there would
      be carried up and pad the bar for the whole scroll. This gap scrolls away,
      which is right, because the crowding only exists at rest against the hero. */
   margin-bottom:clamp(24px,3.2vw,44px)}
-.hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-   radial-gradient(120% 90% at 78% 15%,rgba(17,17,17,.16),transparent 60%),
-   radial-gradient(70% 70% at 8% 100%,rgba(17,17,17,.09),transparent 65%)}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:none}
 .hero__in{position:relative;z-index:1;width:100%}
 .hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
-.hero h1{font-size:clamp(34px,5.6vw,88px)}
+.hero h1{font-size:clamp(26px,3vw,44px)}
 .hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
 .hero 
 
@@ -182,7 +180,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 .add{width:100%;border:1px solid var(--ink);background:none;color:var(--ink);height:40px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
 .add:hover{background:var(--ink);color:#fff}
 .stepper{display:flex;align-items:center;justify-content:space-between;height:40px;border:1px solid var(--ink);background:var(--ink);color:#fff}
-.stepper button{width:40px;height:100%;background:none;border:none;color:#fff;font-size:16px;line-height:1;cursor:pointer}
+.stepper button{width:40px;height:100%;background:none;border:none;color:var(--ink);font-size:16px;line-height:1;cursor:pointer}
 .stepper button:hover{opacity:.6}
 .stepper span{font-size:12px;letter-spacing:.08em;font-weight:700}
 .empty{padding:56px 0;text-align:center;color:var(--muted);font-size:13px}
@@ -418,7 +416,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 .tier__name{font-size:15px;font-weight:700}
 .tier__amt{font-size:15px;font-weight:700;text-align:right;white-space:nowrap}
 .tier__kit{grid-column:1 / -1;font-size:13px;line-height:1.5;color:var(--muted)}
-.tier:has(input:checked) .tier__kit{color:rgba(255,255,255,.78)}
+.tier:has(input:checked) .tier__kit{color:rgba(17,17,17,.78)}
 .gi__note{margin:18px 0 0;font-size:12px;line-height:1.6;color:var(--muted)}
 /* the terms box, as the donate page draws its own: a checkbox and a line,
    not a text field. .field styles every input as a text field, which is

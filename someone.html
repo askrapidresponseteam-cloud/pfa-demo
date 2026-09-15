@@ -86,7 +86,7 @@ section[data-screen-label="Hero"] #hero-media{position:relative;width:100%;heigh
   /* The same four names the other eighteen pages use, so the palette is one
      edit rather than nineteen. The values are identical to what this page
      already painted; nothing here changes colour. */
-  --ink:#111;--deep:#0a0a0a;--paper:#fff;--muted:#6a6a6a;--stone:#f4f3f1;--line:#e4e2df;
+  --ink:#111;--deep:#0a0a0a;--paper:#fff;--muted:#6a6a6a;--stone:#fff;--line:#e4e2df;
   --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
   --rhythm:clamp(76px,8.5vw,136px);
   --ann:34px;
@@ -135,7 +135,7 @@ section[data-screen-label="Test yourself"]{padding:var(--rhythm) var(--g)!import
   rgba(0,0,0,.85) 0%,rgba(0,0,0,.78) 30%,rgba(0,0,0,.55) 46%,
   rgba(0,0,0,.22) 62%,rgba(0,0,0,0) 80%)}
 .pfa-splitcopy{text-shadow:0 1px 3px rgba(0,0,0,.55)}
-.pfa-splitcopy a{border-bottom-color:rgba(255,255,255,.92)}
+.pfa-splitcopy a{border-bottom-color:rgba(17,17,17,.92)}
 @media (max-width:860px){
   /* panels are shorter once stacked, so the copy occupies more of the frame */
   .pfa-split .pfa-scrim{background:linear-gradient(to top,
@@ -199,9 +199,9 @@ body.hide-slot-captions .pfa-slot-empty{display:none}
 [data-slot="fullbleed"] .pfa-slot-frame img{object-position:50% 70%}
 </style>
 <style>
-.pfa-hv1:hover{background:transparent !important;color:#fff !important;opacity:1 !important}
-.pfa-hv2:hover{background:transparent !important;color:#fff !important;opacity:1 !important}
-.pfa-hv3:hover{background:transparent !important;color:#fff !important;opacity:1 !important}
+.pfa-hv1:hover{background:transparent !important;color:var(--ink) !important;opacity:1 !important}
+.pfa-hv2:hover{background:transparent !important;color:var(--ink) !important;opacity:1 !important}
+.pfa-hv3:hover{background:transparent !important;color:var(--ink) !important;opacity:1 !important}
 .pfa-hv4:hover{background:transparent !important;color:#111 !important;opacity:1 !important}
 .pfa-hv5:hover{background:#fff !important;color:#111 !important;opacity:1 !important}
 </style><link rel="stylesheet" href="pfa-search.css">

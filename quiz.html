@@ -67,7 +67,7 @@
   --ink:#111;
   --deep:#0a0a0a;
   --muted:#6a6a6a;
-  --stone:#f4f3f1;
+  --stone:#fff;
   --bone:#fff;
   --line:#e4e2df;
   --line-dark:#3a3a3a;
@@ -107,8 +107,8 @@ input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit
 .eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
 .btn:hover{background:transparent;color:var(--ink);opacity:1}
-.btn--light{background:#fff;border-color:#fff;color:var(--ink)}
-.btn--light:hover{background:transparent;color:#fff}
+.btn--light{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn--light:hover{background:transparent;color:var(--ink)}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
 .btn[disabled]:hover{background:var(--ink);color:#fff}
 
@@ -218,7 +218,7 @@ input,button,textarea,select{font-family:inherit;font-size:inherit;color:inherit
 .shelves button:hover{color:var(--ink)}
 .shelves button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .shelves button span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.shelves button[aria-pressed="true"] span{color:rgba(255,255,255,.66)}
+.shelves button[aria-pressed="true"] span{color:rgba(17,17,17,.66)}
 
 /* ---------- offers rail ----------
    The seller's markdowns and nothing else: a card exists only where Shopify
@@ -257,13 +257,13 @@ a.offer__tile:hover{opacity:1;border-color:var(--ink)}
 /* Ink on paper is the selection everywhere except the surfaces that are
    themselves ink, where it would read as nothing having been selected. */
 .offer--lead ::selection{background:#fff;color:var(--deep)}
-.offer--lead .offer__why,.offer--lead .offer__price small,.offer--lead .eyebrow{color:rgba(255,255,255,.62)}
-.offer--lead .offer__tile{border-color:rgba(255,255,255,.28)}
-.offer--lead .offer__foot{border-top-color:rgba(255,255,255,.22)}
-.offer--lead .add,.offer--lead .stepper{border-color:#fff;color:#fff}
-.offer--lead .stepper button{color:#fff}
+.offer--lead .offer__why,.offer--lead .offer__price small,.offer--lead .eyebrow{color:rgba(17,17,17,.62)}
+.offer--lead .offer__tile{border-color:rgba(17,17,17,.28)}
+.offer--lead .offer__foot{border-top-color:rgba(17,17,17,.22)}
+.offer--lead .add,.offer--lead .stepper{border-color:var(--ink);color:var(--ink)}
+.offer--lead .stepper button{color:var(--ink)}
 .offer--lead .add:hover{background:#fff;color:var(--ink)}
-.offer--lead .was{color:rgba(255,255,255,.55)}
+.offer--lead .was{color:rgba(17,17,17,.55)}
 /* The old price, struck, in front of the new one. On a card and in the
    picker it is the only sign of a markdown beside the tag. */
 .was{color:var(--muted);text-decoration:line-through;margin-right:6px;font-weight:400}
@@ -621,7 +621,6 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 <main id="top">
   <section class="qz">
     <div class="qz__head">
-      <p class="eyebrow">Test yourself</p>
       <h1 class="qz__title">Test yourself.</h1>
       <p class="qz__lede">Six questions on what farm animals have been shown to do. Every answer is
         drawn from a published study, and each one is named and linked as you go. There is a

@@ -41,7 +41,7 @@
 }
 
 :root{
-  --paper:#fff; --ink:#111; --deep:#0a0a0a; --muted:#6a6a6a; --stone:#f4f3f1;
+  --paper:#fff; --ink:#111; --deep:#0a0a0a; --muted:#6a6a6a; --stone:#fff;
   --line:#e4e2df; --line-dark:#3a3a3a; --accent:#2b9fd8;
   --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
   --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
@@ -94,16 +94,16 @@ button{font:inherit;color:inherit}
 .tab{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;
   padding:9px 12px;background:none;border:none;color:#c9c9c9;font-size:13px;cursor:pointer;transition:color .18s,background .18s}
 .tab:hover{color:#fff;background:#161616}
-.tab[aria-current="page"]{color:#fff;background:#1c1c1c}
+.tab[aria-current="page"]{color:var(--ink);background:#1c1c1c}
 .tab[hidden]{display:none}
 .tab .pip{min-width:20px;height:18px;padding:0 6px;display:grid;place-items:center;background:#fff;color:var(--deep);font-size:10px;font-weight:700}
 .tab .pip[hidden]{display:none}
 .railfoot{margin-top:auto;padding:22px 24px 0;border-top:1px solid rgba(17,17,17,.18);color:#8f8f8f;font-size:12px}
-.railfoot b{display:block;color:#fff;font-weight:400;font-size:13px;overflow-wrap:anywhere}
+.railfoot b{display:block;color:var(--ink);font-weight:400;font-size:13px;overflow-wrap:anywhere}
 .railfoot .role{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:4px 0 12px;display:block}
 .railfoot button{background:none;border:1px solid rgba(17,17,17,.18);color:#c9c9c9;padding:7px 12px;font-size:11px;
   letter-spacing:.1em;text-transform:uppercase;cursor:pointer;width:100%}
-.railfoot button:hover{border-color:#fff;color:#fff}
+.railfoot button:hover{border-color:var(--ink);color:var(--ink)}
 
 .main{min-width:0;display:flex;flex-direction:column}
 .bar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);

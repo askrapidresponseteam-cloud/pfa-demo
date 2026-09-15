@@ -72,7 +72,7 @@
   --ink:#111;
   --deep:#0a0a0a;
   --muted:#6a6a6a;
-  --stone:#f4f3f1;
+  --stone:#fff;
   --line:#e4e2df;
   --line-dark:#2a2a2a;
   --accent:#111;
@@ -122,21 +122,19 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    floated against the taller plot and the eyebrow drifted down the page. */
 .u-hero{position:relative;background:var(--stone);color:var(--ink);overflow:hidden;isolation:isolate;
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
-  min-height:clamp(380px,56svh,600px)}
+  }
 /* The same two washes Laws carries, verbatim, so the two dark heroes read
    as one family: white at both corners, no blue (owner, 5 Sep 2026). */
-.u-hero::before{content:"";position:absolute;inset:0;z-index:0;background:
-  radial-gradient(115% 85% at 80% 10%,rgba(17,17,17,.15),transparent 62%),
-  radial-gradient(70% 70% at 5% 100%,rgba(17,17,17,.08),transparent 65%)}
+.u-hero::before{content:"";position:absolute;inset:0;z-index:0;background:none}
 .u-hero__in{position:relative;z-index:1}
 .u-hero__copy{min-width:0}
 .u-hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
-.u-hero h1{font-size:clamp(34px,5.6vw,86px);max-width:13ch}
+.u-hero h1{font-size:clamp(26px,3vw,44px);max-width:13ch}
 .u-hero__lede{margin:26px 0 0;max-width:44ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.76)}
 
 
 /* ============================================================ filter bar */
-.u-bar{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:rgba(255,255,255,.94);
+.u-bar{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:rgba(17,17,17,.94);
   backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
 .u-bar__row{display:flex;align-items:center;gap:10px;overflow-x:auto;scrollbar-width:none}
 .u-bar__row::-webkit-scrollbar{display:none}
@@ -205,12 +203,12 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* ============================================================ the setup path */
 .u-setup{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,64px);margin-top:clamp(30px,3.6vw,50px)}
 .u-setup__col{min-width:0}
-.u-setup h3{margin:0 0 16px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.u-setup h3{margin:0 0 16px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(17,17,17,.5)}
 .u-path{counter-reset:step;display:grid;gap:14px}
-.u-path li{counter-increment:step;position:relative;padding:0 0 14px 44px;border-bottom:1px solid rgba(255,255,255,.14);font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.82)}
-.u-path li::before{content:"0" counter(step);position:absolute;left:0;top:2px;font-family:var(--display);font-size:19px;color:rgba(255,255,255,.4);font-variant-numeric:tabular-nums}
+.u-path li{counter-increment:step;position:relative;padding:0 0 14px 44px;border-bottom:1px solid rgba(17,17,17,.14);font-size:13.5px;line-height:1.6;color:rgba(17,17,17,.82)}
+.u-path li::before{content:"0" counter(step);position:absolute;left:0;top:2px;font-family:var(--display);font-size:19px;color:rgba(17,17,17,.4);font-variant-numeric:tabular-nums}
 .u-first{display:grid;gap:12px}
-.u-first li{position:relative;padding:0 0 12px 20px;border-bottom:1px solid rgba(255,255,255,.14);font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.82)}
+.u-first li{position:relative;padding:0 0 12px 20px;border-bottom:1px solid rgba(17,17,17,.14);font-size:13.5px;line-height:1.6;color:rgba(17,17,17,.82)}
 .u-first li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;background:#fff}
 .u-setup__acts{margin-top:22px}
 @media (max-width:860px){.u-setup{grid-template-columns:1fr}}
@@ -237,8 +235,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .u-cta__acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
 .u-btn{display:inline-block;padding:16px 30px;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
   border:1px solid #fff;background:#fff;color:var(--ink);transition:background .2s,color .2s}
-.u-btn:hover{background:transparent;color:#fff}
-.u-btn--ghost{background:transparent;color:#fff}
+.u-btn:hover{background:transparent;color:var(--ink)}
+.u-btn--ghost{background:transparent;color:var(--ink)}
 .u-btn--ghost:hover{background:#fff;color:var(--ink)}
 .u-cta__addr{margin:34px 0 0;padding-top:22px;border-top:1px solid rgba(17,17,17,.18);
   font-size:13px;line-height:1.7;color:rgba(17,17,17,.6);font-style:normal}
@@ -291,10 +289,10 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .ugal__eyebrow{margin:0 0 14px;color:#ff3b18;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .ugal__eyebrow b{margin-left:12px;color:var(--ink);font-variant-numeric:tabular-nums}
 .ugal__name{margin:0 0 18px;font-family:var(--display);font-weight:400;font-size:clamp(32px,3.4vw,58px);line-height:1;text-transform:uppercase;letter-spacing:.01em;overflow-wrap:break-word}
-.ugal__body{margin:0 0 18px;font-size:16px;line-height:1.6;color:rgba(241,240,235,.85)}
+.ugal__body{margin:0 0 18px;font-size:16px;line-height:1.6;color:rgba(17,17,17,.85)}
 .ugal__rule{width:30px;height:1px;border:0;background:#666;margin:18px 0}
-.ugal__spec{margin:0 0 6px;font-size:14px;line-height:1.5;color:#8f8d86}
-.ugal__spec a{color:#b9b7b0;border-bottom:1px solid #555}
+.ugal__spec{margin:0 0 6px;font-size:14px;line-height:1.5;color:var(--muted)}
+.ugal__spec a{color:var(--muted);border-bottom:1px solid #555}
 .ugal__pill{display:block;width:100%;border:0;border-radius:0;background:#5b6cf6;color:var(--ink);margin-top:22px;padding:15px 20px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;text-align:center}
 .ugal__pill:hover{filter:brightness(1.1)}
 .ugal__strip{display:flex;background:#f2f1ec;overflow-x:auto;scrollbar-width:thin}
