@@ -1,3 +1,21 @@
+## v1.352
+
+- **The supplied mark, unrearranged.** v1.351 split the artwork and set the
+  mark beside the wordmark to keep the letters legible in an 80px nav. That
+  was not the instruction. The file goes in as it stands, at its own 1.5
+  proportion, scaled only for web weight: 384x256 from 1536x1024, the same
+  ratio to four decimal places, 83KB rather than 251.
+
+  The one change is the one asked for. On a dark ground the wordmark's black
+  is turned white, and nothing else is touched: the mark above it is white
+  and blue already and reads on both. img/logo-stacked.png, left over from
+  the last attempt, is gone.
+
+  The header draws it at 62px, as much as the nav can give. The mark is 1.5
+  wide to tall where the old one was 2.92, so it takes its presence in height
+  instead of width: 93x62 against the old 164x56. The header is still 81px
+  and --nav is still 81px, so no sticky offset on the site has moved.
+
 ## v1.351
 
 - **The new mark, set horizontally for the header.** The supplied artwork is
