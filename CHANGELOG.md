@@ -1,3 +1,18 @@
+## v1.340
+
+- **The donate panel has a picture, and dollars say what they buy.** The
+  left of the page was a heading, a screen of nothing, and one sentence
+  pinned to the floor; the ring made from a 500 note goes in the nothing,
+  between the word and the line about the gift. Dollars were four bare
+  figures beside a sentence that still described the last rupee amount, so
+  $25 read as "rabies shots for five street dogs" whatever it came to. Each
+  dollar preset now carries what it funds, the panel follows the dollars and
+  hands the rupee line back on the way out, and a typed figure is costed the
+  same way. Two faults found on the way: the caption on a selected amount was
+  rgba(17,17,17,.7) on #111, so the one card a donor had decided on was the
+  one card that would not say what it bought, and Other amount in dollars
+  toggled a class the stylesheet does not answer to, so it opened nothing.
+
 ## v1.339
 
 - **The chosen tier speaks its whole line.** Selecting a membership

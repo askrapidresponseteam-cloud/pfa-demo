@@ -208,6 +208,19 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .impact{margin-top:40px;padding-top:24px;border-top:1px solid var(--line-dark)}
 .impact .eyebrow{margin-bottom:12px}
 .impact p:not(.eyebrow){margin:0;font-family:var(--display);font-size:clamp(22px,2.4vw,36px);line-height:1.15;text-transform:uppercase;letter-spacing:.01em;min-height:2.3em}
+/* The picture takes the empty middle of the panel rather than being handed a
+   band of its own. .give__side is a flex column set to space-between, so a
+   third child between the word and the impact line is the middle of three:
+   the heading stays at the top and the sentence stays on the floor of the
+   panel, exactly where each of them already was.
+
+   It is capped by height as well as by width because that panel is the
+   viewport tall on a desktop and scrolls if anything inside it is not, and
+   object-fit carries the ratio when the height is the cap rather than the
+   width, so the ring is never squeezed into an oval. */
+.ring{margin:0;padding:clamp(16px,2.6vw,32px) 0;min-height:0;display:flex}
+.ring img{display:block;width:100%;max-width:clamp(220px,32vw,420px);height:auto;
+  max-height:42vh;object-fit:contain;object-position:left center}
 .give__form{padding:clamp(40px,5vw,80px) var(--gutter-lg);display:flex;flex-direction:column;justify-content:center}
 .card{max-width:520px;width:100%;margin:0 auto}
 .stepbar{display:flex;gap:24px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:36px}
@@ -246,7 +259,12 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .amts button:hover{border-color:var(--ink)}
 .amts button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .amts button[aria-pressed="true"]::after{background:#fff}
-.amts button[aria-pressed="true"] small{color:rgba(17,17,17,.7)}
+/* Ink on ink: the chosen amount turned its card black and left the line
+   saying what it buys at rgba(17,17,17,.7) on #111, so the one card a donor
+   had actually decided on was the one card that would not tell them what
+   they were buying. The same fault as the membership tiers in v1.339, in a
+   second place. It is white here, held back from the figure by its alpha. */
+.amts button[aria-pressed="true"] small{color:rgba(255,255,255,.72)}
 /* other amount is a fourth choice in the same group, not a second live field.
    Closed it is a chip; open it becomes the field, and the chips let go. */
 .other{margin-top:10px}
@@ -298,8 +316,17 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* Dollars on: everything that is not the currency seg or the dollar pane is
    the rupee flow, and it steps aside as one thing. */
 #p1.usd > :not(#giveCur):not(#usdPane){display:none}
-.amts--usd{grid-template-columns:repeat(4,1fr)}
-@media (max-width:520px){.amts--usd{grid-template-columns:repeat(2,1fr)}}
+/* Four bare figures fit across one row. Four figures each carrying the
+   sentence of what they buy do not: at 130px a card the line broke to five
+   words on five lines. The dollar presets are two by two, which gives them
+   the same room the three rupee cards have.
+
+   Written as .amts.amts--usd rather than .amts--usd because the narrow-width
+   rule at the foot of this stylesheet sets .amts to three across, carries
+   equal specificity, and comes later: as a single class this lost the whole
+   argument below 860px and put the dollar cards back to three. The extra
+   class wins it on specificity, so source order cannot take it away again. */
+.amts.amts--usd{grid-template-columns:repeat(2,1fr)}
 .callout{display:grid;gap:6px;border-left:2px solid var(--ink);background:var(--stone);padding:14px 16px;margin-top:22px}
 .callout b{font-size:12px;font-weight:700;letter-spacing:.04em}
 .callout p{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
@@ -448,6 +475,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       <div>
         <h1 class="display" id="sideHead">Donate.</h1>
       </div>
+      <!-- The line thrown to something in the water, made of the note that
+           throws it. It goes between the word and the sentence about what a
+           gift buys because that is the order this panel argues in: what the
+           page is, what a gift is, what it does. The panel had a screen of
+           nothing in the middle of that argument until now. -->
+      <figure class="ring">
+        <img src="img/donate-lifebuoy.webp" width="1000" height="835" alt="A life ring made from a five hundred rupee note, its rope trailing away across the floor">
+      </figure>
       <div class="impact" id="sideGive">
         <p class="eyebrow">Your gift</p>
         <p id="impact" aria-live="polite">Rabies shots for five street dogs.</p>
@@ -945,26 +980,73 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
      10 / 25 / 50 / 100 - the brief said "10, 25, 500, 100", and 500 between
      25 and 100 reads as a slipped zero; if 500 was meant, it is one number
      in the list below. The link is the whole gateway: paypal.me takes the
-     amount in the path and the donor finishes there. ---------- */
+     amount in the path and the donor finishes there.
+
+     A dollar donor used to be shown four bare figures and a stale sentence:
+     the panel on the left went on saying what the last rupee amount bought,
+     so $25 was captioned "rabies shots for five street dogs" whatever it
+     really came to (reported 15 Sep 2026). Dollars now say what they buy in
+     both the places rupees do - under the figure and in that panel - off
+     the same 2026 costs the rupee tiers are priced from. ---------- */
 (function(){
   'use strict';
   var pane = document.getElementById('p1'), seg = document.getElementById('giveCur');
   var amts = document.getElementById('usdAmts'), go = document.getElementById('usdGo');
   var wrap = document.getElementById('usdOtherWrap'), oBtn = document.getElementById('usdOtherBtn');
   var oIn = document.getElementById('usdOther'), oBack = document.getElementById('usdOtherBack');
-  var usdPane = document.getElementById('usdPane');
+  var usdPane = document.getElementById('usdPane'), impact = document.getElementById('impact');
   if (!pane || !seg || !amts || !go) return;
-  var USD = [10, 25, 50, 100], amt = 25, custom = false;
+
+  /* Rupees to the dollar, floored on purpose. The rate has not been under 85
+     in a year, so pricing a dollar at 82 means every sentence below buys a
+     little less than the gift really does. That is the only direction a
+     donation page is allowed to be wrong in. Raise it only if the rupee ever
+     strengthens past it, and never above the market. */
+  var RATE = 82;
+  /* The rupee figures the tiers above are already priced from, unchanged:
+     about 500 a week to feed and treat a street dog, 250 for one
+     vaccination on a municipal ABC contract, 5,000 to see an injured animal
+     through. Nothing here invents a cost of its own. */
+  var WEEK = 500;
+  var USD = [
+    [10,  'Ten days of food and care'],
+    [25,  'Rabies shots for eight street dogs'],
+    [50,  'Eight weeks of food and care'],
+    [100, 'Emergency care for an injured animal']
+  ];
+  var amt = 25, custom = false, held = null;
   var BASE = 'https://www.paypal.com/paypalme/Peopleforanimals';
+
+  /* What a typed figure buys, in the unit and the words the rupee flow uses
+     for one, so a dollar typed in reads as real as a dollar chosen. */
+  function line(n){
+    var preset = USD.filter(function(u){ return u[0] === n; })[0];
+    if (preset) return preset[1] + '.';
+    var weeks = Math.floor((n * RATE) / WEEK);
+    if (!weeks) return 'Straight to food and treatment.';
+    return weeks + (weeks === 1 ? ' week of food and care.' : ' weeks of food and care.');
+  }
   function paint(){
-    amts.innerHTML = USD.map(function(n){
-      return '<button type="button" data-usd="' + n + '" aria-pressed="' + (!custom && n === amt) + '">$' + n + '</button>';
+    amts.innerHTML = USD.map(function(u){
+      return '<button type="button" data-usd="' + u[0] + '" aria-pressed="' + (!custom && u[0] === amt) +
+        '"><b>$' + u[0] + '</b><small>' + u[1] + '</small></button>';
     }).join('');
-    wrap.classList.toggle('open', custom);
+    /* is-open, which is the class the stylesheet actually answers to. It read
+       'open' here, so the typed field stayed shut, the presets let go of the
+       amount and the button fell back to a PayPal link with no figure on it:
+       Other amount did nothing a donor could see. */
+    wrap.classList.toggle('is-open', custom);
     oBtn.setAttribute('aria-pressed', String(custom));
     var n = custom ? parseInt(oIn.value, 10) : amt;
-    if (custom && (!n || n < 1)) { go.href = BASE; go.textContent = 'Give with PayPal'; }
-    else { go.href = BASE + '/' + n + 'USD'; go.textContent = 'Give $' + n + ' with PayPal'; }
+    if (custom && (!n || n < 1)){
+      go.href = BASE;
+      go.textContent = 'Give with PayPal';
+      if (impact) impact.textContent = 'Choose an amount.';
+      return;
+    }
+    go.href = BASE + '/' + n + 'USD';
+    go.textContent = 'Give $' + n + ' with PayPal';
+    if (impact) impact.textContent = line(n);
   }
   seg.addEventListener('click', function(e){
     var b = e.target.closest('[data-gcur]');
@@ -975,7 +1057,16 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     Array.prototype.forEach.call(seg.querySelectorAll('[data-gcur]'), function(c){
       c.setAttribute('aria-pressed', String(c === b));
     });
-    if (usd) paint();
+    /* The panel on the left belongs to the rupee flow. Dollars borrow it and
+       hand back the sentence they found, because the rupee amount behind it
+       cannot have moved while the dollar panel was standing in front of it. */
+    if (usd){
+      if (impact && held === null) held = impact.textContent;
+      paint();
+    } else if (impact && held !== null){
+      impact.textContent = held;
+      held = null;
+    }
   });
   amts.addEventListener('click', function(e){
     var b = e.target.closest('[data-usd]');
