@@ -1,3 +1,18 @@
+## v1.341
+
+- **CineKind gets its whole frame back, and its opening line.** The marquee
+  carried padding-top:calc(--ann + --nav) over a #0a0a0a background with a
+  transparent header on top of it, so the top 115px of the page was the
+  section's own black rather than the photograph: the black band, and the
+  reason the picture began under the navigation instead of behind it. The
+  padding is gone and the plate starts at the top of the viewport. The
+  presenter credit is back over the picture and above the trophy, in the
+  28px of sky between the header and the top of the reel, carrying its own
+  shadow because the clouds behind it are white in places. The .marquee__
+  eyebrow rule had been left in the stylesheet with nothing using it, which
+  is what the element used to be. The bar keeps the where and the when so it
+  is not saying the same sentence twice.
+
 ## v1.340
 
 - **The donate panel has a picture, and dollars say what they buy.** The

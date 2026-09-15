@@ -38,6 +38,8 @@ test('sanity: the pages were found', () => {
   assert.ok(pages.length >= 12, `only ${pages.length} pages`);
 });
 
+const reserves = (rule) => /var\(--ann\)/.test(rule) && /var\(--nav\)/.test(rule);
+
 test('the first section of every page reserves the fixed header', () => {
   const broken = [];
   for (const page of pages) {
@@ -46,9 +48,21 @@ test('the first section of every page reserves the fixed header', () => {
     if (!cls) continue;                       // founder has no <main>; checked below
     const rule = ruleFor(html, cls);
     if (!rule) { broken.push(`${page}: .${cls} has no rule`); continue; }
-    if (!/var\(--ann\)/.test(rule) || !/var\(--nav\)/.test(rule)) {
-      broken.push(`${page}: .${cls} does not reserve the header`);
-    }
+    if (reserves(rule)) continue;
+    /* A full-bleed hero is the one case where reserving on the section is
+       the fault rather than the fix. The picture is meant to run behind a
+       transparent header; padding the section instead lays a band of the
+       section's own background across the top of the page. cinekind.html
+       did exactly that on 15 Sep 2026 and shipped 115px of black where the
+       sky should have been, with the header still transparent over it.
+
+       What has to clear the header is the copy, not the photograph. So the
+       reservation may live on the overlay that carries the copy instead of
+       on the section. It still has to exist somewhere: a hero with neither
+       is a hero whose words are behind the navigation. */
+    const inner = ruleFor(html, `${cls}__in`);
+    if (inner && reserves(inner)) continue;
+    broken.push(`${page}: neither .${cls} nor .${cls}__in reserves the header`);
   }
   assert.deepEqual(broken, [],
     `the top of these pages slides under the header:\n  ${broken.join('\n  ')}`);
