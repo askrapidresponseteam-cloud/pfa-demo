@@ -99,7 +99,7 @@ test('the logo is animated by the stylesheet, not by changing the artwork', () =
   /* The artwork is used exactly as it was: same file, same intrinsic size. If
      the animation ever needed the image altered to work, it would be the wrong
      animation. */
-  assert.match(footer, /<img src="img\/logo\.png" alt="People for Animals" width="231" height="79">/);
+  assert.match(footer, /<img src="img\/logo\.png" alt="People for Animals" width="774" height="168">/);
 
   const rule = /\.wordmark img\{[^}]*\}/.exec(css);
   assert.ok(rule, 'the logo rule is gone');

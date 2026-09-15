@@ -1,3 +1,23 @@
+## v1.351
+
+- **The new mark, set horizontally for the header.** The supplied artwork is
+  a stacked lockup, 1536x1024, and its wordmark is 10.9% of the file height.
+  The old one was 231x79 with a wordmark at 26.6%. Dropped in as it stands
+  at the header's 56px, "People for Animals" would have rendered 6.1px tall
+  against the 14.9px it read at before; to match that the stacked lockup
+  needs to be 137px tall, in a nav that is 80.
+
+  So the header draws the same artwork arranged along its long axis: the mark
+  at full height, the wordmark beside it at 26% of that, which lands the
+  letters at 14.5px. 774x168, from the supplied file, nothing redrawn. The
+  dark variant is the same composition with the wordmark flipped to white;
+  the mark is white and blue already and reads on both grounds. The stacked
+  original is kept at img/logo-stacked.png for print, social and anywhere
+  with the room for it.
+
+  Every page carried width="231" height="79" in its header markup: 24 places
+  across 22 pages, the stamped chrome and its test, all now 774x168.
+
 ## v1.350
 
 - **The leader counts, and says nothing.** "CINEKIND · PICTURE START" is
