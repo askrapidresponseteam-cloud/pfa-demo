@@ -1,13 +1,10 @@
-## v1.315
+## v1.316
 
-- **Every film tile names its film.** The founder page's wall held its
-  titles back for a single caption line that spoke only on hover, which
-  read cleanly and failed its first duty: on eight stills of the same
-  person, nothing said which film was which until the cursor asked. The
-  title now sits under each frame, clamped to two lines so the rows
-  stay even, drawn from the same titles media:founder fetches from
-  YouTube and writes into the page; until that runs, a tile says Film
-  NN rather than guessing at what a named person's film is called. The
-  hover stage keeps speaking above, in the larger voice, and the
-  theatre is untouched.
+- **The film wall goes back to hover-spoken titles.** v1.315 put a
+  caption under every tile; the owner prefers the original design and
+  chose it with the page in hand: tiles carry no text of their own, and
+  the title of whichever film the cursor or the keyboard rests on
+  appears once, large and bold, on the stage under the wall. The
+  captions are removed; the stage, the theatre and the fetched titles
+  are untouched.
 
