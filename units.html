@@ -408,14 +408,10 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
        Everything here is read from the list this page already renders, so
        above and below this section the page is exactly the file the owner
        supplied. -->
-  <section class="ugal" aria-label="The network, one unit at a time">
-    <div class="ugal__stage">
-      <figure class="ugal__art" id="galArt"></figure>
-      <div class="ugal__info" id="galInfo"></div>
-    </div>
-    <div class="ugal__strip" id="galStrip"></div>
-  </section>
-
+  <!-- The bar leads (owner, 15 Sep 2026): search is the first thing on the
+       page, before the gallery, so finding a unit never requires knowing to
+       scroll past one. It is sticky, so from here down it rides under the
+       header past gallery and list alike. -->
   <div class="u-bar">
     <div class="u-bar__row">
       <label class="u-search">
@@ -426,6 +422,15 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       <div id="uchips"></div>
       <span class="u-count" id="ucount"></span>
     </div>
+
+  <section class="ugal" aria-label="The network, one unit at a time">
+    <div class="ugal__stage">
+      <figure class="ugal__art" id="galArt"></figure>
+      <div class="ugal__info" id="galInfo"></div>
+    </div>
+    <div class="ugal__strip" id="galStrip"></div>
+  </section>
+
   </div>
 
   <div class="u-body">
