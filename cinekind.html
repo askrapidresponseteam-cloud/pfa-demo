@@ -448,17 +448,22 @@ html{scroll-behavior:smooth}
 .marquee__stage{position:relative;flex:1;min-height:0;overflow:hidden}
 .marquee__plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
 .marquee__scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,10,10,.62),rgba(10,10,10,0) calc(var(--ann) + var(--nav) + 96px)),linear-gradient(to top,rgba(10,10,10,.78) 0%,rgba(10,10,10,.35) 22%,rgba(10,10,10,0) 44%)}
-/* The credit sits at the top of the frame and the word and the door at its
-   foot, so the trophy stands between them. space-between rather than
-   flex-end is what holds that apart; the top padding is the fixed chrome
-   the credit has to clear. */
-.marquee__in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(var(--ann) + var(--nav) + clamp(6px,1.2svh,14px)) var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
+/* The credit reads above the word, as a title card does, and not in the sky
+   above the trophy: that sky is a function of the window, not a place. The
+   reel starts at 16.9% of the picture's height, so on a 1190x616 window the
+   band between the header and the gold is 15px, and on 1024x640 it is
+   negative - the trophy's top is behind the navigation. Above the word there
+   is between 275 and 476px of clear frame at every shape measured, all of it
+   plinth, rock and blurred ground.
+
+   The top padding still reserves the fixed chrome. Nothing sits up there
+   now, but the layer that carries the copy is the one that has to clear the
+   header if anything ever does. */
+.marquee__in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:calc(var(--ann) + var(--nav) + clamp(6px,1.2svh,14px)) var(--gutter) clamp(40px,6svh,72px);color:#fff;text-align:center}
 .marquee__foot{display:flex;flex-direction:column;align-items:center;gap:20px}
-/* It has a 28px band of sky to live in: the header ends at --ann + --nav
-   and the top of the reel is just under it. So it sits tight to the header
-   and carries its own shadow, because the clouds behind it are white in
-   places and .72 white on white cloud is not a line anybody reads. */
-.marquee__eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.92);text-shadow:0 1px 6px rgba(10,10,10,.85),0 0 18px rgba(10,10,10,.6)}
+/* It keeps its shadow: the ground behind it is dark but it is a photograph,
+   and a photograph has bright patches wherever it likes. */
+.marquee__eyebrow{margin:0 0 clamp(14px,2vh,24px);font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.92);text-shadow:0 1px 6px rgba(10,10,10,.85),0 0 18px rgba(10,10,10,.6)}
 .marquee__word{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(44px,7.5vw,120px);line-height:.95;text-shadow:0 2px 10px rgba(0,0,0,.55)}
 .marquee__door{display:inline-block;margin-top:6px;padding:16px 42px;border:1px solid #c9a227;color:#f0d47c;background:rgba(10,10,10,.35);font-family:var(--body);font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;transition:background .35s ease,color .35s ease,letter-spacing .35s ease}
 .marquee__door:hover,.marquee__door:focus-visible{background:#c9a227;color:#0a0a0a;letter-spacing:.26em;opacity:1}
@@ -715,8 +720,8 @@ html{scroll-behavior:smooth}
       <img class="marquee__plate" src="img/cinekind-marquee.webp" alt="" width="1558" height="1009" fetchpriority="high">
       <div class="marquee__scrim"></div>
       <div class="marquee__in">
-        <p class="marquee__eyebrow">People for Animals and the Film Federation of India present</p>
         <div class="marquee__foot">
+          <p class="marquee__eyebrow">People for Animals and the Film Federation of India present</p>
           <p class="marquee__word" aria-hidden="true">CineKind</p>
           <a class="marquee__door" href="#top" aria-label="Enter CineKind">Enter</a>
         </div>

@@ -1,3 +1,22 @@
+## v1.347
+
+- **The credit reads above the word, not across the trophy.** v1.341 put it
+  in the sky over the reel, which held on the window it was measured on and
+  nowhere else. The sky is not a place on that page, it is a function of the
+  window: the reel starts at 16.9% of the picture's height and the picture is
+  object-fit:cover, so 1440x900 leaves 28px under the header, 1190x616 leaves
+  none with the reel's top already behind the navigation, and 1024x640 hides
+  the whole top of the trophy. No vertical position above the trophy survives
+  a short window.
+
+  Above the word there is between 275 and 476px of clear frame at every shape
+  measured, all of it plinth, rock and blurred ground, so the credit sits
+  there and the frame reads as a title card: who presents it, what it is,
+  the way in. Clearance from the gold, measured: 28px at 1190x616, 61 at
+  1512x760, 62 at 1024x640, 87 at 1680x850, 133 at 1440x900, 169 at 420x860.
+  The overlay still reserves the header on the layer that carries the copy,
+  which is what page-shell asks of a full-bleed hero.
+
 ## v1.346
 
 - **One line on long form too, not just on short form.** v1.345 had the
