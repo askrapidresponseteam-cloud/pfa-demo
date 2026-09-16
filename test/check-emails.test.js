@@ -30,10 +30,8 @@ test('every public form and paid application reaches the admin panel and sends i
   for (const r of rows.filter((x) => x.free)) {
     assert.ok(r.unconfiguredFiled, `${r.kind}: with email switched off the submission still has to file`);
     assert.equal(r.unconfiguredState, 'unsent', `${r.kind}: with email switched off the page has to be told it did not go`);
-    if (r.optional) {
-      assert.ok(r.noEmailFiled, `${r.kind}: a submission without an email still has to file`);
-      assert.equal(r.noEmailState, 'none');
-    }
+    assert.ok(r.noEmailRefused, `${r.kind}: a submission without an email must be refused, and nothing filed`);
+    assert.equal(r.noEmailField, 'email');
   }
 });
 

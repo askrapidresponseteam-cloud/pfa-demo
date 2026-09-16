@@ -173,7 +173,7 @@ function handler(db) {
   });
 }
 
-const REPORT = {
+const REPORT = { email: 'asha@example.com',
   what: 'A man is beating a dog outside the market with a stick.',
   animal: 'Dog',
   urgency: 'Happening now',

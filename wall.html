@@ -513,9 +513,14 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 44px)}
             <span class="error">Add the name to credit.</span>
           </div>
           <div class="field">
-            <label for="wallContact">Email or phone</label>
-            <input id="wallContact" name="contact" type="text" required placeholder="So an editor can reach you">
-            <span class="error">Add a contact.</span>
+            <label for="wallEmail">Email</label>
+            <input id="wallEmail" name="email" type="email" autocomplete="email" required placeholder="So an editor can reach you">
+            <span class="error">Add a valid email, so an editor can reach you.</span>
+          </div>
+          <div class="field">
+            <label for="wallMobile">Mobile <span class="opt">(optional)</span></label>
+            <input id="wallMobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel">
+            <span class="error">An Indian mobile number is 10 digits, starting 6, 7, 8 or 9.</span>
           </div>
           <div class="field">
             <label for="wallNote">Anything we should know</label>
@@ -635,6 +640,7 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 44px)}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/form-preview.js"></script>
 <script src="pfa-forms.js"></script>
 <script>
 (function(){
@@ -657,13 +663,15 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 44px)}
     function bad(el, on){ var w = el.closest('.field') || el.closest('.consent'); if (w) w.classList.toggle('is-bad', on); return on; }
     f.addEventListener('submit', function(e){
       e.preventDefault();
-      var url = $('#wallUrl'), name = $('#wallName'), contact = $('#wallContact'), consent = $('#wallConsent'), which = $('#wallWhich');
+      var url = $('#wallUrl'), name = $('#wallName'), email = $('#wallEmail'), mobile = $('#wallMobile'), consent = $('#wallConsent'), which = $('#wallWhich');
+      var mobileDigits = mobile.value.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
       var errs = 0;
       var ok = knownHost(url.value);
       errs += bad(url, !ok) ? 1 : 0;
       errs += bad(which, !which.value) ? 1 : 0;
       errs += bad(name, !name.value.trim()) ? 1 : 0;
-      errs += bad(contact, !contact.value.trim()) ? 1 : 0;
+      errs += bad(email, !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email.value.trim())) ? 1 : 0;
+      errs += bad(mobile, !!mobile.value.trim() && !/^[6-9]\d{9}$/.test(mobileDigits)) ? 1 : 0;
       errs += bad(consent, !consent.checked) ? 1 : 0;
       if (errs){ var first = f.querySelector('.is-bad input, .is-bad select'); if (first) first.focus(); return; }
 
@@ -678,39 +686,42 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 44px)}
       }
       var button = f.querySelector('[type="submit"]');
       var label = button ? button.textContent : '';
-      if (button){ button.disabled = true; button.textContent = 'Sending\u2026'; }
       var status = $('#wallStatus');
       if (status){ status.hidden = true; status.textContent = ''; }
 
-      var digits = contact.value.replace(/\D/g, '');
       var data = {
         url: url.value.trim(),
         /* which wall it is for: long or short. This travelled as "title",
            which read in the panel as the film being called "long". */
         wall: which.value === 'short' ? 'Short form, under a minute' : 'Long form, over three minutes',
         name: name.value.trim(),
+        email: email.value.trim(),
         notes: 'Consent given for PFA to show this on The Wall.'
       };
-      if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact.value.trim())) data.email = contact.value.trim();
-      else if (/^[6-9]\d{9}$/.test(digits)) data.mobile = digits;
-      else { bad(contact, true); contact.focus();
-             if (button){ button.disabled = false; button.textContent = label; }
-             return; }
+      if (mobileDigits) data.mobile = mobileDigits;
 
-      window.PFAForms.submit('PFA-S', data)
-        .then(function(reference){
-          f.hidden = true;
-          var ok = $('#wallSuccess');
-          ok.classList.add('show');
-          var ref = ok.querySelector('[data-reference]');
-          if (ref) ref.textContent = reference;
-          var mailNote = window.PFAForms.emailNote && window.PFAForms.emailNote(reference);
-          if (mailNote) { mailNote.style.marginTop = '16px'; ok.appendChild(mailNote); }
-        })
-        .catch(function(error){
-          if (button){ button.disabled = false; button.textContent = label; }
-          if (status){ status.hidden = false; status.setAttribute('data-state','bad'); status.textContent = error.message; }
-        });
+      /* the last look, then the email and mobile on their own; nothing is sent until confirmed */
+      var look = window.PFAForms.preview ? window.PFAForms.preview(f, { title: 'Check your film before it is sent', send: label || 'Send' }) : null;
+      if (look) look.then(go); else go(true);
+      function go(confirmed) {
+        if (!confirmed) return;
+        data.email = email.value.trim();   /* the preview may have corrected it */
+        if (button){ button.disabled = true; button.textContent = 'Sending\u2026'; }
+        window.PFAForms.submit('PFA-S', data)
+          .then(function(reference){
+            f.hidden = true;
+            var ok = $('#wallSuccess');
+            ok.classList.add('show');
+            var ref = ok.querySelector('[data-reference]');
+            if (ref) ref.textContent = reference;
+            var mailNote = window.PFAForms.emailNote && window.PFAForms.emailNote(reference);
+            if (mailNote) { mailNote.style.marginTop = '16px'; ok.appendChild(mailNote); }
+          })
+          .catch(function(error){
+            if (button){ button.disabled = false; button.textContent = label; }
+            if (status){ status.hidden = false; status.setAttribute('data-state','bad'); status.textContent = error.message; }
+          });
+      }
     });
     f.addEventListener('input', function(e){ var t = e.target; if (t && t.closest) bad(t, false); });
   })();

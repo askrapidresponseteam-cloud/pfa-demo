@@ -228,8 +228,9 @@ test('the submissions API answers with what happened to the email, and a replay 
   assert.deepEqual(replay.body.confirmation, res.body.confirmation, 'a double press was told something different');
 
   const noEmail = await run(handler, request({ body: { kind: 'PFA-EV', data: { title: 'An adoption drive', city: 'Udupi', name: 'Asha Rao', mobile: '9876543210' } } }));
-  assert.equal(noEmail.body.confirmation.state, 'none');
-  assert.equal(noEmail.body.acknowledged, false);
+  /* Since 16 Sep 2026 no submission is filed without an email. */
+  assert.equal(noEmail.statusCode, 422);
+  assert.equal(noEmail.body.fields[0].field, 'email');
   S.resetForTests();
 });
 

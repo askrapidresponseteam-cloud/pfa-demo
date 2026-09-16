@@ -49,7 +49,7 @@ test('the page posts a cruelty report and the server files it under its own kind
   const handler = createHandler({ getDb: () => db, deliver: async () => ({ id: 'm1' }), isConfigured: () => false, now: () => Date.UTC(2026, 7, 27) });
   const res = await run(handler, request({ body: {
     kind: 'PFA-CR', page: 'report.html',
-    data: { what: 'A man beat a dog with a stick outside the market', animal: 'Dog', urgency: 'Happening now', location: 'MG Road, Bengaluru', name: 'Asha', mobile: '9876543210' },
+    data: { what: 'A man beat a dog with a stick outside the market', animal: 'Dog', urgency: 'Happening now', location: 'MG Road, Bengaluru', name: 'Asha', mobile: '9876543210', email: 'asha@example.in' },
     photos: ['data:image/jpeg;base64,' + JPEG.toString('base64')]
   } }));
   assert.equal(res.body.ok, true, JSON.stringify(res.body));

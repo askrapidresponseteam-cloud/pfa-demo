@@ -28,7 +28,6 @@ const mail = require('../lib/caregiver-mail');
 const firebase = require('../lib/firebase');
 const { encrypt, decrypt, encodeMerchantData, decodeMerchantData } = require('../lib/ccavenue');
 const { createHandler } = require('../lib/routes/pfa-submissions')._private;
-const FIELDS = require('../lib/submission-fields');
 
 const EMAIL = 'check@example.com';
 const TEMPLATES = { 'PFA-MEM': 'membership_welcome', 'PFA-CG': 'caregiver_application_received' };
@@ -97,10 +96,6 @@ function responder() {
   return { statusCode: 200, headers: {}, setHeader(k, v) { this.headers[k] = v; }, end(b) { this.raw = String(b || ''); } };
 }
 const subjectOf = (msg) => { try { return mail.render(msg.template, msg.payload).subject; } catch (e) { return `(${msg.template})`; } };
-const emailOptional = (kind) => {
-  const spec = FIELDS.specFor(kind) || {};
-  return !(spec.required && spec.required.email);
-};
 
 async function freeForm([page, doing, kind, fields], { withEmail = true, configured = true } = {}) {
   const db = fakeDb();
@@ -160,9 +155,8 @@ async function run() {
       const plain = await freeForm(form, { withEmail: false });
       const off = await freeForm(form, { configured: false });
       r.free = true;
-      r.optional = emailOptional(form[2]);
-      r.noEmailState = plain.body.confirmation && plain.body.confirmation.state;
-      r.noEmailFiled = plain.filed;
+      r.noEmailRefused = plain.status >= 400 && !plain.filed;
+      r.noEmailField = (plain.body.fields && plain.body.fields[0] && plain.body.fields[0].field) || '';
       r.unconfiguredState = off.body.confirmation && off.body.confirmation.state;
       r.unconfiguredFiled = off.filed;
       r.state = (r.body.confirmation || {}).state;
@@ -196,7 +190,7 @@ function print(rows, brief) {
     console.log(`      admin panel: ${r.filed ? `filed in Submissions as ${r.ref}` : 'NOT FILED'}`);
     console.log(`      email:       ${ack ? `sent to ${ack.to}, "${subjectOf(ack)}"` : 'NONE SENT'}`);
     if (r.free) {
-      console.log(`      no email given: ${r.optional ? `allowed; still filed (${r.noEmailFiled ? 'yes' : 'NO'}), so no acknowledgement can go (${r.noEmailState})` : 'not possible, the form requires an email'}`);
+      console.log(`      no email given: ${r.noEmailRefused ? `refused (${r.noEmailField}), nothing filed` : 'FILED WITHOUT AN EMAIL'}`);
       console.log(`      mail switched off: still filed (${r.unconfiguredFiled ? 'yes' : 'NO'}), email ${r.unconfiguredState}, and the page tells the person`);
     }
     if (r.error) console.log(`      ${r.error}`);

@@ -129,6 +129,7 @@ test('report.html: a whole cruelty report survives the round trip', () => {
   page.set('urgency', 'Happening now');
   page.set('where', 'Ashraya Ankadakatte, Kundapur');
   page.check('consent');
+  page.set('email', 'asha@example.com');
   page.submit('#reportForm');
 
   assert.equal(page.sent.length, 1, 'the report did not send');
@@ -175,6 +176,7 @@ test('cinekind.html: a whole nomination survives the round trip', () => {
   page.set('ckWork', 'The Land of Ahimsa');
   page.set('ckLink', 'https://maakadoodh.in/');
   page.set('ckWhy', 'A film that made the case for animals on a national stage.');
+  page.set('ckEmail', 'asha@example.com');
   page.submit('#ckNominate');
 
   assert.equal(page.sent.length, 1, 'the nomination did not send');

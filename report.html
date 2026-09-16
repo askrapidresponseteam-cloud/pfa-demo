@@ -427,8 +427,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
         </div>
       </div>
       <div class="field">
-        <label for="email">Email <small>(optional, for the acknowledgement)</small></label>
-        <input id="email" name="email" type="email" autocomplete="email">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required>
         <p class="err" hidden></p>
       </div>
       <label class="check"><input type="checkbox" id="consent" required> <span>What I have written is true to the best of my knowledge, and PFA may contact me about it.</span></label>
@@ -553,6 +553,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/form-preview.js" defer></script>
 <script src="pfa-forms.js" defer></script>
 <script>
 (function () {
@@ -604,7 +605,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     var pin = fieldOf('pincode');
     if (pin.value.trim() && !/^\d{6}$/.test(pin.value.trim())) { flag(pin, 'A pincode is 6 digits.'); bad++; }
     var email = fieldOf('email');
-    if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { flag(email, 'That does not look like an email address.'); bad++; }
+    if (!email.value.trim()) { flag(email, 'An email, so the acknowledgement and any follow-up reach you.'); bad++; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { flag(email, 'That does not look like an email address.'); bad++; }
     var consent = $('#consent'), cErr = $('#consentErr');
     cErr.hidden = consent.checked; cErr.textContent = 'Please confirm before sending.';
     if (!consent.checked) bad++;
@@ -630,21 +632,30 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     var status = $('[data-form-status]'), button = form.querySelector('[type="submit"]');
     if (!window.PFAForms) { status.textContent = 'The page did not finish loading. Reload and try again, or call 112 if the animal is in danger now.'; status.setAttribute('data-state', 'bad'); status.hidden = false; return; }
     var data = collect(); if (!data) return;
-    busy = true; button.disabled = true; button.textContent = 'Sending\u2026'; status.hidden = true;
-    window.PFAForms.submit('PFA-CR', data, { photos: photos, page: 'report.html' })
-      .then(function (reference) {
-        form.hidden = true;
-        $('#doneRef').textContent = reference;
-        $('#done').hidden = false;
-        /* whether the confirmation went, to which address, and where to look */
-        var mailNote = window.PFAForms.emailNote && window.PFAForms.emailNote(reference);
-        if (mailNote) $('#done').insertBefore(mailNote, $('#done .acts'));
-        $('#fRef').value = reference; $('#fContact').value = data.mobile || data.email;
-        $('#copyRef').onclick = function () { try { navigator.clipboard.writeText(reference); $('#copyRef').textContent = 'Copied'; } catch (_) {} };
-        $('#done').scrollIntoView({ block: 'start', behavior: 'smooth' });
-      })
-      .catch(function (error) { status.textContent = error.message; status.setAttribute('data-state', 'bad'); status.hidden = false; })
-      .then(function () { busy = false; button.disabled = false; button.textContent = 'Send the report'; });
+    busy = true; status.hidden = true;
+    /* the last look, then the email and mobile on their own; nothing is sent until confirmed */
+    var look = window.PFAForms.preview ? window.PFAForms.preview(form, { title: 'Check your report before it is sent', send: 'Send the report', extra: photos && photos.length ? [['Photographs', photos.length + ' attached']] : [] }) : null;
+    if (look) look.then(go); else go(true);
+    function go(confirmed) {
+      if (!confirmed) { busy = false; return; }
+      /* read the fields again: the preview may have corrected the email */
+      data = collect(); if (!data) { busy = false; return; }
+      button.disabled = true; button.textContent = 'Sending\u2026';
+      window.PFAForms.submit('PFA-CR', data, { photos: photos, page: 'report.html' })
+        .then(function (reference) {
+          form.hidden = true;
+          $('#doneRef').textContent = reference;
+          $('#done').hidden = false;
+          /* whether the confirmation went, to which address, and where to look */
+          var mailNote = window.PFAForms.emailNote && window.PFAForms.emailNote(reference);
+          if (mailNote) $('#done').insertBefore(mailNote, $('#done .acts'));
+          $('#fRef').value = reference; $('#fContact').value = data.mobile || data.email;
+          $('#copyRef').onclick = function () { try { navigator.clipboard.writeText(reference); $('#copyRef').textContent = 'Copied'; } catch (_) {} };
+          $('#done').scrollIntoView({ block: 'start', behavior: 'smooth' });
+        })
+        .catch(function (error) { status.textContent = error.message; status.setAttribute('data-state', 'bad'); status.hidden = false; })
+        .then(function () { busy = false; button.disabled = false; button.textContent = 'Send the report'; });
+    }
   });
 
   /* ---- follow ---- */

@@ -117,6 +117,15 @@
      reference on success, and shows the reason on failure rather than a
      thank-you. `collect` returns the data object, or null if the caller has
      already reported its own validation problem. */
+  /* The last look before sending, from assets/form-preview.js when the page
+     has it. Without it (a page that does not load it, or an old cached copy of
+     this file meeting a new page) the form sends as before, and the server
+     still refuses a submission with no email. */
+  function preview(form, options) {
+    if (!form || !window.PFAPreview || typeof window.PFAPreview.confirm !== 'function') return Promise.resolve(true);
+    return window.PFAPreview.confirm(form, options || {});
+  }
+
   function wire(form, config) {
     if (!form || form.dataset.pfaWired === 'yes') return;
     form.dataset.pfaWired = 'yes';
@@ -141,30 +150,47 @@
       if (!data) return;                       // the caller has flagged its own fields
 
       busy = true;
-      var label = button ? button.textContent : '';
-      if (button) { button.disabled = true; button.textContent = config.sending || 'Sending\u2026'; }
       say('', '');
+      /* The last look: everything about to go, then the email and mobile on
+         their own. Nothing is disabled or sent until the person confirms,
+         so going back leaves the form exactly as it was. */
+      preview(form, {
+        title: config.previewTitle,
+        send: button ? button.textContent : '',
+        labels: config.previewLabels,
+        extra: typeof config.previewExtra === 'function' ? config.previewExtra(data) : config.previewExtra
+      }).then(function (confirmed) {
+        if (!confirmed) { busy = false; return; }
+        /* Read the fields again: the preview may have corrected the email, and
+           what goes must be what the person confirmed, not what they typed first. */
+        var fresh;
+        try { fresh = config.collect(); } catch (error) { busy = false; say(textOf(error), 'bad'); return; }
+        if (!fresh) { busy = false; return; }
+        data = fresh;
+        var label = button ? button.textContent : '';
+        if (button) { button.disabled = true; button.textContent = config.sending || 'Sending\u2026'; }
 
-      /* A form may hand over photographs alongside its fields; report.html
-         does this through submit() directly, the newsroom through wire(). */
-      var photos = typeof config.photos === 'function' ? config.photos() : config.photos;
-      submit(config.kind, data, { page: config.page, photos: Array.isArray(photos) && photos.length ? photos : undefined })
-        .then(function (reference) {
-          busy = false;
-          if (button) { button.disabled = false; button.textContent = label; }
-          if (typeof config.onSent === 'function') config.onSent(reference);
-          else {
-            say('Sent. Your reference is ' + reference + '.', 'good');
-            var note = emailNote(reference);
-            if (note && status && status.parentNode) status.parentNode.insertBefore(note, status.nextSibling);
-          }
-        })
-        .catch(function (error) {
-          busy = false;
-          if (button) { button.disabled = false; button.textContent = label; }
-          if (typeof config.onFailed === 'function') config.onFailed(error);
-          else say(error.message, 'bad');
-        });
+        /* A form may hand over photographs alongside its fields; report.html
+           does this through submit() directly, the newsroom through wire(). */
+        var photos = typeof config.photos === 'function' ? config.photos() : config.photos;
+        submit(config.kind, data, { page: config.page, photos: Array.isArray(photos) && photos.length ? photos : undefined })
+          .then(function (reference) {
+            busy = false;
+            if (button) { button.disabled = false; button.textContent = label; }
+            if (typeof config.onSent === 'function') config.onSent(reference);
+            else {
+              say('Sent. Your reference is ' + reference + '.', 'good');
+              var note = emailNote(reference);
+              if (note && status && status.parentNode) status.parentNode.insertBefore(note, status.nextSibling);
+            }
+          })
+          .catch(function (error) {
+            busy = false;
+            if (button) { button.disabled = false; button.textContent = label; }
+            if (typeof config.onFailed === 'function') config.onFailed(error);
+            else say(error.message, 'bad');
+          });
+      });
     });
   }
 
@@ -277,7 +303,7 @@
   }
 
   root.PFAForms = {
-    submit: submit, wire: wire, shrink: shrink, emailNote: emailNote,
+    submit: submit, wire: wire, shrink: shrink, emailNote: emailNote, preview: preview,
     receipt: function (reference) { return receipts[reference] || null; },
     ENDPOINT: ENDPOINT, _requestBody: requestBody
   };

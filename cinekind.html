@@ -1382,14 +1382,14 @@ html{scroll-behavior:smooth}
       </div>
       <div class="nom__pair">
         <div class="field">
-          <label for="ckMobile">Mobile <span class="opt">(or email)</span></label>
+          <label for="ckMobile">Mobile <span class="opt">(optional)</span></label>
           <input id="ckMobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel">
           <span class="error">Enter a 10-digit Indian mobile number.</span>
         </div>
         <div class="field">
-          <label for="ckEmail">Email <span class="opt">(or mobile)</span></label>
-          <input id="ckEmail" name="email" type="email" autocomplete="email">
-          <span class="error">Check the email address.</span>
+          <label for="ckEmail">Email</label>
+          <input id="ckEmail" name="email" type="email" autocomplete="email" required>
+          <span class="error">Add a valid email, so the committee can reach you.</span>
         </div>
       </div>
       <button class="btn btn--full" type="submit" id="ckSend">Send the nomination</button>
@@ -1496,6 +1496,7 @@ html{scroll-behavior:smooth}
      below needs PFAForms to exist when it runs. -->
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
+<script src="assets/form-preview.js"></script>
 <script src="pfa-forms.js"></script>
 <script>
 (function(){
@@ -2641,6 +2642,7 @@ html{scroll-behavior:smooth}
   });
 
   window.PFAForms.wire(form, {
+      previewTitle: 'Check your nomination before it is sent',
     kind: 'PFA-CK',
     sending: 'Sending\u2026',
     collect: function(){
@@ -2659,9 +2661,8 @@ html{scroll-behavior:smooth}
       errs += bad(name, !name.value.trim()) ? 1 : 0;
       /* one way to reach the nominator, and whichever is given must hold:
          the same rules the server applies */
-      var noContact = !mobileDigits && !emailGiven;
-      errs += bad(mobile, noContact || (mobileDigits && !/^[6-9]\d{9}$/.test(mobileDigits))) ? 1 : 0;
-      errs += bad(email, noContact || (emailGiven && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailGiven))) ? 1 : 0;
+      errs += bad(mobile, !!mobileDigits && !/^[6-9]\d{9}$/.test(mobileDigits)) ? 1 : 0;
+      errs += bad(email, !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailGiven)) ? 1 : 0;
       errs += bad(link, !!link.value.trim() && !/^https?:\/\/\S+\.\S+/.test(link.value.trim())) ? 1 : 0;
       if (errs) {
         var first = form.querySelector('.is-bad input, .is-bad select, .is-bad textarea');

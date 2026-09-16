@@ -644,11 +644,11 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           </div>
           <div class="gi__body">
             <div class="tiers" role="group" aria-label="Membership">
-            <label class="tier"><input type="radio" name="tier" value="student" data-amount="500"><span class="tier__name">Student</span><span class="tier__amt">&#8377;500</span><span class="tier__kit">For anyone in full-time study. The membership, and nothing to post.</span></label>
-            <label class="tier"><input type="radio" name="tier" value="silver" data-amount="1000" checked><span class="tier__name">Silver</span><span class="tier__amt">&#8377;1,000</span><span class="tier__kit">The book <em>Using Laws to Save Animals</em>.</span></label>
-            <label class="tier"><input type="radio" name="tier" value="golden" data-amount="2500"><span class="tier__name">Golden</span><span class="tier__amt">&#8377;2,500</span><span class="tier__kit">A PFA T-shirt and the book <em>Keep Your Dog Vegetarian</em>.</span></label>
-            <label class="tier"><input type="radio" name="tier" value="platinum" data-amount="5000"><span class="tier__name">Platinum</span><span class="tier__amt">&#8377;5,000</span><span class="tier__kit">A PFA T-shirt, a wristband, <em>Keep Your Dog Vegetarian</em>, <em>Heads and Tails</em>, and the receipt and tax exemption certificate.</span></label>
-            <label class="tier"><input type="radio" name="tier" value="lifetime" data-amount="10000"><span class="tier__name">Lifetime</span><span class="tier__amt">&#8377;10,000</span><span class="tier__kit">A PFA T-shirt, a wristband, a set of PFA books, and the receipt and tax exemption certificate. For good.</span></label>
+            <label class="tier"><input type="radio" name="tier" value="student" data-amount="500" data-preview-label="Student"><span class="tier__name">Student</span><span class="tier__amt">&#8377;500</span><span class="tier__kit">For anyone in full-time study. The membership, and nothing to post.</span></label>
+            <label class="tier"><input type="radio" name="tier" value="silver" data-amount="1000" checked data-preview-label="Silver"><span class="tier__name">Silver</span><span class="tier__amt">&#8377;1,000</span><span class="tier__kit">The book <em>Using Laws to Save Animals</em>.</span></label>
+            <label class="tier"><input type="radio" name="tier" value="golden" data-amount="2500" data-preview-label="Golden"><span class="tier__name">Golden</span><span class="tier__amt">&#8377;2,500</span><span class="tier__kit">A PFA T-shirt and the book <em>Keep Your Dog Vegetarian</em>.</span></label>
+            <label class="tier"><input type="radio" name="tier" value="platinum" data-amount="5000" data-preview-label="Platinum"><span class="tier__name">Platinum</span><span class="tier__amt">&#8377;5,000</span><span class="tier__kit">A PFA T-shirt, a wristband, <em>Keep Your Dog Vegetarian</em>, <em>Heads and Tails</em>, and the receipt and tax exemption certificate.</span></label>
+            <label class="tier"><input type="radio" name="tier" value="lifetime" data-amount="10000" data-preview-label="Lifetime"><span class="tier__name">Lifetime</span><span class="tier__amt">&#8377;10,000</span><span class="tier__kit">A PFA T-shirt, a wristband, a set of PFA books, and the receipt and tax exemption certificate. For good.</span></label>
             </div>
             <p class="gi__note">People for Animals is a registered trust; membership payments are eligible for exemption under Section 80G. Members outside India pay the same and receive no kit: the postage is better spent on animals in India.</p>
           </div>
@@ -731,7 +731,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
           <div class="gi__body gi__fields">
             <div class="field"><label for="cgName">Your name</label><input id="cgName" name="name" type="text" autocomplete="name" required><span class="error">Add your name.</span></div>
             <div class="field"><label for="cgMobile">Mobile number</label><input id="cgMobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required><span class="error">Enter a 10-digit Indian mobile number.</span></div>
-            <div class="field gi__wide"><label for="cgEmail">Email <span class="opt">(optional, for your application number)</span></label><input id="cgEmail" name="email" type="email" autocomplete="email"><span class="error">Check the email address, or leave it blank.</span></div>
+            <div class="field gi__wide"><label for="cgEmail">Email</label><input id="cgEmail" name="email" type="email" autocomplete="email" required><span class="error">Add a valid email, for your application number.</span></div>
             <div class="field gi__doc" data-doc="photo"><label for="cgPhoto">Your photograph</label>
               <input id="cgPhoto" type="file" accept="image/*" capture="user">
               <p class="gi__hint">Face straight on, plain background, no cap or sunglasses. This prints on the card.</p>
@@ -877,6 +877,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 }());
 </script>
 
+<script src="assets/form-preview.js"></script>
 <script src="pfa-forms.js"></script>
 <script src="assets/india-districts.js"></script>
 <script>
@@ -1078,6 +1079,8 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
     form.addEventListener('input', function(e){ var f = e.target.closest('.field'); if (f) f.classList.remove('is-bad'); });
     window.PFAForms.wire(form, {
       kind: 'PFA-V',
+      previewTitle: 'Check your application before it is sent',
+      previewExtra: function(){ return [['Applying for', picked.join(', ')]]; },
       collect: function(){
         var n=$('#volName'), m=$('#volMobile'), e=$('#volEmail'), c=$('#volCity'), w=$('#volWhen'), x=$('#volNotes');
         var errs = 0;
@@ -1139,7 +1142,18 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
         return !el.value.trim();
       });
       bad.forEach(function(el){ var f = el.closest('.field'); if (f) f.classList.add('is-bad'); });
-      if (bad.length) { e.preventDefault(); var f = bad[0].closest('.field'); if (f) f.scrollIntoView({ block: 'center' }); bad[0].focus(); }
+      if (bad.length) { e.preventDefault(); var f = bad[0].closest('.field'); if (f) f.scrollIntoView({ block: 'center' }); bad[0].focus(); return; }
+      /* The last look before paying, then the email and mobile on their own.
+         form.submit() posts to CCAvenue without running this handler again. */
+      if (!window.PFAPreview) return;
+      e.preventDefault();
+      var tier = form.querySelector('input[name="tier"]:checked');
+      window.PFAPreview.confirm(form, {
+        title: 'Check your membership before you pay',
+        send: label ? label.textContent : 'Pay and join',
+        labels: { tier: 'Membership' },
+        extra: tier ? [['Amount', '\u20b9' + Number(tier.getAttribute('data-amount')).toLocaleString('en-IN')]] : []
+      }).then(function(confirmed){ if (confirmed) form.submit(); });
     });
   })();
 
@@ -1208,7 +1222,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
       var errs = 0;
       errs += bad(n, !n.value.trim()) ? 1 : 0;
       errs += bad(m, !mobileOk(m.value)) ? 1 : 0;
-      errs += bad(em, !!em.value.trim() && !emailOk(em.value)) ? 1 : 0;
+      errs += bad(em, !emailOk(em.value)) ? 1 : 0;
       errs += bad(a, !a.value.trim()) ? 1 : 0;
       errs += bad(c, !c.value.trim()) ? 1 : 0;
       ['photo'].forEach(function(kind){ var box = docBox(kind); if (box){ box.classList.toggle('is-bad', !docs[kind]); if (!docs[kind]) errs += 1; } });
@@ -1229,21 +1243,28 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
       e.preventDefault();
       if (sending) return;
       sending = true;
-      if (btn){ btn.disabled = true; btn.textContent = 'Sending your pictures\u2026'; }
-      fetch('/api/caregiver/documents', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ photo: docs.photo }) })
-        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(p){ return { ok: r.ok, p: p }; }); })
-        .then(function(res){
-          if (!res.ok || !res.p.token) throw new Error((res.p && res.p.error) || 'The pictures could not be sent. Try again.');
-          $('#cgDocuments').value = res.p.token;
-          if (btn) btn.textContent = 'Opening secure payment\u2026';
-          form.submit();                                /* straight to CCAvenue; handlers do not run again */
-        })
-        .catch(function(error){
-          sending = false;
-          if (btn){ btn.disabled = false; btn.textContent = 'Pay \u20b950 and apply'; }
-          say(error.message, 'bad');
-        });
+      /* The last look before anything is uploaded or paid: the pictures only
+         go once the person has confirmed. */
+      var look = window.PFAForms && window.PFAForms.preview ? window.PFAForms.preview(form, { title: 'Check your application before you pay', send: btn ? btn.textContent : 'Pay and apply', extra: [['Photograph', docs.photo ? 'Attached' : '']] }) : null;
+      if (look) look.then(go); else go(true);
+      function go(confirmed) {
+        if (!confirmed) { sending = false; return; }
+        if (btn){ btn.disabled = true; btn.textContent = 'Sending your pictures\u2026'; }
+        fetch('/api/caregiver/documents', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ photo: docs.photo }) })
+          .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(p){ return { ok: r.ok, p: p }; }); })
+          .then(function(res){
+            if (!res.ok || !res.p.token) throw new Error((res.p && res.p.error) || 'The pictures could not be sent. Try again.');
+            $('#cgDocuments').value = res.p.token;
+            if (btn) btn.textContent = 'Opening secure payment\u2026';
+            form.submit();                                /* straight to CCAvenue; handlers do not run again */
+          })
+          .catch(function(error){
+            sending = false;
+            if (btn){ btn.disabled = false; btn.textContent = 'Pay \u20b950 and apply'; }
+            say(error.message, 'bad');
+          });
+      }
     });
   })();
 

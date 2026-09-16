@@ -948,11 +948,21 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
          paying again is the same transaction, not a second one; changing the
          amount first is a new key, so it is never refused as a conflict. */
       $('#gRef').value = visitRef('donate', amt);
-      $('#payBtn').disabled = true;
-      $('#payBtn').textContent = 'Opening secure payment\u2026';
-      /* No preventDefault: the browser posts to /api/payment/create, which
-         answers with the CCAvenue hand-off page. Pane 3 is never reached from
-         here; the real confirmation is /api/payment/response after the bank. */
+      /* The last look before paying, then the email and mobile on their own.
+         Once confirmed, the browser posts to /api/payment/create, which answers
+         with the CCAvenue hand-off page; form.submit() does not run this handler
+         again. Pane 3 is never reached from here; the real confirmation is
+         /api/payment/response after the bank. */
+      var giveForm = this;
+      var dollars = (giveForm.querySelector('[name="currency"]') || {}).value === 'usd';
+      function pay(){ $('#payBtn').disabled = true; $('#payBtn').textContent = 'Opening secure payment\u2026'; }
+      if (!window.PFAPreview) { pay(); return; }
+      e.preventDefault();
+      window.PFAPreview.confirm(giveForm, {
+        title: 'Check your gift before you pay',
+        send: $('#payBtn').textContent,
+        extra: [['Amount', (dollars ? '$' : '\u20b9') + Number(amt).toLocaleString(dollars ? 'en-US' : 'en-IN')]]
+      }).then(function(confirmed){ if (!confirmed) return; pay(); giveForm.submit(); });
     });
     $('#giveForm').addEventListener('input', function(e){ var t = e.target; if (t.closest('.field')) bad(t, false); });
 
@@ -1116,5 +1126,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   oIn.addEventListener('input', function(){ oIn.value = oIn.value.replace(/[^0-9]/g, ''); paint(); });
 })();
 </script>
+<script src="assets/form-preview.js" defer></script>
 </body>
 </html>

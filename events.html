@@ -243,6 +243,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 </style>
 <link rel="stylesheet" href="pfa-search.css">
 <script src="pfa-search.js" defer></script>
+<script src="assets/form-preview.js"></script>
 <script src="pfa-forms.js"></script>
 <!-- The editorial layer from the Sep 2026 theme pass: labels, display
      leading, the band head, the call-to-action control, square corners,
@@ -406,9 +407,9 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       </div>
 
       <div class="field">
-        <label for="evEmail">Email <span class="opt">(optional)</span></label>
-        <input id="evEmail" type="email" autocomplete="email">
-        <span class="error">Check the email address, or leave it blank.</span>
+        <label for="evEmail">Email</label>
+        <input id="evEmail" type="email" autocomplete="email" required>
+        <span class="error">Add a valid email, so PFA can confirm your request.</span>
       </div>
 
       <div class="field">
@@ -548,6 +549,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     });
 
     window.PFAForms.wire(form, {
+      previewTitle: 'Check your request before it is sent',
       kind: 'PFA-EV',
       sending: 'Sending\u2026',
       collect: function(){
@@ -560,7 +562,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
         /* The same rule the server applies, so a number it will reject is
            caught here rather than after a round trip. */
         errs += bad(mobile, !/^[6-9]\d{9}$/.test(mobile.value.replace(/\D/g, ''))) ? 1 : 0;
-        errs += bad(email, !!email.value.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())) ? 1 : 0;
+        errs += bad(email, !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())) ? 1 : 0;
         if (errs){
           var first = form.querySelector('.is-bad input, .is-bad select');
           if (first) first.focus();
