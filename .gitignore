@@ -1,0 +1,44 @@
+# Local secrets. Never commit CCAvenue credentials.
+.env
+.env.*
+!.env.example
+
+# Never commit the downloaded live PHP integration or keys.
+**/ccavRequestHandler.php
+**/ccavResponseHandler.php
+**/Crypto.php
+
+# Never commit a Firebase service account key. It is a full-access credential
+# to the whole project - more powerful than anything in the Vercel dashboard -
+# and it arrives from the console as a .json in Downloads, one stray copy away
+# from `git add .`. Setting up the first administrator requires holding one, so
+# this is not a hypothetical.
+*firebase-adminsdk*.json
+serviceAccount*.json
+service-account*.json
+*.pem
+*.p12
+
+# Local and platform files
+.DS_Store
+.vercel
+node_modules
+npm-debug.log*
+
+# built by scripts/minify.js on every Vercel deploy
+dist/
+
+# written by scripts/build-catalog.js on every Vercel deploy
+assets/catalog-snapshot.json
+lib/catalog-snapshot.json
+
+# Member data exports contain names and phone numbers. They never belong in
+# the repository or in a zip that is passed around: a copy lived at the root as
+# MEMBER-REGISTER-REVIEW.csv until 30 Aug 2026. Keep such files out of the tree.
+MEMBER-REGISTER*.csv
+*-register*.csv
+*members*.csv
+*.xlsx
+
+# built by scripts/build-firebase.js
+public/

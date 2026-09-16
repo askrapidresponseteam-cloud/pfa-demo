@@ -1,0 +1,175 @@
+/* People for Animals, search overlay + results page.
+   Every value here is taken from index.html: white paper, #111 ink, #6a6a6a
+   muted, #e4e2df hairlines, Marcellus uppercase for display, 13px Helvetica
+   for labels, square corners, the header's own gutter and 1560px measure. */
+
+/* ================================ overlay ================================ */
+.pfa-search{
+  --g:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  position:fixed;left:0;right:0;top:0;bottom:0;z-index:45; /* below the site header (50) and announcement (60) */
+  background:#fff;color:#111;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  display:flex;flex-direction:column;
+  overflow-y:auto;overscroll-behavior:contain;
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .28s ease,transform .28s ease}
+.pfa-search.is-open{opacity:1;transform:none}
+.pfa-search[hidden]{display:none}
+html.pfa-search-open{overflow:hidden}
+.pfa-search *{box-sizing:border-box}
+.pfa-search a{color:inherit;text-decoration:none}
+.pfa-search mark{background:none;color:inherit;border-bottom:1px solid #111}
+
+.pfa-search__close{
+  position:absolute;right:var(--g);top:18px;z-index:2;
+  background:none;border:none;color:#111;cursor:pointer;font-size:14px;line-height:1;padding:8px;margin:-8px}
+.pfa-search__close:hover{opacity:.65}
+
+.pfa-search__form{
+  max-width:1560px;width:100%;margin:0 auto;
+  padding:clamp(32px,6vh,72px) var(--g) 0;border-top:1px solid #e4e2df}
+/* The same question appears here and on search.html, so it is set at the same
+   size in both. It is a prompt above an input, not a display headline: at the
+   old 112px it dwarfed the field it was labelling. */
+.pfa-search__ask{
+  display:block;margin:0;
+  font-family:Marcellus,'Cormorant Garamond',Georgia,serif;font-weight:400;
+  text-transform:uppercase;line-height:1.12;letter-spacing:.01em;
+  font-size:clamp(24px,3.1vw,44px);max-width:22ch;text-wrap:balance;cursor:text}
+.pfa-search__field{
+  position:relative;display:flex;align-items:flex-end;gap:16px;
+  margin-top:clamp(28px,4vw,48px);border-bottom:1px solid #111}
+.pfa-search__field input{
+  flex:1;min-width:0;border:0;outline:0;background:none;color:#111;
+  font:400 clamp(20px,2.6vw,34px)/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;
+  padding:8px 0 14px;-webkit-appearance:none;appearance:none}
+.pfa-search__field input::placeholder{color:#8f8f8f}
+.pfa-search__field input::-webkit-search-decoration,
+.pfa-search__field input::-webkit-search-cancel-button{-webkit-appearance:none}
+.pfa-search__field button{
+  flex:0 0 auto;width:44px;height:44px;margin-bottom:6px;
+  border:1px solid #111;background:#111;color:#fff;cursor:pointer;
+  font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;
+  transition:background .3s,color .3s}
+.pfa-search__field button:hover{background:#fff;color:#111}
+.pfa-search__field:focus-within{border-bottom-color:#111;box-shadow:0 1px 0 #111}
+.pfa-search__hint{margin:12px 0 0;font-size:13px;color:#6a6a6a}
+
+/* quick actions: always visible between the field and the results */
+.pfa-search__quick{max-width:1560px;width:100%;margin:0 auto;padding:clamp(20px,3vw,32px) var(--g) 0}
+.pfa-search__quick ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.pfa-search__quick a{display:inline-block;padding:13px 22px;border:1px solid #111;background:#111;color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1;transition:background .2s,color .2s}
+.pfa-search__quick a:hover{background:#fff;color:#111;opacity:1}
+.pfa-search__quick li:not(:first-child) a{background:none;color:#111}
+.pfa-search__quick li:not(:first-child) a:hover{background:#111;color:#fff}
+.pfa-search__body{
+  max-width:1560px;width:100%;margin:0 auto;
+  padding:clamp(28px,4vw,56px) var(--g) 64px}
+.pfa-search__label{
+  margin:0 0 6px;font-size:13px;color:#6a6a6a}
+.pfa-search__label a{border-bottom:1px solid #111;color:#111;padding-bottom:1px}
+.pfa-search__list{
+  list-style:none;margin:0;padding:0;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:0 clamp(24px,3vw,56px)}
+.pfa-search__list li a{
+  display:grid;grid-template-columns:1fr;gap:2px 0;align-items:start;
+  padding:18px 0;border-bottom:1px solid #e4e2df;font-size:13px}
+.pfa-search__list li[aria-selected="true"] a{background:#f4f3f1;margin:0 -12px;padding-left:12px;padding-right:12px}
+.pfa-s-title{font-size:15px;color:#111}
+.pfa-s-sec{color:#6a6a6a;white-space:nowrap;font-size:13px}
+.pfa-s-desc{grid-column:1 / -1;color:#6a6a6a;line-height:1.5}
+
+/* ============================ results page ============================== */
+/* search.html is built on the inner-page shell: dark hero (var(--deep)) with
+   the query as the display headline, results in a white .band below. */
+.pfa-sr__hero{min-height:0}
+.pfa-sr__hero .eyebrow{color:rgba(255,255,255,.55)}
+.pfa-sr__q{font-size:clamp(34px,6.4vw,104px);max-width:none;overflow-wrap:anywhere}
+/* The idle prompt is a question, not a headline: the query echo keeps the
+   display scale above, the prompt sits closer to the body copy. */
+.pfa-sr__q.is-prompt{font-size:clamp(24px,3.1vw,44px);line-height:1.12;max-width:22ch;text-wrap:balance;letter-spacing:.01em}
+.pfa-sr__form{margin-top:clamp(28px,4vw,48px);max-width:900px}
+.pfa-sr__label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.pfa-sr__field{display:flex;align-items:flex-end;gap:16px;border-bottom:1px solid rgba(255,255,255,.7)}
+.pfa-sr__field input{
+  flex:1;min-width:0;border:0;outline:0;background:none;color:#fff;
+  font:400 clamp(18px,2vw,24px)/1.2 var(--body);padding:8px 0 12px;-webkit-appearance:none;appearance:none}
+.pfa-sr__field input::placeholder{color:rgba(255,255,255,.45)}
+.pfa-sr__field input::-webkit-search-decoration,
+.pfa-sr__field input::-webkit-search-cancel-button{-webkit-appearance:none}
+.pfa-sr__field button{
+  width:44px;height:44px;margin-bottom:4px;border:1px solid #fff;background:#fff;color:var(--ink);
+  cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+.pfa-sr__field button:hover{background:transparent;color:#fff;opacity:1}
+.pfa-sr__field:focus-within{border-bottom-color:#fff;box-shadow:0 1px 0 #fff}
+
+.pfa-sr__body{padding-top:clamp(40px,5vw,72px)}
+.pfa-sr__in{max-width:var(--max);margin:0 auto}
+.pfa-sr mark{background:none;color:inherit;border-bottom:1px solid var(--ink)}
+
+.pfa-sr__note{margin:0 0 24px;font-size:15px}
+.pfa-sr__note:empty{display:none}
+.pfa-sr__note a{border-bottom:1px solid var(--ink)}
+.pfa-sr__facets{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;border-bottom:1px solid var(--line)}
+.pfa-sr__facets:empty{display:none}
+.pfa-sr__facets a{display:inline-block;padding:0 0 12px;color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px}
+.pfa-sr__facets a span{margin-left:4px}
+.pfa-sr__facets a[aria-current="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.pfa-sr__facets a:hover{color:var(--ink);opacity:1}
+.pfa-sr__results{margin-top:clamp(40px,5vw,64px);display:grid;gap:clamp(40px,5vw,64px)}
+.pfa-sr-group h2{margin:0 0 6px;font-size:15px;font-weight:700;letter-spacing:.01em;padding-bottom:12px;border-bottom:1px solid var(--ink)}
+.pfa-sr-group ol{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 clamp(24px,3vw,56px)}
+.pfa-sr-group li a{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:start;padding:20px 0;border-bottom:1px solid var(--line)}
+.pfa-sr-group li a:hover{opacity:1}
+.pfa-sr-group li a:hover .pfa-sr-title{border-bottom:1px solid var(--ink)}
+.pfa-sr-title{font-size:15px;line-height:1.3}
+.pfa-sr-url{font-size:13px;color:var(--muted);white-space:nowrap}
+.pfa-sr-desc{grid-column:1 / -1;font-size:13px;line-height:1.5;color:var(--muted);max-width:56ch}
+
+.pfa-sr-popular{margin-top:clamp(28px,3.5vw,40px);display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 clamp(24px,3vw,56px);max-width:1100px}
+.pfa-sr-popular li a{display:grid;grid-template-columns:1fr;gap:4px 0;padding:18px 0;border-bottom:1px solid var(--line)}
+.pfa-sr-popular li a:hover{opacity:1}
+.pfa-sr-popular li a:hover .pfa-sr-title{border-bottom:1px solid var(--ink)}
+
+.pfa-sr-empty p{margin:0;font-size:15px;line-height:1.55;max-width:56ch}
+.pfa-sr-empty .pfa-sr-fallback{margin-top:24px;font-size:13px;color:var(--muted)}
+.pfa-sr-empty .pfa-sr-fallback a{border-bottom:1px solid var(--ink);color:var(--ink)}
+.pfa-sr-chips{margin:24px 0 0;display:flex;flex-wrap:wrap;gap:10px}
+.pfa-sr-chips a{display:inline-block;padding:11px 20px;border:1px solid var(--ink);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1;transition:background .2s,color .2s}
+.pfa-sr-chips a:hover{background:var(--ink);color:#fff;opacity:1}
+
+/* keyboard focus is visible everywhere the cursor is hidden */
+.pfa-search a:focus-visible,.pfa-search button:focus-visible,
+.pfa-sr a:focus-visible,.pfa-sr button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+@media (max-width:860px){
+  .pfa-search__list,.pfa-sr-group ol{grid-template-columns:1fr}
+  .pfa-search__hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .pfa-search{transition:none;transform:none}
+}
+
+/* ---------------- completions, recents, did-you-mean, facets ---------------- */
+.pfa-search__chips{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px}
+.pfa-search__chips:empty{display:none}
+.pfa-search__chiplabel{color:#6a6a6a;margin-right:4px}
+.pfa-search__chips a,.pfa-search__chips button{
+  display:inline-block;padding:8px 14px;border:1px solid #111;background:none;color:#111;cursor:pointer;
+  font:inherit;line-height:1;transition:background .3s,color .3s}
+.pfa-search__chips a:hover,.pfa-search__chips button:hover{background:#111;color:#fff;opacity:1}
+.pfa-search__chips a mark{border-bottom:0;font-weight:700}
+.pfa-search__chips button{border-color:#e4e2df;color:#6a6a6a}
+.pfa-search__dym{margin-left:12px}
+.pfa-search__dym a{border-bottom:1px solid #111;color:#111}
+
+/* keyboard focus is visible everywhere the cursor is hidden */
+.pfa-search a:focus-visible,.pfa-search button:focus-visible{outline:2px solid #111;outline-offset:3px}
+.pfa-sr a:focus-visible,.pfa-sr button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (max-width:860px){
+  .pfa-search__list,.pfa-sr-group ol{grid-template-columns:1fr}
+  .pfa-search__hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){.pfa-search{transition:none;transform:none}}

@@ -1,0 +1,33 @@
+PFA Vercel payment layer: Donate + Give/Send + Patron Membership
+================================================================
+
+CCAvenue is intentionally limited to Donate, Give/Send and Patron Membership. Store/e-commerce payments remain completely separate with the vendor and are not covered here.
+
+Full step-by-step (Firebase setup, finding your currently-live PHP handler,
+USD, testing): see VERCEL_CCAVENUE_SETUP.md. This file is just the fast
+checklist once you already know what you're doing.
+
+Add these in Vercel Project Settings > Environment Variables:
+  CCAVENUE_MERCHANT_ID=<merchant id>
+  CCAVENUE_ACCESS_CODE=<existing live access code>
+  CCAVENUE_WORKING_KEY=<existing live working key>
+  CCAVENUE_MODE=production
+  FIREBASE_PROJECT_ID=<firebase project id>
+  FIREBASE_CLIENT_EMAIL=<firebase admin client email>
+  FIREBASE_PRIVATE_KEY=<firebase admin private key>
+  PUBLIC_SITE_URL=https://peopleforanimalsindia.org
+
+Only if offering USD, also add:
+  CCAVENUE_USD_ACCESS_CODE=<usd access code>
+  CCAVENUE_USD_WORKING_KEY=<usd working key>
+  CCAVENUE_USD_MERCHANT_ID=<only if CCAvenue issued a separate one>
+
+Redeploy and check:
+  /api/payment/health
+
+Expected health response includes:
+  "scope": ["donate", "send", "membership"]
+  "store": false
+
+Test one small donation and one Patron membership (and the USD equivalents,
+if configured) before changing production DNS.
