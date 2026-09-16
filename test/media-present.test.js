@@ -37,7 +37,8 @@ test('a missing image or video removes its frame, not just itself', () => {
      stone box at aspect-ratio 4/5, which is the grey placeholder. */
   const html = fs.readFileSync(path.join(ROOT, 'cinekind.html'), 'utf8');
   const frames = [...html.matchAll(/<div class="shot"[^>]*>\s*<(img|video)[^>]*src="(media\/[^"]+)"[^>]*>/g)];
-  assert.ok(frames.length >= 9, `expected the local media frames, found ${frames.length}`);
+  /* Six since v1.359: seven 2025 portraits are the owner's links again, not local files. */
+  assert.ok(frames.length >= 6, `expected the local media frames, found ${frames.length}`);
   for (const frame of frames) {
     const tag = frame[0];
     assert.match(tag, /data-shot/, `${frame[2]} has no frame hook`);

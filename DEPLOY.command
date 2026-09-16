@@ -54,6 +54,9 @@ node scripts/fetch-cinekind-media.js --rewrite || echo "  CineKind media fetch f
 npm run media:films -- --rewrite || echo "  founder-film fetch failed; continuing"
 npm run media:units || echo "  unit-photo fetch failed; continuing"
 
+step "Checking every form reaches the admin panel and sends its acknowledgement (offline)"
+node scripts/check-emails.js --brief || echo "  The email check found a problem; the test suite in scripts/ship.sh runs it too and will stop the deploy."
+
 step "Handing over to scripts/ship.sh"
 bash scripts/ship.sh "$EMAIL"
 
@@ -65,5 +68,14 @@ if [ -n "$LIVE" ]; then
 else
   printf '\nCould not read %s just now. Give it a minute and open the site yourself;\nthe deploy above already finished.\n' "$LIVE_URL"
 fi
+
+step "Checking automated email is switched on in production"
+HEALTH_URL="${LIVE_URL%/index.html}/api/payment/health"
+HEALTH="$(curl -s "$HEALTH_URL" || true)"
+case "$HEALTH" in
+  *'"mail":true'*)  printf 'EMAIL IS ON: acknowledgements, receipts and welcome letters can be sent.\n' ;;
+  *'"mail":false'*) printf '\033[31mEMAIL IS OFF: PFA_MAIL_API_KEY is not set in Vercel.\033[0m\n  Every form still reaches the admin panel, but nobody is sent an acknowledgement or a welcome letter.\n  Add the key in Vercel (Project > Settings > Environment Variables), then deploy again.\n' ;;
+  *) printf 'Could not read %s just now. Open it in a browser and look for "mail":true.\n' "$HEALTH_URL" ;;
+esac
 
 printf '\nDone. You can close this window.\n'

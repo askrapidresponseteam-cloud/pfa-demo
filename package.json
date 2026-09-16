@@ -15,6 +15,7 @@
     "media:cinekind": "node scripts/fetch-cinekind-media.js",
     "rename:section": "node scripts/rename-section.js",
     "check:media": "node scripts/check-media.js",
+    "check:emails": "node scripts/check-emails.js",
     "check:lookalikes": "node scripts/check-lookalikes.js",
     "media:founder": "node scripts/fetch-founder-films.js",
     "media:films": "node scripts/fetch-founder-films.js",
