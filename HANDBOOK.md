@@ -380,3 +380,30 @@ New collections added 22 Aug: `storeOrders` (admin-readable),
 | `firestore.rules` | Access rules incl. new store collections |
 | `ARCHITECTURE.md` | Architecture and security reference |
 | `.claude/skills/pfa-website/SKILL.md` | Instructions for AI assistants working on this repo |
+
+## 10. Adding an event to the events page
+
+`events.html` is written from one file, `data/events.json`. Order does not matter: the page puts the newest first.
+
+1. Add an entry to the `events` list:
+   - `code`: the next three-digit number, such as `"003"`.
+   - `kind`: `awards`, `adoption`, `camp`, `openday` or `talk`. It decides which bar the event counts under.
+   - `title`, `city`, and `date` written `YYYY-MM-DD`.
+   - `photos`: one to three, each `{ "src", "alt", "caption" }`. Put the files under `media/events/`, or use an https address whose host is in the img-src of the Content-Security-Policy in `vercel.json`. The caption is written by hand on the card, so keep it to a name or a few words (24 characters at most).
+   - Optional: `note` (one or two sentences), `tags` (up to three words), `link` `{ "href", "label" }`, and `feature` `{ "src", "alt" }` for the large photograph beside the request form.
+2. Run `node scripts/build-events.js`. It refuses bad data and names the entry and the field. `DEPLOY.command` runs it for you, and the tests stop a deploy whose page is out of date (`npm run check:events`).
+3. Nothing needs changing when a date passes. Which event is coming next, the countdown, and which have been held are worked out in each visitor's browser from the date.
+
+## 11. Adding a story to the newsroom
+
+The top of `newsroom.html`, the nameplate, the front page and the desks, is written from `data/newsroom.json`. Case 001's full record and the closing band below it are written by hand and never touched by the script.
+
+1. Add an entry to the `stories` list. A story is something that happened, with the page that carries it:
+   - `slug`: a short id in lowercase with hyphens, such as `case-002-pune`.
+   - `desk`: `case`, `law`, `policy` or `cinekind`. Law and policy share the Policy and law desk.
+   - `title` (at most 90 characters), `dek` (the one or two sentences under it, at most 260), `date` written `YYYY-MM-DD`, and `place`.
+   - `link` `{ "href", "label" }`: a page on this site, an anchor, or both, such as `achievements.html#rec-080`. The build checks that the page and the anchor exist.
+   - Optional: `image` `{ "src", "alt" }` (a file on disk, or an https address allowed by img-src), `from` (who issued it), `tag` (the label on the story, such as `Case 002`), `status` (such as `Resolved`), and `front` (1 to 4) to place it on the front page. With no story marked, the four newest make the front page.
+2. Run `node scripts/build-newsroom.js`. It refuses bad data and names the story and the field. `DEPLOY.command` runs it for you, and the tests stop a deploy whose page is out of date (`npm run check:newsroom`).
+3. A story with no photograph is set in type with its date large, so leave `image` out rather than use a stand-in picture.
+

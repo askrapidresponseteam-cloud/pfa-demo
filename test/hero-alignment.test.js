@@ -41,7 +41,9 @@ const reserve = (html, gutter) => {
 
 test('every page in the hero family reserves the same room above the headline', () => {
   const family = pages();
-  assert.ok(family.length >= 10, `expected the hero family, found ${family.length} pages`);
+  /* Nine since v1.361: events.html and newsroom.html now open on their own
+     first sections, and are held to the same height by the test below. */
+  assert.ok(family.length >= 9, `expected the hero family, found ${family.length} pages`);
 
   const wrong = [];
   family.forEach(({ file, html }) => {
@@ -50,6 +52,22 @@ test('every page in the hero family reserves the same room above the headline', 
   });
   assert.deepStrictEqual(wrong, [],
     'these pages would start at a different height from the rest:\n  ' + wrong.join('\n  '));
+});
+
+/* v1.361 (owner, 17 Sep 2026): the events archive and the newsroom nameplate
+   replaced those pages' heroes, so the two pages left the family above. A
+   reader moving from Laws to Events or the Newsroom must still not see the
+   headline jump, so their first sections reserve exactly the family's room. */
+const OWN_FIRST_SECTION = { 'events.html': 'ev-head', 'newsroom.html': 'nr-mast' };
+
+test('the events archive and the newsroom nameplate start at the same height as the family', () => {
+  for (const [file, cls] of Object.entries(OWN_FIRST_SECTION)) {
+    const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
+    const desk = html.match(new RegExp('\\.' + cls + '\\{[^}]*?padding:calc\\(var\\(--ann\\) \\+ var\\(--nav\\) \\+ (\\d+)px\\)'));
+    assert.strictEqual(desk && Number(desk[1]), DESKTOP, `${file}: the desktop room above the headline`);
+    const phone = html.match(new RegExp('@media \\(max-width:720px\\)\\{\\.' + cls + '\\{padding-top:calc\\(var\\(--ann\\) \\+ var\\(--nav\\) \\+ (\\d+)px\\)'));
+    assert.strictEqual(phone && Number(phone[1]), MOBILE, `${file}: the room on a phone`);
+  }
 });
 
 test('and the same room on a phone', () => {

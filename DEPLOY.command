@@ -53,6 +53,8 @@ step "Fetching media (best effort; the test suite is the backstop)"
 node scripts/fetch-cinekind-media.js --rewrite || echo "  CineKind media fetch failed; continuing, the tests will judge the tree"
 npm run media:films -- --rewrite || echo "  founder-film fetch failed; continuing"
 npm run media:units || echo "  unit-photo fetch failed; continuing"
+node scripts/build-events.js || echo "  The events list could not be written; the test suite will stop the deploy and name the entry"
+node scripts/build-newsroom.js || echo "  The newsroom could not be written; the test suite will stop the deploy and name the story"
 
 step "Checking every form reaches the admin panel and sends its acknowledgement (offline)"
 node scripts/check-emails.js --brief || echo "  The email check found a problem; the test suite in scripts/ship.sh runs it too and will stop the deploy."

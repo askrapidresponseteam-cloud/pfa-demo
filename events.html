@@ -240,6 +240,87 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .hero,.u-hero{border-bottom:1px solid var(--line)}
 .leg__panel{border-top:3px solid var(--pop,#ff3b18)}
 ::selection{background:var(--pop,#ff3b18);color:#fff}
+
+/* ---- The events archive (v1.361) ------------------------------------------
+   Written by scripts/build-events.js from data/events.json: one card per
+   event, newest first, on a strip that scrolls sideways as the list grows;
+   bars that show one kind at a time; the coming-next bar; and the next event
+   beside the request form. Cards stand on a cool grey so the photographs, on
+   white cards with a handwritten caption, are the brightest thing there.
+   Kalam is Indian Type Foundry's hand, under the SIL Open Font License
+   (fonts/OFL-Kalam.txt), used for those captions and nothing else. */
+@font-face{font-family:'Kalam';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/kalam-latin-400.woff2") format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+.ev,.ev-lower{--ev-gutter:max(clamp(24px,5vw,84px),calc((100% - 1440px) / 2));--ev-pad:clamp(70px,8vw,110px);--ev-ink:#111;--ev-display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;--ev-body:'Helvetica Neue',Helvetica,Arial,sans-serif;--ev-card:#f1f3f7;--ev-rule:rgba(17,17,17,.14);--ev-muted:#5c5c5c;--ev-accent:var(--pop,#ff3b18);--ev-tint:#ffe2dc;--ev-hand:'Kalam','Bradley Hand','Segoe Print',cursive}
+.ev{position:relative;padding:0 0 6px}
+.ev-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ev-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 40px;padding:calc(var(--ann) + var(--nav) + 72px) var(--ev-gutter) clamp(18px,2vw,26px)}
+.ev-head__text{max-width:62ch}
+.ev-title::before{content:"";display:block;width:34px;height:3px;margin-bottom:18px;background:var(--pop,#ff3b18)}
+.ev-title{margin:0;font-family:var(--ev-display);font-weight:400;font-size:clamp(46px,6.4vw,92px);line-height:.92;letter-spacing:.005em;color:var(--ev-ink)}
+.ev-lede{margin:14px 0 0;font-size:16px;line-height:1.55;color:#333}
+.ev-tally{display:flex;align-items:center;gap:18px}
+.ev-count{margin:0;font-size:13px;letter-spacing:.04em;color:var(--ev-muted);font-variant-numeric:tabular-nums}
+.ev-count b{font-weight:400;color:var(--ev-ink)}
+.ev-nav{display:flex;gap:6px}
+.ev-nav[hidden],.ev-card[hidden],.ev-empty[hidden],.ev-now[hidden]{display:none}
+.ev-nav button{width:44px;height:44px;padding:0;border:1px solid var(--ev-ink);background:#fff;color:var(--ev-ink);font:inherit;font-size:22px;line-height:1;cursor:pointer}
+.ev-nav button:disabled{opacity:.28;cursor:default}
+.ev-scroll{display:flex;align-items:stretch;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--ev-gutter);padding:0 var(--ev-gutter) 14px;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:rgba(17,17,17,.3) transparent}
+.ev-scroll:focus-visible,.ev-bar:focus-visible,.ev-nav button:focus-visible,.ev-btn:focus-visible,.ev-now:focus-visible,.ev-card__link:focus-visible,.ev-next__link:focus-visible{outline:3px solid #2634f5;outline-offset:2px}
+.ev-strip{display:flex;gap:10px;margin:0;padding:0;list-style:none}
+.ev-card{position:relative;flex:none;scroll-snap-align:start;display:flex;flex-direction:column;width:min(calc(var(--n,2) * 252px + 46px),calc(100vw - 48px));min-width:min(420px,calc(100vw - 48px));padding:18px 18px 16px;background:var(--ev-card)}
+.ev-card__title{margin:0;font-family:var(--ev-display);font-weight:400;font-size:clamp(28px,2.5vw,38px);line-height:1.04;color:var(--ev-ink)}
+.ev-card__city{font-family:var(--ev-body);font-size:.5em;letter-spacing:.02em;color:var(--ev-muted);white-space:nowrap}
+.ev-card__meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 18px;margin:12px 0 0;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ev-ink)}
+.ev-no,.ev-card__meta time,.ev-now__meta,.ev-next__where time,.ev-pola__top{font-variant-numeric:tabular-nums}
+.ev-no{margin-right:12px}
+.ev-card__tags{display:flex;gap:14px;color:var(--ev-muted)}
+.ev-card__note{margin:10px 0 0;max-width:48ch;font-size:14px;line-height:1.5;color:#333}
+.ev-polas{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:10px;margin-top:auto;padding-top:22px}
+.ev-pola{margin:0;padding:10px 10px 8px;background:#fff;border:1px solid var(--ev-rule)}
+.ev-pola__top{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;font-size:11px;letter-spacing:.06em;color:var(--ev-ink)}
+.ev-dot::before{content:'';display:inline-block;width:5px;height:5px;margin:0 5px 2px 0;border-radius:50%;background:var(--ev-accent);vertical-align:middle}
+.ev-pola__mark{font-family:var(--ev-display);font-size:12px;letter-spacing:.1em}
+.ev-pola__frame{aspect-ratio:5/4;overflow:hidden;background:#e4e7ed}
+.ev-pola__frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 25%}
+.ev-pola figcaption{margin:8px 2px 2px;overflow:hidden;font-family:var(--ev-hand);font-size:clamp(22px,1.9vw,28px);line-height:1.15;color:var(--ev-ink);text-align:center;white-space:nowrap;text-overflow:ellipsis}
+.ev-card__foot{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:22px;margin:14px 0 0;font-size:13px}
+.ev-state{display:inline-flex;align-items:center;gap:8px;letter-spacing:.03em;color:var(--ev-ink)}
+.ev-state[data-state="next"]::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--ev-accent)}
+.ev-state[data-state="held"]{color:var(--ev-muted)}
+.ev-card__link,.ev-next__link{color:var(--ev-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.ev-empty,.ev-ask{flex:none;scroll-snap-align:start;display:flex;flex-direction:column;align-items:flex-start;width:min(380px,calc(100vw - 48px));padding:22px;border:1px dashed rgba(17,17,17,.34)}
+.ev-empty__title,.ev-ask__title{margin:0;font-family:var(--ev-display);font-weight:400;font-size:clamp(26px,2.3vw,34px);line-height:1.08;color:var(--ev-ink)}
+.ev-empty p,.ev-ask p{margin:12px 0 22px;font-size:14px;line-height:1.55;color:#333}
+.ev-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin-top:auto;padding:0 22px;background:var(--ev-ink);color:#fff;font-size:12px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+.ev-bars{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:4px 10px;margin:6px var(--ev-gutter) 0}
+.ev-bar{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:0 12px;border:0;border-bottom:1px solid var(--ev-rule);background:transparent;color:var(--ev-ink);font:inherit;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;text-align:left;cursor:pointer}
+.ev-bar[aria-pressed="true"]{background:var(--ev-card);border-bottom-color:var(--ev-ink)}
+.ev-bar__name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ev-bar__n{margin-left:auto;color:var(--ev-muted);font-variant-numeric:tabular-nums}
+.ev-bar__plus{width:14px;font-size:17px;line-height:1;text-align:center}
+.ev-now{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:10px var(--ev-gutter) 0;min-height:46px;padding:8px 14px;background:var(--ev-tint);color:var(--ev-ink);text-decoration:none}
+.ev-now__label{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.07em;text-transform:uppercase}
+.ev-now__label::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--ev-accent)}
+.ev-now__title{font-family:var(--ev-display);font-size:clamp(19px,1.7vw,24px);line-height:1.1}
+.ev-now__where{font-size:15px;color:#333}
+.ev-now__count{font-weight:700;color:var(--ev-ink)}
+.ev-now__meta{display:flex;gap:18px;margin-left:auto;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase}
+.ev-lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:clamp(28px,5vw,80px);padding:clamp(40px,5vw,72px) var(--ev-gutter) var(--ev-pad)}
+.ev-lower > .band{margin:0;padding:0}
+.ev-next{padding-top:22px;border-top:1px solid var(--ev-ink)}
+.ev-next__label{margin:0;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ev-muted)}
+.ev-next__title{margin:12px 0 0;font-family:var(--ev-display);font-weight:400;font-size:clamp(34px,3.6vw,54px);line-height:1;color:var(--ev-ink)}
+.ev-next__where{display:flex;flex-wrap:wrap;gap:4px 16px;margin:12px 0 0;font-size:17px;color:#333}
+.ev-next__city{color:var(--ev-ink)}
+.ev-next__note{margin:12px 0 0;max-width:52ch;font-size:15px;line-height:1.6;color:#333}
+.ev-next__link{display:inline-block;margin-top:14px;font-size:15px}
+.ev-next__photo{margin:22px 0 0;background:#e4e7ed}
+.ev-next__photo img{display:block;width:100%;height:auto}
+@media (max-width:900px){.ev-lower{grid-template-columns:minmax(0,1fr)}.ev-now__meta{width:100%;margin-left:0}}
+@media (max-width:560px){.ev-card{width:calc(100vw - 48px);min-width:0}.ev-bars{grid-template-columns:repeat(2,minmax(0,1fr))}.ev-card__title{font-size:30px}.ev-pola figcaption{font-size:21px}}
+@media (max-width:720px){.ev-head{padding-top:calc(var(--ann) + var(--nav) + 36px)}}
+@media (prefers-reduced-motion:no-preference){.ev-scroll{scroll-behavior:smooth}}
 </style>
 <link rel="stylesheet" href="pfa-search.css">
 <script src="pfa-search.js" defer></script>
@@ -328,38 +409,72 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 <script src="assets/field-validate.js"></script>
 
 <main>
-  <section class="hero" id="top">
-    <div class="hero__in">
-      <p class="eyebrow">Events 2026</p>
-      <h1 class="display">Events.</h1>
-    </div>
-  </section>
+  <!-- events:start. Written by scripts/build-events.js from data/events.json: edit the data, then run the script. -->
+<section class="ev" id="events" aria-labelledby="evTitle">
+<div class="ev-head" id="top">
+<div class="ev-head__text">
+<h1 class="ev-title" id="evTitle">Events</h1>
+<p class="ev-lede">Every awards evening, drive, camp and open day PFA has held or announced, newest first.</p>
+</div>
+<div class="ev-tally">
+<p class="ev-count"><b>2</b> on the record</p>
+<div class="ev-nav" hidden><button type="button" data-step="-1" aria-controls="evScroll" aria-label="Newer events">&lsaquo;</button><button type="button" data-step="1" aria-controls="evScroll" aria-label="Older events">&rsaquo;</button></div>
+</div>
+</div>
+<div class="ev-scroll" id="evScroll" role="region" aria-label="Events, newest first" tabindex="0">
+<ol class="ev-strip">
+<li class="ev-card" id="event-002" data-code="002" data-kind="awards" data-date="2026-10-04" style="--n:2">
+<h3 class="ev-card__title">CineKind Awards 2026 <span class="ev-card__city">Mumbai</span></h3>
+<p class="ev-card__meta"><span><span class="ev-no">No. 002</span><time datetime="2026-10-04"><span aria-hidden="true">04 10 2026</span><span class="ev-sr">Sunday, 4 October 2026</span></time></span><span class="ev-card__tags"><span>Awards</span><span>Film</span></span></p>
+<p class="ev-card__note">World Animal Day. Eleven honours for films and people who leave the frame kinder than they found it.</p>
+<div class="ev-polas"><figure class="ev-pola" data-shot><p class="ev-pola__top"><span class="ev-dot">002</span><span class="ev-pola__mark">PFA</span></p><div class="ev-pola__frame"><img src="media/cinekind-2026/john-abraham.webp" alt="John Abraham, honoured as Champion for Animals" loading="lazy" decoding="async" onerror="var f=this.closest('[data-shot]');if(f)f.remove()"></div><figcaption>John Abraham</figcaption></figure><figure class="ev-pola" data-shot><p class="ev-pola__top"><span class="ev-dot">002</span><span class="ev-pola__mark">PFA</span></p><div class="ev-pola__frame"><img src="media/cinekind-2026/raveena-tandon.webp" alt="Raveena Tandon, honoured as Kindness Catalyst" loading="lazy" decoding="async" onerror="var f=this.closest('[data-shot]');if(f)f.remove()"></div><figcaption>Raveena Tandon</figcaption></figure></div>
+<p class="ev-card__foot"><span class="ev-state"></span><a class="ev-card__link" href="cinekind.html">The eleven honours</a></p>
+</li>
+<li class="ev-card" id="event-001" data-code="001" data-kind="awards" data-date="2025-12-20" style="--n:2">
+<h3 class="ev-card__title">CineKind National Awards 2025 <span class="ev-card__city">Kolkata</span></h3>
+<p class="ev-card__meta"><span><span class="ev-no">No. 001</span><time datetime="2025-12-20"><span aria-hidden="true">20 12 2025</span><span class="ev-sr">Saturday, 20 December 2025</span></time></span><span class="ev-card__tags"><span>Awards</span><span>Film</span></span></p>
+<p class="ev-card__note">The first edition. Ten honours, presented by the Film Federation of India with People for Animals.</p>
+<div class="ev-polas"><figure class="ev-pola" data-shot><p class="ev-pola__top"><span class="ev-dot">001</span><span class="ev-pola__mark">PFA</span></p><div class="ev-pola__frame"><img src="media/cinekind-2025/nirmal.webp" alt="Nirmal Verma, filmmaker of Keeper of the Last Herd" loading="lazy" decoding="async" onerror="var f=this.closest('[data-shot]');if(f)f.remove()"></div><figcaption>Nirmal Verma</figcaption></figure><figure class="ev-pola" data-shot><p class="ev-pola__top"><span class="ev-dot">001</span><span class="ev-pola__mark">PFA</span></p><div class="ev-pola__frame"><img src="media/cinekind-2025/ashish.webp" alt="Ashish Goswami of PFA Wardha" loading="lazy" decoding="async" onerror="var f=this.closest('[data-shot]');if(f)f.remove()"></div><figcaption>Ashish Goswami</figcaption></figure></div>
+<p class="ev-card__foot"><span class="ev-state"></span><a class="ev-card__link" href="cinekind.html">The ten honours</a></p>
+</li>
+</ol>
+<div class="ev-empty" id="evEmpty" hidden>
+<h3 class="ev-empty__title">Nothing of this kind is on the record yet.</h3>
+<p>They happen where someone local asks for one and can help make it possible.</p>
+<a class="ev-btn" href="#request" data-ask="">Ask for one</a>
+</div>
+<div class="ev-ask">
+<h3 class="ev-ask__title">Your area could be next.</h3>
+<p>A drive or a camp happens where someone local asks for one: a ground, a hall, a residents association, a school.</p>
+<a class="ev-btn" href="#request">Ask for an event</a>
+</div>
+</div>
+<div class="ev-bars" role="group" aria-label="Show one kind of event">
+<button class="ev-bar" type="button" data-kind="all" aria-pressed="true"><span class="ev-bar__name">Every event</span><span class="ev-bar__n">2</span><span class="ev-bar__plus" aria-hidden="true">&minus;</span></button>
+<button class="ev-bar" type="button" data-kind="awards" aria-pressed="false" data-none="No awards evening is on the record yet." data-choice="A CineKind screening" data-choice-label="Ask for a CineKind screening"><span class="ev-bar__name">Awards</span><span class="ev-bar__n">2</span><span class="ev-bar__plus" aria-hidden="true">+</span></button>
+<button class="ev-bar" type="button" data-kind="adoption" aria-pressed="false" data-none="No adoption drive is on the record yet." data-choice="An adoption drive" data-choice-label="Ask for an adoption drive"><span class="ev-bar__name">Adoption drives</span><span class="ev-bar__n">0</span><span class="ev-bar__plus" aria-hidden="true">+</span></button>
+<button class="ev-bar" type="button" data-kind="camp" aria-pressed="false" data-none="No camp is on the record yet." data-choice="A sterilisation or vaccination camp" data-choice-label="Ask for a camp"><span class="ev-bar__name">Camps</span><span class="ev-bar__n">0</span><span class="ev-bar__plus" aria-hidden="true">+</span></button>
+<button class="ev-bar" type="button" data-kind="openday" aria-pressed="false" data-none="No open day is on the record yet." data-choice="Something else" data-choice-label="Ask for an open day"><span class="ev-bar__name">Open days</span><span class="ev-bar__n">0</span><span class="ev-bar__plus" aria-hidden="true">+</span></button>
+<button class="ev-bar" type="button" data-kind="talk" aria-pressed="false" data-none="No talk is on the record yet." data-choice="A talk or a school session" data-choice-label="Ask for a talk"><span class="ev-bar__name">Talks</span><span class="ev-bar__n">0</span><span class="ev-bar__plus" aria-hidden="true">+</span></button>
+</div>
+<p class="ev-sr" aria-live="polite"></p>
+<a class="ev-now" id="evNow" href="#event-002" hidden><span class="ev-now__label">Coming next</span><span class="ev-now__title">CineKind Awards 2026</span><span class="ev-now__where">Mumbai</span><span class="ev-now__meta"><span class="ev-no">No. 002</span><time datetime="2026-10-04">04 10 2026</time><span class="ev-now__count"></span></span></a>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Events held or announced by People for Animals","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Event","name":"CineKind Awards 2026","startDate":"2026-10-04","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"Mumbai","address":{"@type":"PostalAddress","addressLocality":"Mumbai","addressCountry":"IN"}},"organizer":{"@type":"Organization","name":"People for Animals","url":"https://peopleforanimalsindia.org/"},"image":["https://peopleforanimalsindia.org/media/cinekind-2026/john-abraham.webp","https://peopleforanimalsindia.org/media/cinekind-2026/raveena-tandon.webp"],"description":"World Animal Day. Eleven honours for films and people who leave the frame kinder than they found it.","url":"https://peopleforanimalsindia.org/events#event-002"}},{"@type":"ListItem","position":2,"item":{"@type":"Event","name":"CineKind National Awards 2025","startDate":"2025-12-20","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"Kolkata","address":{"@type":"PostalAddress","addressLocality":"Kolkata","addressCountry":"IN"}},"organizer":{"@type":"Organization","name":"People for Animals","url":"https://peopleforanimalsindia.org/"},"image":["https://peopleforanimalsindia.org/media/cinekind-2025/nirmal.webp","https://peopleforanimalsindia.org/media/cinekind-2025/ashish.webp"],"description":"The first edition. Ten honours, presented by the Film Federation of India with People for Animals.","url":"https://peopleforanimalsindia.org/events#event-001"}}]}</script>
+<script type="application/json" id="evData">{"events":[{"code":"002","kind":"awards","title":"CineKind Awards 2026","city":"Mumbai","date":"2026-10-04","dmy":"04 10 2026","long":"Sunday, 4 October 2026","note":"World Animal Day. Eleven honours for films and people who leave the frame kinder than they found it.","link":{"href":"cinekind.html","label":"The eleven honours"},"feature":{"src":"img/cinekind-landing.webp","alt":"The CineKind trophy"}},{"code":"001","kind":"awards","title":"CineKind National Awards 2025","city":"Kolkata","date":"2025-12-20","dmy":"20 12 2025","long":"Saturday, 20 December 2025","note":"The first edition. Ten honours, presented by the Film Federation of India with People for Animals.","link":{"href":"cinekind.html","label":"The ten honours"},"feature":null}]}</script>
+</section>
+<!-- events:end -->
 
-  <div class="legs" id="legs">
-
-    <section class="leg" data-leg="cinekind">
-      <div class="leg__panel">
-        <p class="eyebrow">On the record</p>
-        <h2 class="display">CineKind</h2>
-        <p>The award for cinema that made the case for animals, presented by the Film Federation of India with People for Animals. The first edition has taken place; the CineKind page carries what is known about the next one.</p>
-        <div class="leg__meta">
-          <span>First edition</span>
-          <span>Kolkata</span>
-          <span>20 December 2025</span>
-        </div>
-      </div>
-      <ul class="rows">
-        <li class="row" data-type="cinekind" data-find="kolkata cinekind first edition awards">
-          <span class="d">Sat, 20 Dec 2025</span>
-          <span class="v">CineKind, first edition</span>
-          <span class="c">Kolkata</span>
-          <span class="b"><em>Held</em></span>
-          <span class="a"><a href="cinekind.html">The honours</a></span>
-        </li>
-      </ul>
-    </section>
-
-  </div>
+  <div class="ev-lower">
+  <!-- events-next:start. Written by scripts/build-events.js. -->
+<article class="ev-next" id="evNext" aria-labelledby="evNextTitle">
+<p class="ev-next__label">Latest on the record</p>
+<h2 class="ev-next__title" id="evNextTitle">CineKind Awards 2026</h2>
+<p class="ev-next__where"><span class="ev-next__city">Mumbai</span> <time datetime="2026-10-04">Sunday, 4 October 2026</time></p>
+<p class="ev-next__note">World Animal Day. Eleven honours for films and people who leave the frame kinder than they found it.</p>
+<a class="ev-next__link" href="cinekind.html">The eleven honours</a>
+<figure class="ev-next__photo" data-shot><img src="img/cinekind-landing.webp" alt="The CineKind trophy" loading="lazy" decoding="async" onerror="var f=this.closest('[data-shot]');if(f)f.remove()"></figure>
+</article>
+<!-- events-next:end -->
 
   <section class="band" id="request">
     <div class="band__head">
@@ -422,6 +537,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       <p class="fine">This goes to PFA with a reference number you can quote. It is a request, not a booking: nothing is confirmed until someone at PFA replies.</p>
     </form>
   </section>
+  </div>
 </main>
 
 <footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
@@ -514,6 +630,133 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script>
+  /* ---- the events archive ----
+     The cards, the kind bars and the coming-next bar are written into the page
+     by scripts/build-events.js from data/events.json, so they are there without
+     JavaScript. What depends on today is decided here, in the visitor's
+     browser: which event is coming next and how many days away, and which have
+     been held. A kind bar shows only that kind; a kind with nothing on the
+     record yet becomes an invitation, and sets the request form to it. */
+  (function eventsArchive(){
+    var root = document.getElementById('events');
+    var source = document.getElementById('evData');
+    if (!root || !source) return;
+    var events;
+    try { events = JSON.parse(source.textContent).events || []; } catch (e) { return; }
+    var scroller = document.getElementById('evScroll');
+    var cards = [].slice.call(root.querySelectorAll('.ev-card'));
+    var bars = [].slice.call(root.querySelectorAll('.ev-bar[data-kind]'));
+    var empty = document.getElementById('evEmpty');
+    var live = root.querySelector('[aria-live]');
+    var nav = root.querySelector('.ev-nav');
+    var now = document.getElementById('evNow');
+    var next = document.getElementById('evNext');
+    var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+    function dayOf(iso){ var p = String(iso).split('-'); return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); }
+    var clock = new Date();
+    var today = new Date(clock.getFullYear(), clock.getMonth(), clock.getDate());
+    var soonest = events.filter(function(ev){ return dayOf(ev.date) >= today; })
+      .sort(function(a, b){ return a.date === b.date ? (a.code < b.code ? -1 : 1) : (a.date < b.date ? -1 : 1); })[0] || null;
+    function put(box, selector, value){ var node = box && box.querySelector(selector); if (node) node.textContent = value; return node; }
+
+    cards.forEach(function(card){
+      var state = soonest && card.getAttribute('data-code') === soonest.code ? 'next'
+        : (dayOf(card.getAttribute('data-date')) >= today ? 'coming' : 'held');
+      var tag = card.querySelector('.ev-state');
+      if (!tag) return;
+      tag.setAttribute('data-state', state);
+      tag.textContent = state === 'next' ? 'Coming next' : (state === 'coming' ? 'Coming' : 'Held');
+    });
+
+    if (now) {
+      now.hidden = !soonest;
+      if (soonest) {
+        var days = Math.round((dayOf(soonest.date) - today) / 86400000);
+        now.setAttribute('href', '#event-' + soonest.code);
+        put(now, '.ev-now__title', soonest.title);
+        put(now, '.ev-now__where', soonest.city);
+        put(now, '.ev-no', 'No. ' + soonest.code);
+        var at = put(now, 'time', soonest.dmy); if (at) at.setAttribute('datetime', soonest.date);
+        put(now, '.ev-now__count', days === 0 ? 'Today' : (days === 1 ? 'Tomorrow' : 'In ' + days + ' days'));
+      }
+    }
+
+    if (next && events.length) {
+      put(next, '.ev-next__label', soonest ? 'Coming next' : 'Most recent');
+      if (soonest) {
+        put(next, '.ev-next__title', soonest.title);
+        put(next, '.ev-next__city', soonest.city);
+        var when = put(next, 'time', soonest.long); if (when) when.setAttribute('datetime', soonest.date);
+        var note = put(next, '.ev-next__note', soonest.note); if (note) note.hidden = !soonest.note;
+        var link = next.querySelector('.ev-next__link');
+        if (link) { link.hidden = !soonest.link; if (soonest.link) { link.setAttribute('href', soonest.link.href); link.textContent = soonest.link.label; } }
+        var photo = next.querySelector('.ev-next__photo'), img = photo && photo.querySelector('img');
+        if (photo && img) { photo.hidden = !soonest.feature; if (soonest.feature && img.getAttribute('src') !== soonest.feature.src) { img.setAttribute('src', soonest.feature.src); img.setAttribute('alt', soonest.feature.alt); } }
+      }
+    }
+
+    function paintNav(){
+      if (!nav || !scroller) return;
+      var room = scroller.scrollWidth - scroller.clientWidth;
+      nav.hidden = !(room > 4);
+      var buttons = nav.querySelectorAll('button');
+      if (buttons.length === 2) { buttons[0].disabled = scroller.scrollLeft <= 2; buttons[1].disabled = scroller.scrollLeft >= room - 2; }
+    }
+
+    function show(kind){
+      var shown = 0, name = '', none = '';
+      cards.forEach(function(card){ var on = kind === 'all' || card.getAttribute('data-kind') === kind; card.hidden = !on; if (on) shown += 1; });
+      bars.forEach(function(bar){
+        var on = bar.getAttribute('data-kind') === kind;
+        bar.setAttribute('aria-pressed', on ? 'true' : 'false');
+        put(bar, '.ev-bar__plus', on ? '\u2212' : '+');
+        if (on) { name = (bar.querySelector('.ev-bar__name') || {}).textContent || ''; none = bar.getAttribute('data-none') || ''; }
+        if (on && empty && !shown && kind !== 'all') {
+          put(empty, '.ev-empty__title', none);
+          var ask = empty.querySelector('[data-ask]');
+          if (ask) { ask.setAttribute('data-ask', bar.getAttribute('data-choice') || ''); ask.textContent = bar.getAttribute('data-choice-label') || 'Ask for one'; }
+        }
+      });
+      if (empty) empty.hidden = shown > 0 || kind === 'all';
+      if (live) live.textContent = kind === 'all' ? shown + (shown === 1 ? ' event' : ' events') + ' on the record.'
+        : (shown ? shown + ' of ' + cards.length + ' shown: ' + name + '.' : none);
+      if (scroller) scroller.scrollLeft = 0;
+      paintNav();
+    }
+
+    bars.forEach(function(bar){
+      bar.addEventListener('click', function(){
+        var kind = bar.getAttribute('data-kind');
+        show(kind !== 'all' && bar.getAttribute('aria-pressed') === 'true' ? 'all' : kind);
+      });
+    });
+
+    root.addEventListener('click', function(e){
+      var ask = e.target && e.target.closest ? e.target.closest('a[data-ask]') : null;
+      var choice = ask && ask.getAttribute('data-ask');
+      var select = document.getElementById('evKind');
+      if (!choice || !select) return;
+      select.value = choice;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      window.setTimeout(function(){ try { select.focus({ preventScroll: true }); } catch (err) { select.focus(); } }, reduced ? 0 : 450);
+    });
+
+    if (nav && scroller) {
+      nav.addEventListener('click', function(e){
+        var step = e.target && e.target.closest ? e.target.closest('button[data-step]') : null;
+        if (!step) return;
+        var by = Number(step.getAttribute('data-step')) * Math.max(280, scroller.clientWidth * 0.85);
+        if (typeof scroller.scrollBy === 'function') scroller.scrollBy({ left: by, behavior: reduced ? 'auto' : 'smooth' });
+        else scroller.scrollLeft += by;
+      });
+      scroller.addEventListener('scroll', paintNav, { passive: true });
+      window.addEventListener('resize', paintNav);
+    }
+    paintNav();
+  })();
+</script>
 <script>
 (function(){
   'use strict';

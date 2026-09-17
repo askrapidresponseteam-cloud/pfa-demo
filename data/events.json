@@ -1,0 +1,65 @@
+{
+  "about": "Every event PFA has held or announced, one entry each, in any order: the page puts the newest first. Edit this file, then run node scripts/build-events.js (DEPLOY.command runs it for you). HANDBOOK.md section 10 explains every field.",
+  "events": [
+    {
+      "code": "002",
+      "kind": "awards",
+      "title": "CineKind Awards 2026",
+      "date": "2026-10-04",
+      "city": "Mumbai",
+      "note": "World Animal Day. Eleven honours for films and people who leave the frame kinder than they found it.",
+      "tags": [
+        "Awards",
+        "Film"
+      ],
+      "link": {
+        "href": "cinekind.html",
+        "label": "The eleven honours"
+      },
+      "feature": {
+        "src": "img/cinekind-landing.webp",
+        "alt": "The CineKind trophy"
+      },
+      "photos": [
+        {
+          "src": "media/cinekind-2026/john-abraham.webp",
+          "alt": "John Abraham, honoured as Champion for Animals",
+          "caption": "John Abraham"
+        },
+        {
+          "src": "media/cinekind-2026/raveena-tandon.webp",
+          "alt": "Raveena Tandon, honoured as Kindness Catalyst",
+          "caption": "Raveena Tandon"
+        }
+      ]
+    },
+    {
+      "code": "001",
+      "kind": "awards",
+      "title": "CineKind National Awards 2025",
+      "date": "2025-12-20",
+      "city": "Kolkata",
+      "note": "The first edition. Ten honours, presented by the Film Federation of India with People for Animals.",
+      "tags": [
+        "Awards",
+        "Film"
+      ],
+      "link": {
+        "href": "cinekind.html",
+        "label": "The ten honours"
+      },
+      "photos": [
+        {
+          "src": "media/cinekind-2025/nirmal.webp",
+          "alt": "Nirmal Verma, filmmaker of Keeper of the Last Herd",
+          "caption": "Nirmal Verma"
+        },
+        {
+          "src": "media/cinekind-2025/ashish.webp",
+          "alt": "Ashish Goswami of PFA Wardha",
+          "caption": "Ashish Goswami"
+        }
+      ]
+    }
+  ]
+}

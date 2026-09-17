@@ -1,0 +1,125 @@
+{
+  "about": "Every story in the newsroom: something that happened, dated, with the page that carries it. Order does not matter. front (1 to 4) places a story on the front page; with none marked, the four newest go there. Edit this file, then run node scripts/build-newsroom.js (DEPLOY.command runs it for you). HANDBOOK.md section 11.",
+  "stories": [
+    {
+      "slug": "case-001-chandigarh",
+      "desk": "case",
+      "front": 1,
+      "tag": "Case 001",
+      "status": "Resolved",
+      "title": "Removed for a VIP visit. Returned by a city.",
+      "dek": "PEC had 35 community dogs picked up before the Prime Minister’s visit, then declined their return. Four offices, one protest, six states: the director cleared every single one.",
+      "date": "2026-08-08",
+      "place": "Chandigarh",
+      "image": {
+        "src": "img/case-001-protest.webp",
+        "alt": "The protest at the gates: rows of people on the campus steps holding placards for the dogs"
+      },
+      "link": {
+        "href": "#case-001",
+        "label": "Read the case"
+      }
+    },
+    {
+      "slug": "cinekind-2026-honours",
+      "desk": "cinekind",
+      "front": 2,
+      "title": "Eleven honours for CineKind 2026",
+      "dek": "Announced ahead of Mumbai, 4 October 2026, World Animal Day: eleven honours for films and people who leave the frame kinder than they found it.",
+      "date": "2026-10-04",
+      "place": "Mumbai",
+      "image": {
+        "src": "img/cinekind-landing.webp",
+        "alt": "The CineKind trophy"
+      },
+      "link": {
+        "href": "cinekind.html#honours-2026",
+        "label": "The eleven honours"
+      }
+    },
+    {
+      "slug": "supreme-court-may-2026",
+      "desk": "law",
+      "front": 3,
+      "tag": "Supreme Court",
+      "from": "Supreme Court of India",
+      "title": "What the Supreme Court’s May 2026 judgment says",
+      "dek": "The ABC Rules remain the primary tool, blanket culling stays prohibited, and every district must have at least one working ABC centre.",
+      "date": "2026-05-19",
+      "place": "New Delhi",
+      "link": {
+        "href": "laws.html#a8",
+        "label": "Read the answer"
+      }
+    },
+    {
+      "slug": "cinekind-2025-first-edition",
+      "desk": "cinekind",
+      "front": 4,
+      "title": "Ten honours at CineKind’s first edition",
+      "dek": "Presented by the Film Federation of India with People for Animals, in Kolkata on 20 December 2025.",
+      "date": "2025-12-20",
+      "place": "Kolkata",
+      "image": {
+        "src": "media/cinekind-2025/nitin.webp",
+        "alt": "Nitin Vemupati, honoured with S. A. Chandrasekhar for Kooran"
+      },
+      "link": {
+        "href": "cinekind.html#cinekind-2025",
+        "label": "The ten honours"
+      }
+    },
+    {
+      "slug": "delhi-order-community-dogs",
+      "desk": "policy",
+      "from": "Government of NCT of Delhi",
+      "title": "Delhi adopts community-dog management guidelines",
+      "dek": "PFA assisted the Government of NCT of Delhi to issue its Order of 15 September 2025, covering feeding zones, caregiver protection, pet registration, humane capture and round-the-clock helplines.",
+      "date": "2025-09-15",
+      "place": "Delhi",
+      "link": {
+        "href": "achievements.html#rec-080",
+        "label": "On the record"
+      }
+    },
+    {
+      "slug": "jk-order-humane-dog-management",
+      "desk": "policy",
+      "from": "Government of Jammu and Kashmir",
+      "title": "Jammu and Kashmir institutionalises humane dog management",
+      "dek": "PFA assisted the Government of J&K to issue its Order of 5 September 2025, directing every Urban Local Body to run feeding sites, ABC infrastructure with CCTV, caregiver protections and compliance reporting.",
+      "date": "2025-09-05",
+      "place": "Jammu and Kashmir",
+      "link": {
+        "href": "achievements.html#rec-081",
+        "label": "On the record"
+      }
+    },
+    {
+      "slug": "ugc-animal-welfare-societies",
+      "desk": "policy",
+      "from": "University Grants Commission",
+      "title": "A national push for Animal Welfare Societies in higher education",
+      "dek": "PFA secured a University Grants Commission directive of 13 June 2025 recommending an Animal Welfare Society in every Higher Education Institution.",
+      "date": "2025-06-13",
+      "place": "India",
+      "link": {
+        "href": "achievements.html#rec-076",
+        "label": "On the record"
+      }
+    },
+    {
+      "slug": "be-kind-to-animals-transport",
+      "desk": "policy",
+      "from": "Ministry of Road Transport and Highways",
+      "title": "Be Kind to Animals, on public transport nationwide",
+      "dek": "PFA assisted the Ministry of Road Transport and Highways to issue its Order of 25 February 2025, putting the message on all public transport vehicles across India from 1 April 2025.",
+      "date": "2025-02-25",
+      "place": "India",
+      "link": {
+        "href": "achievements.html#rec-074",
+        "label": "On the record"
+      }
+    }
+  ]
+}
