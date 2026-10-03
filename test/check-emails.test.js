@@ -24,7 +24,9 @@ test('every public form and paid application reaches the admin panel and sends i
     'seven forms and two paid applications');
   for (const r of rows) {
     assert.ok(r.filed, `${r.doing} (${r.kind}) was not filed where the admin panel reads it`);
-    assert.ok(r.sent.length > 0 && r.sent[0].to === EMAIL, `${r.doing} (${r.kind}) sent no acknowledgement`);
+    assert.ok(r.ack && r.ack.to === EMAIL, `${r.doing} (${r.kind}) sent no acknowledgement`);
+    /* PFA's copy, to the inbox, answering to the person (owner, 3 Oct 2026). */
+    assert.ok(r.forwarded, `${r.doing} (${r.kind}) was not forwarded to the inbox with Reply-To set to the sender`);
     assert.ok(r.ok, `${r.doing} (${r.kind}) failed: ${r.error || r.state || ''}`);
   }
   for (const r of rows.filter((x) => x.free)) {

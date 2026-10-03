@@ -1,3 +1,9 @@
+## v1.372
+
+- **Every submission is emailed to PFA's inbox; a Reply goes straight to the sender.** Owner, 3 Oct 2026. The inbox is gandhim@exmpls.sansad.in. Each form (cruelty report, question, job application, film for the Wall, volunteer, event request, CineKind nomination) and each paid application (membership, colony caregiver application) is forwarded once, as soon as it is on record: the subject is the reference, the type and the sender's name; the body is who sent it, how to reach them, and every field they filled in; photographs are pointed to in the admin panel rather than attached. The email's Reply-To is the sender's own address, so pressing Reply in that mailbox writes to them directly. Nothing is asked of the government mailbox; the site only sends to it.
+- **Never at the cost of the form.** The forward rides the confirmations' outbound queue and is sent beside the sender's acknowledgement, so the page waits once, a mail outage delays it, and a retry never sends it twice. PFA_SUBMISSIONS_INBOX can name other or several inboxes, or `off`. A Reply-To is passed to the provider only if it is a clean address.
+- scripts/check-emails.js (and its test, which ship.sh runs) now checks every form and paid application for both emails: the acknowledgement to the sender and the forward to the inbox with Reply-To set. test/submission-forward.test.js pins the inbox, the email, and what the provider is told.
+
 ## v1.371
 
 - **The Shop button no longer has paw prints.** Owner, 3 Oct 2026. The line of paw prints that walked along the button's foot on hover is gone, with its animation. Under the pointer the shirt mark still hops and the "50% off" sticker straightens; nothing else moves. chrome.css has a new fingerprint, so the change reaches every browser at once.

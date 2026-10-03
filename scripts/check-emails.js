@@ -25,6 +25,7 @@
 const { EventEmitter } = require('events');
 const S = require('../lib/submissions');
 const mail = require('../lib/caregiver-mail');
+const FORWARD = require('../lib/submission-forward');
 const firebase = require('../lib/firebase');
 const { encrypt, decrypt, encodeMerchantData, decodeMerchantData } = require('../lib/ccavenue');
 const { createHandler } = require('../lib/routes/pfa-submissions')._private;
@@ -144,6 +145,18 @@ async function paid(label, body, kind, template) {
   return out;
 }
 
+/* Which email is which. The acknowledgement goes to the person; the forward
+   (lib/submission-forward.js) goes to PFA's inbox with Reply-To set to the
+   person. They are sent side by side, so neither is "the first" one. */
+function classify(r) {
+  const me = String(EMAIL).toLowerCase();
+  r.ack = r.sent.find((m) => String(m.to).toLowerCase() === me) || null;
+  const fwd = r.sent.find((m) => m.template === 'submission_forward') || null;
+  r.forwardTo = fwd ? fwd.to : '';
+  r.forwarded = Boolean(fwd && FORWARD.inboxes().includes(String(fwd.to).toLowerCase()) && fwd.payload && fwd.payload.replyTo === me);
+  return r;
+}
+
 async function run() {
   const saved = { warn: console.warn, info: console.info, deliver: mail.deliver, isConfigured: mail.isConfigured, env: Object.assign({}, process.env) };
   const rows = [];
@@ -151,7 +164,7 @@ async function run() {
   console.warn = () => {}; console.info = () => {};
   try {
     for (const form of FORMS) {
-      const r = await freeForm(form);
+      const r = classify(await freeForm(form));
       const plain = await freeForm(form, { withEmail: false });
       const off = await freeForm(form, { configured: false });
       r.free = true;
@@ -160,12 +173,12 @@ async function run() {
       r.unconfiguredState = off.body.confirmation && off.body.confirmation.state;
       r.unconfiguredFiled = off.filed;
       r.state = (r.body.confirmation || {}).state;
-      r.ok = r.filed && r.sent.length > 0 && r.sent[0].to === EMAIL && r.state === 'sent';
+      r.ok = r.filed && Boolean(r.ack) && r.state === 'sent' && r.forwarded;
       rows.push(r);
     }
     rows.push(await paid('Become a member (paid)', { type: 'membership', tier: 'golden', amount: '2500', name: PERSON.name, mobile: PERSON.mobile, email: EMAIL, address: '16 MG Road', city: 'Udupi', state: 'Karnataka', district: 'Udupi', terms: 'yes' }, 'PFA-MEM', TEMPLATES['PFA-MEM']));
     rows.push(await paid('Colony caregiver card (paid)', { type: 'caregiver-application', name: PERSON.name, mobile: PERSON.mobile, email: EMAIL, address: 'Car Street colony, near the temple', city: 'Udupi', animals: '12', district: 'Udupi', state: 'Karnataka', documents: 'a'.repeat(48), terms: 'yes' }, 'PFA-CG', TEMPLATES['PFA-CG']));
-    for (const r of rows.filter((x) => !x.free)) r.ok = r.filed && r.sent.length > 0 && r.sent[0].to === EMAIL && r.sent[0].template === r.template;
+    for (const r of rows.filter((x) => !x.free)) { classify(r); r.ok = r.filed && Boolean(r.ack) && r.ack.template === r.template && r.forwarded; }
   } finally {
     console.warn = saved.warn; console.info = saved.info;
     mail.deliver = saved.deliver; mail.isConfigured = saved.isConfigured;
@@ -180,7 +193,7 @@ async function run() {
 function print(rows, brief) {
   if (!brief) console.log('\nEvery submission, through the real server code (offline, nothing is sent)\n');
   for (const r of rows) {
-    const ack = r.sent[0];
+    const ack = r.ack;
     const email = ack ? `email "${subjectOf(ack)}"` : 'NO EMAIL';
     if (brief) {
       console.log(`  ${r.ok ? 'PASS' : 'FAIL'}  ${r.doing.padEnd(30)} ${r.filed ? `admin: ${r.ref}` : 'admin: NOT FILED'}, ${email}`);
@@ -189,6 +202,7 @@ function print(rows, brief) {
     console.log(`${r.ok ? 'PASS' : 'FAIL'}  ${r.doing.padEnd(30)} ${r.kind.padEnd(8)} ${r.page}`);
     console.log(`      admin panel: ${r.filed ? `filed in Submissions as ${r.ref}` : 'NOT FILED'}`);
     console.log(`      email:       ${ack ? `sent to ${ack.to}, "${subjectOf(ack)}"` : 'NONE SENT'}`);
+    console.log(`      forwarded:   ${r.forwarded ? `to ${r.forwardTo}, Reply-To ${EMAIL}` : 'NOT FORWARDED to the inbox with Reply-To set'}`);
     if (r.free) {
       console.log(`      no email given: ${r.noEmailRefused ? `refused (${r.noEmailField}), nothing filed` : 'FILED WITHOUT AN EMAIL'}`);
       console.log(`      mail switched off: still filed (${r.unconfiguredFiled ? 'yes' : 'NO'}), email ${r.unconfiguredState}, and the page tells the person`);
