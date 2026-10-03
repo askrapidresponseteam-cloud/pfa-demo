@@ -114,6 +114,26 @@ test('shop orders go only to pfa-oldsite, and only with a key that belongs to it
   assert.equal(backend.isConfigured(), false);
 });
 
+test('without the pfa-oldsite key, orders go to the site database donations use; a wrong key is never fallen back from', () => {
+  env();
+  backend.use(null);
+  const saved = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  try {
+    process.env.FIREBASE_SERVICE_ACCOUNT_JSON = JSON.stringify({ project_id: 'pfa-new-website', client_email: 'a@b', private_key: 'x' });
+    assert.equal(backend.ready(), 'pfa-oldsite', 'the pfa-oldsite key wins when it is set');
+    delete process.env.PFA_SHOP_FIREBASE_SERVICE_ACCOUNT;
+    assert.equal(backend.ready(), 'pfa-new-website');
+    assert.deepEqual(backend.SITE_COLLECTIONS, { orders: 'shopOrders', stock: 'shopStock', aggregates: 'shopTotals' });
+    process.env.PFA_SHOP_FIREBASE_SERVICE_ACCOUNT = JSON.stringify({ project_id: 'someone-else', client_email: 'a@b', private_key: 'x' });
+    assert.throws(() => backend.ready(), /belongs to someone-else/);
+    delete process.env.PFA_SHOP_FIREBASE_SERVICE_ACCOUNT;
+    delete process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+    assert.throws(() => backend.ready(), /Missing Vercel environment variable/);
+  } finally {
+    if (saved === undefined) delete process.env.FIREBASE_SERVICE_ACCOUNT_JSON; else process.env.FIREBASE_SERVICE_ACCOUNT_JSON = saved;
+  }
+});
+
 test('checkout records the order before payment, reserves stock, and asks CCAvenue for the catalogue total', async () => {
   env();
   const db = memory();
@@ -147,9 +167,11 @@ test('a size that has sold out cannot be bought, and no order is written', async
   } finally { backend.use(null); }
 });
 
-test('with no backend key, checkout takes no payment', async () => {
+test('with no order store at all, checkout takes no payment', async () => {
   env();
   delete process.env.PFA_SHOP_FIREBASE_SERVICE_ACCOUNT;
+  delete process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  delete process.env.FIREBASE_PROJECT_ID;
   const { r, sent } = await checkout([{ id: '23', size: 'L', qty: 1 }]);
   assert.equal(sent, null);
   assert.equal(r.statusCode, 503);

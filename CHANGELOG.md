@@ -1,3 +1,9 @@
+## v1.369
+
+- **The shop takes payment now, the way donations do, and has its own button beside Donate.** Owner, 3 Oct 2026. Checkout showed "Online orders are not open yet" because it had nowhere to write an order without the pfa-oldsite key. It now writes to pfa-oldsite when PFA_SHOP_FIREBASE_SERVICE_ACCOUNT is set, and otherwise to this site's own Firestore (shopOrders, shopStock, shopTotals) through the connection donations already use, in the same order shape. A key for the wrong project is still refused, never fallen back from.
+- **Every shop order is in the admin panel.** Each one is also a row in transactions with type 'shop', so the Payments tab lists it (filter: Shop order) with the shopper, amount, outcome, CCAvenue tracking ID and what was bought, and the dashboard counts it. /api/payment/health reports where orders are going as shopOrders.
+- **Shop sits beside Donate in the header on every page**, as its own control rather than a second Donate: paper with an ink rule, a T-shirt mark, and a tilted "50% off" sticker. Under the pointer the shirt hops and a line of paw prints walks along its foot; still for reduced motion. It left the Get Involved menu, so the shop has one way in. The scrolling strip stays gone.
+
 ## v1.368
 
 - **The PFA shop's money is PFA's, so it goes through PFA's CCAvenue: written into the rules.** Owner, 3 Oct 2026. The assistant rules (.claude/skills/pfa-website) and ARCHITECTURE.md said store money never goes through CCAvenue; that was written for the Paws & Tails store, where the money was the seller's. They now say what is true: every payment whose money is PFA's (donations, memberships, caregiver applications and the shop) goes through PFA's CCAvenue, and a seller's money never does. No code changed.

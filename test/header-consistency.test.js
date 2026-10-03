@@ -59,11 +59,11 @@ const NAV = [
   'wall.html|The Wall',
   'events.html|Events',
   'cinekind.html|CineKind',
-  'shop.html|Shop',
   'founder.html|About',
   'founder.html|The founder',
   'careers.html|Careers',
   'ask.html|Contact',
+  'shop.html|Shop',
   'donate.html|Donate'
 ];
 
@@ -97,7 +97,7 @@ const EXPECTED = {
   'get-involved.html': ['Volunteer',                 'get-involved.html'],
   'cinekind.html':     ['CineKind',                  'get-involved.html'],
   'events.html':       ['Events',                    'get-involved.html'],
-  'shop.html':         ['Shop',                      'get-involved.html'],
+  'shop.html':         ['Shop',                      null],
   'careers.html':      ['Careers',                   'founder.html'],
   'caregiver-card.html': [null,                       'get-involved.html'], /* in the section, no longer a destination in it */
   'donate.html':       ['Donate',                    null]

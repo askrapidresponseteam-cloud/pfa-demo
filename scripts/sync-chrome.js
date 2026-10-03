@@ -70,7 +70,7 @@ const PAGES = {
   'cinekind.html':     { current: 'cinekind.html',    group: 'get-involved.html', announce: 'CineKind 2026 · Mumbai · 4 October' }, /* the credit went back over the photograph and above the trophy, where it reads; putting it here cost the hero 115px of black and left the bar saying the same sentence twice. The bar keeps the where and the when */
   'donate.html':       { current: 'donate.html',      group: null,               announce: DEFAULT_ANNOUNCE },
   'events.html':       { current: 'events.html',      group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
-  'shop.html':         { current: 'shop.html',        group: 'get-involved.html', announce: 'Every purchase supports PFA\u2019s work for animals' },
+  'shop.html':         { current: 'shop.html',        group: null,               announce: 'Every purchase supports PFA\u2019s work for animals' },
   'search.html':       { current: null,               group: null,               announce: DEFAULT_ANNOUNCE },
   'quiz.html':         { current: 'quiz.html',        group: 'laws.html',        announce: DEFAULT_ANNOUNCE }
 };
