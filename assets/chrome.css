@@ -76,8 +76,7 @@ header.site nav{position:relative;display:flex;align-items:center;justify-conten
 .wordmark img{height:56px;width:auto;display:block;filter:none;
   /* The mark alights: it drops the last few pixels into place as the page
      paints, rather than simply being there. One pass, and nothing left running
-     afterwards. Nothing in the header moves on its own; the paw tracks under
-     Shop walk only while the pointer is on it.
+     afterwards. Nothing in the header moves on its own.
 
      The file itself is untouched. This moves the <img>, not the artwork.
 
@@ -126,13 +125,12 @@ header.site nav{position:relative;display:flex;align-items:center;justify-conten
    saying what the shop is offering (the designer pieces are half price,
    owner, 3 Oct 2026: change the words here when the offer changes). Its
    life is under the pointer only: the shirt hops, the sticker straightens,
-   and a line of paw prints walks along its foot. Still for anyone who asked
+   and nothing else moves. Still for anyone who asked
    for less movement. Everything is drawn in CSS, so the link's own text is
    just "Shop" and the header reads the same on every page. */
 .shop{position:relative;display:inline-flex;align-items:center;gap:9px;box-sizing:border-box;
   margin-left:12px;padding:13px 22px 13px 18px;background-color:#fff;color:var(--ink,#111);border:1px solid var(--ink,#111);
   font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;line-height:1;white-space:nowrap;vertical-align:middle;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 16'%3E%3Cg fill='%23111'%3E%3Cellipse cx='6' cy='11' rx='3' ry='2.4'/%3E%3Ccircle cx='2.6' cy='7' r='1.1'/%3E%3Ccircle cx='5' cy='5.6' r='1.1'/%3E%3Ccircle cx='7.4' cy='5.6' r='1.1'/%3E%3Ccircle cx='9.6' cy='7' r='1.1'/%3E%3Cellipse cx='28' cy='8' rx='3' ry='2.4'/%3E%3Ccircle cx='24.6' cy='4' r='1.1'/%3E%3Ccircle cx='27' cy='2.6' r='1.1'/%3E%3Ccircle cx='29.4' cy='2.6' r='1.1'/%3E%3Ccircle cx='31.6' cy='4' r='1.1'/%3E%3C/g%3E%3C/svg%3E");background-repeat:repeat-x;background-size:44px 12px;background-position:0 160%;
   transition:box-shadow .3s ease,background-color .3s}
 .shop::before{content:"";flex:none;width:15px;height:15px;background:currentColor;
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 3 3 6l2 4.2 2.2-1V21h9.6V9.2l2.2 1L21 6l-5.5-3c-.5 1.6-1.9 2.6-3.5 2.6S9 4.6 8.5 3z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 3 3 6l2 4.2 2.2-1V21h9.6V9.2l2.2 1L21 6l-5.5-3c-.5 1.6-1.9 2.6-3.5 2.6S9 4.6 8.5 3z'/%3E%3C/svg%3E") center/contain no-repeat;
@@ -140,11 +138,10 @@ header.site nav{position:relative;display:flex;align-items:center;justify-conten
 .shop::after{content:"50% off";position:absolute;top:-10px;right:-12px;padding:4px 6px 3px;background:var(--pop,#ff3b18);color:#111;
   font-size:9px;font-weight:800;letter-spacing:.06em;line-height:1;white-space:nowrap;transform:rotate(7deg);pointer-events:none;
   box-shadow:0 2px 0 rgba(17,17,17,.18);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
-.shop:hover,.shop:focus-visible{opacity:1;box-shadow:0 0 0 5px rgba(17,17,17,.08);animation:pfa-paws 1.4s steps(4) infinite}
+.shop:hover,.shop:focus-visible{opacity:1;box-shadow:0 0 0 5px rgba(17,17,17,.08)}
 .shop:hover::before,.shop:focus-visible::before{transform:translateY(-3px) rotate(-10deg)}
 .shop:hover::after,.shop:focus-visible::after{transform:rotate(-3deg) scale(1.08)}
 .shop.current{background-color:var(--stone,#f6f5f2)}
-@keyframes pfa-paws{from{background-position:-44px calc(100% + 1px)}to{background-position:0 calc(100% + 1px)}}
 html.header-on-dark header.site .shop{background-color:transparent;color:#fff;border-color:#fff}
 @media (max-width:1180px){
   .shop{margin-left:10px;padding:13px 16px 13px 14px;letter-spacing:.1em}

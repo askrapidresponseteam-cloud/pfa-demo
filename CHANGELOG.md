@@ -1,3 +1,7 @@
+## v1.371
+
+- **The Shop button no longer has paw prints.** Owner, 3 Oct 2026. The line of paw prints that walked along the button's foot on hover is gone, with its animation. Under the pointer the shirt mark still hops and the "50% off" sticker straightens; nothing else moves. chrome.css has a new fingerprint, so the change reaches every browser at once.
+
 ## v1.370
 
 - **Shop is a button, to the right of Donate.** Owner, 3 Oct 2026. On the live site Shop arrived as the plain word "Shop", left of Donate. The markup was right; the stylesheet was not there yet: assets/ is cached for an hour and served stale for a day, the HTML for five minutes, so the new header was read by the previous chrome.css. Shop now follows Donate, as its own bordered button with the T-shirt mark and the "50% off" sticker, at every width.
