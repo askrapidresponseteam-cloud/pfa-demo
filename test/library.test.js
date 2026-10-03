@@ -5,8 +5,9 @@
    The shelves hold exactly the documents PFA supplied on its resources
    page (PFA Resources, Downloadable Links), under the titles and Google
    Drive files it gave; the page and the reader's catalogue are in step
-   with data/library.json; and the reading editions say only what the PDF
-   says. The extraction tests run pdf.js over small PDFs in
+   with data/library.json; every PDF has its own cover; and the contents
+   the reader lists are the document's own. The extraction tests run pdf.js
+   over small PDFs in
    test/fixtures/library/ made to have the shapes of the real documents: a
    cover, running heads and folios, chapters, numbered clauses, bullets, a
    table split over a page turn, a picture page, hyphenated line ends, a
@@ -71,7 +72,9 @@ test('data/library.json passes its own validation', () => {
   const broken = JSON.parse(JSON.stringify(DATA));
   broken.items[1].drive = broken.items[0].drive;
   broken.items[2].shelf = 'nowhere';
+  broken.items[3].coverPage = 1;
   const problems = B.validate(broken);
+  assert.ok(problems.some((p) => /coverPage/.test(p)), problems.join('; '));
   assert.ok(problems.some((p) => /same file/.test(p)), problems.join('; '));
   assert.ok(problems.some((p) => /not one of the shelves/.test(p)), problems.join('; '));
 });
@@ -111,18 +114,30 @@ test('a card links each PDF by its encoded name, and the file is on disk', () =>
   }
 });
 
-test('every reading edition is current with its PDF and with the extractor (run node scripts/build-library.js --extract)', () => {
+test('every index is current with its PDF and with the extractor (run node scripts/build-library.js --extract)', () => {
   const crypto = require('crypto');
   for (const it of DATA.items) {
     const rel = B.pdfPath(it);
     if (!rel) continue;
     const file = path.join(ROOT, 'media', 'library', `${it.slug}.json`);
-    assert.ok(fs.existsSync(file), `${it.slug} has no edition`);
+    assert.ok(fs.existsSync(file), `${it.slug} has no index`);
     const e = JSON.parse(fs.readFileSync(file, 'utf8'));
     const buf = fs.readFileSync(path.join(ROOT, rel));
     assert.equal(e.x, X.VERSION, `${it.slug} was read by an older extractor`);
     assert.equal(e.src.bytes, buf.length, `${it.slug}: the PDF has changed`);
     assert.equal(e.src.sha1, crypto.createHash('sha1').update(buf).digest('hex'), `${it.slug}: the PDF has changed`);
+  }
+});
+
+test('every PDF on the shelves shows its own first page as its cover', () => {
+  const page = read('library.html');
+  for (const it of DATA.items) {
+    if (!B.pdfPath(it)) continue;
+    const meta = B.metaFor(it);
+    assert.equal(meta.cover, `media/library/covers/${it.slug}.webp`, `${it.slug} has no cover`);
+    assert.ok(fs.existsSync(path.join(ROOT, meta.cover)), meta.cover);
+    const card = page.slice(page.indexOf(`data-slug="${it.slug}"`));
+    assert.ok(card.slice(0, card.indexOf('</article>')).includes(`<img class="cover__img" src="${meta.cover}"`), `${it.slug}: the card does not show the cover`);
   }
 });
 
@@ -144,14 +159,20 @@ test('the reader bar is Library, title, Aa, Search, Download, in that order', ()
   assert.deepEqual(order, order.slice().sort((a, b) => a - b));
 });
 
-test('the Aa panel offers every setting asked for', () => {
+test('the Aa panel sets the paper, the page size, and how the pages turn', () => {
   const html = read('read.html');
-  for (const [k, vs] of Object.entries({
-    theme: ['light', 'sepia', 'dark'], font: ['serif', 'sans', 'dyslexic'], line: ['tight', 'normal', 'loose'],
-    para: ['book', 'normal', 'open'], margin: ['narrow', 'medium', 'wide'], align: ['left', 'justify'],
-    cols: ['1', '2'], flow: ['paged', 'scroll']
-  })) for (const v of vs) assert.ok(html.includes(`data-k="${k}" data-v="${v}"`), `${k}=${v}`);
+  for (const [k, vs] of Object.entries({ theme: ['light', 'sepia', 'dark'], layout: ['paged', 'scroll'], spread: ['1', '2'] })) {
+    for (const v of vs) assert.ok(html.includes(`data-k="${k}" data-v="${v}"`), `${k}=${v}`);
+  }
   assert.match(html, /id="rdSizeDown"[\s\S]*id="rdSize"[\s\S]*id="rdSizeUp"/, 'A-, slider, A+');
+});
+
+test('the reader shows the PDF itself: no title page of its own, no retyped text', () => {
+  const js = read('assets/reader.js');
+  assert.match(js, /PFA_READER_PDF/);
+  assert.doesNotMatch(js, /rd-cover|rd-flow|item\.edition/);
+  assert.doesNotMatch(read('read.html'), /rdFrame|rdText|Literata/);
+  assert.doesNotMatch(read('assets/reader.css'), /Literata|OpenDyslexic|\.rd-cover/);
 });
 
 test('the library and the reader keep progress under the same key', () => {
@@ -262,8 +283,9 @@ test('Hindi a font has scrambled is recognised, and good Hindi is not', () => {
   assert.ok(X.devanagariDamage(scrambled).ratio > 0.5);
 });
 
-test('bookmarks that are ids or file names are not contents', () => {
+test('bookmarks that are ids, file names or bare page numbers are not contents', () => {
   assert.equal(X.saneTitle('Chapter 2: Summary'), true);
+  assert.equal(X.saneTitle('Page 12'), false);
   assert.equal(X.saneTitle('ee2613e3defed6fd3d7bb6e5a762c444dbaa4d9e6100348fb392267cc4681b38.pdf'), false);
   assert.equal(X.saneTitle('9bb0e1cce4a8b9ba40b6661b55f47abb8a928015'), false);
 });
@@ -272,4 +294,38 @@ test('only a hyphen before a lower-case continuation is a line-end hyphen', () =
   assert.equal(X.joinLine('the ex-', 'posure'), 'the exposure');
   assert.equal(X.joinLine('Section 11 of the PCA-', 'Act'), 'Section 11 of the PCA- Act');
   assert.equal(X.joinLine('one', 'two'), 'one two');
+});
+
+/* A contents page as the real ones are set: a page number in its own column
+   beside the first line of a title run over onto a second, and a cover and
+   a contents page ahead of page 1, so printed numbers are two behind. */
+test('the printed contents become the contents, each entry on the page where it starts', () => {
+  const L = (text, x0, y, size = 12, bold = false) => ({ text, cells: [text], xs: [x0], x0, x1: x0 + text.length * size * 0.5, y, size, bold });
+  const prose = 'Pigs are kept in many parts of the country, in backyards and on farms of every size.';
+  const page = (n, lines) => ({ n, width: 595, height: 842, lines: lines.concat([L(prose, 72, 600), L(prose, 72, 585), L(prose, 72, 570)]) });
+  const contents = { n: 2, width: 595, height: 842, lines: [
+    L('Contents', 72, 760, 24),
+    L('Sl. No. Name of the chapter Page Number', 72, 730),
+    L('1 Introduction 1', 72, 700),
+    L('2 Breeding strategy to be followed in organised', 72, 678),
+    L('6', 500, 678),
+    L('farms', 90, 664),
+    L('3 Care of Pigs ........ 9', 72, 640)
+  ] };
+  const entries = X.readContents([contents]);
+  assert.deepEqual(entries.map((e) => [e.t, e.printed]), [
+    ['1 Introduction', 1], ['2 Breeding strategy to be followed in organised farms', 6], ['3 Care of Pigs', 9]
+  ]);
+  const pages = [page(1, [L('PIG FARMS', 72, 700, 30)]), contents];
+  for (let n = 3; n <= 12; n++) {
+    const heads = { 3: '1. Introduction', 8: '2. Breeding Strategy to be Followed in Organised Farms', 11: '3. Care of Pigs' };
+    pages.push(page(n, heads[n] ? [L(heads[n], 72, 760, 18, true)] : [L('The introduction of new breeds is covered later.', 72, 760)]));
+  }
+  assert.deepEqual(X.placeContents(entries, pages, 3), [
+    { t: '1 Introduction', l: 1, p: 3 },
+    { t: '2 Breeding strategy to be followed in organised farms', l: 1, p: 8 },
+    { t: '3 Care of Pigs', l: 1, p: 11 }
+  ]);
+  /* not one entry found by its words: no contents is better than wrong pages */
+  assert.equal(X.placeContents(entries, pages.slice(0, 2), 3), null);
 });

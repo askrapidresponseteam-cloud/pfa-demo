@@ -4,9 +4,9 @@
 
      node scripts/build-library.js                 write the page and the catalogue
      node scripts/build-library.js --check         fail if either is out of date
-     node scripts/build-library.js --extract       build the reading edition of every
+     node scripts/build-library.js --extract       make the cover and index of every
                                                    document whose PDF is here and has
-                                                   changed since its edition was made
+                                                   changed since its index was made
      node scripts/build-library.js --fetch         the same, after downloading from
                                                    Google Drive any PDF not here yet
      ... add --force to redo every one, or slugs to do only those documents
@@ -19,11 +19,14 @@
    so a document the site does not serve opens in Google Drive's own viewer
    inside the reading frame, with Download going to Drive.
 
-   The reading edition, media/library/<slug>.json, is the document's text as
-   read by scripts/library-extract.js, which says how, and when it declines
-   (a scan, Hindi in a legacy font): then the reader shows the original pages.
-   Each edition records the size and SHA-1 of the PDF it was read from and
-   the extractor's version, so --extract only redoes what has changed.
+   The reader shows the PDF itself. What the build adds, per document, is
+   its cover, the first page (or the entry's "coverPage", where a foreword
+   was bound in front of the cover) rendered as media/library/covers/<slug>.webp,
+   and an index, media/library/<slug>.json: its page count and a contents
+   list of its headings with their pages, found by scripts/library-extract.js
+   (and, where the text can be trusted, its length for a reading time).
+   Each index records the size and SHA-1 of the PDF it was made from and the
+   extractor's version, so --extract only redoes what has changed.
 
    The output never depends on today's date, so --check gives the same answer
    on any day. LIBRARY.md has the rest. */
@@ -40,6 +43,7 @@ const DATA = path.join(ROOT, 'data', 'library.json');
 const CLIENT = path.join(ROOT, 'assets', 'library-data.js');
 const PDF_DIR = path.join(ROOT, 'media', 'library');
 const ED_DIR = PDF_DIR; // beside the PDF: media/ is published by both hosts, data/ only by Vercel
+const COVER_DIR = path.join(PDF_DIR, 'covers');
 const SITE = 'https://peopleforanimalsindia.org';
 const MAX_BYTES = 95 * 1024 * 1024; // GitHub refuses a file over 100 MB
 
@@ -83,6 +87,7 @@ function validate(data) {
     else if (drives.has(it.drive)) problems.push(`${at}.drive is the same file as another entry`);
     else drives.add(it.drive);
     if (it.language !== undefined && (!text(it.language) || it.language === 'English')) problems.push(`${at}.language is for a document not in English, such as "Hindi"`);
+    if (it.coverPage !== undefined && !(Number.isInteger(it.coverPage) && it.coverPage > 1)) problems.push(`${at}.coverPage is the page of the PDF its cover is on, when that is not page 1, such as 2`);
     if (it.pdf !== undefined) {
       if (!text(it.pdf) || !/^resources\/[^/]+\.pdf$/i.test(it.pdf)) problems.push(`${at}.pdf must name a PDF in resources/, such as "resources/AWBI ULB.pdf"`);
       else if (!fs.existsSync(path.join(ROOT, it.pdf))) problems.push(`${at}.pdf "${it.pdf}" is not on disk`);
@@ -121,10 +126,15 @@ function metaFor(item) {
       const e = JSON.parse(fs.readFileSync(ed, 'utf8'));
       meta.pages = e.pages;
       meta.lang = e.lang;
+      meta.index = `media/library/${item.slug}.json`;
       if (e.text) {
-        meta.edition = `media/library/${item.slug}.json`;
         meta.words = e.words;
         meta.minutes = e.minutes;
+      }
+      if (e.cover && fs.existsSync(path.join(COVER_DIR, `${item.slug}.webp`))) {
+        meta.cover = `media/library/covers/${item.slug}.webp`;
+        meta.coverW = e.cover.w;
+        meta.coverH = e.cover.h;
       }
     } catch (error) {
       throw new Error(`media/library/${item.slug}.json is not valid JSON: ${error.message}`);
@@ -152,26 +162,23 @@ function downloadHref(item, meta) {
   return meta.file || `https://drive.google.com/uc?export=download&id=${item.drive}`;
 }
 
-function cover(item, shelf, index) {
-  const len = item.title.length;
-  const fit = len > 46 ? ' cover--long' : len < 20 ? ' cover--short' : '';
-  return [
-    `<span class="cover cover--${esc(item.shelf)}${fit}" style="--i:${index % 7}" aria-hidden="true">`,
-    `<span class="cover__shelf">${esc(item.kind)}</span>`,
-    `<span class="cover__title">${esc(item.title)}</span>`,
-    '<span class="cover__mark">People for Animals<i>Library</i></span>',
-    '</span>'
-  ].join('');
+/* The document's own first page; a plain plate with the title where there
+   is no PDF to take it from. */
+function cover(item, meta) {
+  if (meta && meta.cover) {
+    return `<span class="cover"><img class="cover__img" src="${esc(meta.cover)}" width="${meta.coverW}" height="${meta.coverH}" alt="" loading="lazy" decoding="async"></span>`;
+  }
+  return `<span class="cover"><span class="cover__plate"><span class="cover__title">${esc(item.title)}</span><span class="cover__none">Cover to come</span></span></span>`;
 }
 
-function card(item, shelf, index, meta) {
+function card(item, shelf, meta) {
   const read = `read.html?r=${encodeURIComponent(item.slug)}`;
   const facts = [meta.pages ? `${meta.pages} pages` : '', item.language ? `In ${item.language}` : '', readingTime(meta.minutes), meta.bytes ? `PDF ${size(meta.bytes)}` : ''].filter(Boolean);
   const dl = downloadHref(item, meta);
   const dlAttrs = meta.file ? ` download="${esc(meta.name)}"` : ' rel="noopener" target="_blank"';
   return [
     `<li class="book" data-slug="${esc(item.slug)}" data-shelf="${esc(item.shelf)}">`,
-    `<a class="book__cover" href="${read}" tabindex="-1" aria-hidden="true">${cover(item, shelf, index)}</a>`,
+    `<a class="book__cover" href="${read}" tabindex="-1" aria-hidden="true">${cover(item, meta)}</a>`,
     '<div class="book__body">',
     `<h3 class="book__title"><a href="${read}">${esc(item.title)}</a></h3>`,
     `<p class="book__blurb">${esc(item.blurb)}</p>`,
@@ -208,7 +215,6 @@ function jsonLd(data) {
 
 function shelvesMarkup(data, metas) {
   const out = [];
-  let index = 0;
   data.shelves.forEach((shelf) => {
     const items = data.items.filter((it) => it.shelf === shelf.id);
     if (!items.length) return;
@@ -220,7 +226,7 @@ function shelvesMarkup(data, metas) {
       `<p>${esc(shelf.note)}</p>`,
       '</div>',
       `<ul class="lib-grid${shelf.id === 'essential' ? ' lib-grid--feature' : ''}">`,
-      items.map((item) => card(item, shelf, index++, metas[item.slug])).join('\n'),
+      items.map((item) => card(item, shelf, metas[item.slug])).join('\n'),
       '</ul>',
       '</section>'
     );
@@ -232,12 +238,13 @@ function shelvesMarkup(data, metas) {
 /* The hero's display: the essential shelf, standing in a fan. Decorative
    (the same documents are on the shelf below), so hidden from assistive
    technology and from the tab order. */
-function stackMarkup(data) {
+function stackMarkup(data, metas) {
   const shelf = data.shelves[0];
-  const items = data.items.filter((it) => it.shelf === shelf.id).slice(0, 5);
+  const items = data.items.filter((it) => it.shelf === shelf.id && metas[it.slug] && metas[it.slug].cover).slice(0, 5);
+  if (items.length < 3) return '';
   return [
     '<div class="lib-stack" aria-hidden="true">',
-    items.map((item, i) => `<a class="lib-stack__book" href="read.html?r=${encodeURIComponent(item.slug)}" tabindex="-1">${cover(item, shelf, i)}</a>`).join('\n'),
+    items.map((item) => `<a class="lib-stack__book" href="read.html?r=${encodeURIComponent(item.slug)}" tabindex="-1">${cover(item, metas[item.slug])}</a>`).join('\n'),
     '</div>'
   ].join('\n');
 }
@@ -250,7 +257,7 @@ function between(page, start, end, inner, label) {
 }
 
 function render(page, data, metas) {
-  return between(between(page, START, END, shelvesMarkup(data, metas), 'library'), STACK_START, STACK_END, stackMarkup(data), 'library-stack');
+  return between(between(page, START, END, shelvesMarkup(data, metas), 'library'), STACK_START, STACK_END, stackMarkup(data, metas), 'library-stack');
 }
 
 function clientData(data, metas) {
@@ -259,7 +266,7 @@ function clientData(data, metas) {
     const m = metas[it.slug] || {};
     const row = { slug: it.slug, title: it.title, shelf: it.shelf, kind: it.kind, blurb: it.blurb, drive: it.drive };
     if (it.language) row.language = it.language;
-    for (const k of ['file', 'name', 'bytes', 'pages', 'lang', 'edition', 'words', 'minutes']) if (m[k] !== undefined) row[k] = m[k];
+    for (const k of ['file', 'name', 'bytes', 'pages', 'lang', 'index', 'words', 'minutes', 'cover', 'coverW', 'coverH']) if (m[k] !== undefined) row[k] = m[k];
     return row;
   });
   return [
@@ -311,12 +318,14 @@ function sourceOf(buf) {
   return { bytes: buf.length, sha1: crypto.createHash('sha1').update(buf).digest('hex') };
 }
 
-/* The edition already made from these exact bytes by this extractor, if any. */
+/* The index already made from these exact bytes by this extractor, with its
+   cover on disk, if any. */
 function currentEdition(item, src) {
   const X = require('./library-extract.js');
   try {
     const e = JSON.parse(fs.readFileSync(path.join(ED_DIR, `${item.slug}.json`), 'utf8'));
-    if (e.x === X.VERSION && e.src && e.src.sha1 === src.sha1 && e.src.bytes === src.bytes) return e;
+    const coverHere = !e.cover || (fs.existsSync(path.join(COVER_DIR, `${item.slug}.webp`)) && (e.cover.page || 1) === (item.coverPage || 1));
+    if (e.x === X.VERSION && e.src && e.src.sha1 === src.sha1 && e.src.bytes === src.bytes && coverHere) return e;
   } catch (error) { /* none yet, or unreadable: make it */ }
   return null;
 }
@@ -331,14 +340,22 @@ async function buildEdition(item, { force } = {}) {
   edition.slug = item.slug;
   edition.x = X.VERSION;
   edition.src = src;
-  fs.mkdirSync(ED_DIR, { recursive: true });
+  fs.mkdirSync(COVER_DIR, { recursive: true });
+  try {
+    const c = await X.renderCover(buf, 520, item.coverPage || 1);
+    fs.writeFileSync(path.join(COVER_DIR, `${item.slug}.webp`), c.image);
+    edition.cover = item.coverPage ? { w: c.w, h: c.h, page: item.coverPage } : { w: c.w, h: c.h };
+  } catch (error) {
+    console.log(`  ${item.slug}: no cover (${error.message}); the shelf shows its title instead`);
+  }
   fs.writeFileSync(path.join(ED_DIR, `${item.slug}.json`), JSON.stringify(orderKeys(edition)) + '\n');
   return { edition, kept: false };
 }
 
+/* The index keeps what the reader and the shelf use: no text. */
 function orderKeys(e) {
-  const { v, x, slug, src, pages, lang, text: t, words, minutes, quality, toc, blocks } = e;
-  return { v, x, slug, src, pages, lang, text: t, words, minutes, quality, toc, blocks };
+  const { v, x, slug, src, pages, lang, text: t, words, minutes, quality, toc, cover: c } = e;
+  return { v, x, slug, src, pages, lang, text: t, words, minutes, quality, toc: (toc || []).map((k) => ({ t: k.t, l: k.l, p: k.p })), cover: c };
 }
 
 async function fetchAndExtract(data, { fetchMissing, force, only }) {
@@ -359,7 +376,7 @@ async function fetchAndExtract(data, { fetchMissing, force, only }) {
       }
       if (!pdfPath(item)) { console.log(`  ${item.slug}: no PDF here yet (put it in resources/ and name it in data/library.json, or run with --fetch)`); continue; }
       const { edition: e, kept } = await buildEdition(item, { force });
-      const verdict = e.text ? `reading edition, ${e.words} words, ${e.toc.length} contents entries` : `original pages only: ${e.quality.reason}`;
+      const verdict = `${e.toc.length} contents entries${e.text ? `, about ${e.minutes} min of reading` : `, no reading time (${e.quality.reason})`}${e.cover ? ', cover' : ''}`;
       console.log(`  ${item.slug}: ${e.pages} pages, ${verdict}${kept ? ' (unchanged)' : ''}`);
     } catch (error) {
       failed++;
@@ -402,7 +419,7 @@ async function main() {
   const data = load();
 
   if (fetchMissing || extractOnly) {
-    console.log(fetchMissing ? 'Fetching what is missing from Google Drive and building reading editions:' : 'Building reading editions from the PDFs here:');
+    console.log(fetchMissing ? 'Fetching what is missing from Google Drive, then reading every PDF for its cover and contents:' : 'Reading every PDF here for its cover and contents:');
     const failed = await fetchAndExtract(data, { fetchMissing, force, only });
     if (failed) process.exitCode = 1;
   }
@@ -420,8 +437,8 @@ async function main() {
   if (html !== page) fs.writeFileSync(PAGE, html);
   if (client !== current) fs.writeFileSync(CLIENT, client);
   const fetched = Object.values(metas).filter((m) => m.file).length;
-  const editions = Object.values(metas).filter((m) => m.edition).length;
-  console.log(`library.html: ${data.items.length} documents on ${data.shelves.length} shelves. Served from this site: ${fetched}; with a reading edition: ${editions}.`);
+  const covers = Object.values(metas).filter((m) => m.cover).length;
+  console.log(`library.html: ${data.items.length} documents on ${data.shelves.length} shelves. PDFs served from this site: ${fetched}; with their own cover: ${covers}.`);
 }
 
 if (require.main === module) {

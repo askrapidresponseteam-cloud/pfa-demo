@@ -37,7 +37,11 @@ window.PFA_LIBRARY = {
    "name": "Prevention of Cruelty to Animals Act, 1960.pdf",
    "bytes": 964581,
    "pages": 20,
-   "lang": "en"
+   "lang": "en",
+   "index": "media/library/pca-act-1960.json",
+   "cover": "media/library/covers/pca-act-1960.webp",
+   "coverW": 520,
+   "coverH": 677
   },
   {
    "slug": "revised-abc-module",
@@ -51,9 +55,12 @@ window.PFA_LIBRARY = {
    "bytes": 3612534,
    "pages": 147,
    "lang": "en",
-   "edition": "media/library/revised-abc-module.json",
+   "index": "media/library/revised-abc-module.json",
    "words": 30108,
-   "minutes": 131
+   "minutes": 131,
+   "cover": "media/library/covers/revised-abc-module.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "animal-law-handbook-ulb",
@@ -67,9 +74,12 @@ window.PFA_LIBRARY = {
    "bytes": 3440061,
    "pages": 66,
    "lang": "en",
-   "edition": "media/library/animal-law-handbook-ulb.json",
-   "words": 7922,
-   "minutes": 34
+   "index": "media/library/animal-law-handbook-ulb.json",
+   "words": 7921,
+   "minutes": 34,
+   "cover": "media/library/covers/animal-law-handbook-ulb.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "law-enforcement-handbook",
@@ -83,9 +93,12 @@ window.PFA_LIBRARY = {
    "bytes": 4548536,
    "pages": 99,
    "lang": "en",
-   "edition": "media/library/law-enforcement-handbook.json",
+   "index": "media/library/law-enforcement-handbook.json",
    "words": 14711,
-   "minutes": 64
+   "minutes": 64,
+   "cover": "media/library/covers/law-enforcement-handbook.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "veterinary-officers-handbook",
@@ -99,9 +112,12 @@ window.PFA_LIBRARY = {
    "bytes": 4375907,
    "pages": 57,
    "lang": "en",
-   "edition": "media/library/veterinary-officers-handbook.json",
+   "index": "media/library/veterinary-officers-handbook.json",
    "words": 7497,
-   "minutes": 33
+   "minutes": 33,
+   "cover": "media/library/covers/veterinary-officers-handbook.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "abc-blue-book-lucknow",
@@ -115,9 +131,12 @@ window.PFA_LIBRARY = {
    "bytes": 5278866,
    "pages": 84,
    "lang": "en",
-   "edition": "media/library/abc-blue-book-lucknow.json",
+   "index": "media/library/abc-blue-book-lucknow.json",
    "words": 5744,
-   "minutes": 25
+   "minutes": 25,
+   "cover": "media/library/covers/abc-blue-book-lucknow.webp",
+   "coverW": 520,
+   "coverH": 740
   },
   {
    "slug": "delhi-police-handbook",
@@ -131,9 +150,12 @@ window.PFA_LIBRARY = {
    "bytes": 2442956,
    "pages": 58,
    "lang": "en",
-   "edition": "media/library/delhi-police-handbook.json",
-   "words": 15733,
-   "minutes": 68
+   "index": "media/library/delhi-police-handbook.json",
+   "words": 15691,
+   "minutes": 68,
+   "cover": "media/library/covers/delhi-police-handbook.webp",
+   "coverW": 520,
+   "coverH": 673
   },
   {
    "slug": "up-ud-handbook",
@@ -147,7 +169,11 @@ window.PFA_LIBRARY = {
    "name": "UP-UD-Handbook.pdf",
    "bytes": 29298073,
    "pages": 69,
-   "lang": "hi"
+   "lang": "hi",
+   "index": "media/library/up-ud-handbook.json",
+   "cover": "media/library/covers/up-ud-handbook.webp",
+   "coverW": 520,
+   "coverH": 736
   },
   {
    "slug": "ey-cage-free",
@@ -161,9 +187,12 @@ window.PFA_LIBRARY = {
    "bytes": 6031418,
    "pages": 32,
    "lang": "en",
-   "edition": "media/library/ey-cage-free.json",
+   "index": "media/library/ey-cage-free.json",
    "words": 7941,
-   "minutes": 35
+   "minutes": 35,
+   "cover": "media/library/covers/ey-cage-free.webp",
+   "coverW": 520,
+   "coverH": 736
   },
   {
    "slug": "pig-farms-practices",
@@ -177,9 +206,12 @@ window.PFA_LIBRARY = {
    "bytes": 4787700,
    "pages": 151,
    "lang": "en",
-   "edition": "media/library/pig-farms-practices.json",
+   "index": "media/library/pig-farms-practices.json",
    "words": 33242,
-   "minutes": 145
+   "minutes": 145,
+   "cover": "media/library/covers/pig-farms-practices.webp",
+   "coverW": 520,
+   "coverH": 673
   },
   {
    "slug": "piggery-handbook-uttarakhand",
@@ -201,7 +233,11 @@ window.PFA_LIBRARY = {
    "name": "कान्हा-गौशाला-प्रबन्धन-मैनुअल.pdf",
    "bytes": 68178781,
    "pages": 94,
-   "lang": "en"
+   "lang": "en",
+   "index": "media/library/kanha-gaushala-up.json",
+   "cover": "media/library/covers/kanha-gaushala-up.webp",
+   "coverW": 520,
+   "coverH": 736
   },
   {
    "slug": "shvaan-pashu",
@@ -215,7 +251,11 @@ window.PFA_LIBRARY = {
    "name": "श्वान-पशु-प्रबन्धन-मैनुअल.pdf",
    "bytes": 22395729,
    "pages": 66,
-   "lang": "hi"
+   "lang": "hi",
+   "index": "media/library/shvaan-pashu.json",
+   "cover": "media/library/covers/shvaan-pashu.webp",
+   "coverW": 520,
+   "coverH": 736
   },
   {
    "slug": "veterinary-infrastructure-standards",
@@ -229,9 +269,12 @@ window.PFA_LIBRARY = {
    "bytes": 8443509,
    "pages": 44,
    "lang": "en",
-   "edition": "media/library/veterinary-infrastructure-standards.json",
+   "index": "media/library/veterinary-infrastructure-standards.json",
    "words": 5836,
-   "minutes": 25
+   "minutes": 25,
+   "cover": "media/library/covers/veterinary-infrastructure-standards.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "scc-policy-brief",
@@ -245,9 +288,12 @@ window.PFA_LIBRARY = {
    "bytes": 39447817,
    "pages": 32,
    "lang": "en",
-   "edition": "media/library/scc-policy-brief.json",
+   "index": "media/library/scc-policy-brief.json",
    "words": 6641,
-   "minutes": 29
+   "minutes": 29,
+   "cover": "media/library/covers/scc-policy-brief.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "hidden-costs-piggery",
@@ -261,9 +307,12 @@ window.PFA_LIBRARY = {
    "bytes": 7018426,
    "pages": 32,
    "lang": "en",
-   "edition": "media/library/hidden-costs-piggery.json",
+   "index": "media/library/hidden-costs-piggery.json",
    "words": 8158,
-   "minutes": 35
+   "minutes": 35,
+   "cover": "media/library/covers/hidden-costs-piggery.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "dairy-scoping-report",
@@ -277,9 +326,12 @@ window.PFA_LIBRARY = {
    "bytes": 9870656,
    "pages": 52,
    "lang": "en",
-   "edition": "media/library/dairy-scoping-report.json",
+   "index": "media/library/dairy-scoping-report.json",
    "words": 8654,
-   "minutes": 38
+   "minutes": 38,
+   "cover": "media/library/covers/dairy-scoping-report.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "pig-scoping-report",
@@ -293,9 +345,12 @@ window.PFA_LIBRARY = {
    "bytes": 54516225,
    "pages": 40,
    "lang": "en",
-   "edition": "media/library/pig-scoping-report.json",
+   "index": "media/library/pig-scoping-report.json",
    "words": 5957,
-   "minutes": 26
+   "minutes": 26,
+   "cover": "media/library/covers/pig-scoping-report.webp",
+   "coverW": 520,
+   "coverH": 735
   },
   {
    "slug": "poultry-scoping-report",
@@ -309,9 +364,12 @@ window.PFA_LIBRARY = {
    "bytes": 54824895,
    "pages": 61,
    "lang": "en",
-   "edition": "media/library/poultry-scoping-report.json",
+   "index": "media/library/poultry-scoping-report.json",
    "words": 9009,
-   "minutes": 39
+   "minutes": 39,
+   "cover": "media/library/covers/poultry-scoping-report.webp",
+   "coverW": 520,
+   "coverH": 735
   }
  ]
 };
