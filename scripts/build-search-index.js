@@ -89,7 +89,7 @@ function build() {
     'laws.html': 'Laws', 'academy.html': 'Explore', 'achievements.html': 'About',
     'someone.html': 'Explore', 'cinekind.html': 'Explore', 'events.html': 'Places',
     'newsroom.html': 'Explore', 'wall.html': 'Explore', 'get-involved.html': 'Do something',
-    'donate.html': 'Do something', 'report.html': 'Do something', 'track.html': 'Do something',
+    'donate.html': 'Do something', 'shop.html': 'Do something', 'report.html': 'Do something', 'track.html': 'Do something',
     'ask.html': 'Do something', 'founder.html': 'About', 'careers.html': 'About',
     'quiz.html': 'Explore', 'units.html': 'Places', 'index.html': 'Explore'
   };

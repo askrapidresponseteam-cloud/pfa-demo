@@ -1,3 +1,33 @@
+## v1.368
+
+- **The PFA shop's money is PFA's, so it goes through PFA's CCAvenue: written into the rules.** Owner, 3 Oct 2026. The assistant rules (.claude/skills/pfa-website) and ARCHITECTURE.md said store money never goes through CCAvenue; that was written for the Paws & Tails store, where the money was the seller's. They now say what is true: every payment whose money is PFA's (donations, memberships, caregiver applications and the shop) goes through PFA's CCAvenue, and a seller's money never does. No code changed.
+
+## v1.367
+
+- **The fourteen designer T-shirts are half price, at ₹2,500, with ₹5,000 struck through.** Owner, 3 Oct 2026. Set in lib/shop.js, so it is what CCAvenue is asked for, and shown on each card and in the closer look as the old price struck through and "50% off". The logo tee keeps ₹350, down from ₹450.
+- **Checkout asks for the place once.** The City field is gone: the state, then its district from the list. The district fills CCAvenue's city and the order's city in the pfa-oldsite record, and the confirmation page and email no longer print the same place twice.
+
+## v1.366
+
+- **The shop takes real orders: checkout, payment, an order in pfa-oldsite, and a confirmation.** Asked for on 3 Oct 2026. The bag on shop.html now goes to a checkout (name, mobile, email, delivery address with state, district and PIN), then to CCAvenue on PFA's own account, the one donations use. The WhatsApp hand-off is gone.
+- **Real items.** The pieces, product ids, prices and sizes are the old site's, from the PFAcurrent snapshot, now held in lib/shop.js, the only place a price is trusted: the browser sends pieces, sizes and quantities, and the server prices them, adds the old cart's flat ₹150 delivery, and asks CCAvenue for that total. The 43 photographs are in media/shop/ as WebP (1.6 MB, from 46 MB of PNG), so localise-shop.sh is no longer needed and has gone.
+- **Orders go to the pfa-oldsite backend** (owner's instruction), the database pfa-oldsite.web.app's panel reads, in the old checkout's own shape: orders/{id} written 'initiated' before payment, stock reserved per size in the same write (99 a size for each designer piece, as before), and completed 'paid', 'cancelled', 'failed' or 'verification_failed' by the callback, with aggregates/store counted once. A key of its own, PFA_SHOP_FIREBASE_SERVICE_ACCOUNT, refused for any other project; pfa-oldsite stays retired as the site's server key. If the order cannot be written, no payment starts.
+- **Confirmation.** A paid order lands on a confirmation page with its order number, pieces, total and delivery address, empties the bag, and is emailed to the shopper; PFA_SHOP_ORDERS_EMAIL, if set, gets a note too. A purchase carries no 80G wording. A repeated callback changes nothing; a cancelled payment returns its stock and keeps the bag; a payment for the wrong amount or merchant is held for a person to check.
+- **The running strip of designers' names is gone** (owner).
+- New routes: /api/shop/checkout and /api/shop/response. test/shop.test.js covers pricing, the page against the catalogue, the backend key, stock, and settling an order once.
+
+## v1.365
+
+- **A shop, with every item on PFA's merchandise page.** Asked for on 3 Oct 2026, laid out after the store the owner supplied as a reference: the announcement bar, a running strip of the designers' names, a campaign opening, the collection as tall image blocks, one feature banner, and a row of promises above the footer, in this site's own type on white. It lives at shop.html, under Get Involved in the header and in the footer.
+- **The items, as peopleforanimalsindia.org lists them.** Fourteen designer T-shirts at ₹5,000 each (Sabyasachi, Gaurav Gupta and Gaurav Gupta in charcoal, Varun Bahl and Varun Bahl Design 2, Rocky Star, Geisha Designs, Muzaffar Ali, Nida Mahmood, J J Valaya, Monisha Jaisingh, Raw Mango, Masaba Gupta, Ashima Singh), each a unisex drop shoulder tee in 100% cotton, and the PFA logo T-shirt at ₹350, down from ₹450. Every piece in L and XL. The cards are plain HTML, so the page reads without JavaScript and is in the search index and the sitemap.
+- **Ordering.** Choose a size, add to the bag, and send the bag to PFA as one WhatsApp message to +91 99533 13319, or call that number, which is what the merchandise page asks shoppers to do. The page takes no money; PFA confirms payment and delivery. A closer look at any piece shows every photograph and its details. The bag is kept in the browser.
+- **Photographs.** They are served from peopleforanimalsindia.org/uploads/product/ for now, which the content security policy already allows. Run `./localise-shop.sh` from the site root to copy all 43 into media/shop/ and point the page at them, before this site replaces the old one at the same address. A photograph that fails to load shows the designer's name set in type, never a broken image.
+
+## v1.364
+
+- **The record's cards spell out their titles, and the drum drifts on its own.** Asked for on 3 Oct 2026. A card with a year or a figure used to draw that number in its digit art and then print it again large beneath. The art now spells the entry's title in capitals, set in Marcellus at the largest size that fits and built out of the year's or figure's digits, over a faint solid print of the same words so the letters read at any size; the number stays printed once, beneath. Cards without a number keep their pattern.
+- **The cards keep moving.** The drum drifts slowly to the left, about one card every seven seconds, and goes round: the first card follows the last. A front too short to go round drifts to its end, rests, and drifts back. The drift eases to a stop while a mouse is over the cards, while the drum has keyboard focus, while a card is open or the arc is off screen, and picks up again about three seconds after the last turn by hand. The middle card can be opened while it moves. Reduced motion keeps the drum still, as before.
+
 ## v1.363
 
 - **The library's reader shows each document as its own PDF, with its real cover.** Asked for on 3 Oct 2026, after v1.362: no title page made by the reader, no typographic covers, no retyped text. Every document opens as its own PDF, drawn page by page by pdf.js with range requests. It turns like a book (one page, or two side by side on a wide screen) or scrolls, the default on a phone, with Light, Sepia and Dark paper, page size, contents, search marked where it is printed, and the place kept. Dark dims the page on a dark desk rather than inverting it, which turned photographs and covers into negatives. The reflowed text mode, its CSS and the Literata and OpenDyslexic fonts are gone.

@@ -55,10 +55,13 @@ link previews and search engines.
 | Flow | Merchant of record | Gateway | PFA's role |
 | --- | --- | --- | --- |
 | Donate, Give/Send, Patron membership | **PFA** | CCAvenue (PFA account) | collects money; `lib/payment.js` recomputes every amount server-side from a fixed catalogue — the browser's number is never trusted |
-| Store (Paws & Tails products) | **Paws & Tails** | Shopify checkout → Razorpay (seller's) | never touches money; creates the Shopify cart, hands the shopper to the seller's page, then mirrors the resulting order |
+| Store (Paws & Tails products), retired | **Paws & Tails** | Shopify checkout → Razorpay (seller's) | never touched money; created the Shopify cart, handed the shopper to the seller's page, then mirrored the resulting order |
+| PFA shop (`shop.html`, PFA's own merchandise) | **PFA** | CCAvenue (PFA account) | sells; the money is PFA's (owner, 3 Oct 2026). `lib/shop.js` prices every order server-side, `lib/routes/shop/*` takes it, and the order is recorded in the pfa-oldsite backend |
 
-`lib/payment.js` rejects any attempt to push a store item through CCAvenue
-(there is a test for it). The two flows cannot be mixed by a client.
+`lib/payment.js` rejects any attempt to push a store item through
+`/api/payment/create` (there is a test for it): money that is a seller's, not
+PFA's, never goes through PFA's CCAvenue. The PFA shop is PFA's own money and
+has its own routes, `/api/shop/checkout` and `/api/shop/response`.
 
 ### Store order lifecycle
 

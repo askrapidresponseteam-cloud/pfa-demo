@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.368">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Shop | People for Animals</title>
+<meta name="description" content="Fourteen limited-edition designer T-shirts made with People for Animals, by Sabyasachi, Gaurav Gupta, Masaba Gupta, Raw Mango and more, and the PFA logo tee. 100% cotton. Every purchase supports PFA’s work for animals.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+/* The PFA shop (3 Oct 2026). Laid out after the store the owner supplied as a
+   reference (an announcement bar, a campaign opening, the collection as tall
+   image blocks, one feature banner, and the promises row above the footer)
+   and set in this site's own type, on white, with no black grounds. The
+   pieces are the old site's merchandise, from the PFAcurrent snapshot: the
+   same product ids, prices and sizes, and its photographs in media/shop/.
+
+   Checkout is real. The bag posts to /api/shop/checkout, which prices it
+   from lib/shop.js (never from this page), records the order in the
+   pfa-oldsite backend and hands the shopper to CCAvenue;
+   /api/shop/response confirms the order on the page and by email. */
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --muted:#6a6a6a;
+  --stone:#f6f5f2;
+  --line:#e4e2df;
+  --accent:#111;
+  --pop:#ff3b18;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;padding:0;border:0}
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn--light{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn--light:hover{background:var(--ink);color:#fff}
+
+/* ---------- the opening ---------- */
+.hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(32px,5vw,88px);align-items:center;
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) clamp(48px,5vw,80px);border-bottom:1px solid var(--line)}
+.hero__in{min-width:0}
+.hero .eyebrow{margin:0 0 18px}
+.hero h1{font-size:clamp(46px,7vw,112px);line-height:.92}
+.hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:22px}
+.hero .lede{margin:28px 0 0;max-width:44ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.78)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.mosaic{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mosaic__t{position:relative;display:block;aspect-ratio:4/5;background:var(--stone);overflow:hidden}
+.mosaic__t:nth-child(2){transform:translateY(32px)}
+.mosaic__t:nth-child(4){transform:translateY(32px)}
+.mosaic__t img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.mosaic__t:hover img{transform:scale(1.04)}
+.mosaic__t span{position:absolute;left:10px;bottom:10px;padding:5px 8px;background:#fff;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+
+/* ---------- a band ---------- */
+.band{padding:var(--band) var(--gutter) 0}
+.band__head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px 40px;margin-bottom:clamp(28px,3vw,44px)}
+.band__head h2{font-size:clamp(32px,4vw,60px)}
+.band__head p{margin:14px 0 0;max-width:52ch;font-size:14px;line-height:1.6;color:var(--muted)}
+
+/* ---------- the bar above the collection ---------- */
+.bar{position:sticky;top:calc(var(--ann) + var(--nav));z-index:30;display:flex;align-items:center;gap:8px;margin:0 calc(var(--gutter) * -1) clamp(24px,3vw,40px);
+  padding:12px var(--gutter);background:rgba(255,255,255,.96);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.bar::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 14px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.bar__sort{display:flex;align-items:center;gap:8px;margin-left:auto;padding-left:12px;font-size:12px;color:var(--muted);white-space:nowrap}
+.bar__sort select{height:38px;border:1px solid var(--line);background:#fff;padding:0 10px;font-size:12px;color:var(--ink)}
+.bar__count{flex:none;font-size:12px;color:var(--muted);padding-left:14px;white-space:nowrap}
+
+/* ---------- the collection ---------- */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(36px,3.4vw,56px) clamp(14px,1.7vw,26px)}
+.item{display:flex;flex-direction:column;min-width:0}
+.item__media{position:relative;display:block;width:100%;aspect-ratio:4/5;padding:0;border:0;background:var(--stone);overflow:hidden;cursor:pointer}
+.item__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:opacity .45s,transform .7s cubic-bezier(.2,.7,.2,1)}
+.item--fit .item__media img{object-fit:contain;padding:12%}
+.item__alt{opacity:0}
+.item__media:hover .item__alt{opacity:1}
+.item__media:hover .item__img:not(:only-of-type){opacity:0}
+.item__media:hover img{transform:scale(1.035)}
+.item__fallback{position:absolute;inset:0;display:none;place-items:center;padding:12%;font-family:var(--display);font-size:clamp(22px,2vw,30px);line-height:1.05;text-transform:uppercase;text-align:center;color:var(--ink)}
+.item__media.is-bare .item__fallback{display:grid}
+.item__media.is-bare img{display:none}
+.item__tag{position:absolute;left:10px;top:10px;padding:5px 8px;background:#fff;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.item__bd{display:flex;flex-direction:column;flex:1;padding-top:16px}
+.item__name{font-size:clamp(16px,1.25vw,19px);line-height:1.12}
+.item__name a:hover{opacity:.65}
+.item__meta{margin:7px 0 0;font-size:12.5px;line-height:1.45;color:var(--muted)}
+.item__price{margin:10px 0 0;font-size:14px}
+.item__price b{font-weight:700}
+.item__was{margin-left:8px;color:var(--muted)}
+.item__off{margin-left:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.item__buy{display:flex;gap:6px;margin-top:auto;padding-top:16px}
+.sizes{display:flex;gap:6px;margin:0;padding:0;border:0;min-width:0}
+.sizes label{position:relative;display:block;cursor:pointer}
+.sizes input{position:absolute;opacity:0;width:0;height:0}
+.sizes span{display:grid;place-items:center;min-width:42px;height:42px;padding:0 8px;border:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.04em;background:#fff}
+.sizes input:checked + span{border-color:var(--ink);background:var(--ink);color:#fff}
+.sizes input:focus-visible + span{outline:2px solid var(--ink);outline-offset:2px}
+.item__add{flex:1;min-width:0;height:42px;border:1px solid var(--ink);background:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.item__add:hover{background:var(--ink);color:#fff}
+.item__add.is-done{background:var(--ink);color:#fff}
+.grid__none{padding:40px 0;color:var(--muted);font-size:14px}
+
+/* ---------- the feature: the everyday tee ---------- */
+.feature{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);margin:var(--band) var(--gutter) 0;border:1px solid var(--line)}
+.feature__pics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.feature__pics span{position:relative;display:block;aspect-ratio:1;background:var(--stone);overflow:hidden}
+.feature__pics img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:8%}
+.feature__bd{display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5vw,80px)}
+.feature__bd h2{font-size:clamp(34px,4.4vw,68px)}
+.feature__bd h2::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:22px}
+.feature__bd p{margin:20px 0 0;max-width:40ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.78)}
+.feature__price{margin-top:26px!important;font-size:22px!important;color:var(--ink)!important}
+.feature__price s{margin-left:10px;font-size:16px;color:var(--muted)}
+.feature .item__buy{max-width:360px;margin-top:22px;padding-top:0}
+
+/* ---------- the promises ---------- */
+.promises{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:var(--band) var(--gutter) 0;border-top:1px solid var(--ink)}
+.promises li{padding:26px clamp(14px,2vw,30px) 0 0}
+.promises li + li{padding-left:clamp(14px,2vw,30px);border-left:1px solid var(--line)}
+.promises b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(18px,1.6vw,23px);text-transform:uppercase;letter-spacing:.01em;line-height:1.1}
+.promises span{display:block;margin-top:10px;font-size:13px;line-height:1.6;color:var(--muted)}
+.promises a{text-decoration:underline;text-underline-offset:3px}
+.shop-end{height:var(--band)}
+
+/* ---------- the bag button ---------- */
+.bagbtn{position:fixed;right:clamp(14px,2vw,28px);bottom:clamp(14px,2vw,28px);z-index:120;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 20px;
+  border:1px solid var(--ink);background:#fff;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  box-shadow:0 18px 40px -22px rgba(17,17,17,.5);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.bagbtn:hover{background:var(--ink);color:#fff}
+.bagbtn b{display:grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--pop);color:#fff;font-size:11px;letter-spacing:0}
+.bagbtn.is-bump{transform:translateY(-6px)}
+
+/* ---------- the layers: a closer look, and the bag ---------- */
+.scrim{position:fixed;inset:0;z-index:200;background:rgba(17,17,17,.38);opacity:0;transition:opacity .3s}
+.scrim.is-in{opacity:1}
+.look{position:fixed;inset:0;z-index:210;display:grid;place-items:center;padding:clamp(12px,3vw,40px);pointer-events:none}
+.look__card{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);width:min(1080px,100%);max-height:calc(100svh - 48px);overflow:auto;background:#fff;
+  pointer-events:auto;opacity:0;transform:translateY(16px);transition:opacity .3s,transform .4s cubic-bezier(.2,.7,.2,1)}
+.look.is-in .look__card{opacity:1;transform:none}
+.look__pics{background:var(--stone);display:flex;flex-direction:column}
+.look__main{position:relative;aspect-ratio:4/5}
+.look__main img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.look__thumbs{display:flex;gap:6px;padding:0 12px 12px;overflow-x:auto}
+.look__thumbs button{flex:none;width:58px;height:70px;padding:0;border:1px solid transparent;background:#fff;cursor:pointer}
+.look__thumbs button[aria-current="true"]{border-color:var(--ink)}
+.look__thumbs img{width:100%;height:100%;object-fit:contain;padding:4px}
+.look__bd{display:flex;flex-direction:column;padding:clamp(24px,3.4vw,48px)}
+.look__bd h2{font-size:clamp(26px,2.6vw,38px);padding-right:40px}
+.look__price{margin:16px 0 0;font-size:18px}
+.look__price s{margin-left:10px;font-size:14px;color:var(--muted)}
+.look__copy{margin:20px 0 0;font-size:14px;line-height:1.7;color:rgba(17,17,17,.8)}
+.look__spec{margin:20px 0 0;border-top:1px solid var(--line)}
+.look__spec div{display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.look__spec dt{color:var(--muted)}
+.look__spec dd{margin:0;text-align:right}
+.look .item__buy{margin-top:24px;padding-top:0}
+.look__src{margin:16px 0 0;font-size:12px;color:var(--muted)}
+.look__src a{text-decoration:underline;text-underline-offset:3px}
+.x{position:absolute;right:14px;top:14px;z-index:2;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:16px}
+.x:hover{border-color:var(--ink)}
+
+.bag{position:fixed;top:0;right:0;bottom:0;z-index:220;display:flex;flex-direction:column;width:min(440px,100%);background:#fff;border-left:1px solid var(--line);
+  transform:translateX(100%);transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.bag.is-in{transform:none}
+.bag__head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line)}
+.bag__head h2{font-size:24px}
+.bag__head .x{position:static}
+.bag__list{flex:1;overflow:auto;padding:4px 24px}
+.bag__empty{padding:40px 0;font-size:14px;line-height:1.6;color:var(--muted)}
+.line{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
+.line__pic{position:relative;aspect-ratio:4/5;background:var(--stone)}
+.line__pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.line__name{margin:0;font-size:13px;font-weight:700;line-height:1.35}
+.line__meta{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.qty{display:inline-flex;align-items:center;margin-top:10px;border:1px solid var(--line)}
+.qty button{width:32px;height:32px;border:0;background:#fff;cursor:pointer;font-size:15px}
+.qty span{min-width:26px;text-align:center;font-size:13px}
+.line__end{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;font-size:13px;font-weight:700}
+.line__rm{border:0;background:none;padding:0;font-size:11px;font-weight:400;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.bag__view{display:flex;flex-direction:column;flex:1;min-height:0}
+.bag__foot{padding:20px 24px 24px;border-top:1px solid var(--line)}
+.sum{margin:0 0 16px}
+.sum div{display:flex;justify-content:space-between;gap:16px;padding:4px 0;font-size:13px;color:var(--muted)}
+.sum dd{margin:0;color:var(--ink)}
+.sum div:last-child{margin-top:6px;padding-top:10px;border-top:1px solid var(--line);font-size:15px;color:var(--ink)}
+.sum div:last-child dd{font-size:20px;font-weight:700}
+.co{display:flex;flex-direction:column;flex:1;min-height:0}
+.co__body{flex:1;overflow:auto;padding:16px 24px 8px}
+.co__back{border:0;background:none;padding:0 0 18px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.co__back:hover{color:var(--ink)}
+.co__gap{margin-top:26px!important}
+.co .field{margin-top:14px}
+.co label{display:block;margin-bottom:6px;font-size:12px;font-weight:700;letter-spacing:.04em}
+.co input:not([type=hidden]),.co select{width:100%;height:46px;padding:0 12px;border:1px solid var(--line);background:#fff;font-size:15px;color:var(--ink)}
+.co input:focus,.co select:focus{outline:none;border-color:var(--ink)}
+.co select:disabled{color:var(--muted);background:var(--stone)}
+.co__pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.co .error{display:none;margin-top:6px;font-size:12px;color:#b42318}
+.co .is-bad input,.co .is-bad select{border-color:#b42318}
+.co .is-bad .error{display:block}
+.co .sum{margin:24px 0 8px;padding-top:14px;border-top:1px solid var(--line)}
+.btn[disabled]{opacity:.5;cursor:default}
+.bag__total{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}
+.bag__total b{font-size:20px}
+.bag__note{margin:12px 0 0;font-size:12px;line-height:1.6;color:var(--muted)}
+.bag__note a{text-decoration:underline;text-underline-offset:3px}
+.bag__foot .btn{display:flex;justify-content:center;width:100%}
+
+.toast{position:fixed;left:50%;bottom:28px;z-index:230;display:flex;align-items:center;gap:16px;padding:12px 14px 12px 18px;background:#fff;border:1px solid var(--ink);font-size:13px;
+  transform:translate(-50%,24px);opacity:0;pointer-events:none;transition:opacity .25s,transform .35s cubic-bezier(.2,.7,.2,1)}
+.toast.is-in{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{border:0;background:none;padding:0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+body.is-held{overflow:hidden}
+
+@media (max-width:1100px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .promises{grid-template-columns:1fr 1fr}
+  .promises li:nth-child(3){padding-left:0;border-left:0}
+  .promises li:nth-child(n+3){margin-top:26px}
+}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;align-items:start}
+  .feature{grid-template-columns:1fr}
+  .look__card{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .hero{padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px;gap:36px}
+  .mosaic__t:nth-child(2),.mosaic__t:nth-child(4){transform:translateY(18px)}
+  .grid{grid-template-columns:1fr 1fr;gap:34px 12px}
+  .item__buy{flex-wrap:wrap}
+  .item__add{flex:1 1 100%}
+  .sizes{flex:1 1 100%}
+  .sizes label{flex:1}
+  .bar__sort span{display:none}
+  .promises{grid-template-columns:1fr}
+  .promises li,.promises li + li{padding:22px 0 0;border-left:0}
+  .promises li + li{margin-top:22px;border-top:1px solid var(--line)}
+  .look{padding:0;place-items:end stretch}
+  .look__card{max-height:92svh}
+  .bagbtn{height:48px;padding:0 16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/shop">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Shop">
+  <meta property="og:description" content="Fourteen limited-edition designer T-shirts made with People for Animals, by Sabyasachi, Gaurav Gupta, Masaba Gupta, Raw Mango and more, and the PFA logo tee. 100% cotton. Every purchase supports PFA’s work for animals.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/shop">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Shop">
+  <meta name="twitter:description" content="Fourteen limited-edition designer T-shirts made with People for Animals, by Sabyasachi, Gaurav Gupta, Masaba Gupta, Raw Mango and more, and the PFA logo tee. 100% cotton. Every purchase supports PFA’s work for animals.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Shop","item":"https://peopleforanimalsindia.org/shop"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every purchase supports PFA’s work for animals</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="library.html" data-nav="library.html">Resources library</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
+        <div class="menu">
+          <span class="menu-label">Join the tribe</span>
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+          <a href="#top" data-nav="shop.html" class="current" aria-current="page">Shop</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+  <section class="hero" data-screen-label="Shop opening">
+    <div class="hero__in">
+      <p class="eyebrow">The PFA shop</p>
+      <h1 class="display">Wear the cause.</h1>
+      <p class="lede">Fourteen designers each made a T-shirt with People for Animals. Every one is a limited edition in 100% cotton, cut as a unisex drop shoulder tee, and every purchase supports PFA&rsquo;s work for animals.</p>
+      <div class="hero__cta">
+        <a class="btn" href="#collection">Shop the designer edit</a>
+        <a class="btn btn--light" href="#everyday">The PFA logo tee, ₹350</a>
+      </div>
+    </div>
+    <div class="mosaic" aria-label="From the designer edit">
+        <a class="mosaic__t" href="#sabyasachi" data-open-id="23"><img src="media/shop/1745704362.webp" alt="Sabyasachi x PFA" decoding="async"><span>Sabyasachi</span></a>
+        <a class="mosaic__t" href="#masaba-gupta" data-open-id="38"><img src="media/shop/1745705914.webp" alt="Masaba Gupta x PFA" decoding="async"><span>Masaba Gupta</span></a>
+        <a class="mosaic__t" href="#gaurav-gupta" data-open-id="26"><img src="media/shop/1745704396.webp" alt="Gaurav Gupta x PFA" decoding="async"><span>Gaurav Gupta</span></a>
+        <a class="mosaic__t" href="#raw-mango" data-open-id="37"><img src="media/shop/1745704071.webp" alt="Raw Mango x PFA" decoding="async"><span>Raw Mango</span></a>
+    </div>
+  </section>
+
+  <section class="band" id="collection" data-screen-label="The collection">
+    <div class="band__head">
+      <div>
+        <p class="eyebrow">The designer edit</p>
+        <h2 class="display">Fourteen designers. One cause.</h2>
+        <p>Sabyasachi, Gaurav Gupta, Masaba Gupta, Raw Mango, J J Valaya and nine more, each in their own hand. Now half price: ₹2,500, down from ₹5,000, in L and XL.</p>
+      </div>
+    </div>
+    <div class="bar" role="group" aria-label="Filter and sort the shop">
+      <button class="chip" type="button" data-filter="" aria-pressed="true">Everything</button>
+      <button class="chip" type="button" data-filter="designer" aria-pressed="false">Designer edit</button>
+      <button class="chip" type="button" data-filter="essentials" aria-pressed="false">Everyday</button>
+      <label class="bar__sort"><span>Sort</span>
+        <select id="sort" aria-label="Sort the shop">
+          <option value="featured">Featured</option>
+          <option value="low">Price, low to high</option>
+          <option value="high">Price, high to low</option>
+          <option value="name">Designer, A to Z</option>
+        </select>
+      </label>
+      <span class="bar__count" id="count" aria-live="polite">15 pieces</span>
+    </div>
+    <div class="grid" id="grid">
+      <article class="item" id="sabyasachi" data-id="23" data-kind="designer" data-order="0"
+        data-name="Sabyasachi x PFA" data-designer="Sabyasachi" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704362.webp|media/shop/1065290666-1744522585.webp|media/shop/1675989618-1744522736.webp|media/shop/995423029-1745704296.webp|media/shop/1852132592-1745704362.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Sabyasachi x PFA">
+          <img class="item__img" src="media/shop/1745704362.webp" alt="Sabyasachi x PFA T-shirt" loading="eager" decoding="async">
+          <img class="item__alt" src="media/shop/1065290666-1744522585.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Sabyasachi</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#sabyasachi" data-open>Sabyasachi x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-sabyasachi" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-sabyasachi" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="gaurav-gupta" data-id="26" data-kind="designer" data-order="1"
+        data-name="Gaurav Gupta x PFA" data-designer="Gaurav Gupta" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704396.webp|media/shop/160937322-1744522642.webp|media/shop/560918646-1744522769.webp|media/shop/1843996607-1745704257.webp|media/shop/524535961-1745704396.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Gaurav Gupta x PFA">
+          <img class="item__img" src="media/shop/1745704396.webp" alt="Gaurav Gupta x PFA T-shirt" loading="eager" decoding="async">
+          <img class="item__alt" src="media/shop/160937322-1744522642.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Gaurav Gupta</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#gaurav-gupta" data-open>Gaurav Gupta x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-gaurav-gupta" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-gaurav-gupta" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item item--fit" id="pfa-logo-tee" data-id="21" data-kind="essentials" data-order="2"
+        data-name="PFA logo T-shirt" data-designer="People for Animals" data-price="350" data-was="450"
+        data-images="media/shop/1663574021.3.webp|media/shop/2025128364-1663585636.2.webp|media/shop/1481721904-1663585636.2.webp|media/shop/1367888086-1663585680.1.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at PFA logo T-shirt">
+          <img class="item__img" src="media/shop/1663574021.3.webp" alt="PFA logo T-shirt" loading="eager" decoding="async">
+          <img class="item__alt" src="media/shop/2025128364-1663585636.2.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">People for Animals</span>
+          <span class="item__tag">Everyday</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#pfa-logo-tee" data-open>PFA logo T-shirt</a></h3>
+          <p class="item__meta">People for Animals logo T-shirt</p>
+          <p class="item__price"><b>₹350</b> <s class="item__was">₹450</s> <span class="item__off">22% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-pfa-logo-tee" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-pfa-logo-tee" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="varun-bahl" data-id="27" data-kind="designer" data-order="3"
+        data-name="Varun Bahl x PFA" data-designer="Varun Bahl" data-price="2500" data-was="5000"
+        data-images="media/shop/1745706391.webp|media/shop/1662351743-1744522686.webp|media/shop/552126632-1744522798.webp|media/shop/626410566-1745706391.webp|media/shop/163281179-1745706391.webp|media/shop/1532406164-1745706391.webp|media/shop/722274283-1745706610.webp|media/shop/2012418041-1745706610.webp|media/shop/248165720-1745706610.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Varun Bahl x PFA">
+          <img class="item__img" src="media/shop/1745706391.webp" alt="Varun Bahl x PFA T-shirt" loading="eager" decoding="async">
+          <img class="item__alt" src="media/shop/1662351743-1744522686.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Varun Bahl</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#varun-bahl" data-open>Varun Bahl x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-varun-bahl" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-varun-bahl" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="rocky-star" data-id="29" data-kind="designer" data-order="4"
+        data-name="Rocky Star x PFA" data-designer="Rocky Star" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704223.webp|media/shop/72323783-1744524307.webp|media/shop/186834865-1745704223.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Rocky Star x PFA">
+          <img class="item__img" src="media/shop/1745704223.webp" alt="Rocky Star x PFA T-shirt" loading="lazy" decoding="async">
+          <img class="item__alt" src="media/shop/72323783-1744524307.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Rocky Star</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#rocky-star" data-open>Rocky Star x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-rocky-star" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-rocky-star" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="geisha-designs" data-id="30" data-kind="designer" data-order="5"
+        data-name="Geisha Designs x PFA" data-designer="Geisha Designs" data-price="2500" data-was="5000"
+        data-images="media/shop/1745706312.webp|media/shop/1417929631-1745706312.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Geisha Designs x PFA">
+          <img class="item__img" src="media/shop/1745706312.webp" alt="Geisha Designs x PFA T-shirt" loading="lazy" decoding="async">
+          <img class="item__alt" src="media/shop/1417929631-1745706312.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Geisha Designs</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#geisha-designs" data-open>Geisha Designs x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-geisha-designs" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-geisha-designs" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="muzaffar-ali" data-id="31" data-kind="designer" data-order="6"
+        data-name="Muzaffar Ali x PFA" data-designer="Muzaffar Ali" data-price="2500" data-was="5000"
+        data-images="media/shop/1745706275.webp|media/shop/651460845-1745706275.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Muzaffar Ali x PFA">
+          <img class="item__img" src="media/shop/1745706275.webp" alt="Muzaffar Ali x PFA T-shirt" loading="lazy" decoding="async">
+          <img class="item__alt" src="media/shop/651460845-1745706275.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Muzaffar Ali</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#muzaffar-ali" data-open>Muzaffar Ali x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-muzaffar-ali" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-muzaffar-ali" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="nida-mahmood" data-id="32" data-kind="designer" data-order="7"
+        data-name="Nida Mahmood x PFA" data-designer="Nida Mahmood" data-price="2500" data-was="5000"
+        data-images="media/shop/1745706013.webp|media/shop/1460064648-1745706013.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Nida Mahmood x PFA">
+          <img class="item__img" src="media/shop/1745706013.webp" alt="Nida Mahmood x PFA T-shirt" loading="lazy" decoding="async">
+          <img class="item__alt" src="media/shop/1460064648-1745706013.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Nida Mahmood</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#nida-mahmood" data-open>Nida Mahmood x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-nida-mahmood" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-nida-mahmood" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="jj-valaya" data-id="33" data-kind="designer" data-order="8"
+        data-name="J J Valaya x PFA" data-designer="J J Valaya" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704182.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at J J Valaya x PFA">
+          <img class="item__img" src="media/shop/1745704182.webp" alt="J J Valaya x PFA T-shirt" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">J J Valaya</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#jj-valaya" data-open>J J Valaya x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-jj-valaya" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-jj-valaya" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="gaurav-gupta-charcoal" data-id="34" data-kind="designer" data-order="9"
+        data-name="Gaurav Gupta x PFA, Charcoal" data-designer="Gaurav Gupta" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704146.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Gaurav Gupta x PFA, Charcoal">
+          <img class="item__img" src="media/shop/1745704146.webp" alt="Gaurav Gupta x PFA, Charcoal T-shirt" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Gaurav Gupta</span>
+          <span class="item__tag">Charcoal</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#gaurav-gupta-charcoal" data-open>Gaurav Gupta x PFA, Charcoal</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-gaurav-gupta-charcoal" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-gaurav-gupta-charcoal" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="monisha-jaisingh" data-id="35" data-kind="designer" data-order="10"
+        data-name="Monisha Jaisingh x PFA" data-designer="Monisha Jaisingh" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704117.webp|media/shop/1065804775-1744552603.webp|media/shop/887024610-1745704117.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Monisha Jaisingh x PFA">
+          <img class="item__img" src="media/shop/1745704117.webp" alt="Monisha Jaisingh x PFA T-shirt" loading="lazy" decoding="async">
+          <img class="item__alt" src="media/shop/1065804775-1744552603.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Monisha Jaisingh</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#monisha-jaisingh" data-open>Monisha Jaisingh x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-monisha-jaisingh" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-monisha-jaisingh" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="varun-bahl-2" data-id="36" data-kind="designer" data-order="11"
+        data-name="Varun Bahl x PFA, Design 2" data-designer="Varun Bahl" data-price="2500" data-was="5000"
+        data-images="media/shop/1745705960.webp|media/shop/248256171-1745705960.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Varun Bahl x PFA, Design 2">
+          <img class="item__img" src="media/shop/1745705960.webp" alt="Varun Bahl x PFA, Design 2 T-shirt" loading="lazy" decoding="async">
+          <img class="item__alt" src="media/shop/248256171-1745705960.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Varun Bahl</span>
+          <span class="item__tag">Design 2</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#varun-bahl-2" data-open>Varun Bahl x PFA, Design 2</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-varun-bahl-2" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-varun-bahl-2" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="raw-mango" data-id="37" data-kind="designer" data-order="12"
+        data-name="Raw Mango x PFA" data-designer="Raw Mango" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704071.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Raw Mango x PFA">
+          <img class="item__img" src="media/shop/1745704071.webp" alt="Raw Mango x PFA T-shirt" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Raw Mango</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#raw-mango" data-open>Raw Mango x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-raw-mango" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-raw-mango" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="masaba-gupta" data-id="38" data-kind="designer" data-order="13"
+        data-name="Masaba Gupta x PFA" data-designer="Masaba Gupta" data-price="2500" data-was="5000"
+        data-images="media/shop/1745705914.webp|media/shop/1811195198-1745705914.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Masaba Gupta x PFA">
+          <img class="item__img" src="media/shop/1745705914.webp" alt="Masaba Gupta x PFA T-shirt" loading="lazy" decoding="async">
+          <img class="item__alt" src="media/shop/1811195198-1745705914.webp" alt="" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Masaba Gupta</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#masaba-gupta" data-open>Masaba Gupta x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-masaba-gupta" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-masaba-gupta" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+      <article class="item" id="ashima-singh" data-id="39" data-kind="designer" data-order="14"
+        data-name="Ashima Singh x PFA" data-designer="Ashima Singh" data-price="2500" data-was="5000"
+        data-images="media/shop/1745704033.webp">
+        <button class="item__media" type="button" data-open aria-label="Look closer at Ashima Singh x PFA">
+          <img class="item__img" src="media/shop/1745704033.webp" alt="Ashima Singh x PFA T-shirt" loading="lazy" decoding="async">
+          <span class="item__fallback" aria-hidden="true">Ashima Singh</span>
+          <span class="item__tag">Limited edition</span>
+        </button>
+        <div class="item__bd">
+          <h3 class="item__name display"><a href="#ashima-singh" data-open>Ashima Singh x PFA</a></h3>
+          <p class="item__meta">Unisex drop shoulder T-shirt · 100% cotton</p>
+          <p class="item__price"><b>₹2,500</b> <s class="item__was">₹5,000</s> <span class="item__off">50% off</span></p>
+          <form class="item__buy" data-buy>
+            <fieldset class="sizes">
+              <legend class="sr">Size</legend>
+              <label><input type="radio" name="size-ashima-singh" value="L" checked><span>L</span></label>
+              <label><input type="radio" name="size-ashima-singh" value="XL"><span>XL</span></label>
+            </fieldset>
+            <button class="item__add" type="submit">Add to bag</button>
+          </form>
+        </div>
+      </article>
+    </div>
+    <p class="grid__none" id="none" hidden>Nothing here yet.</p>
+  </section>
+
+  <section class="feature" id="everyday" data-screen-label="The everyday tee">
+    <div class="feature__pics">
+      <span><img src="media/shop/1663574021.3.webp" alt="PFA logo T-shirt" loading="lazy" decoding="async"></span>
+      <span><img src="media/shop/2025128364-1663585636.2.webp" alt="" loading="lazy" decoding="async"></span>
+      <span><img src="media/shop/1481721904-1663585636.2.webp" alt="" loading="lazy" decoding="async"></span>
+      <span><img src="media/shop/1367888086-1663585680.1.webp" alt="" loading="lazy" decoding="async"></span>
+    </div>
+    <div class="feature__bd">
+      <p class="eyebrow">Everyday</p>
+      <h2 class="display">The one with the logo.</h2>
+      <p>The People for Animals logo T-shirt. The piece to wear on a drive, at a camp, or on the walk home past the dogs you feed.</p>
+      <p class="feature__price"><b>₹350</b> <s>₹450</s></p>
+      <form class="item__buy" data-buy data-for="21">
+        <fieldset class="sizes">
+          <legend class="sr">Size</legend>
+          <label><input type="radio" name="size-feature" value="L" checked><span>L</span></label>
+          <label><input type="radio" name="size-feature" value="XL"><span>XL</span></label>
+        </fieldset>
+        <button class="item__add" type="submit">Add to bag</button>
+      </form>
+    </div>
+  </section>
+
+  <ul class="promises" aria-label="How the shop works">
+    <li><b>100% cotton</b><span>Every designer piece is a unisex drop shoulder T-shirt in 100% cotton, in L and XL.</span></li>
+    <li><b>For the animals</b><span>Every purchase supports PFA&rsquo;s work to protect and care for animals across the country.</span></li>
+    <li><b>Delivered across India</b><span>One delivery charge of ₹150 an order, wherever in India it is going.</span></li>
+    <li><b>Paid securely</b><span>Pay by card, UPI or net banking through CCAvenue. Your order confirmation comes by email. Questions: <a href="tel:+919953313319">+91&nbsp;99533&nbsp;13319</a>.</span></li>
+  </ul>
+  <div class="shop-end"></div>
+</main>
+
+<button class="bagbtn" type="button" id="bagBtn" aria-controls="bag" aria-expanded="false" hidden>Bag <b id="bagCount">0</b></button>
+
+<div class="scrim" id="scrim" hidden></div>
+
+<div class="look" id="look" role="dialog" aria-modal="true" aria-labelledby="lookTitle" hidden>
+  <div class="look__card">
+    <button class="x" type="button" data-close aria-label="Close">&#x2715;</button>
+    <div class="look__pics">
+      <div class="look__main"><img id="lookImg" src="data:," alt=""></div>
+      <div class="look__thumbs" id="lookThumbs"></div>
+    </div>
+    <div class="look__bd">
+      <p class="eyebrow" id="lookKicker"></p>
+      <h2 class="display" id="lookTitle"></h2>
+      <p class="look__price" id="lookPrice"></p>
+      <p class="look__copy" id="lookCopy"></p>
+      <dl class="look__spec" id="lookSpec"></dl>
+      <form class="item__buy" data-buy id="lookBuy">
+        <fieldset class="sizes">
+          <legend class="sr">Size</legend>
+          <label><input type="radio" name="size-look" value="L" checked><span>L</span></label>
+          <label><input type="radio" name="size-look" value="XL"><span>XL</span></label>
+        </fieldset>
+        <button class="item__add" type="submit">Add to bag</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<aside class="bag" id="bag" role="dialog" aria-modal="true" aria-labelledby="bagTitle" hidden>
+  <div class="bag__head">
+    <h2 class="display" id="bagTitle">Your bag</h2>
+    <button class="x" type="button" data-close aria-label="Close the bag">&#x2715;</button>
+  </div>
+  <div class="bag__view" id="bagView">
+    <div class="bag__list" id="bagList"></div>
+    <div class="bag__foot">
+      <dl class="sum" id="bagSum"></dl>
+      <button class="btn" type="button" id="toCheckout">Checkout</button>
+      <p class="bag__note">Delivery anywhere in India, ₹150 an order. Prefer to order by phone? Call <a href="tel:+919953313319">+91&nbsp;99533&nbsp;13319</a>.</p>
+    </div>
+  </div>
+  <form class="co" id="checkout" method="post" action="/api/shop/checkout" novalidate hidden>
+    <div class="co__body">
+      <button type="button" class="co__back" id="backToBag"><span aria-hidden="true">&larr;</span> Back to your bag</button>
+      <p class="eyebrow">Your details</p>
+      <div class="field"><label for="coName">Full name</label><input id="coName" name="name" type="text" autocomplete="name" required><span class="error">Add your name.</span></div>
+      <div class="field"><label for="coMobile">Mobile number</label><input id="coMobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel" required><span class="error">Enter a 10-digit Indian mobile number.</span></div>
+      <div class="field"><label for="coEmail">Email</label><input id="coEmail" name="email" type="email" autocomplete="email" required><span class="error">Add a valid email for your order confirmation.</span></div>
+      <p class="eyebrow co__gap">Deliver to</p>
+      <div class="field"><label for="coAddress">Address</label><input id="coAddress" name="address" type="text" autocomplete="street-address" required><span class="error">Enter the delivery address.</span></div>
+      <div class="co__pair">
+        <div class="field"><label for="coState">State</label><select id="coState" name="state" autocomplete="address-level1" required><option value="">Select</option></select><span class="error">Pick the state.</span></div>
+        <div class="field"><label for="coDistrict">District</label><select id="coDistrict" name="district" required disabled><option value="">Select the state first</option></select><span class="error">Pick the district.</span></div>
+      </div>
+      <div class="field"><label for="coPin">PIN code</label><input id="coPin" name="pincode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6" required><span class="error">Enter the 6-digit PIN code.</span></div>
+      <dl class="sum" id="coSum"></dl>
+    </div>
+    <div class="bag__foot">
+      <input type="hidden" name="items" id="coItems" value="[]">
+      <button class="btn" type="submit" id="coPay">Pay securely</button>
+      <p class="bag__note">You pay on CCAvenue, by card, UPI or net banking; PFA never sees those details. Your order confirmation comes to your email.</p>
+    </div>
+  </form>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastText"></span><button type="button" id="toastBag">View bag</button></div>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- The same four groups the header uses, in the same order, with the same
+       labels. They used to differ: the header put Careers under Get Involved
+       and Policies under Our Work, while this listed Careers under About,
+       Policies under About, and Academy, Events, CineKind and The Wall under
+       an "Explore" that existed nowhere else. Six items sat in one group at
+       the top of a page and a different one at the bottom. -->
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure.
+
+       No caption. An odometer in a footer reads as what it is without being
+       told, and every phrasing of the caption either restated the obvious or
+       claimed something the number does not support: a visit is not someone
+       who cared, or stood with us, or came for the animals. The aria-label
+       below still names it for a screen reader, which cannot see the shape. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<script src="assets/field-rules.js" defer></script>
+<script src="assets/india-districts.js" defer></script>
+<script src="assets/shop.js" defer></script>
+</body>
+</html>

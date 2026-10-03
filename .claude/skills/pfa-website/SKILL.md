@@ -78,6 +78,12 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
   seller's domain, never `products/<handle>.html`.
 
 ## Payments
-- CCAvenue handles donate / give-send / membership only (`lib/routes/payment/*`).
-  Store payments are Shopify's. Never route store money through CCAvenue
-  (`lib/payment.js` rejects it; there is a test).
+- CCAvenue (PFA's own account) takes every payment whose money is PFA's:
+  donate / membership / caregiver application (`lib/routes/payment/*`) and
+  the PFA shop (`lib/routes/shop/*`). The shop's money is PFA-owned (owner,
+  3 Oct 2026), so shop payments go through CCAvenue, priced only by
+  `lib/shop.js`, with orders recorded in the pfa-oldsite backend.
+- Money that belongs to someone else never goes through PFA's CCAvenue. That
+  was the old Paws & Tails store (the seller's own checkout). `lib/payment.js`
+  still refuses a store purchase on `/api/payment/create` (there is a test);
+  the PFA shop has its own routes and does not use that path.

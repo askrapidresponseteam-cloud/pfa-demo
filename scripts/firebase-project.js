@@ -37,7 +37,12 @@ const ROOT = path.join(__dirname, '..');
 
 /* Projects this site has left. A key for one of these is refused outright,
    whatever the browser config says, so a stale file on a Desktop can never be
-   picked up again. Add to the list; never remove from it. */
+   picked up again. Add to the list; never remove from it.
+   The one use of pfa-oldsite left is the shop's order store (owner, 3 Oct
+   2026): lib/shop-backend.js reads its own variable,
+   PFA_SHOP_FIREBASE_SERVICE_ACCOUNT, and refuses any project but pfa-oldsite.
+   That key is never the site's server key, and this check still refuses it
+   in that role. */
 const RETIRED = ['pfa-oldsite'];
 
 function read(file) {
