@@ -60,7 +60,7 @@
 }
 </style>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.305">
+<meta name="pfa-build" content="v1.363">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Policies and achievements | People for Animals</title>
@@ -242,111 +242,101 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   *{transition:none!important;animation:none!important}
 }
 
-/* ---------- the sphere ----------
-   Every entry in the record, tangent to one rotating globe. The geometry is
-   solved, not styled: cards sit on latitude rings, and the radius is grown
-   until two guarantees hold - within a ring, r*tan(pi/n) clears half a card
-   width; between rings, R*tan(dphi/2) clears half a card diagonal - so no
-   two cards can ever intersect, at any spin angle, for any entry count. The
-   hover pop translates a card outward along its own normal: unpopped cards
-   live in the radial shell [R, R+12], a popped one at [R+150, ...], disjoint
-   by construction, so the pop cannot clip anything either. The section stays
-   hidden until the script builds it from the list below, which remains the
-   one source of the entries. */
-.sph{background:var(--stone);color:var(--ink);padding:0 var(--gutter);overflow:hidden}
-.sph__in{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:clamp(14px,2.2vw,36px);min-height:clamp(500px,80vh,780px)}
-.sph__fronts{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(5px,1vh,10px);z-index:5;max-height:100%;overflow:auto;scrollbar-width:none;padding:10px 0}
-.sph__cap{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.5)}
-.sph__pill{border:1px solid var(--ink);background:transparent;color:var(--ink);padding:clamp(7px,1.3vh,11px) clamp(13px,1.8vh,20px);font-size:clamp(10px,1.5vh,12px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s}
-.sph__pill:hover{background:#fff;color:var(--ink);opacity:1}
-.sph__pill.is-on{background:#fff;color:var(--ink)}
-.sph__stage{position:relative;height:clamp(500px,80vh,780px);min-width:0;perspective:2400px;cursor:grab;touch-action:none;overflow:hidden}
-.sph__stage.is-drag{cursor:grabbing}
-.sph__ghost{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(40px,6vw,104px);text-align:center;color:var(--ink);pointer-events:none}
-.sph__scale{position:absolute;left:50%;top:50%;transform-style:preserve-3d}
-.sph__globe{position:relative;width:0;height:0;transform-style:preserve-3d;will-change:transform}
-.sphcard{position:absolute;left:0;top:0;transform-style:preserve-3d}
-.sphcard__face,.sphcard__back{position:absolute;width:150px;height:190px;margin:-95px 0 0 -75px;backface-visibility:hidden}
-.sphcard__face{border:0;padding:0;background:var(--stone);color:var(--ink);text-align:left;display:flex;flex-direction:column;box-shadow:0 12px 34px rgba(0,0,0,.5);cursor:pointer;transition:transform .3s,opacity .35s,filter .35s;overflow:hidden}
-.sphcard__face:hover,.sphcard__face:focus-visible{background:#fff;transform:translateZ(150px) scale(2.6)}
-/* The artwork block: each front owns a colour (--a, set per card), and each
-   entry draws one of six motifs in white over it. Generative, so a hundred
-   cards read like a run of prints rather than one card repeated. */
-.sphcard__art{position:relative;height:100px;flex:none;background:var(--a,#444)}
-.m0 .sphcard__art{background-image:repeating-linear-gradient(45deg,rgba(17,17,17,.32) 0 7px,transparent 7px 16px)}
-.m1 .sphcard__art{background-image:radial-gradient(rgba(17,17,17,.42) 1.8px,transparent 2.1px);background-size:13px 13px}
-.m2 .sphcard__art{background-image:linear-gradient(rgba(17,17,17,.3) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(17,17,17,.3) 1.5px,transparent 1.5px);background-size:15px 15px}
-.m3 .sphcard__art{background-image:repeating-conic-gradient(rgba(17,17,17,.24) 0% 25%,transparent 0% 50%);background-size:22px 22px}
-.m4 .sphcard__art{background-image:repeating-radial-gradient(circle at 32% 36%,rgba(17,17,17,.32) 0 3px,transparent 3px 12px)}
-.m5 .sphcard__art{background-image:repeating-linear-gradient(90deg,rgba(17,17,17,.3) 0 5px,transparent 5px 14px)}
-.sphcard__chip{display:none;position:absolute;top:8px;left:8px;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;font-family:var(--display);font-size:12.5px;box-shadow:0 2px 8px rgba(0,0,0,.25);font-variant-numeric:tabular-nums}
-.sphcard__tag{position:absolute;right:8px;bottom:7px;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--ink);font-variant-numeric:tabular-nums;text-shadow:0 1px 4px rgba(0,0,0,.35)}
-.sphcard__bd{display:flex;flex-direction:column;gap:5px;padding:9px 10px 8px;flex:1;min-height:0}
-.sphcard__t{font-family:var(--display);font-size:12.5px;line-height:1.16;text-transform:uppercase;letter-spacing:.01em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.sphcard__c{margin-top:auto;display:flex;align-items:center;gap:5px;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.sphcard__c::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--a,#444);flex:none}
-.sphcard__back{transform:rotateY(180deg);background:#edebe7;box-shadow:0 12px 34px rgba(0,0,0,.35);pointer-events:none;display:grid;place-items:center}
-.sphcard__back::before{content:'';position:absolute;top:0;left:0;right:0;height:9px;background:var(--a,#c9c6c0)}
-.sphcard__back span{font-family:var(--display);font-size:15px;color:#c9c6c0}
-.sphcard.is-off .sphcard__face{opacity:.08;filter:grayscale(1) brightness(.55);pointer-events:none}
-.sph__pill{display:inline-flex;align-items:center;gap:8px}
-.sph__dot{width:8px;height:8px;border-radius:50%;flex:none}
-.sph__aside{display:flex;flex-direction:column;align-items:center;gap:14px;z-index:5;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(17,17,17,.6);writing-mode:vertical-rl}
-.sph__rule{width:1px;height:56px;background:rgba(17,17,17,.35)}
-.sphlay{position:fixed;inset:0;z-index:120;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);display:grid;place-items:center;padding:clamp(24px,5vw,80px);overflow:auto}
-/* display:grid above beats the browser's [hidden]{display:none}, which is
-   exactly how the overlay once opened itself on page load and blacked out
-   the whole record. Author styles outrank the user-agent sheet whatever the
-   specificity, so hiding has to be an author rule too. */
-.sphlay[hidden]{display:none}
-.sphlay{opacity:0;transition:opacity .32s}
-.sphlay.is-in{opacity:1}
-.sphlay__card{position:relative;max-width:1060px;width:100%;display:grid;grid-template-columns:clamp(230px,29vw,330px) minmax(0,1fr);gap:clamp(30px,5vw,70px);align-items:center}
-/* The print: the clicked card lands here, so it shares the sphere card's
-   anatomy at a larger cut, tilted like a held photograph, with a second
-   sheet behind it for the stack. */
-.sphlay__fig{position:relative;aspect-ratio:15/19;min-height:290px;width:100%}
-.sphlay__fig::before{content:'';position:absolute;inset:0;background:#e7e5e1;transform:rotate(2.2deg) translate(9px,11px);box-shadow:0 18px 48px rgba(0,0,0,.4)}
-.sphlay__fly{transition:transform .52s cubic-bezier(.22,.75,.25,1)}
-.sphlay__print{position:relative;width:100%;height:100%;background:var(--stone);color:var(--ink);transform:rotate(-3.5deg);box-shadow:0 34px 90px rgba(0,0,0,.6);display:flex;flex-direction:column;overflow:hidden;transition:transform .18s,opacity .18s}
-.sphlay__print .sphcard__art{height:56%;flex:none}
-.sphlay__print .sphcard__chip{width:52px;height:52px;font-size:19px;top:12px;left:12px}
-.sphlay__print .sphcard__tag{font-size:13px;right:12px;bottom:10px}
-.sphlay__pbody{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:14px 16px}
-.sphlay__pno{display:none;font-family:var(--display);font-size:clamp(38px,4.6vw,58px);line-height:1;font-variant-numeric:tabular-nums}
-.sphlay__pfront{font-size:10px;gap:7px}
-.sphlay__info{display:grid;gap:18px;transition:opacity .18s}
-.sphlay__info > *{opacity:0;transform:translateY(12px);transition:opacity .45s,transform .45s}
-.sphlay.is-in .sphlay__info > *{opacity:1;transform:none}
-.sphlay.is-in .sphlay__info > :nth-child(2){transition-delay:.05s}
-.sphlay.is-in .sphlay__info > :nth-child(3){transition-delay:.1s}
-.sphlay.is-in .sphlay__info > :nth-child(4){transition-delay:.15s}
-.sphlay.is-in .sphlay__info > :nth-child(5){transition-delay:.2s}
-.sphlay.is-swap .sphlay__print{opacity:0;transform:rotate(-3.5deg) scale(.96)}
-.sphlay.is-swap .sphlay__info{opacity:0}
-.sphlay__meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.55)}
-.sphlay__meta b{font-weight:700;color:var(--a,#fff)}
-.sphlay__go{background:var(--a,#fff);border-color:var(--a,#fff);color:var(--ink)}
-.sphlay__go:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
-.sphlay__t{font-size:clamp(26px,3.8vw,54px);line-height:1.04;color:var(--ink)}
-.sphlay__p{margin:0;max-width:58ch;font-size:16px;line-height:1.65;color:rgba(17,17,17,.78)}
-.sphlay__specs{display:grid;gap:6px;padding-top:16px;border-top:1px solid rgba(17,17,17,.18);font-size:13px;line-height:1.5;color:rgba(17,17,17,.6)}
-.sphlay__specs b{font-weight:700;color:var(--ink)}
-.sphlay__row{display:flex;gap:12px;flex-wrap:wrap;margin-top:2px}
-.sphlay__row .btn--ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
-.sphlay__row .btn--ghost:hover{background:#fff;color:var(--ink)}
+/* ---------- the arc ----------
+   The record as a row of tall cards on a shallow drum, after the record-book
+   carousel on jjettas.com/on-field (asked for on 3 Oct 2026), set on white
+   in the site's own type. The middle card faces you; the others turn away
+   round the drum and soften with distance. Each card's art is a field of
+   digits drawn on a canvas: an entry's year or figure, built out of its own
+   digits, or else the entry's own pattern. The cards are read out of the
+   list below, which stays the one source of the record; without JavaScript
+   the section stays hidden and the list is the page. */
+.arc{position:relative;padding:clamp(40px,4.6vw,76px) 0 clamp(44px,5vw,80px);background:#fff;overflow:hidden;border-bottom:1px solid var(--line)}
+.arc__head{padding:0 var(--gutter);text-align:center}
+.arc__eye{margin:0 0 16px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.arc__title{font-size:clamp(42px,6.2vw,100px);line-height:.9;letter-spacing:.004em}
+.arc__stage{--cw:clamp(210px,min(21vw,calc((100svh - 420px) / 1.62)),330px);position:relative;height:calc(var(--cw) * 1.62 + 56px);margin-top:clamp(20px,2.6vw,40px);
+  perspective:2000px;perspective-origin:50% 42%;cursor:grab;touch-action:pan-y;outline:none;-webkit-user-select:none;user-select:none}
+.arc__stage.is-drag{cursor:grabbing}
+.arc__stage:focus-visible .arcc.is-mid{outline:2px solid var(--ink);outline-offset:6px}
+.arc__drum{position:absolute;left:50%;top:20px;width:0;height:0;transform-style:preserve-3d}
+.arcc{position:absolute;left:0;top:0;display:none;flex-direction:column;width:var(--cw);height:calc(var(--cw) * 1.62);margin:0 0 0 calc(var(--cw) / -2);padding:0;
+  border:1px solid #e6e3de;background:#f6f5f2;color:var(--ink);font:inherit;text-align:center;cursor:pointer;
+  box-shadow:0 1px 2px rgba(17,17,17,.05),0 34px 64px -38px rgba(17,17,17,.42);backface-visibility:hidden;will-change:transform,opacity,filter}
+.arcc.is-on{display:flex}
+.arcc__art{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
+.arcc__art canvas{position:absolute;inset:0;width:100%;height:100%;
+  -webkit-mask-image:linear-gradient(#000 50%,rgba(0,0,0,.35) 78%,transparent 98%);mask-image:linear-gradient(#000 50%,rgba(0,0,0,.35) 78%,transparent 98%)}
+.arcc__bd{position:relative;flex:none;display:flex;flex-direction:column;align-items:center;gap:calc(var(--cw) * .026);padding:0 calc(var(--cw) * .08) calc(var(--cw) * .09)}
+.arcc__fig{font-family:var(--display);font-size:calc(var(--cw) * .215);line-height:.86;letter-spacing:.005em;font-variant-numeric:lining-nums}
+.arcc__lab{display:inline-flex;align-items:center;gap:8px;font-size:calc(var(--cw) * .06);font-weight:700;line-height:1.1;letter-spacing:-.005em}
+.arcc__lab::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--a,#111)}
+.arcc__t{font-family:var(--display);font-size:calc(var(--cw) * .076);line-height:1.08;letter-spacing:.008em;text-transform:uppercase;text-wrap:balance;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.arcc__cap{max-width:30ch;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;font-size:calc(var(--cw) * .034);line-height:1.8;letter-spacing:.17em;
+  text-transform:uppercase;color:#7c7974;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.arcc__cap--front{letter-spacing:.2em}
+.arc__nav{position:absolute;top:calc(20px + var(--cw) * .81);z-index:300;display:grid;place-items:center;width:48px;height:48px;margin-top:-24px;border:1px solid var(--line);
+  background:rgba(255,255,255,.9);color:var(--ink);cursor:pointer;opacity:0;transition:opacity .25s,background .2s}
+.arc__nav--prev{left:var(--gutter)}
+.arc__nav--next{right:var(--gutter)}
+.arc__stage:hover .arc__nav,.arc__nav:focus-visible{opacity:1}
+.arc__nav:hover{background:#fff}
+.arc__nav[disabled]{opacity:0!important;pointer-events:none}
+.arc__tabs{display:flex;justify-content:center;gap:clamp(16px,2.1vw,34px);margin:clamp(10px,1.6vw,24px) auto 0;padding:0 var(--gutter);overflow-x:auto;scrollbar-width:none}
+.arc__tabs::-webkit-scrollbar{display:none}
+.arc__tab{position:relative;flex:none;border:0;background:none;padding:8px 0 14px;font-size:clamp(14px,1.18vw,19px);font-weight:500;letter-spacing:-.003em;color:#a6a29c;cursor:pointer;white-space:nowrap;transition:color .2s}
+.arc__tab:hover{color:var(--ink)}
+.arc__tab[aria-pressed="true"]{color:var(--ink)}
+.arc__tab::after{content:"";position:absolute;left:50%;bottom:0;width:0;height:2px;background:var(--ink);transform:translateX(-50%);transition:width .3s cubic-bezier(.2,.7,.2,1)}
+.arc__tab[aria-pressed="true"]::after{width:min(44px,70%)}
+.arc__hint{margin:16px 0 0;padding:0 var(--gutter);text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#a6a29c}
+.arc__live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:720px){
+  .arc{padding:48px 0 44px}
+  .arc__stage{--cw:min(64vw,280px);height:calc(var(--cw) * 1.62 + 48px);margin-top:24px}
+  .arc__drum{top:24px}
+  .arc__nav{display:none}
+  .arc__tabs{justify-content:flex-start;gap:22px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 24px),transparent)}
+}
+
+/* The entry, opened: the card leaves the drum and lands as a held print
+   beside the whole entry, and flies back on close. */
+.arclay{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:clamp(24px,5vw,80px);overflow:auto;background:rgba(255,255,255,.97);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);opacity:0;transition:opacity .32s}
+/* display:grid above outranks the browser's own [hidden] rule, so hiding
+   has to be an author rule too, or the overlay opens itself on load. */
+.arclay[hidden]{display:none}
+.arclay.is-in{opacity:1}
+.arclay__card{display:grid;grid-template-columns:clamp(236px,26vw,320px) minmax(0,1fr);gap:clamp(30px,5vw,76px);align-items:center;width:100%;max-width:1080px}
+.arclay__fig{--cw:clamp(236px,26vw,320px);position:relative;width:var(--cw);height:calc(var(--cw) * 1.62)}
+.arclay__fig .arcc{display:flex;margin:0;transform:rotate(-2.2deg)}
+.arclay__fig::before{content:"";position:absolute;inset:0;border:1px solid #e6e3de;background:#efede9;transform:rotate(2.4deg) translate(10px,12px);box-shadow:0 26px 60px -34px rgba(17,17,17,.5)}
+.arclay__fly{transition:transform .52s cubic-bezier(.22,.75,.25,1)}
+.arclay__info{display:grid;gap:18px;transition:opacity .18s}
+.arclay__info > *{opacity:0;transform:translateY(12px);transition:opacity .45s,transform .45s}
+.arclay.is-in .arclay__info > *{opacity:1;transform:none}
+.arclay.is-in .arclay__info > :nth-child(2){transition-delay:.05s}
+.arclay.is-in .arclay__info > :nth-child(3){transition-delay:.1s}
+.arclay.is-in .arclay__info > :nth-child(4){transition-delay:.15s}
+.arclay.is-swap .arclay__fig,.arclay.is-swap .arclay__info{opacity:0}
+.arclay__fig{transition:opacity .18s}
+.arclay__meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(17,17,17,.55)}
+.arclay__meta b{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--ink)}
+.arclay__meta b::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--a,#111)}
+.arclay__t{font-size:clamp(28px,3.8vw,54px);line-height:1.04}
+.arclay__p{margin:0;max-width:58ch;font-size:16px;line-height:1.65;color:rgba(17,17,17,.78)}
+.arclay__row{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.btn--ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:#fff}
 @media (max-width:760px){
-  .sphlay__card{grid-template-columns:1fr;gap:26px}
-  .sphlay__fig{width:min(200px,56vw);min-height:0;margin:0 auto}
+  .arclay__card{grid-template-columns:1fr;gap:28px}
+  .arclay__fig{--cw:min(200px,54vw);margin:0 auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .arc__tab::after{transition:none}
 }
 .rec.is-lit{outline:2px solid var(--ink);outline-offset:6px}
-@media (max-width:980px){
-  .sph__in{grid-template-columns:1fr;min-height:0;padding:26px 0 10px}
-  .sph__fronts{flex-direction:row;max-height:none;overflow-x:auto;padding:2px 0 10px;width:100%}
-  .sph__cap{display:none}
-  .sph__stage{height:clamp(420px,62vh,560px)}
-  .sph__aside{display:none}
-}
 
 /* ---------- the pop (15 Sep 2026): the orange the site already owns
    (#ff3b18, the units gallery's kicker), promoted to a page-wide device so
@@ -448,24 +438,22 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     </div>
   </section>
 
-  <!-- The record as a globe: every entry below, on one sphere you can spin.
+  <!-- The record as an arc of cards: every entry below, on a drum you turn.
        Hidden until the script builds it out of the list, so without
-       JavaScript there is no empty dark band and the list stays the page. -->
-  <section class="sph" data-screen-label="The sphere" id="sphere" hidden>
-    <div class="sph__in">
-      <nav class="sph__fronts" id="sphFronts" aria-label="Spin the record by front">
-        <p class="sph__cap">The record</p>
-      </nav>
-      <div class="sph__stage" id="sphStage">
-        <p class="sph__ghost display" aria-hidden="true">What<br>changed</p>
-        <div class="sph__scale" id="sphScale"><div class="sph__globe" id="sphGlobe"></div></div>
-      </div>
-      <div class="sph__aside" aria-hidden="true">
-        <span id="sphHint">Thirty years &middot; eight fronts</span>
-        <span class="sph__rule"></span>
-        <span>Drag to spin &middot; click a card</span>
-      </div>
+       JavaScript there is no empty band and the list stays the page. -->
+  <section class="arc" data-screen-label="The arc" id="arc" hidden>
+    <div class="arc__head">
+      <p class="arc__eye">Thirty years &middot; eight fronts</p>
+      <h2 class="display arc__title">What changed.</h2>
     </div>
+    <div class="arc__stage" id="arcStage" tabindex="0" role="region" aria-roledescription="carousel" aria-label="The record, card by card. Use the arrow keys to turn, Enter to open a card.">
+      <div class="arc__drum" id="arcDrum"></div>
+      <button class="arc__nav arc__nav--prev" type="button" id="arcPrev" aria-label="Previous card"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="arc__nav arc__nav--next" type="button" id="arcNext" aria-label="Next card"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      <p class="arc__live" id="arcLive" aria-live="polite"></p>
+    </div>
+    <nav class="arc__tabs" id="arcTabs" aria-label="The record by front"></nav>
+    <p class="arc__hint">Drag or swipe to turn &middot; choose a card to open it</p>
   </section>
 
   <section class="band rband">
@@ -506,14 +494,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       <article class="rec" id="rec-016" data-theme="Courts &amp; law" data-year=2020><span class="rec__n">016</span><div class="rec__b"><h3 class="rec__t display">Environmental rules for&nbsp;dairy farms and&nbsp;gaushalas</h3><p class="rec__p">Advocated, through proceedings before the National Green Tribunal, for stronger environmental regulation of dairy farms and gaushalas, contributing to the Central Pollution Control Board's Guidelines for Environmental Management of Dairy Farms and Gaushalas (2020, revised 2021).</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span><span class="rec__y">2020</span></p></div></article>
       <article class="rec" id="rec-017" data-theme="Courts &amp; law"><span class="rec__n">017</span><div class="rec__b"><h3 class="rec__t display">Environmental rules for&nbsp;poultry farms</h3><p class="rec__p">Advocated, before the National Green Tribunal, for stronger environmental regulation of poultry farms, contributing to the Central Pollution Control Board's Guidelines for Environmental Management of Poultry Farms.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
       <article class="rec" id="rec-018" data-theme="Farmed animals"><span class="rec__n">018</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;Package of&nbsp;Practice for&nbsp;Organised Pig Farms</h3><p class="rec__p">Co-authored the Package of Practice for Organised Pig Farms, with the National Research Center on Pig, Guwahati. This serves as an SOP which promotes welfare of lakhs of pigs and scientific management practices to prevent cruelty.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
-      <article class="rec" id="rec-019" data-theme="Farmed animals"><span class="rec__n">019</span><div class="rec__b"><h3 class="rec__t display">Conditions improved for 10,000 pigs across 53 farms</h3><p class="rec__p">Documented welfare violations at 53 pig farms and secured regulatory directions improving conditions for more than 10,000 pigs in Uttar Pradesh and Haryana.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" id="rec-019" data-fig="10,000" data-figl="pigs" data-theme="Farmed animals"><span class="rec__n">019</span><div class="rec__b"><h3 class="rec__t display">Conditions improved for 10,000 pigs across 53 farms</h3><p class="rec__p">Documented welfare violations at 53 pig farms and secured regulatory directions improving conditions for more than 10,000 pigs in Uttar Pradesh and Haryana.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
       <article class="rec" id="rec-020" data-theme="Farmed animals"><span class="rec__n">020</span><div class="rec__b"><h3 class="rec__t display">Confinement crates taken off IndiaMART</h3><p class="rec__p">Facilitated the removal of approximately 1,000 confinement-crate listings from IndiaMART, curbing the sale of equipment used for intensive pig confinement.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
       <article class="rec" id="rec-021" data-theme="Farmed animals"><span class="rec__n">021</span><div class="rec__b"><h3 class="rec__t display">A&nbsp;scientific pig housing unit at&nbsp;Rishikesh</h3><p class="rec__p">Established, with the Government of Uttarakhand and ICAR-NRCP, a Scientific Pig Housing Model Demonstration Unit in Rishikesh, and PFA train veterinary officers in humane, welfare-oriented pig farming.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
-      <article class="rec" id="rec-022" data-theme="Farmed animals"><span class="rec__n">022</span><div class="rec__b"><h3 class="rec__t display">31,000 poultry farmers reached across six States</h3><p class="rec__p">Conducted more than 150 farm visits and 10 training programmes, reaching over 31,000 poultry farmers across six States with guidance on cage-free production.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" id="rec-022" data-fig="31,000" data-figl="poultry farmers" data-theme="Farmed animals"><span class="rec__n">022</span><div class="rec__b"><h3 class="rec__t display">31,000 poultry farmers reached across six States</h3><p class="rec__p">Conducted more than 150 farm visits and 10 training programmes, reaching over 31,000 poultry farmers across six States with guidance on cage-free production.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
       <article class="rec" id="rec-023" data-theme="Farmed animals"><span class="rec__n">023</span><div class="rec__b"><h3 class="rec__t display">A&nbsp;cage-free poultry training facility in&nbsp;Tamil Nadu</h3><p class="rec__p">Established a cage-free poultry demonstration and training facility in Tamil Nadu, and are developing a model cage-free farm and training centre with the Government of Uttar Pradesh and ICAR-CARI.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
-      <article class="rec" id="rec-024" data-theme="Farmed animals"><span class="rec__n">024</span><div class="rec__b"><h3 class="rec__t display">Twenty-five companies moved on&nbsp;cage-free eggs</h3><p class="rec__p">Engaged more than 25 Indian and international companies on cage-free egg sourcing and brought farmers, retailers and institutional buyers together to grow cage-free supply.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
+      <article class="rec" id="rec-024" data-fig="25" data-figl="companies" data-theme="Farmed animals"><span class="rec__n">024</span><div class="rec__b"><h3 class="rec__t display">Twenty-five companies moved on&nbsp;cage-free eggs</h3><p class="rec__p">Engaged more than 25 Indian and international companies on cage-free egg sourcing and brought farmers, retailers and institutional buyers together to grow cage-free supply.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
       <article class="rec" id="rec-025" data-theme="Courts &amp; law"><span class="rec__n">025</span><div class="rec__b"><h3 class="rec__t display">Illegal dairies off the&nbsp;Yamuna floodplains</h3><p class="rec__p">Litigated before the National Green Tribunal against illegally operated dairies polluting the Yamuna floodplains, causing illegal dairy operations and unauthorised colonies to be removed.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
-      <article class="rec" id="rec-026" data-theme="Policy &amp; systems"><span class="rec__n">026</span><div class="rec__b"><h3 class="rec__t display">Sixteen hundred vials of&nbsp;spurious oxytocin seized</h3><p class="rec__p">PFA’s intervention against the illegal use of spurious oxytocin in dairies contributed to enforcement action, including the seizure of around 1,600 vials, closure of illegal facilities and arrests.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
+      <article class="rec" id="rec-026" data-fig="1,600" data-figl="vials" data-theme="Policy &amp; systems"><span class="rec__n">026</span><div class="rec__b"><h3 class="rec__t display">Sixteen hundred vials of&nbsp;spurious oxytocin seized</h3><p class="rec__p">PFA’s intervention against the illegal use of spurious oxytocin in dairies contributed to enforcement action, including the seizure of around 1,600 vials, closure of illegal facilities and arrests.</p><p class="rec__m"><span class="rec__c">Policy &amp; systems</span></p></div></article>
       <article class="rec" id="rec-027" data-theme="Farmed animals"><span class="rec__n">027</span><div class="rec__b"><h3 class="rec__t display">Science partnerships with ICAR and&nbsp;veterinary universities</h3><p class="rec__p">Work with the Indian Council of Agricultural Research (including ICAR-CARI, ICAR-NRCP and ICAR-CIFA) and veterinary universities to promote science-based, higher-welfare husbandry across poultry, pig and fish farming.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
       <article class="rec" id="rec-028" data-theme="Courts &amp; law"><span class="rec__n">028</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;only equine infirmary at&nbsp;Rudraprayag</h3><p class="rec__p">Manage the only equine infirmary at Rudraprayag in collaboration with the District Administration; the Uttarakhand High Court has recognised its role in caring for equines on the Kedarnath route. Government records placed before the Uttarakhand High Court recorded more than 21,000 equines screened and 3,482 treatments; its programme records report over 700 unfit equines kept off the track on medical grounds.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
       <article class="rec" id="rec-029" data-theme="Working animals"><span class="rec__n">029</span><div class="rec__b"><h3 class="rec__t display">Happy Home Sanctuary, no&nbsp;tie and&nbsp;no&nbsp;cage</h3><p class="rec__p">Operate Happy Home Sanctuary at Chharba, Dehradun on a no-tie, no-cage model, currently caring for around 300 rescued animals, including working equines.</p><p class="rec__m"><span class="rec__c">Working animals</span></p></div></article>
@@ -532,11 +520,11 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       <article class="rec" id="rec-042" data-theme="Farmed animals"><span class="rec__n">042</span><div class="rec__b"><h3 class="rec__t display">Bullock-cart races prohibited in&nbsp;Andhra Pradesh</h3><p class="rec__p">PFA’s campaign against bullock-cart races led to their prohibition in Andhra Pradesh and elsewhere; PFA also introduced maintenance standards and daily veterinary checks for horses on Chennai beaches and halted plans for ostrich slaughter farms in Karnataka.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
       <article class="rec" id="rec-043" data-theme="Courts &amp; law"><span class="rec__n">043</span><div class="rec__b"><h3 class="rec__t display">Standing support to&nbsp;police on&nbsp;cruelty cases</h3><p class="rec__p">Assist the police and competent authorities to respond to cruelty complaints, document violations, rescue animals in distress and pursue prosecutions, on a day to day basis, while working to improve awareness and implementation of animal-welfare laws.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
       <article class="rec" id="rec-044" data-theme="Courts &amp; law"><span class="rec__n">044</span><div class="rec__b"><h3 class="rec__t display">Animal transport written into the&nbsp;Motor Vehicles Rules</h3><p class="rec__p">Worked with the Ministry of Road Transport to include Rules for animal transport in the Central Motor Vehicles Rules, which prevent the illegal, cruel and overcrowded transport of animals for slaughter.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
-      <article class="rec" id="rec-045" data-theme="Working animals" data-year=2013><span class="rec__n">045</span><div class="rec__b"><h3 class="rec__t display">Six thousand mules evacuated in&nbsp;the 2013 floods</h3><p class="rec__p">A long record of disaster rescue for working animals in Uttarakhand, during the 2013 floods PFA evacuated more than 6000 mules along a route rebuilt with Army assistance, and in the 2024 Kedarnath cloudburst PFA conducted a multi-day operation evacuating over hundreds of equines and establishing veterinary care camps, with the aid of the district administration.</p><p class="rec__m"><span class="rec__c">Working animals</span><span class="rec__y">2013</span></p></div></article>
+      <article class="rec" id="rec-045" data-fig="6,000" data-figl="mules" data-theme="Working animals" data-year=2013><span class="rec__n">045</span><div class="rec__b"><h3 class="rec__t display">Six thousand mules evacuated in&nbsp;the 2013 floods</h3><p class="rec__p">A long record of disaster rescue for working animals in Uttarakhand, during the 2013 floods PFA evacuated more than 6000 mules along a route rebuilt with Army assistance, and in the 2024 Kedarnath cloudburst PFA conducted a multi-day operation evacuating over hundreds of equines and establishing veterinary care camps, with the aid of the district administration.</p><p class="rec__m"><span class="rec__c">Working animals</span><span class="rec__y">2013</span></p></div></article>
       <article class="rec" id="rec-046" data-theme="Testing &amp; labs"><span class="rec__n">046</span><div class="rec__b"><h3 class="rec__t display">Hundreds of&nbsp;laboratories inspected</h3><p class="rec__p">Served on laboratory ethics and monitoring committees; hundreds of laboratories have been inspected and thousands of animals rescued.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
       <article class="rec" id="rec-047" data-theme="Testing &amp; labs"><span class="rec__n">047</span><div class="rec__b"><h3 class="rec__t display">Replacement, reduction and&nbsp;refinement in&nbsp;testing</h3><p class="rec__p">Advocate for the replacement, reduction and refinement of animal use and promote non-animal alternatives in toxicity testing, sensitivity testing and veterinary education.</p><p class="rec__m"><span class="rec__c">Testing &amp; labs</span></p></div></article>
-      <article class="rec" id="rec-048" data-theme="Teaching"><span class="rec__n">048</span><div class="rec__b"><h3 class="rec__t display">Five hundred police workshops across 25 States</h3><p class="rec__p">Conducted more than 500 workshops for police across 25+ States on animal-protection law, including training officers at the Central Detective Training Institute.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
-      <article class="rec" id="rec-049" data-theme="Teaching"><span class="rec__n">049</span><div class="rec__b"><h3 class="rec__t display">Judges and&nbsp;magistrates sensitised in 12 States</h3><p class="rec__p">Sensitised judges and magistrates at judicial academies across 12 States and are training government veterinary, animal-husbandry and urban-development officials, the latter in partnership with the All India Institute of Local Self Government.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
+      <article class="rec" id="rec-048" data-fig="500" data-figl="police workshops" data-theme="Teaching"><span class="rec__n">048</span><div class="rec__b"><h3 class="rec__t display">Five hundred police workshops across 25 States</h3><p class="rec__p">Conducted more than 500 workshops for police across 25+ States on animal-protection law, including training officers at the Central Detective Training Institute.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
+      <article class="rec" id="rec-049" data-fig="12" data-figl="States" data-theme="Teaching"><span class="rec__n">049</span><div class="rec__b"><h3 class="rec__t display">Judges and&nbsp;magistrates sensitised in 12 States</h3><p class="rec__p">Sensitised judges and magistrates at judicial academies across 12 States and are training government veterinary, animal-husbandry and urban-development officials, the latter in partnership with the All India Institute of Local Self Government.</p><p class="rec__m"><span class="rec__c">Teaching</span></p></div></article>
       <article class="rec" id="rec-050" data-theme="Courts &amp; law"><span class="rec__n">050</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;Ahimsa Fellowship in&nbsp;law and&nbsp;policy</h3><p class="rec__p">Run the Ahimsa Fellowship, an animal-welfare law and policy in partnership with NALSAR University of Law, University of Delhi to strengthen animal-law education.</p><p class="rec__m"><span class="rec__c">Courts &amp; law</span></p></div></article>
       <article class="rec" id="rec-051" data-theme="Community dogs"><span class="rec__n">051</span><div class="rec__b"><h3 class="rec__t display">The&nbsp;Revised ABC Module for&nbsp;the&nbsp;AWBI</h3><p class="rec__p">Co-authored the Revised ABC Module for the Animal Welfare Board of India, along with handbooks for veterinary officers, law-enforcement personnel and urban local bodies.</p><p class="rec__m"><span class="rec__c">Community dogs</span></p></div></article>
       <article class="rec" id="rec-052" data-theme="Farmed animals"><span class="rec__n">052</span><div class="rec__b"><h3 class="rec__t display">Management manuals written for&nbsp;Uttar Pradesh</h3><p class="rec__p">Assisted Uttar Pradesh with the Cattle Management Manual for Urban Local Bodies, the Kanha Gaushala Management Manual, the Lucknow ABC Implementation Manual and the Street Dog Management Manual for Urban Local Bodies.</p><p class="rec__m"><span class="rec__c">Farmed animals</span></p></div></article>
@@ -757,85 +745,38 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 </script>
 
 <script>
-/* The sphere. Geometry first: cards 150x190 sit tangent to latitude rings,
-   and the radius grows until, within a ring, r*tan(pi/n) clears half a card
-   width plus a gap, and, between rings, R*tan(dphi/2) clears half a card
-   diagonal. Both are exact conditions for tangent rectangles on a sphere, so
-   the layout cannot clip at any spin angle - the prototype clipped because
-   its radius was chosen by eye. The cards are read out of the list below;
-   this script owns no copy of the record. */
+/* The arc. The record's entries as tall cards on a shallow drum: the card in
+   the middle faces you, the rest turn away round the drum and soften with
+   distance, and you turn it by dragging, swiping, a sideways scroll, the
+   arrow keys or the buttons at its sides. Tabs underneath show one front at
+   a time. The cards are read out of the list below; this script owns no
+   copy of the record.
+
+   Each card's art is a field of digits on a canvas, after the numeral
+   portraits on jjettas.com/on-field. An entry with a figure in its title
+   (data-fig) or a year (data-year) has that number built out of its own
+   digits; any other entry has its own pattern, one of six, the same six the
+   cards have always had, laid on a soft central mass so it reads as a
+   subject rather than wallpaper. The card in the middle stays faintly alive:
+   a few of its digits turn over while it is looked at. */
 (function(){
   'use strict';
-  var sec = document.getElementById('sphere');
+  var sec = document.getElementById('arc');
   var recs = document.getElementById('recs');
-  if (!sec || !recs) return;
-
+  if (!sec || !recs || !window.requestAnimationFrame) return;
   var rows = [].slice.call(recs.querySelectorAll('.rec'));
-  if (rows.length < 8) return;
-  var data = rows.map(function(rec){
-    var no = rec.querySelector('.rec__n').textContent;
-    if (!rec.id) rec.id = 'rec-' + no;
-    return {
-      no: no,
-      title: rec.querySelector('.rec__t').textContent,
-      body: rec.querySelector('.rec__p').textContent,
-      front: rec.getAttribute('data-theme') || '',
-      year: rec.getAttribute('data-year') || '',
-      id: rec.id
-    };
-  });
+  if (rows.length < 3) return;
 
-  /* Solve the sphere for however many entries the list holds today. One
-     uniform bound covers every pair: two planes tangent to a sphere at
-     angular separation theta meet at a line R*tan(theta/2) from each tangent
-     point, and a card can reach at most half its diagonal toward that line.
-     So every pair of cards - same ring or across rings - is kept at least
-     thmin apart, where R*tan(thmin/2) clears the half diagonal plus a gap.
-     A brute-force intersection test over all pairs at build time confirmed
-     zero contacts for this formula; the width-based shortcut it replaces
-     produced twelve. */
-  var W = 150, H = 190, GAPD = 10;
-  var HALFDIAG = Math.sqrt(W * W + H * H) / 2;
-  var R, lats, caps;
-  for (R = 600; R < 2600; R += 10) {
-    var thmin = 2 * Math.atan((HALFDIAG + GAPD) / R);
-    lats = []; caps = [];
-    for (var j = 0; ; j++) {
-      var phi = (j + 0.5) * thmin;
-      if (phi > 72 * Math.PI / 180) break;
-      var cosphi = Math.cos(phi), sinphi = Math.sin(phi);
-      var c = (Math.cos(thmin) - sinphi * sinphi) / (cosphi * cosphi);
-      if (c >= 1) break;
-      lats.push(phi);
-      caps.push(Math.max(1, Math.floor(2 * Math.PI / Math.acos(Math.max(-1, c)))));
-    }
-    var total = 2 * caps.reduce(function(a, b){ return a + b; }, 0);
-    if (total >= data.length) break;
-  }
+  var stage = document.getElementById('arcStage');
+  var drum = document.getElementById('arcDrum');
+  var tabs = document.getElementById('arcTabs');
+  var live = document.getElementById('arcLive');
+  var prevB = document.getElementById('arcPrev');
+  var nextB = document.getElementById('arcNext');
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Rings from the equator out, north then south, each given its share of
-     the entries in proportion to its capacity. */
-  var rings = [];
-  lats.forEach(function(phi, k){
-    rings.push({ lat: phi, cap: caps[k] });
-    rings.push({ lat: -phi, cap: caps[k] });
-  });
-  var capSum = rings.reduce(function(a, r){ return a + r.cap; }, 0);
-  var left = data.length;
-  rings.forEach(function(r){ r.take = Math.floor(r.cap * data.length / capSum); left -= r.take; });
-  var order = rings.slice().sort(function(a, b){ return (b.cap - b.take) - (a.cap - a.take); });
-  for (var o = 0; left > 0; o = (o + 1) % order.length) {
-    if (order[o].take < order[o].cap) { order[o].take += 1; left -= 1; }
-  }
-
-  var globe = document.getElementById('sphGlobe');
-  var stage = document.getElementById('sphStage');
-  var scaleEl = document.getElementById('sphScale');
-  var hint = document.getElementById('sphHint');
-
-  /* One colour per front, editorial rather than candy, so the sphere reads
-     as a legend: cobalt is the courts, vermilion the farms. Fronts the map
-     does not know yet borrow from the same palette in rotation. */
+  /* One colour per front, editorial rather than candy, so the cards read as
+     a legend: cobalt is the courts, vermilion the farms. */
   var PALETTE = ['#2b50e0', '#e2572b', '#0e9a80', '#7040dd', '#eaa628', '#d84f86', '#2e9fd8', '#5d8f3c'];
   var FRONTCOLOR = {
     'Courts & law': '#2b50e0',
@@ -852,295 +793,478 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     if (!FRONTCOLOR[front]) { FRONTCOLOR[front] = PALETTE[spare % PALETTE.length]; spare += 1; }
     return FRONTCOLOR[front];
   }
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
 
-  var cards = [];
-  var cursor = 0;
-  rings.forEach(function(r, ringIdx){
-    var offset = ringIdx * 29;
-    for (var i = 0; i < r.take; i++) {
-      var d = data[cursor % data.length]; cursor += 1;
-      var lon = offset + i * (360 / r.take);
-      var latDeg = r.lat * 180 / Math.PI;
-
-      var wrap = document.createElement('div');
-      wrap.className = 'sphcard m' + (parseInt(d.no, 10) % 6);
-      wrap.setAttribute('data-front', d.front);
-      wrap.style.setProperty('--a', tone(d.front));
-      var rot = 'rotateY(' + lon.toFixed(2) + 'deg) rotateX(' + (-latDeg).toFixed(2) + 'deg)';
-      wrap.setAttribute('data-rot', rot);
-      wrap.style.transform = rot + ' translateZ(' + R + 'px)';
-
-      var face = document.createElement('button');
-      face.type = 'button';
-      face.className = 'sphcard__face';
-      face.setAttribute('aria-label', d.title);
-      face.setAttribute('data-idx', String((cursor - 1) % data.length));
-      var art = document.createElement('span');
-      art.className = 'sphcard__art';
-      /* no number chip: the record is longer than its count, and a numbered card reads as one of a finished set */
-      if (d.year) {
-        var tag = document.createElement('span'); tag.className = 'sphcard__tag'; tag.textContent = d.year;
-        art.appendChild(tag);
-      }
-      var bd = document.createElement('span');
-      bd.className = 'sphcard__bd';
-      var t = document.createElement('span'); t.className = 'sphcard__t'; t.textContent = d.title;
-      var c = document.createElement('span'); c.className = 'sphcard__c'; c.textContent = d.front;
-      bd.appendChild(t); bd.appendChild(c);
-      face.appendChild(art); face.appendChild(bd);
-      d.faceEl = face;
-      face.addEventListener('click', function(entry){ return function(e){ if (!moved || e.detail === 0) open(entry); }; }(d));
-
-      var back = document.createElement('div');
-      back.className = 'sphcard__back';
-
-      wrap.appendChild(face); wrap.appendChild(back);
-      globe.appendChild(wrap);
-      cards.push(wrap);
-    }
+  var data = rows.map(function(rec, i){
+    var fig = rec.getAttribute('data-fig') || '';
+    var year = rec.getAttribute('data-year') || '';
+    return {
+      i: i,
+      id: rec.id,
+      no: parseInt(rec.querySelector('.rec__n').textContent, 10) || i + 1,
+      title: rec.querySelector('.rec__t').textContent,
+      body: rec.querySelector('.rec__p').textContent,
+      front: rec.getAttribute('data-theme') || '',
+      year: year,
+      big: fig || year,
+      label: fig ? (rec.getAttribute('data-figl') || '') : ''
+    };
   });
 
-  /* Fit the solved sphere into whatever stage the viewport gives it. The
-     resting tilt is painted here, synchronously, so the sphere is on screen
-     from the first frame whether or not an animation frame ever runs. */
-  var rx = -9, ry = 0;
-  globe.style.transform = 'rotateX(' + rx + 'deg) rotateY(0deg)';
-  function fit(){
-    var w = stage.clientWidth, h = stage.clientHeight;
-    if (!w || !h) return;
-    var s = Math.min(1, (h * 0.96) / (2 * R + H * 1.2), (w * 0.98) / (2 * R + W * 1.2));
-    scaleEl.style.transform = 'translate(-50%,-50%) scale(' + s.toFixed(4) + ')';
+  /* ---- the art: a field of digits ---------------------------------------- */
+  var MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace';
+  var RAMP = '1742359608';      // the digits from lightest to heaviest on the page
+  function hash(s){
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
   }
-  window.addEventListener('resize', fit);
-
-  /* Spin: eased back to a base speed after a drag, still after a reduced-
-     motion request, and not spent at all while the sphere is off screen. */
-  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var BASE = still ? 0 : 0.07;
-  var vy = BASE, drag = null, moved = false, raf = null, overlayOpen = false;
-  function loop(){
-    if (!drag && !overlayOpen) { ry += vy; vy += (BASE - vy) * 0.03; }
-    globe.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + (ry % 360).toFixed(2) + 'deg)';
-    raf = window.requestAnimationFrame(loop);
-  }
-  function running(on){
-    if (!window.requestAnimationFrame) return;
-    if (on && raf === null) raf = window.requestAnimationFrame(loop);
-    if (!on && raf !== null) { window.cancelAnimationFrame(raf); raf = null; }
-  }
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function(entries){
-      entries.forEach(function(en){ running(en.isIntersecting); });
-    }).observe(sec);
-  } else {
-    running(true);
+  function rng(seed){
+    var s = seed || 1;
+    return function(){ s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return ((s >>> 0) % 1000003) / 1000003; };
   }
 
-  /* Capturing the pointer on the press itself made the browser retarget
-     the eventual click at the stage, so the card under the finger never
-     received it and nothing ever opened. Capture is therefore taken only
-     once a drag is real, and a clean tap opens its card straight from the
-     pointerup hit-test, without depending on click delivery at all. The
-     click handler on each card stays for keyboard activation, and the open
-     debounce absorbs the duplicate when both paths fire for one tap. */
+  /* How much of each cell a number covers, drawn large in the site's display
+     face and thickened a little, so its strokes survive being made of digits. */
+  function glyphMask(text, W, H, cols, rowsN, cw, ch){
+    var c = document.createElement('canvas');
+    c.width = Math.ceil(W); c.height = Math.ceil(H);
+    var x = c.getContext('2d');
+    var size = H * 0.62;
+    x.font = '400 ' + size + 'px Marcellus, Georgia, serif';
+    var w = x.measureText(text).width;
+    if (w > W * 0.86) { size *= W * 0.86 / w; x.font = '400 ' + size + 'px Marcellus, Georgia, serif'; }
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    x.fillStyle = '#000';
+    x.strokeStyle = '#000';
+    x.lineWidth = size * 0.045;
+    x.lineJoin = 'round';
+    x.fillText(text, W / 2, H * 0.47);
+    x.strokeText(text, W / 2, H * 0.47);
+    var px = x.getImageData(0, 0, c.width, c.height).data;
+    var out = new Float32Array(cols * rowsN);
+    for (var r = 0; r < rowsN; r++) {
+      for (var q = 0; q < cols; q++) {
+        var x0 = Math.floor(q * cw), x1 = Math.min(c.width, Math.floor((q + 1) * cw));
+        var y0 = Math.floor(r * ch), y1 = Math.min(c.height, Math.floor((r + 1) * ch));
+        var sum = 0, n = 0;
+        for (var yy = y0; yy < y1; yy += 1) for (var xx = x0; xx < x1; xx += 1) { sum += px[(yy * c.width + xx) * 4 + 3]; n += 1; }
+        out[r * cols + q] = n ? sum / n / 255 : 0;
+      }
+    }
+    return out;
+  }
+
+  function grid(d, W, H){
+    var cols = Math.max(40, Math.round(W / 5.1));
+    var cw = W / cols, ch = cw * 1.5;
+    var rowsN = Math.ceil(H / ch);
+    var n = cols * rowsN;
+    var v = new Float32Array(n), k = new Uint8Array(n), chars = new Array(n);
+    var r = rng(hash(d.id || String(d.no)));
+    var kind = d.no % 6, f = 1.5 + r() * 1.3, ph = r() * 6.283;
+    var Hn = H / W, fx = 0.28 + r() * 0.44, fy = Hn * (0.28 + r() * 0.36);
+    var mask = d.big ? glyphMask(d.big, W, H, cols, rowsN, cw, ch) : null;
+    var digits = (d.big || '').replace(/\D/g, '') || '0';
+    var TAU = 6.2832;
+    for (var y = 0; y < rowsN; y++) {
+      for (var x = 0; x < cols; x++) {
+        var i = y * cols + x;
+        var X = (x + 0.5) / cols, Y = (y + 0.5) * ch / W;
+        var m;
+        if (kind === 0) m = 0.5 + 0.5 * Math.sin((X * 0.8 + Y) * f * TAU * 0.5 + ph);
+        else if (kind === 1) m = Math.pow(Math.max(0, 0.5 + 0.5 * Math.cos(X * f * TAU * 0.7) * Math.cos(Y * f * TAU * 0.7)), 1.6);
+        else if (kind === 2) m = Math.max(Math.pow(Math.abs(Math.cos(X * f * Math.PI)), 7), Math.pow(Math.abs(Math.cos(Y * f * Math.PI)), 7));
+        else if (kind === 3) m = 0.5 + 0.5 * Math.tanh(4 * Math.sin(X * f * Math.PI) * Math.sin(Y * f * Math.PI));
+        else if (kind === 4) m = 0.5 + 0.5 * Math.cos(Math.sqrt((X - fx) * (X - fx) + (Y - fy) * (Y - fy)) * f * TAU * 1.1 + ph);
+        else m = 0.5 + 0.5 * Math.sin(X * f * TAU * 0.9 + 1.8 * Math.sin(Y * f * TAU * 0.35 + ph));
+        var dx = (X - 0.5) / 0.56, dy = (Y - Hn * 0.44) / (Hn * 0.52);
+        var mass = Math.exp(-(dx * dx + dy * dy) * 1.15);
+        var val = m * (0.16 + 0.84 * mass) + (r() - 0.5) * 0.1;
+        var g = mask ? mask[i] : 0;
+        if (mask) val = g > 0.08 ? 0.62 + 0.38 * Math.min(1, g * 1.3) : val * 0.34;
+        val = Math.max(0, Math.min(1, val));
+        v[i] = val;
+        if (mask && g > 0.08) { k[i] = 10; chars[i] = digits.charAt((x + y * 2) % digits.length); }
+        else { k[i] = Math.min(9, Math.round(val * 9)); chars[i] = RAMP.charAt(k[i]); }
+      }
+    }
+    return { cols: cols, rows: rowsN, cw: cw, ch: ch, n: n, v: v, k: k, c: chars, font: (cw * 1.24).toFixed(2) + 'px ' + MONO };
+  }
+
+  /* chaos: the share of cells drawn at random (the turn-over as a card
+     arrives); jitter: the share whose digit moves one step lighter or
+     heavier (the card in the middle, breathing). */
+  function paint(card, chaos, jitter){
+    var cv = card.canvas;
+    var W = cv.clientWidth, H = cv.clientHeight;
+    if (!W || !H) return false;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (card.W !== W || card.H !== H || card.dpr !== dpr) {
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      card.W = W; card.H = H; card.dpr = dpr; card.g = null;
+    }
+    if (!card.g) card.g = grid(card.d, W, H);
+    var g = card.g, ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = g.font;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    /* eight greys for the ground, and a ninth, near-black, for a number */
+    var buckets = [[], [], [], [], [], [], [], [], []];
+    for (var i = 0; i < g.n; i++) {
+      var v = g.v[i], c = g.c[i], strong = g.k[i] === 10;
+      if (chaos && Math.random() < chaos) { v = Math.random() * 0.85; c = RAMP.charAt((Math.random() * 10) | 0); strong = false; }
+      else if (jitter && v > 0.12 && Math.random() < jitter) c = strong ? RAMP.charAt(7 + ((Math.random() * 3) | 0)) : RAMP.charAt(Math.max(0, Math.min(9, g.k[i] + ((Math.random() * 3) | 0) - 1)));
+      if (v < 0.1) continue;
+      buckets[strong ? 8 : Math.min(7, (v * 8) | 0)].push(i, c);
+    }
+    for (var b = 0; b < 9; b++) {
+      var list = buckets[b];
+      if (!list.length) continue;
+      ctx.fillStyle = b === 8 ? 'rgba(17,17,17,.9)' : 'rgba(17,17,17,' + (0.1 + b * 0.09).toFixed(3) + ')';
+      for (var j = 0; j < list.length; j += 2) {
+        var idx = list[j];
+        ctx.fillText(list[j + 1], (idx % g.cols + 0.5) * g.cw, (((idx / g.cols) | 0) + 0.5) * g.ch);
+      }
+    }
+    card.painted = true;
+    return true;
+  }
+
+  function turnOver(card){
+    if (still) { paint(card, 0, 0); return; }
+    var t0 = null;
+    if (card.anim) window.cancelAnimationFrame(card.anim);
+    function step(ts){
+      if (t0 === null) t0 = ts;
+      var k = Math.min(1, (ts - t0) / 420);
+      paint(card, 0.55 * (1 - k) * (1 - k), 0);
+      card.anim = k < 1 ? window.requestAnimationFrame(step) : 0;
+    }
+    card.anim = window.requestAnimationFrame(step);
+  }
+
+  /* ---- the cards ----------------------------------------------------------- */
+  function buildCard(d){
+    var b = el('button', 'arcc');
+    b.type = 'button';
+    b.tabIndex = -1;
+    b.style.setProperty('--a', tone(d.front));
+    b.setAttribute('aria-label', d.title + '. ' + d.front + (d.year ? ', ' + d.year : ''));
+    var art = el('span', 'arcc__art');
+    var cv = document.createElement('canvas');
+    cv.setAttribute('aria-hidden', 'true');
+    art.appendChild(cv);
+    var bd = el('span', 'arcc__bd');
+    if (d.big) {
+      bd.appendChild(el('span', 'arcc__fig', d.big));
+      bd.appendChild(el('span', 'arcc__lab', d.label || d.front));
+      bd.appendChild(el('span', 'arcc__cap', d.title));
+    } else {
+      bd.appendChild(el('span', 'arcc__t', d.title));
+      bd.appendChild(el('span', 'arcc__cap arcc__cap--front', d.front));
+    }
+    b.appendChild(art);
+    b.appendChild(bd);
+    return { el: b, canvas: cv, d: d };
+  }
+
+  var cards = data.map(function(d){
+    var c = buildCard(d);
+    drum.appendChild(c.el);
+    return c;
+  });
+
+  /* ---- the drum ------------------------------------------------------------ */
+  var probe = el('div');
+  probe.style.cssText = 'position:absolute;visibility:hidden;width:var(--cw);height:0;pointer-events:none';
+  stage.appendChild(probe);
+  var list = cards.slice();
+  var pos = 0, to = 0, fade = 1, fadeTo = 1, swapTo = null;
+  var step = 360, R = 1600, ang = 0.2, reach = 4;
+  var raf = 0, drag = null, mid = null, overlayOpen = false;
+
+  function measure(){
+    var cw = probe.offsetWidth || 300;
+    step = cw * 1.1;
+    R = Math.max(step * 3.1, stage.clientWidth * 1.15);
+    ang = 2 * Math.asin(Math.min(1, step / (2 * R)));
+    reach = Math.ceil(stage.clientWidth / 2 / step) + 1.6;
+  }
+
+  function layout(){
+    var DEG = 180 / Math.PI;
+    for (var n = 0; n < cards.length; n++) cards[n].idx = -1;
+    list.forEach(function(c, i){ c.idx = i; });
+    cards.forEach(function(c){
+      var off = c.idx < 0 ? 99 : c.idx - pos;
+      var a = Math.abs(off);
+      if (a > reach) {
+        if (c.on) { c.el.classList.remove('is-on'); c.on = false; }
+        return;
+      }
+      if (!c.on) { c.el.classList.add('is-on'); c.on = true; }
+      c.el.style.transform = 'translateZ(' + (-R).toFixed(1) + 'px) rotateY(' + (off * ang * DEG).toFixed(3) + 'deg) translateZ(' + R.toFixed(1) + 'px)';
+      var blur = a <= 1.3 ? 0 : Math.min(9, (a - 1.3) * 4.2);
+      c.el.style.filter = blur ? 'blur(' + blur.toFixed(2) + 'px)' : '';
+      var op = a <= 2.2 ? 1 : Math.max(0, 1 - (a - 2.2) / Math.max(0.6, reach - 2.2));
+      c.el.style.opacity = (op * fade).toFixed(3);
+      if (!c.painted) paint(c, 0, 0);
+    });
+    prevB.disabled = to <= 0;
+    nextB.disabled = to >= list.length - 1;
+  }
+
+  function settle(){
+    var c = list[to];
+    if (!c || c === mid) return;
+    if (mid) mid.el.classList.remove('is-mid');
+    mid = c;
+    mid.el.classList.add('is-mid');
+    live.textContent = c.d.title + '. ' + c.d.front + (c.d.year ? ', ' + c.d.year : '');
+    turnOver(c);
+  }
+
+  function tick(){
+    raf = 0;
+    if (!drag) {
+      var gap = to - pos;
+      pos = still || Math.abs(gap) < 0.001 ? to : pos + gap * 0.15;
+    }
+    if (fade !== fadeTo) {
+      fade = still || Math.abs(fadeTo - fade) < 0.02 ? fadeTo : fade + (fadeTo - fade) * 0.28;
+      if (fade === 0 && swapTo) {
+        list = swapTo.list; pos = to = swapTo.at; swapTo = null; fadeTo = 1;
+        if (mid) mid.el.classList.remove('is-mid');
+        mid = null;
+      }
+    }
+    layout();
+    if (!drag && pos === to && fade === fadeTo) settle();
+    if (drag || pos !== to || fade !== fadeTo) raf = window.requestAnimationFrame(tick);
+  }
+  function kick(){ if (!raf) raf = window.requestAnimationFrame(tick); }
+  function go(i){
+    to = Math.max(0, Math.min(list.length - 1, Math.round(i)));
+    kick();
+  }
+
+  /* Dragging. Capture is taken only once a drag is real, and a clean tap is
+     resolved from the pointerup hit-test, not from click delivery, which a
+     capture taken on press retargets at the stage. The click handler on each
+     card stays for keyboard activation. */
   stage.addEventListener('pointerdown', function(e){
-    drag = { x: e.clientX, y: e.clientY, id: e.pointerId };
-    moved = false; vy = 0;
-    stage.classList.add('is-drag');
+    if (e.target.closest && e.target.closest('.arc__nav')) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    drag = { x: e.clientX, y: e.clientY, at: pos, id: e.pointerId, moved: false, lx: e.clientX, lt: performance.now(), v: 0 };
   });
   stage.addEventListener('pointermove', function(e){
     if (!drag) return;
     var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-    if (!moved && Math.abs(dx) + Math.abs(dy) > 3) {
-      moved = true;
+    if (!drag.moved) {
+      if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
+      drag.moved = true;
+      stage.classList.add('is-drag');
       if (stage.setPointerCapture) { try { stage.setPointerCapture(drag.id); } catch (err) { void err; } }
     }
-    ry += dx * 0.26;
-    rx = Math.max(-26, Math.min(26, rx - dy * 0.12));
-    vy = dx * 0.09;
-    drag = { x: e.clientX, y: e.clientY, id: drag.id };
+    var now = performance.now();
+    var dt = Math.max(1, now - drag.lt);
+    drag.v = drag.v * 0.6 + ((e.clientX - drag.lx) / dt) * 0.4;
+    drag.lx = e.clientX; drag.lt = now;
+    pos = Math.max(-0.45, Math.min(list.length - 0.55, drag.at - dx / step));
+    kick();
   });
-  function drop(){ drag = null; stage.classList.remove('is-drag'); }
-  stage.addEventListener('pointerup', function(e){
-    if (drag && !moved && document.elementFromPoint) {
+  function release(e){
+    if (!drag) return;
+    var d = drag;
+    drag = null;
+    stage.classList.remove('is-drag');
+    if (d.moved) { go(pos - d.v * 240 / step); return; }
+    if (e && e.type === 'pointerup' && document.elementFromPoint) {
       var hit = document.elementFromPoint(e.clientX, e.clientY);
-      var face = hit && hit.closest ? hit.closest('.sphcard__face') : null;
-      if (face && face.hasAttribute('data-idx')) open(data[Number(face.getAttribute('data-idx'))]);
+      var face = hit && hit.closest ? hit.closest('.arcc') : null;
+      var c = null;
+      for (var i = 0; i < list.length; i++) if (list[i].el === face) c = list[i];
+      if (!c) return;
+      if (c.idx === to && pos === to) open(c);
+      else go(c.idx);
     }
-    drop();
-  });
-  stage.addEventListener('pointercancel', drop);
-  stage.addEventListener('lostpointercapture', drop);
+  }
+  stage.addEventListener('pointerup', release);
+  stage.addEventListener('pointercancel', function(){ if (drag && drag.moved) release(); else drag = null; stage.classList.remove('is-drag'); });
 
-  /* One pill per front, in the order the record introduces them. */
+  /* A sideways scroll turns the drum; an up-and-down one is left to the page. */
+  var wheelTimer = 0;
+  stage.addEventListener('wheel', function(e){
+    var dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+    if (!dx) return;
+    e.preventDefault();
+    pos = Math.max(-0.3, Math.min(list.length - 0.7, pos + dx / step));
+    to = Math.round(pos);
+    window.clearTimeout(wheelTimer);
+    wheelTimer = window.setTimeout(function(){ go(pos); }, 120);
+    kick();
+  }, { passive: false });
+
+  stage.addEventListener('keydown', function(e){
+    if (e.target !== stage) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(to + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); go(to - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(list.length - 1); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (list[to]) open(list[to]); }
+  });
+  prevB.addEventListener('click', function(){ go(to - 1); });
+  nextB.addEventListener('click', function(){ go(to + 1); });
+  cards.forEach(function(c){
+    c.el.addEventListener('click', function(e){ if (e.detail === 0 && c.idx === to) open(c); });
+  });
+
+  /* ---- the fronts ---------------------------------------------------------- */
   var fronts = [];
   data.forEach(function(d){ if (d.front && fronts.indexOf(d.front) < 0) fronts.push(d.front); });
-  var frontsNav = document.getElementById('sphFronts');
-  var active = '';
-  function pill(name, key){
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'sph__pill' + (key === '' ? ' is-on' : '');
-    if (key !== '') {
-      var dot = document.createElement('span');
-      dot.className = 'sph__dot';
-      dot.style.background = tone(key);
-      b.appendChild(dot);
-    }
-    b.appendChild(document.createTextNode(name));
-    b.addEventListener('click', function(){
-      active = (active === key) ? '' : key;
-      [].forEach.call(frontsNav.querySelectorAll('.sph__pill'), function(x){
-        x.classList.toggle('is-on', x === b && active !== '' || active === '' && x.getAttribute('data-key') === '');
-      });
-      cards.forEach(function(w){
-        var on = !active || w.getAttribute('data-front') === active;
-        w.classList.toggle('is-off', !on);
-        w.style.transform = w.getAttribute('data-rot') + ' translateZ(' + (on && active ? R + 34 : R) + 'px)';
-      });
-      hint.textContent = active || 'Thirty years \u00b7 eight fronts';
-    });
-    b.setAttribute('data-key', key);
-    frontsNav.appendChild(b);
+  var active = null;
+  function startOf(n){ return Math.min(n - 1, 2); }
+  function choose(key, b){
+    if (key === active) return;
+    active = key;
+    [].forEach.call(tabs.querySelectorAll('.arc__tab'), function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+    var next = cards.filter(function(c){ return !key || c.d.front === key; });
+    swapTo = { list: next, at: startOf(next.length) };
+    fadeTo = 0;
+    kick();
   }
-  pill('Everything', '');
-  fronts.forEach(function(f){ pill(f, f); });
+  function tab(name, key){
+    var b = el('button', 'arc__tab', name);
+    b.type = 'button';
+    b.setAttribute('aria-pressed', key === '' ? 'true' : 'false');
+    b.addEventListener('click', function(){ choose(key, b); });
+    tabs.appendChild(b);
+  }
+  tab('Everything', '');
+  fronts.forEach(function(f){ tab(f, f); });
+  active = '';
 
-  /* The overlay. First-last-invert-play: the clicked card's projected
-     rectangle is measured, the big print is laid out in its place on the
-     right of nothing yet, and a transform carries it from one to the other,
-     so the card visibly leaves the sphere, lands as a held print, and flies
-     back on close. The card it left goes invisible meanwhile, which is what
-     sells it as one object. */
-  var lay = document.createElement('div');
-  lay.className = 'sphlay';
+  /* ---- the entry, opened --------------------------------------------------- */
+  var lay = el('div', 'arclay');
   lay.hidden = true;
   lay.setAttribute('role', 'dialog');
   lay.setAttribute('aria-modal', 'true');
   lay.setAttribute('aria-label', 'Record entry');
-  var card = document.createElement('div'); card.className = 'sphlay__card';
-  var figWrap = document.createElement('div'); figWrap.className = 'sphlay__fig';
-  var fig = document.createElement('div'); fig.className = 'sphlay__print';
-  var pArt = document.createElement('span'); pArt.className = 'sphcard__art';
-  var pTag = document.createElement('span'); pTag.className = 'sphcard__tag';
-  pArt.appendChild(pTag);
-  var pBody = document.createElement('span'); pBody.className = 'sphlay__pbody';
-  var pNo = document.createElement('span'); pNo.className = 'sphlay__pno';
-  var pFront = document.createElement('span'); pFront.className = 'sphcard__c sphlay__pfront';
-  pBody.appendChild(pNo); pBody.appendChild(pFront);
-  fig.appendChild(pArt); fig.appendChild(pBody);
-  figWrap.appendChild(fig);
-  var info = document.createElement('div'); info.className = 'sphlay__info';
-  var meta = document.createElement('div'); meta.className = 'sphlay__meta';
-  var mLeft = document.createElement('span'), mRight = document.createElement('span');
-  meta.appendChild(mLeft); meta.appendChild(mRight);
-  var lt = document.createElement('h2'); lt.className = 'display sphlay__t';
-  var lp = document.createElement('p'); lp.className = 'sphlay__p';
-  var specs = document.createElement('div'); specs.className = 'sphlay__specs';
-  var row = document.createElement('div'); row.className = 'sphlay__row';
-  var go = document.createElement('button'); go.type = 'button'; go.className = 'btn sphlay__go'; go.textContent = 'Read it in the record';
-  var again = document.createElement('button'); again.type = 'button'; again.className = 'btn btn--ghost'; again.textContent = 'Another';
-  var shut = document.createElement('button'); shut.type = 'button'; shut.className = 'btn btn--ghost'; shut.textContent = 'Back to the sphere';
-  row.appendChild(go); row.appendChild(again); row.appendChild(shut);
-  info.appendChild(meta); info.appendChild(lt); info.appendChild(lp); info.appendChild(specs); info.appendChild(row);
-  card.appendChild(figWrap); card.appendChild(info);
-  lay.appendChild(card);
+  var box = el('div', 'arclay__card');
+  var fig = el('div', 'arclay__fig');
+  var info = el('div', 'arclay__info');
+  var meta = el('div', 'arclay__meta');
+  var mFront = el('b'), mYear = el('span');
+  meta.appendChild(mFront); meta.appendChild(mYear);
+  var lt = el('h2', 'display arclay__t');
+  var lp = el('p', 'arclay__p');
+  var row = el('div', 'arclay__row');
+  var goRec = el('button', 'btn', 'Read it in the record'); goRec.type = 'button';
+  var again = el('button', 'btn btn--ghost', 'Another'); again.type = 'button';
+  var shut = el('button', 'btn btn--ghost', 'Back to the cards'); shut.type = 'button';
+  row.appendChild(goRec); row.appendChild(again); row.appendChild(shut);
+  info.appendChild(meta); info.appendChild(lt); info.appendChild(lp); info.appendChild(row);
+  box.appendChild(fig); box.appendChild(info);
+  lay.appendChild(box);
   document.body.appendChild(lay);
 
-  function spec(label, value){
-    var line = document.createElement('div');
-    var b = document.createElement('b'); b.textContent = label + ' ';
-    line.appendChild(b);
-    line.appendChild(document.createTextNode(value));
-    specs.appendChild(line);
-  }
-  function fill(d){
+  var showing = null, print = null, wasFocused = null, busy = false;
+  function fill(c){
+    var d = c.d;
     lay.style.setProperty('--a', tone(d.front));
-    fig.className = 'sphlay__print m' + (parseInt(d.no, 10) % 6);
-    pTag.textContent = d.year;
-    pFront.textContent = d.front;
-    mLeft.textContent = '';
-    var fb = document.createElement('b'); fb.textContent = d.front;
-    mLeft.appendChild(fb);
-    mRight.textContent = d.year;
+    fig.textContent = '';
+    print = buildCard(d);
+    print.el.tabIndex = -1;
+    print.el.setAttribute('aria-hidden', 'true');
+    fig.appendChild(print.el);
+    mFront.textContent = d.front;
+    mYear.textContent = d.year;
     lt.textContent = d.title;
     lp.textContent = d.body;
-    specs.textContent = '';
-    spec('Front', d.front);
-    if (d.year) spec('First secured', d.year);
   }
-  /* Move the print between the card's on-screen box and its resting place. */
+  /* Carry the print between the card's box on screen and its own place. */
   function flight(from){
-    var F = figWrap.getBoundingClientRect();
+    var F = fig.getBoundingClientRect();
     if (!from || !F.width) return false;
-    figWrap.style.transformOrigin = '0 0';
-    figWrap.style.transform = 'translate(' + (from.left - F.left).toFixed(1) + 'px,' +
-      (from.top - F.top).toFixed(1) + 'px) scale(' + (from.width / F.width).toFixed(4) + ',' +
-      (from.height / F.height).toFixed(4) + ')';
+    fig.style.transformOrigin = '0 0';
+    fig.style.transform = 'translate(' + (from.left - F.left).toFixed(1) + 'px,' + (from.top - F.top).toFixed(1) + 'px) scale(' +
+      (from.width / F.width).toFixed(4) + ',' + (from.height / F.height).toFixed(4) + ')';
     return true;
   }
-
-  var showing = null, wasFocused = null, busy = false;
-  function open(d){
-    if (busy) return;
+  function open(c){
+    if (busy || !c) return;
     busy = true;
-    showing = d;
-    fill(d);
+    showing = c;
+    fill(c);
     wasFocused = document.activeElement;
-    lay.hidden = false; overlayOpen = true;
-    var from = d.faceEl ? d.faceEl.getBoundingClientRect() : null;
-    var flew = !still && flight(from);
-    if (d.faceEl) d.faceEl.style.visibility = 'hidden';
+    lay.hidden = false;
+    overlayOpen = true;
+    var flew = !still && flight(c.el.getBoundingClientRect());
+    c.el.style.visibility = 'hidden';
+    paint(print, 0, 0);
     window.requestAnimationFrame(function(){
       window.requestAnimationFrame(function(){
         lay.classList.add('is-in');
-        if (flew) figWrap.classList.add('sphlay__fly');
-        figWrap.style.transform = '';
-        window.setTimeout(function(){ busy = false; }, still ? 0 : 540);
+        if (flew) fig.classList.add('arclay__fly');
+        fig.style.transform = '';
+        window.setTimeout(function(){ busy = false; paint(print, 0, 0); }, still ? 0 : 540);
       });
     });
     shut.focus();
   }
   function land(){
-    figWrap.classList.remove('sphlay__fly');
-    figWrap.style.transform = '';
-    if (showing && showing.faceEl) showing.faceEl.style.visibility = '';
-    lay.hidden = true; overlayOpen = false;
-    if (wasFocused && wasFocused.focus) wasFocused.focus();
+    fig.classList.remove('arclay__fly');
+    fig.style.transform = '';
+    if (showing) showing.el.style.visibility = '';
+    lay.hidden = true;
+    overlayOpen = false;
+    if (wasFocused && wasFocused.focus) wasFocused.focus({ preventScroll: true });
   }
   function close(fast){
     lay.classList.remove('is-in');
-    var from = showing && showing.faceEl ? showing.faceEl.getBoundingClientRect() : null;
-    /* A close during the opening flight lands instantly rather than being
+    /* A close during the opening flight lands at once rather than being
        refused: escape has to mean escape, whatever the animation is doing. */
-    if (fast === true || still || busy || !flight(from)) { land(); busy = false; return; }
+    if (fast === true || still || busy || !showing || !flight(showing.el.getBoundingClientRect())) { land(); busy = false; return; }
     busy = true;
-    figWrap.classList.add('sphlay__fly');
+    fig.classList.add('arclay__fly');
     window.setTimeout(function(){ land(); busy = false; }, 540);
   }
   shut.addEventListener('click', function(){ close(); });
   lay.addEventListener('click', function(e){ if (e.target === lay) close(); });
-  card.addEventListener('click', function(e){ e.stopPropagation(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !lay.hidden) close(); });
   again.addEventListener('click', function(){
     if (busy) return;
-    var pool = data.filter(function(d){ return (!active || d.front === active) && d !== showing; });
+    var pool = list.filter(function(c){ return c !== showing; });
     if (!pool.length) return;
     var next = pool[Math.floor(Math.random() * pool.length)];
     busy = true;
     lay.classList.add('is-swap');
     window.setTimeout(function(){
-      if (showing && showing.faceEl) showing.faceEl.style.visibility = '';
+      showing.el.style.visibility = '';
+      /* the drum turns to it unseen, so closing flies the print home to it */
+      pos = to = next.idx;
+      layout();
+      settle();
       showing = next;
       fill(next);
-      if (next.faceEl) next.faceEl.style.visibility = 'hidden';
+      paint(print, 0, 0);
+      next.el.style.visibility = 'hidden';
       lay.classList.remove('is-swap');
       window.setTimeout(function(){ busy = false; }, still ? 0 : 200);
     }, still ? 0 : 190);
   });
-  go.addEventListener('click', function(){
+  goRec.addEventListener('click', function(){
     if (!showing) return;
-    var target = document.getElementById(showing.id);
+    var target = document.getElementById(showing.d.id);
     close(true);
     if (!target) return;
     if (target.hidden) {
@@ -1152,8 +1276,62 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     window.setTimeout(function(){ target.classList.remove('is-lit'); }, 2400);
   });
 
+  /* ---- start --------------------------------------------------------------- */
   sec.hidden = false;
-  fit();
+  measure();
+  to = startOf(list.length);
+  /* the cards deal in from the right the first time the arc is seen */
+  pos = still ? to : to - 3.2;
+  fade = still ? 1 : 0;
+  layout();
+  var seen = false, onScreen = false;
+  function arrive(){
+    if (seen) return;
+    seen = true;
+    fadeTo = 1;
+    kick();
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        onScreen = en.isIntersecting;
+        if (onScreen) arrive();
+      });
+    }, { threshold: 0.2 }).observe(stage);
+  } else {
+    onScreen = true;
+    arrive();
+  }
+  if (still) { fadeTo = 1; settle(); }
+
+  /* The card in the middle breathes while the arc is on screen and still. */
+  if (!still) {
+    window.setInterval(function(){
+      if (!onScreen || overlayOpen || document.hidden || !mid || raf || drag || (mid && mid.anim)) return;
+      paint(mid, 0, 0.03);
+    }, 160);
+  }
+
+  window.addEventListener('resize', (function(){
+    var t = 0;
+    return function(){
+      window.clearTimeout(t);
+      t = window.setTimeout(function(){
+        measure();
+        cards.forEach(function(c){ c.painted = false; });
+        layout();
+      }, 120);
+    };
+  }()));
+
+  /* The numbers are drawn in Marcellus; when it arrives after the first
+     paint, the cards that carry one are drawn again in it. */
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('400 80px Marcellus').then(function(){
+      cards.forEach(function(c){ if (c.d.big) { c.g = null; c.painted = false; } });
+      layout();
+    }, function(){});
+  }
 })();
 </script>
 </body>
