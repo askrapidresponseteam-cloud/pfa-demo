@@ -38,6 +38,10 @@ function walk(dir, out = []) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (SKIP_DIRS.has(entry.name)) continue;
+      /* The library's documents (PDFs and their reading editions) are other
+         people's publications, kept word for word; a newspaper they cite by
+         name is not this site's old section. */
+      if (path.relative(ROOT, full) === path.join('media', 'library')) continue;
       walk(full, out);
     } else if (EXTENSIONS.has(path.extname(entry.name)) && !SKIP_FILES.has(entry.name)) {
       out.push(full);

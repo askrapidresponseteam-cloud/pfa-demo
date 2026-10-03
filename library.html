@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Only the latin file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="pfa-build" content="v1.362">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>The PFA Library: handbooks, laws and reports | People for Animals</title>
+<meta name="description" content="Handbooks, laws, training manuals, policy briefs and scoping reports on animal welfare in India. Read any of them here, comfortably, on any screen, pick up where you left off, or download the original.">
+<link rel="stylesheet" href="assets/chrome.css">
+<style>
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#fff;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --pop:#ff3b18; /* the units kicker orange, now the site-wide pop */
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav is 80px and the header carries a 1px rule under it. This is
+     only what the first paint uses; assets/chrome.js measures the real height
+     into --nav and overwrites it. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button{font-family:inherit;font-size:inherit;color:inherit}
+
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;padding:16px 32px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn--light:hover{background:transparent;color:var(--ink)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  overflow:hidden;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:none}
+.hero__in{position:relative;z-index:1;width:100%}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
+.hero h1{font-size:clamp(34px,4.4vw,62px);max-width:15ch}
+.hero p.lede{margin:26px 0 0;max-width:52ch;font-size:15px;line-height:1.6;color:rgba(17,17,17,.78)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(17,17,17,.85)}
+
+/* ---------- filter bar, same component as the shop and the newsroom ---------- */
+.filters{position:sticky;top:calc(var(--ann) + var(--nav));z-index:40;background:#fff;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.filters__row{display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+.filters__row::-webkit-scrollbar{display:none}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:0 12px;height:38px;min-width:220px;flex:0 0 auto;background:#fff}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:none;outline:none;background:none;font-size:13px;width:100%;padding:0}
+.search svg{flex:0 0 auto;opacity:.5}
+.chip{flex:0 0 auto;border:1px solid transparent;background:none;padding:0 12px;height:38px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.count{flex:0 0 auto;font-size:12px;color:var(--muted);margin-left:auto;padding-left:12px;white-space:nowrap}
+
+/* ---------- bands ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band__head{max-width:var(--max)}
+.band__head h2{font-size:clamp(26px,3.2vw,48px);margin-top:14px;max-width:17ch}
+.band__head p{margin:22px 0 0;max-width:52ch;font-size:14px;line-height:1.65;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+/* ---------- responsive ---------- */
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .filters{padding-left:16px;padding-right:16px}
+  .search{min-width:170px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- the pop: the tick over the title, and the selection ---------- */
+.hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop,#ff3b18);margin-bottom:18px}
+.hero{border-bottom:1px solid var(--line)}
+::selection{background:var(--pop,#ff3b18);color:#fff}
+</style>
+<link rel="stylesheet" href="assets/library.css">
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/library">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The PFA Library: handbooks, laws and reports">
+  <meta property="og:description" content="Handbooks, laws, training manuals, policy briefs and scoping reports on animal welfare in India. Read any of them here, comfortably, on any screen, pick up where you left off, or download the original.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/library">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="The PFA Library: handbooks, laws and reports">
+  <meta name="twitter:description" content="Handbooks, laws, training manuals, policy briefs and scoping reports on animal welfare in India. Read any of them here, comfortably, on any screen, pick up where you left off, or download the original.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"The PFA Library: handbooks, laws and reports","item":"https://peopleforanimalsindia.org/library"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html" class="in-section">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="#top" data-nav="library.html" class="current" aria-current="page">Resources library</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+        <div class="menu">
+          <span class="menu-label">Join the tribe</span>
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+    </div>
+  </nav>
+</header>
+<script src="assets/chrome.js"></script>
+
+<main>
+  <section class="hero" id="top">
+    <div class="hero__in">
+      <p class="eyebrow">Learn</p>
+      <h1 class="display">The PFA Library</h1>
+      <p class="lede">The handbooks, laws, training manuals and research PFA shares, gathered on four shelves. Open any of them and read it here at your own pace, come back to the page you left, or download the original.</p>
+      <ul class="meta lib-facts" aria-label="About the library">
+        <li><b id="libTotal">19</b> documents</li>
+        <li><b>4</b> shelves</li>
+        <li>Free to read and to download</li>
+      </ul>
+    </div>
+<!-- library-stack:start. Written by scripts/build-library.js. -->
+<div class="lib-stack" aria-hidden="true">
+<a class="lib-stack__book" href="read.html?r=pca-act-1960" tabindex="-1"><span class="cover cover--essential" style="--i:0" aria-hidden="true"><span class="cover__shelf">Act of Parliament</span><span class="cover__title">Prevention of Cruelty to Animals Act 1960</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<a class="lib-stack__book" href="read.html?r=revised-abc-module" tabindex="-1"><span class="cover cover--essential" style="--i:1" aria-hidden="true"><span class="cover__shelf">Module</span><span class="cover__title">Revised Animal Birth Control Module</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<a class="lib-stack__book" href="read.html?r=animal-law-handbook-ulb" tabindex="-1"><span class="cover cover--essential" style="--i:2" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Animal Law Handbook for Urban Local Bodies</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<a class="lib-stack__book" href="read.html?r=law-enforcement-handbook" tabindex="-1"><span class="cover cover--essential cover--long" style="--i:3" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Law Enforcement Handbook on Animal Welfare Laws</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<a class="lib-stack__book" href="read.html?r=veterinary-officers-handbook" tabindex="-1"><span class="cover cover--essential cover--long" style="--i:4" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Handbook for Veterinary Officers on Animal Welfare Laws</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+</div>
+<!-- library-stack:end -->
+  </section>
+
+  <section class="lib-continue" id="libContinue" aria-labelledby="libContinueLabel" hidden>
+    <div class="lib-continue__panel">
+      <a class="lib-continue__cover" id="libContinueCover" href="read.html" tabindex="-1" aria-hidden="true"></a>
+      <div class="lib-continue__body">
+        <p class="eyebrow" id="libContinueLabel">Continue reading</p>
+        <h2 class="lib-continue__title"><a id="libContinueTitle" href="read.html">Your last document</a></h2>
+        <p class="lib-continue__where" id="libContinueWhere"></p>
+        <p class="lib-continue__track"><span class="lib-continue__bar"><span id="libContinueBar"></span></span><span class="lib-continue__pct" id="libContinuePct"></span></p>
+        <p class="lib-continue__actions"><a class="btn" id="libContinueGo" href="read.html">Resume reading</a></p>
+      </div>
+      <div class="lib-continue__also" id="libAlsoWrap" hidden>
+        <p class="eyebrow">Also reading</p>
+        <ul class="lib-also" id="libAlso"></ul>
+      </div>
+    </div>
+  </section>
+
+  <nav class="filters lib-filters" aria-label="Choose a shelf">
+    <div class="filters__row">
+      <label class="search lib-search" for="libFind">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="libFind" type="search" placeholder="Find a document" autocomplete="off" aria-label="Find a document by title or subject">
+      </label>
+      <button class="chip" type="button" data-shelf="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-shelf="essential" aria-pressed="false">Essential</button>
+      <button class="chip" type="button" data-shelf="handbooks" aria-pressed="false">Handbooks</button>
+      <button class="chip" type="button" data-shelf="research" aria-pressed="false">Research</button>
+      <button class="chip" type="button" data-shelf="scoping" aria-pressed="false">Scoping reports</button>
+      <span class="count" id="libCount" aria-live="polite">19 documents</span>
+    </div>
+  </nav>
+
+  <div class="lib-shelves" id="libShelves">
+<!-- library:start. Written by scripts/build-library.js from data/library.json: edit the data, then run the script. -->
+<section class="band lib-shelf" id="shelf-essential" data-shelf="essential" aria-labelledby="shelf-essential-h">
+<div class="band__head">
+<p class="eyebrow">Essential handbooks<span class="lib-shelf__count">5 documents</span></p>
+<h2 class="display" id="shelf-essential-h">Start with these five</h2>
+<p>The five to read first: the law itself, the module behind animal birth control, and the handbooks that explain the law to the officials who apply it.</p>
+</div>
+<ul class="lib-grid lib-grid--feature">
+<li class="book" data-slug="pca-act-1960" data-shelf="essential">
+<a class="book__cover" href="read.html?r=pca-act-1960" tabindex="-1" aria-hidden="true"><span class="cover cover--essential" style="--i:0" aria-hidden="true"><span class="cover__shelf">Act of Parliament</span><span class="cover__title">Prevention of Cruelty to Animals Act 1960</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=pca-act-1960">Prevention of Cruelty to Animals Act 1960</a></h3>
+<p class="book__blurb">The Act as published in the Gazette of India on 27 December 1960: what counts as cruelty, the penalties, and the Animal Welfare Board of India it set up.</p>
+<p class="book__facts">20 pages<span aria-hidden="true"> · </span>PDF 942 KB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=pca-act-1960">Read now</a>
+<a class="book__dl" href="resources/Prevention%20of%20Cruelty%20to%20Animals%20Act%2C%201960.pdf" download="Prevention of Cruelty to Animals Act, 1960.pdf" aria-label="Download Prevention of Cruelty to Animals Act 1960">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="revised-abc-module" data-shelf="essential">
+<a class="book__cover" href="read.html?r=revised-abc-module" tabindex="-1" aria-hidden="true"><span class="cover cover--essential" style="--i:1" aria-hidden="true"><span class="cover__shelf">Module</span><span class="cover__title">Revised Animal Birth Control Module</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=revised-abc-module">Revised Animal Birth Control Module</a></h3>
+<p class="book__blurb">AWBI's revised module on street dog population management, rabies eradication and reducing conflict between people and dogs, under the ABC Rules, 2023.</p>
+<p class="book__facts">147 pages<span aria-hidden="true"> · </span>About 2 hours<span aria-hidden="true"> · </span>PDF 3.4 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=revised-abc-module">Read now</a>
+<a class="book__dl" href="resources/Revised%20ABC%20Module.pdf" download="Revised ABC Module.pdf" aria-label="Download Revised Animal Birth Control Module">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="animal-law-handbook-ulb" data-shelf="essential">
+<a class="book__cover" href="read.html?r=animal-law-handbook-ulb" tabindex="-1" aria-hidden="true"><span class="cover cover--essential" style="--i:2" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Animal Law Handbook for Urban Local Bodies</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=animal-law-handbook-ulb">Animal Law Handbook for Urban Local Bodies</a></h3>
+<p class="book__blurb">AWBI's handbook for municipal bodies: the constitutional and legal framework for managing animals, from animal birth control to cattle premises and disease.</p>
+<p class="book__facts">66 pages<span aria-hidden="true"> · </span>35 min read<span aria-hidden="true"> · </span>PDF 3.3 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=animal-law-handbook-ulb">Read now</a>
+<a class="book__dl" href="resources/AWBI%20ULB.pdf" download="AWBI ULB.pdf" aria-label="Download Animal Law Handbook for Urban Local Bodies">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="law-enforcement-handbook" data-shelf="essential">
+<a class="book__cover" href="read.html?r=law-enforcement-handbook" tabindex="-1" aria-hidden="true"><span class="cover cover--essential cover--long" style="--i:3" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Law Enforcement Handbook on Animal Welfare Laws</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=law-enforcement-handbook">Law Enforcement Handbook on Animal Welfare Laws</a></h3>
+<p class="book__blurb">AWBI's ready reference for enforcement officers: the laws protecting animals, and the procedure from a complaint to its investigation, kind by kind of cruelty.</p>
+<p class="book__facts">99 pages<span aria-hidden="true"> · </span>About 1 hour<span aria-hidden="true"> · </span>PDF 4.3 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=law-enforcement-handbook">Read now</a>
+<a class="book__dl" href="resources/AWBI%20Law%20Enforcement.pdf" download="AWBI Law Enforcement.pdf" aria-label="Download Law Enforcement Handbook on Animal Welfare Laws">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="veterinary-officers-handbook" data-shelf="essential">
+<a class="book__cover" href="read.html?r=veterinary-officers-handbook" tabindex="-1" aria-hidden="true"><span class="cover cover--essential cover--long" style="--i:4" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Handbook for Veterinary Officers on Animal Welfare Laws</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=veterinary-officers-handbook">Handbook for Veterinary Officers on Animal Welfare Laws</a></h3>
+<p class="book__blurb">AWBI's ready reference to the statutory duties of veterinary officers, and the procedure they follow in cases of cruelty to animals.</p>
+<p class="book__facts">57 pages<span aria-hidden="true"> · </span>35 min read<span aria-hidden="true"> · </span>PDF 4.2 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=veterinary-officers-handbook">Read now</a>
+<a class="book__dl" href="resources/AWBI%20Veterinary%20Officer.pdf" download="AWBI Veterinary Officer.pdf" aria-label="Download Handbook for Veterinary Officers on Animal Welfare Laws">Download</a>
+</p>
+</div>
+</li>
+</ul>
+</section>
+<section class="band lib-shelf" id="shelf-handbooks" data-shelf="handbooks" aria-labelledby="shelf-handbooks-h">
+<div class="band__head">
+<p class="eyebrow">Handbooks and training manuals<span class="lib-shelf__count">9 documents</span></p>
+<h2 class="display" id="shelf-handbooks-h">Manuals for the people who do the work</h2>
+<p>Manuals and guides for municipal bodies, police, farms, companies and veterinary services, several of them from Uttar Pradesh.</p>
+</div>
+<ul class="lib-grid">
+<li class="book" data-slug="abc-blue-book-lucknow" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=abc-blue-book-lucknow" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks" style="--i:5" aria-hidden="true"><span class="cover__shelf">Training manual</span><span class="cover__title">ABC Training Blue Book, Nagar Nigam, Lucknow</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=abc-blue-book-lucknow">ABC Training Blue Book, Nagar Nigam, Lucknow</a></h3>
+<p class="book__blurb">Lucknow Nagar Nigam's training guide for dog population management: how its Animal Birth Control training is organised, run and assessed.</p>
+<p class="book__facts">84 pages<span aria-hidden="true"> · </span>25 min read<span aria-hidden="true"> · </span>PDF 5.0 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=abc-blue-book-lucknow">Read now</a>
+<a class="book__dl" href="resources/ABC%20Bluebook.pdf" download="ABC Bluebook.pdf" aria-label="Download ABC Training Blue Book, Nagar Nigam, Lucknow">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="delhi-police-handbook" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=delhi-police-handbook" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks" style="--i:6" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Delhi Police Handbook</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=delhi-police-handbook">Delhi Police Handbook</a></h3>
+<p class="book__blurb">For Delhi Police: the protocol for cruelty complaints and the laws that apply in Delhi, chapter by chapter from community dogs to dairies and slaughterhouses.</p>
+<p class="book__facts">58 pages<span aria-hidden="true"> · </span>About 1 hour<span aria-hidden="true"> · </span>PDF 2.3 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=delhi-police-handbook">Read now</a>
+<a class="book__dl" href="resources/Final_Delhi%20Specific%20Police%20Handbook.pdf" download="Final_Delhi Specific Police Handbook.pdf" aria-label="Download Delhi Police Handbook">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="up-ud-handbook" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=up-ud-handbook" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks cover--short" style="--i:0" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">UP UD Handbook</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=up-ud-handbook">UP UD Handbook</a></h3>
+<p class="book__blurb">A handbook for Uttar Pradesh's urban local bodies on managing the animals in their areas, with the laws and court judgments behind that duty.</p>
+<p class="book__facts">69 pages<span aria-hidden="true"> · </span>In Hindi<span aria-hidden="true"> · </span>PDF 28 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=up-ud-handbook">Read now</a>
+<a class="book__dl" href="resources/UP-UD-Handbook.pdf" download="UP-UD-Handbook.pdf" aria-label="Download UP UD Handbook">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="ey-cage-free" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=ey-cage-free" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks" style="--i:1" aria-hidden="true"><span class="cover__shelf">Report</span><span class="cover__title">EY - Transitioning to Cage-Free</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=ey-cage-free">EY - Transitioning to Cage-Free</a></h3>
+<p class="book__blurb">EY's roadmap for companies in India's egg supply chain moving to cage-free eggs: where India stands, what is driving the shift, and the way forward.</p>
+<p class="book__facts">32 pages<span aria-hidden="true"> · </span>35 min read<span aria-hidden="true"> · </span>PDF 5.8 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=ey-cage-free">Read now</a>
+<a class="book__dl" href="resources/Transitioning%20to%20Cage-Free_%20A%20Roadmap%20for%20Corporates%20in%20the%20Egg%20Supply%20Chain.pdf" download="Transitioning to Cage-Free_ A Roadmap for Corporates in the Egg Supply Chain.pdf" aria-label="Download EY - Transitioning to Cage-Free">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="pig-farms-practices" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=pig-farms-practices" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks" style="--i:2" aria-hidden="true"><span class="cover__shelf">Practice guide</span><span class="cover__title">Package Of Practices For Organized Pig Farms</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=pig-farms-practices">Package Of Practices For Organized Pig Farms</a></h3>
+<p class="book__blurb">From ICAR's National Research Centre on Pig: breeds, breeding, care, housing, feeding, reproduction and transport on organised pig farms.</p>
+<p class="book__facts">151 pages<span aria-hidden="true"> · </span>About 2½ hours<span aria-hidden="true"> · </span>PDF 4.6 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=pig-farms-practices">Read now</a>
+<a class="book__dl" href="resources/NRCP%20-%20Package%20of%20Practices%20for%20Organized%20Pig%20Farms%20(2).pdf" download="NRCP - Package of Practices for Organized Pig Farms (2).pdf" aria-label="Download Package Of Practices For Organized Pig Farms">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="piggery-handbook-uttarakhand" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=piggery-handbook-uttarakhand" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks" style="--i:3" aria-hidden="true"><span class="cover__shelf">Handbook</span><span class="cover__title">Piggery Handbook Uttarakhand</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=piggery-handbook-uttarakhand">Piggery Handbook Uttarakhand</a></h3>
+<p class="book__blurb">A handbook on pig farming from Uttarakhand.</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=piggery-handbook-uttarakhand">Read now</a>
+<a class="book__dl" href="https://drive.google.com/uc?export=download&amp;id=1XoO45Hs5kq2gPQxFwTbPTfJevSMJnYUS" rel="noopener" target="_blank" aria-label="Download Piggery Handbook Uttarakhand">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="kanha-gaushala-up" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=kanha-gaushala-up" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks" style="--i:4" aria-hidden="true"><span class="cover__shelf">Manual</span><span class="cover__title">Kanha Gaushala, Govt of UP</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=kanha-gaushala-up">Kanha Gaushala, Govt of UP</a></h3>
+<p class="book__blurb">The management manual for Kanha Gaushalas, the Government of Uttar Pradesh's shelters for cattle.</p>
+<p class="book__facts">94 pages<span aria-hidden="true"> · </span>In Hindi<span aria-hidden="true"> · </span>PDF 65 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=kanha-gaushala-up">Read now</a>
+<a class="book__dl" href="resources/%E0%A4%95%E0%A4%BE%E0%A4%A8%E0%A5%8D%E0%A4%B9%E0%A4%BE-%E0%A4%97%E0%A5%8C%E0%A4%B6%E0%A4%BE%E0%A4%B2%E0%A4%BE-%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%AC%E0%A4%A8%E0%A5%8D%E0%A4%A7%E0%A4%A8-%E0%A4%AE%E0%A5%88%E0%A4%A8%E0%A5%81%E0%A4%85%E0%A4%B2.pdf" download="कान्हा-गौशाला-प्रबन्धन-मैनुअल.pdf" aria-label="Download Kanha Gaushala, Govt of UP">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="shvaan-pashu" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=shvaan-pashu" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks cover--short" style="--i:5" aria-hidden="true"><span class="cover__shelf">Manual</span><span class="cover__title">Shvaan Pashu</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=shvaan-pashu">Shvaan Pashu</a></h3>
+<p class="book__blurb">Uttar Pradesh's 2023 advisory manual on the management of dogs, from the state's Urban Development department.</p>
+<p class="book__facts">66 pages<span aria-hidden="true"> · </span>In Hindi<span aria-hidden="true"> · </span>PDF 21 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=shvaan-pashu">Read now</a>
+<a class="book__dl" href="resources/%E0%A4%B6%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%A8-%E0%A4%AA%E0%A4%B6%E0%A5%81-%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%AC%E0%A4%A8%E0%A5%8D%E0%A4%A7%E0%A4%A8-%E0%A4%AE%E0%A5%88%E0%A4%A8%E0%A5%81%E0%A4%85%E0%A4%B2.pdf" download="श्वान-पशु-प्रबन्धन-मैनुअल.pdf" aria-label="Download Shvaan Pashu">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="veterinary-infrastructure-standards" data-shelf="handbooks">
+<a class="book__cover" href="read.html?r=veterinary-infrastructure-standards" tabindex="-1" aria-hidden="true"><span class="cover cover--handbooks cover--long" style="--i:6" aria-hidden="true"><span class="cover__shelf">Guidelines</span><span class="cover__title">Minimum Standards for Veterinary Infrastructure</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=veterinary-infrastructure-standards">Minimum Standards for Veterinary Infrastructure</a></h3>
+<p class="book__blurb">The Government of India's minimum standards for four tiers of veterinary institutions, from primary care centres to state polyclinics: buildings, staff, services.</p>
+<p class="book__facts">44 pages<span aria-hidden="true"> · </span>25 min read<span aria-hidden="true"> · </span>PDF 8.1 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=veterinary-infrastructure-standards">Read now</a>
+<a class="book__dl" href="resources/Vet%20Infrastructure%20guidelines.pdf" download="Vet Infrastructure guidelines.pdf" aria-label="Download Minimum Standards for Veterinary Infrastructure">Download</a>
+</p>
+</div>
+</li>
+</ul>
+</section>
+<section class="band lib-shelf" id="shelf-research" data-shelf="research" aria-labelledby="shelf-research-h">
+<div class="band__head">
+<p class="eyebrow">Research and policy briefs<span class="lib-shelf__count">2 documents</span></p>
+<h2 class="display" id="shelf-research-h">The evidence, in brief</h2>
+<p>Evidence and argument for policy makers.</p>
+</div>
+<ul class="lib-grid">
+<li class="book" data-slug="scc-policy-brief" data-shelf="research">
+<a class="book__cover" href="read.html?r=scc-policy-brief" tabindex="-1" aria-hidden="true"><span class="cover cover--research cover--short" style="--i:0" aria-hidden="true"><span class="cover__shelf">Policy brief</span><span class="cover__title">SCC Policy Brief</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=scc-policy-brief">SCC Policy Brief</a></h3>
+<p class="book__blurb">Healthy Herds, Safer Milk: somatic cell count (SCC), the measure of udder infection and milk quality India does not regulate, and the case for a national limit.</p>
+<p class="book__facts">32 pages<span aria-hidden="true"> · </span>30 min read<span aria-hidden="true"> · </span>PDF 38 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=scc-policy-brief">Read now</a>
+<a class="book__dl" href="resources/SCC%20Policy%20Brief_Final%20.pdf" download="SCC Policy Brief_Final .pdf" aria-label="Download SCC Policy Brief">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="hidden-costs-piggery" data-shelf="research">
+<a class="book__cover" href="read.html?r=hidden-costs-piggery" tabindex="-1" aria-hidden="true"><span class="cover cover--research" style="--i:1" aria-hidden="true"><span class="cover__shelf">Research</span><span class="cover__title">Hidden Costs of Piggery Operations in India</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=hidden-costs-piggery">Hidden Costs of Piggery Operations in India</a></h3>
+<p class="book__blurb">How India's unregulated piggery sector threatens public health: the waste piggery units discard, its impact, and what should change.</p>
+<p class="book__facts">32 pages<span aria-hidden="true"> · </span>35 min read<span aria-hidden="true"> · </span>PDF 6.7 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=hidden-costs-piggery">Read now</a>
+<a class="book__dl" href="resources/Hidden%20Costs%20of%20Piggery%20Operations%20in%20India.pdf" download="Hidden Costs of Piggery Operations in India.pdf" aria-label="Download Hidden Costs of Piggery Operations in India">Download</a>
+</p>
+</div>
+</li>
+</ul>
+</section>
+<section class="band lib-shelf" id="shelf-scoping" data-shelf="scoping" aria-labelledby="shelf-scoping-h">
+<div class="band__head">
+<p class="eyebrow">Financial scoping reports<span class="lib-shelf__count">3 documents</span></p>
+<h2 class="display" id="shelf-scoping-h">Following the money</h2>
+<p>The money behind three animal farming sectors in India: dairy, pigs and poultry.</p>
+</div>
+<ul class="lib-grid">
+<li class="book" data-slug="dairy-scoping-report" data-shelf="scoping">
+<a class="book__cover" href="read.html?r=dairy-scoping-report" tabindex="-1" aria-hidden="true"><span class="cover cover--scoping" style="--i:2" aria-hidden="true"><span class="cover__shelf">Scoping report</span><span class="cover__title">Dairy Scoping Report</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=dairy-scoping-report">Dairy Scoping Report</a></h3>
+<p class="book__blurb">Do India's financial incentives for dairy reward animal welfare, environmental sustainability and public health? The schemes assessed, with recommendations.</p>
+<p class="book__facts">52 pages<span aria-hidden="true"> · </span>40 min read<span aria-hidden="true"> · </span>PDF 9.4 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=dairy-scoping-report">Read now</a>
+<a class="book__dl" href="resources/Dairy%20Scoping%20Report%20(10.06.2025).pdf" download="Dairy Scoping Report (10.06.2025).pdf" aria-label="Download Dairy Scoping Report">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="pig-scoping-report" data-shelf="scoping">
+<a class="book__cover" href="read.html?r=pig-scoping-report" tabindex="-1" aria-hidden="true"><span class="cover cover--scoping cover--short" style="--i:3" aria-hidden="true"><span class="cover__shelf">Scoping report</span><span class="cover__title">Pig Scoping Report</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=pig-scoping-report">Pig Scoping Report</a></h3>
+<p class="book__blurb">India's financial incentives for piggery, weighed against animal welfare and environmental sustainability, with a close look at Assam, Nagaland and Karnataka.</p>
+<p class="book__facts">40 pages<span aria-hidden="true"> · </span>25 min read<span aria-hidden="true"> · </span>PDF 52 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=pig-scoping-report">Read now</a>
+<a class="book__dl" href="resources/Piggery%20Scoping%20Report.pdf" download="Piggery Scoping Report.pdf" aria-label="Download Pig Scoping Report">Download</a>
+</p>
+</div>
+</li>
+<li class="book" data-slug="poultry-scoping-report" data-shelf="scoping">
+<a class="book__cover" href="read.html?r=poultry-scoping-report" tabindex="-1" aria-hidden="true"><span class="cover cover--scoping" style="--i:4" aria-hidden="true"><span class="cover__shelf">Scoping report</span><span class="cover__title">Poultry Scoping Report</span><span class="cover__mark">People for Animals<i>Library</i></span></span></a>
+<div class="book__body">
+<h3 class="book__title"><a href="read.html?r=poultry-scoping-report">Poultry Scoping Report</a></h3>
+<p class="book__blurb">The government schemes and subsidies behind egg production in India, assessed against animal welfare and sustainability, and the case for cage-free.</p>
+<p class="book__facts">61 pages<span aria-hidden="true"> · </span>40 min read<span aria-hidden="true"> · </span>PDF 52 MB</p>
+<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>
+<p class="book__actions">
+<a class="book__read" href="read.html?r=poultry-scoping-report">Read now</a>
+<a class="book__dl" href="resources/Poultry%20Scoping%20Report%20(03.07.2025).pdf" download="Poultry Scoping Report (03.07.2025).pdf" aria-label="Download Poultry Scoping Report">Download</a>
+</p>
+</div>
+</li>
+</ul>
+</section>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"The PFA Library","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"DigitalDocument","name":"Prevention of Cruelty to Animals Act 1960","description":"The Act as published in the Gazette of India on 27 December 1960: what counts as cruelty, the penalties, and the Animal Welfare Board of India it set up.","url":"https://peopleforanimalsindia.org/read.html?r=pca-act-1960","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":2,"item":{"@type":"DigitalDocument","name":"Revised Animal Birth Control Module","description":"AWBI's revised module on street dog population management, rabies eradication and reducing conflict between people and dogs, under the ABC Rules, 2023.","url":"https://peopleforanimalsindia.org/read.html?r=revised-abc-module","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":3,"item":{"@type":"DigitalDocument","name":"Animal Law Handbook for Urban Local Bodies","description":"AWBI's handbook for municipal bodies: the constitutional and legal framework for managing animals, from animal birth control to cattle premises and disease.","url":"https://peopleforanimalsindia.org/read.html?r=animal-law-handbook-ulb","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":4,"item":{"@type":"DigitalDocument","name":"Law Enforcement Handbook on Animal Welfare Laws","description":"AWBI's ready reference for enforcement officers: the laws protecting animals, and the procedure from a complaint to its investigation, kind by kind of cruelty.","url":"https://peopleforanimalsindia.org/read.html?r=law-enforcement-handbook","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":5,"item":{"@type":"DigitalDocument","name":"Handbook for Veterinary Officers on Animal Welfare Laws","description":"AWBI's ready reference to the statutory duties of veterinary officers, and the procedure they follow in cases of cruelty to animals.","url":"https://peopleforanimalsindia.org/read.html?r=veterinary-officers-handbook","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":6,"item":{"@type":"DigitalDocument","name":"ABC Training Blue Book, Nagar Nigam, Lucknow","description":"Lucknow Nagar Nigam's training guide for dog population management: how its Animal Birth Control training is organised, run and assessed.","url":"https://peopleforanimalsindia.org/read.html?r=abc-blue-book-lucknow","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":7,"item":{"@type":"DigitalDocument","name":"Delhi Police Handbook","description":"For Delhi Police: the protocol for cruelty complaints and the laws that apply in Delhi, chapter by chapter from community dogs to dairies and slaughterhouses.","url":"https://peopleforanimalsindia.org/read.html?r=delhi-police-handbook","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":8,"item":{"@type":"DigitalDocument","name":"UP UD Handbook","description":"A handbook for Uttar Pradesh's urban local bodies on managing the animals in their areas, with the laws and court judgments behind that duty.","url":"https://peopleforanimalsindia.org/read.html?r=up-ud-handbook","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":9,"item":{"@type":"DigitalDocument","name":"EY - Transitioning to Cage-Free","description":"EY's roadmap for companies in India's egg supply chain moving to cage-free eggs: where India stands, what is driving the shift, and the way forward.","url":"https://peopleforanimalsindia.org/read.html?r=ey-cage-free","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":10,"item":{"@type":"DigitalDocument","name":"Package Of Practices For Organized Pig Farms","description":"From ICAR's National Research Centre on Pig: breeds, breeding, care, housing, feeding, reproduction and transport on organised pig farms.","url":"https://peopleforanimalsindia.org/read.html?r=pig-farms-practices","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":11,"item":{"@type":"DigitalDocument","name":"Piggery Handbook Uttarakhand","description":"A handbook on pig farming from Uttarakhand.","url":"https://peopleforanimalsindia.org/read.html?r=piggery-handbook-uttarakhand","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":12,"item":{"@type":"DigitalDocument","name":"Kanha Gaushala, Govt of UP","description":"The management manual for Kanha Gaushalas, the Government of Uttar Pradesh's shelters for cattle.","url":"https://peopleforanimalsindia.org/read.html?r=kanha-gaushala-up","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":13,"item":{"@type":"DigitalDocument","name":"Shvaan Pashu","description":"Uttar Pradesh's 2023 advisory manual on the management of dogs, from the state's Urban Development department.","url":"https://peopleforanimalsindia.org/read.html?r=shvaan-pashu","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":14,"item":{"@type":"DigitalDocument","name":"Minimum Standards for Veterinary Infrastructure","description":"The Government of India's minimum standards for four tiers of veterinary institutions, from primary care centres to state polyclinics: buildings, staff, services.","url":"https://peopleforanimalsindia.org/read.html?r=veterinary-infrastructure-standards","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":15,"item":{"@type":"DigitalDocument","name":"SCC Policy Brief","description":"Healthy Herds, Safer Milk: somatic cell count (SCC), the measure of udder infection and milk quality India does not regulate, and the case for a national limit.","url":"https://peopleforanimalsindia.org/read.html?r=scc-policy-brief","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":16,"item":{"@type":"DigitalDocument","name":"Hidden Costs of Piggery Operations in India","description":"How India's unregulated piggery sector threatens public health: the waste piggery units discard, its impact, and what should change.","url":"https://peopleforanimalsindia.org/read.html?r=hidden-costs-piggery","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":17,"item":{"@type":"DigitalDocument","name":"Dairy Scoping Report","description":"Do India's financial incentives for dairy reward animal welfare, environmental sustainability and public health? The schemes assessed, with recommendations.","url":"https://peopleforanimalsindia.org/read.html?r=dairy-scoping-report","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":18,"item":{"@type":"DigitalDocument","name":"Pig Scoping Report","description":"India's financial incentives for piggery, weighed against animal welfare and environmental sustainability, with a close look at Assam, Nagaland and Karnataka.","url":"https://peopleforanimalsindia.org/read.html?r=pig-scoping-report","publisher":{"@type":"Organization","name":"People for Animals"}}},{"@type":"ListItem","position":19,"item":{"@type":"DigitalDocument","name":"Poultry Scoping Report","description":"The government schemes and subsidies behind egg production in India, assessed against animal welfare and sustainability, and the case for cage-free.","url":"https://peopleforanimalsindia.org/read.html?r=poultry-scoping-report","publisher":{"@type":"Organization","name":"People for Animals"}}}]}</script>
+<!-- library:end -->
+    <p class="lib-empty" id="libEmpty" hidden>Nothing on these shelves matches that. Try a shorter word, or <button class="lib-empty__reset" type="button" id="libReset">show every document</button>.</p>
+  </div>
+
+  <section class="band lib-note" aria-labelledby="libNoteH">
+    <div class="band__head">
+      <p class="eyebrow">About these documents</p>
+      <h2 class="display" id="libNoteH">Read here, cite the original</h2>
+      <p>Each document is the work of the government body, institution or author named in it, shared here as PFA lists it on its resources page. The reader sets the text for comfortable reading; the page numbers it shows are the original's, and Download always gives you the original file. Quote and cite from that.</p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="laws.html">What the law says</a>
+      <a class="btn btn--light" href="academy.html">The Academy</a>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- The same four groups the header uses, in the same order, with the same
+       labels. They used to differ: the header put Careers under Get Involved
+       and Policies under Our Work, while this listed Careers under About,
+       Policies under About, and Academy, Events, CineKind and The Wall under
+       an "Explore" that existed nowhere else. Six items sat in one group at
+       the top of a page and a different one at the bottom. -->
+  <div class="pfa-footer__links">
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="pfa-footer__mark">People for Animals</p>
+
+  <!-- The registered office and how to reach it, as published on
+       peopleforanimalsindia.org. One source, stamped into every page by
+       sync-chrome, so none of it can go stale on one page and not another.
+       tel: and mailto: so a phone dials and a mail client opens.
+
+       Deliberately <div> and not <span>: assets/ is cached for an hour while
+       the HTML is not, so new markup meets the previous stylesheet for up to
+       that long after a deploy. These lines are block-level on their own and
+       stack whichever stylesheet arrives. The numbers hold themselves together
+       with non-breaking spaces for the same reason: a number split across two
+       lines is not a number anyone can dial. -->
+  <address class="pfa-footer__where">
+    <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+    <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+    <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+  </address>
+
+  <!-- Real count, from /api/visits. Hidden until a number actually arrives, so
+       a counter that cannot reach the server shows nothing rather than a zero
+       or an invented figure.
+
+       No caption. An odometer in a footer reads as what it is without being
+       told, and every phrasing of the caption either restated the obvious or
+       claimed something the number does not support: a visit is not someone
+       who cared, or stood with us, or came for the animals. The aria-label
+       below still names it for a screen reader, which cannot see the shape. -->
+  <div class="pfa-tally" id="pfaTally" hidden>
+    <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+    <p>Registered charity · All donations tax-deductible</p>
+  </div>
+</footer>
+
+<script src="assets/library-data.js"></script>
+<script src="assets/library.js"></script>
+</body>
+</html>

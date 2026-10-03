@@ -19,8 +19,9 @@ const assert = require('node:assert');
 
 const ROOT = path.join(__dirname, '..');
 /* index.html is a separate design with its own tokens; submission-collage is a
-   standalone full-viewport piece with no site chrome at all. */
-const SEPARATE = new Set(['index.html', 'submission-collage.html', 'admin.html']);
+   standalone full-viewport piece with no site chrome at all, and so is
+   read.html, the library's reader. */
+const SEPARATE = new Set(['index.html', 'submission-collage.html', 'admin.html', 'read.html']);
 const pages = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html') && !SEPARATE.has(f));
 
 const rules = (html) => html.replace(/\/\*[\s\S]*?\*\//g, '');

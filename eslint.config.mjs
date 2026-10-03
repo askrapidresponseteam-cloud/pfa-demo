@@ -57,7 +57,8 @@ const rules = {
 
 export default [
   js.configs.recommended,
-  { ignores: ['node_modules/**', 'dist/**', 'public/**', '_inline-extracts/**', '_retired-assets/**', 'functions/node_modules/**'] },
+  // assets/vendor/ is third-party code shipped as published (pdf.js for the library reader).
+  { ignores: ['node_modules/**', 'dist/**', 'public/**', '_inline-extracts/**', '_retired-assets/**', 'functions/node_modules/**', 'assets/vendor/**'] },
   {
     files: ['assets/**/*.js', 'pfa-search.js', 'pfa-forms.js', 'search-index.js'],
     languageOptions: { ecmaVersion: 2020, sourceType: 'script', globals: { ...shared, ...browserGlobals } },

@@ -55,6 +55,7 @@ const PAGES = {
   'founder.html':      { current: 'founder.html',     group: 'founder.html',     announce: DEFAULT_ANNOUNCE },
   'laws.html':         { current: 'laws.html',        group: 'laws.html',        announce: DEFAULT_ANNOUNCE },
   'academy.html':      { current: 'academy.html',     group: 'laws.html',        announce: DEFAULT_ANNOUNCE },
+  'library.html':      { current: 'library.html',     group: 'laws.html',        announce: DEFAULT_ANNOUNCE },
   'someone.html':      { current: 'someone.html',     group: 'laws.html',        announce: DEFAULT_ANNOUNCE },
   'units.html':        { current: 'units.html',       group: 'units.html',       announce: DEFAULT_ANNOUNCE },
   'careers.html':      { current: 'careers.html',     group: 'founder.html', announce: DEFAULT_ANNOUNCE },
@@ -75,8 +76,11 @@ const PAGES = {
 
 /* submission-collage.html is a full-viewport piece with no site chrome.
    admin.html is the staff panel: it carries no public nav, announcement bar
-   or footer, and must not be given them. */
-const SKIP = new Set(['submission-collage.html', 'admin.html']);
+   or footer, and must not be given them. read.html is the library's reader:
+   a full-screen reading room with its own quiet bar (Library, title, Aa,
+   Search, Download), where the site header would sit on top of the page
+   being read. It links back to library.html, which carries the chrome. */
+const SKIP = new Set(['submission-collage.html', 'admin.html', 'read.html']);
 
 
 function announceMarkup(text) {
