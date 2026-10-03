@@ -97,7 +97,7 @@ test('every page re-measures the header when the window changes', () => {
   assert.match(chrome, /addEventListener\((['"])resize\1/, 'and re-measures on resize');
   const missing = pages.filter((page) => {
     const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
-    return !/<script src="\/?assets\/chrome\.js"><\/script>/.test(html);
+    return !/<script src="\/?assets\/chrome\.js(?:\?v=[a-f0-9]+)?"><\/script>/.test(html);
   });
   assert.deepEqual(missing, [], `these never re-measure: ${missing.join(', ')}`);
 });

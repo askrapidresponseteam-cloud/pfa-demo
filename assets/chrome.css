@@ -130,7 +130,7 @@ header.site nav{position:relative;display:flex;align-items:center;justify-conten
    for less movement. Everything is drawn in CSS, so the link's own text is
    just "Shop" and the header reads the same on every page. */
 .shop{position:relative;display:inline-flex;align-items:center;gap:9px;box-sizing:border-box;
-  margin-left:20px;padding:13px 22px 13px 18px;background-color:#fff;color:var(--ink,#111);border:1px solid var(--ink,#111);
+  margin-left:12px;padding:13px 22px 13px 18px;background-color:#fff;color:var(--ink,#111);border:1px solid var(--ink,#111);
   font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;line-height:1;white-space:nowrap;vertical-align:middle;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 16'%3E%3Cg fill='%23111'%3E%3Cellipse cx='6' cy='11' rx='3' ry='2.4'/%3E%3Ccircle cx='2.6' cy='7' r='1.1'/%3E%3Ccircle cx='5' cy='5.6' r='1.1'/%3E%3Ccircle cx='7.4' cy='5.6' r='1.1'/%3E%3Ccircle cx='9.6' cy='7' r='1.1'/%3E%3Cellipse cx='28' cy='8' rx='3' ry='2.4'/%3E%3Ccircle cx='24.6' cy='4' r='1.1'/%3E%3Ccircle cx='27' cy='2.6' r='1.1'/%3E%3Ccircle cx='29.4' cy='2.6' r='1.1'/%3E%3Ccircle cx='31.6' cy='4' r='1.1'/%3E%3C/g%3E%3C/svg%3E");background-repeat:repeat-x;background-size:44px 12px;background-position:0 160%;
   transition:box-shadow .3s ease,background-color .3s}
@@ -145,11 +145,10 @@ header.site nav{position:relative;display:flex;align-items:center;justify-conten
 .shop:hover::after,.shop:focus-visible::after{transform:rotate(-3deg) scale(1.08)}
 .shop.current{background-color:var(--stone,#f6f5f2)}
 @keyframes pfa-paws{from{background-position:-44px calc(100% + 1px)}to{background-position:0 calc(100% + 1px)}}
-.shop + .donate{margin-left:12px}
 html.header-on-dark header.site .shop{background-color:transparent;color:#fff;border-color:#fff}
 @media (max-width:1180px){
   .shop{margin-left:10px;padding:13px 16px 13px 14px;letter-spacing:.1em}
-  .shop + .donate{margin-left:8px}
+  .donate + .shop{margin-left:8px}
 }
 @media (max-width:560px){
   .shop{padding:11px 11px;gap:7px;letter-spacing:.08em}

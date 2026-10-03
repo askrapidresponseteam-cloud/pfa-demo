@@ -64,7 +64,7 @@ test('the header height is re-measured, not assumed', () => {
   assert.match(CHROME_JS, /addEventListener\('resize', measure\)/, 'and re-measure on resize');
   for (const page of ['quiz.html', 'get-involved.html']) {
     const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
-    assert.match(html, /<script src="\/?assets\/chrome\.js"><\/script>/, `${page} must load chrome.js`);
+    assert.match(html, /<script src="\/?assets\/chrome\.js(?:\?v=[a-f0-9]{10})?"><\/script>/, `${page} must load chrome.js`);
   }
 });
 

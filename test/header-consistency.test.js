@@ -63,8 +63,8 @@ const NAV = [
   'founder.html|The founder',
   'careers.html|Careers',
   'ask.html|Contact',
-  'shop.html|Shop',
-  'donate.html|Donate'
+  'donate.html|Donate',
+  'shop.html|Shop'
 ];
 
 test('every page lists the same navigation, in the same order', () => {
@@ -147,8 +147,8 @@ test('the home page is measured like the rest, not pinned to a literal', () => {
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   assert.ok(!/top:34px/.test(html), 'the header must not be pinned to a literal bar height');
   assert.match(html, /<header class="site" id="header"/, 'the home page uses the shared header');
-  assert.match(html, /<link rel="stylesheet" href="assets\/chrome\.css">/);
-  assert.match(html, /<script src="assets\/chrome\.js"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="assets\/chrome\.css\?v=[a-f0-9]{10}">/);
+  assert.match(html, /<script src="assets\/chrome\.js\?v=[a-f0-9]{10}"><\/script>/);
   assert.ok(!/header nav\{max-width/.test(html), 'the home page must not cap the nav width on its own');
   assert.ok(!/padding:0 16px/.test(html), 'the home page must not hard-code the gutter');
 });

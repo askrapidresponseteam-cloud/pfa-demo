@@ -133,10 +133,22 @@ function renderChrome(page) {
   return spec.root ? rootify(out) : out;
 }
 
-const LINK = (root) => `<link rel="stylesheet" href="${root ? '/' : ''}assets/chrome.css">`;
+/* The stylesheet and script are linked with a fingerprint of their own
+   contents (?v=...). vercel.json lets browsers keep assets/ for an hour and
+   serve a stale copy for a day while they refresh, and the HTML only five
+   minutes. Without the fingerprint, a deploy that changed the header put new
+   markup in front of the previous chrome.css: on 3 Oct 2026 the new Shop
+   button arrived unstyled, as the word "Shop", until the cache let go. Now a
+   changed file is a new URL, fetched at once, and an unchanged one keeps its
+   cache. --check fails when a file changed and the pages were not stamped. */
+const crypto = require('crypto');
+function fingerprint(file) {
+  return crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, 'assets', file))).digest('hex').slice(0, 10);
+}
+const LINK = (root) => `<link rel="stylesheet" href="${root ? '/' : ''}assets/chrome.css?v=${fingerprint('chrome.css')}">`;
 /* Not deferred: it sits right after </header>, so the header exists when it
    runs and window.PFA_CHROME exists for every page script that follows. */
-const SCRIPT = (root) => `<script src="${root ? '/' : ''}assets/chrome.js"></script>`;
+const SCRIPT = (root) => `<script src="${root ? '/' : ''}assets/chrome.js?v=${fingerprint('chrome.js')}"></script>`;
 
 /* Apply the chrome to a page's HTML. Pure. Used by this script and by the
    product/quiz template builders, so a rebuild can never reintroduce a
@@ -147,7 +159,7 @@ function applyChrome(html, page) {
 
   /* 1. The block: from the announcement bar (if any) to </header> and the
         chrome script right after it. Anything in between is chrome. */
-  html = html.replace(/[ \t]*<script src="\/?assets\/chrome\.js"( defer)?><\/script>\n?/g, '');
+  html = html.replace(/[ \t]*<script src="\/?assets\/chrome\.js(?:\?v=[a-f0-9]+)?"( defer)?><\/script>\n?/g, '');
   const headerOpen = html.indexOf('<header');
   const headerClose = html.indexOf('</header>', headerOpen);
   if (headerOpen < 0 || headerClose < 0) throw new Error(`sync-chrome: ${page} has no <header>`);
@@ -174,7 +186,7 @@ function applyChrome(html, page) {
 
   /* 2. The stylesheet link: once, in <head>, before the page's own <style>. */
   const linkTag = LINK(spec.root);
-  html = html.replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/chrome\.css">\n?/g, '');
+  html = html.replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/chrome\.css(?:\?v=[a-f0-9]+)?">\n?/g, '');
   const headEnd = html.indexOf('</head>');
   const firstStyle = html.indexOf('<style>', html.indexOf('</title>'));
   const at = firstStyle > -1 && firstStyle < headEnd ? firstStyle : headEnd;

@@ -97,7 +97,7 @@ test('the cursor is drawn once, by the shared chrome, on every page that hides t
     const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
     const usesChrome = /assets\/chrome\.css/.test(html);
     if (usesChrome) {
-      assert.match(html, /<script src="\/?assets\/chrome\.js"><\/script>/, `${page} takes the stylesheet, so it must take the script`);
+      assert.match(html, /<script src="\/?assets\/chrome\.js(?:\?v=[a-f0-9]+)?"><\/script>/, `${page} takes the stylesheet, so it must take the script`);
       assert.ok(!/function cursor\(\)|id="cursorSvg"|id="pfaCursorSvg"/.test(html), `${page} still carries its own cursor`);
     }
   }

@@ -1,3 +1,8 @@
+## v1.370
+
+- **Shop is a button, to the right of Donate.** Owner, 3 Oct 2026. On the live site Shop arrived as the plain word "Shop", left of Donate. The markup was right; the stylesheet was not there yet: assets/ is cached for an hour and served stale for a day, the HTML for five minutes, so the new header was read by the previous chrome.css. Shop now follows Donate, as its own bordered button with the T-shirt mark and the "50% off" sticker, at every width.
+- **A changed header can no longer arrive unstyled.** scripts/sync-chrome.js links chrome.css and chrome.js with a fingerprint of their contents (?v=...), so a changed file is a new address that browsers fetch at once, and an unchanged one keeps its cache. `npm run sync:chrome -- --check` (and its test) fails if either file changes and the pages were not stamped again. The site audit and four tests read ?v= as a cache tag, not part of the file name.
+
 ## v1.369
 
 - **The shop takes payment now, the way donations do, and has its own button beside Donate.** Owner, 3 Oct 2026. Checkout showed "Online orders are not open yet" because it had nowhere to write an order without the pfa-oldsite key. It now writes to pfa-oldsite when PFA_SHOP_FIREBASE_SERVICE_ACCOUNT is set, and otherwise to this site's own Firestore (shopOrders, shopStock, shopTotals) through the connection donations already use, in the same order shape. A key for the wrong project is still refused, never fallen back from.

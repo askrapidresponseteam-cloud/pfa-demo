@@ -62,7 +62,7 @@ function ids(html) {
   return new Set([...html.matchAll(/\sid=["']([^"']+)["']/g)].map((m) => m[1]));
 }
 function scriptsOf(html) {
-  return attrs(html, 'script', 'src').filter((s) => !/^https?:/.test(s)).map((s) => path.join(ROOT, s.replace(/^\//, '')));
+  return attrs(html, 'script', 'src').filter((s) => !/^https?:/.test(s)).map((s) => path.join(ROOT, s.split('?')[0].replace(/^\//, '')));
 }
 
 function markupOf(html) {

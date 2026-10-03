@@ -42,7 +42,7 @@ function classesUsed(html) {
    search.html styles .is-prompt in pfa-search.css, not inline. */
 function classesDefined(html) {
   let css = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('\n');
-  for (const m of html.matchAll(/<link[^>]+href="([^":]+\.css)"/g)) {
+  for (const m of html.matchAll(/<link[^>]+href="([^":?]+\.css)(?:\?[^"]*)?"/g)) {
     const file = path.join(ROOT, m[1]);
     if (fs.existsSync(file)) css += '\n' + fs.readFileSync(file, 'utf8');
   }
