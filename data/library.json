@@ -1,0 +1,208 @@
+{
+  "about": "The PFA Library: every resource on PFA's resources page, one entry each, on the shelf it was listed under. The titles and Google Drive links are the ones PFA supplied (PFA Resources, Downloadable Links); keep them as supplied. Edit this file, then run node scripts/build-library.js, which writes library.html and assets/library-data.js. To read a document in the PFA reader rather than Google's viewer, run node scripts/build-library.js --fetch once on a machine that can reach Google Drive: it saves each PDF and its reading edition under media/library/. LIBRARY.md explains every field.",
+  "shelves": [
+    {
+      "id": "essential",
+      "head": "Start with these five",
+      "name": "Essential handbooks",
+      "short": "Essential",
+      "note": "The five to read first: the law itself, the module behind animal birth control, and the handbooks that explain the law to the officials who apply it."
+    },
+    {
+      "id": "handbooks",
+      "head": "Manuals for the people who do the work",
+      "name": "Handbooks and training manuals",
+      "short": "Handbooks",
+      "note": "Manuals and guides for municipal bodies, police, farms, companies and veterinary services, several of them from Uttar Pradesh."
+    },
+    {
+      "id": "research",
+      "head": "The evidence, in brief",
+      "name": "Research and policy briefs",
+      "short": "Research",
+      "note": "Evidence and argument for policy makers."
+    },
+    {
+      "id": "scoping",
+      "head": "Following the money",
+      "name": "Financial scoping reports",
+      "short": "Scoping reports",
+      "note": "The money behind three animal farming sectors in India: dairy, pigs and poultry."
+    }
+  ],
+  "items": [
+    {
+      "slug": "pca-act-1960",
+      "title": "Prevention of Cruelty to Animals Act 1960",
+      "shelf": "essential",
+      "drive": "12aqsaqS6JVgO4AV7dax3hx_6QhsyHvhX",
+      "pdf": "resources/Prevention of Cruelty to Animals Act, 1960.pdf",
+      "kind": "Act of Parliament",
+      "blurb": "The Act as published in the Gazette of India on 27 December 1960: what counts as cruelty, the penalties, and the Animal Welfare Board of India it set up."
+    },
+    {
+      "slug": "revised-abc-module",
+      "title": "Revised Animal Birth Control Module",
+      "shelf": "essential",
+      "drive": "12LiBm5L3p6D96-RhOploL_gTafvTgK7w",
+      "pdf": "resources/Revised ABC Module.pdf",
+      "kind": "Module",
+      "blurb": "AWBI's revised module on street dog population management, rabies eradication and reducing conflict between people and dogs, under the ABC Rules, 2023."
+    },
+    {
+      "slug": "animal-law-handbook-ulb",
+      "title": "Animal Law Handbook for Urban Local Bodies",
+      "shelf": "essential",
+      "drive": "1YhUMAWqUbxZCFlIJ4j7YmWKLnEb_YrG3",
+      "pdf": "resources/AWBI ULB.pdf",
+      "kind": "Handbook",
+      "blurb": "AWBI's handbook for municipal bodies: the constitutional and legal framework for managing animals, from animal birth control to cattle premises and disease."
+    },
+    {
+      "slug": "law-enforcement-handbook",
+      "title": "Law Enforcement Handbook on Animal Welfare Laws",
+      "shelf": "essential",
+      "drive": "1Xnb_WxHTdDULwbr7aelo95XlgMyPD2m2",
+      "pdf": "resources/AWBI Law Enforcement.pdf",
+      "kind": "Handbook",
+      "blurb": "AWBI's ready reference for enforcement officers: the laws protecting animals, and the procedure from a complaint to its investigation, kind by kind of cruelty."
+    },
+    {
+      "slug": "veterinary-officers-handbook",
+      "title": "Handbook for Veterinary Officers on Animal Welfare Laws",
+      "shelf": "essential",
+      "drive": "1jV3sN_CQSrD1sJLVQZEGPgyDZzZ9vRpj",
+      "pdf": "resources/AWBI Veterinary Officer.pdf",
+      "kind": "Handbook",
+      "blurb": "AWBI's ready reference to the statutory duties of veterinary officers, and the procedure they follow in cases of cruelty to animals."
+    },
+    {
+      "slug": "abc-blue-book-lucknow",
+      "title": "ABC Training Blue Book, Nagar Nigam, Lucknow",
+      "shelf": "handbooks",
+      "drive": "1Cw8N_-t3DfZKvNC5cynu7XfrdxBg6UyN",
+      "pdf": "resources/ABC Bluebook.pdf",
+      "kind": "Training manual",
+      "blurb": "Lucknow Nagar Nigam's training guide for dog population management: how its Animal Birth Control training is organised, run and assessed."
+    },
+    {
+      "slug": "delhi-police-handbook",
+      "title": "Delhi Police Handbook",
+      "shelf": "handbooks",
+      "drive": "1xlf_lgf_QF8OrvvKNWMJWuFci1NGJRYv",
+      "pdf": "resources/Final_Delhi Specific Police Handbook.pdf",
+      "kind": "Handbook",
+      "blurb": "For Delhi Police: the protocol for cruelty complaints and the laws that apply in Delhi, chapter by chapter from community dogs to dairies and slaughterhouses."
+    },
+    {
+      "slug": "up-ud-handbook",
+      "title": "UP UD Handbook",
+      "shelf": "handbooks",
+      "drive": "1qbm0vh0sSzBtlYWRPEfAZ6U2WcNZ5D52",
+      "pdf": "resources/UP-UD-Handbook.pdf",
+      "kind": "Handbook",
+      "language": "Hindi",
+      "blurb": "A handbook for Uttar Pradesh's urban local bodies on managing the animals in their areas, with the laws and court judgments behind that duty."
+    },
+    {
+      "slug": "ey-cage-free",
+      "title": "EY - Transitioning to Cage-Free",
+      "shelf": "handbooks",
+      "drive": "1vgEnm8yTnIeaFQ607J2Y6jvetpdPUYwR",
+      "pdf": "resources/Transitioning to Cage-Free_ A Roadmap for Corporates in the Egg Supply Chain.pdf",
+      "kind": "Report",
+      "blurb": "EY's roadmap for companies in India's egg supply chain moving to cage-free eggs: where India stands, what is driving the shift, and the way forward."
+    },
+    {
+      "slug": "pig-farms-practices",
+      "title": "Package Of Practices For Organized Pig Farms",
+      "shelf": "handbooks",
+      "drive": "1xUbK6Vw1rb_YT7U0hg1oiI894vos_vAp",
+      "pdf": "resources/NRCP - Package of Practices for Organized Pig Farms (2).pdf",
+      "kind": "Practice guide",
+      "blurb": "From ICAR's National Research Centre on Pig: breeds, breeding, care, housing, feeding, reproduction and transport on organised pig farms."
+    },
+    {
+      "slug": "piggery-handbook-uttarakhand",
+      "title": "Piggery Handbook Uttarakhand",
+      "shelf": "handbooks",
+      "drive": "1XoO45Hs5kq2gPQxFwTbPTfJevSMJnYUS",
+      "kind": "Handbook",
+      "blurb": "A handbook on pig farming from Uttarakhand."
+    },
+    {
+      "slug": "kanha-gaushala-up",
+      "title": "Kanha Gaushala, Govt of UP",
+      "shelf": "handbooks",
+      "drive": "1igF7rS-uUIraStXTPGvTziN664ClPnoI",
+      "pdf": "resources/कान्हा-गौशाला-प्रबन्धन-मैनुअल.pdf",
+      "kind": "Manual",
+      "language": "Hindi",
+      "blurb": "The management manual for Kanha Gaushalas, the Government of Uttar Pradesh's shelters for cattle."
+    },
+    {
+      "slug": "shvaan-pashu",
+      "title": "Shvaan Pashu",
+      "shelf": "handbooks",
+      "drive": "17JX79mBQi4rrjEq30zp2aEzXqqBMAfih",
+      "pdf": "resources/श्वान-पशु-प्रबन्धन-मैनुअल.pdf",
+      "kind": "Manual",
+      "language": "Hindi",
+      "blurb": "Uttar Pradesh's 2023 advisory manual on the management of dogs, from the state's Urban Development department."
+    },
+    {
+      "slug": "veterinary-infrastructure-standards",
+      "title": "Minimum Standards for Veterinary Infrastructure",
+      "shelf": "handbooks",
+      "drive": "17ZK8TIqTvPuTrjIvgAlWqUTGUWh068fX",
+      "pdf": "resources/Vet Infrastructure guidelines.pdf",
+      "kind": "Guidelines",
+      "blurb": "The Government of India's minimum standards for four tiers of veterinary institutions, from primary care centres to state polyclinics: buildings, staff, services."
+    },
+    {
+      "slug": "scc-policy-brief",
+      "title": "SCC Policy Brief",
+      "shelf": "research",
+      "drive": "1AD3a39onjZaAexJBH2FCAqzAD7DgzyEo",
+      "pdf": "resources/SCC Policy Brief_Final .pdf",
+      "kind": "Policy brief",
+      "blurb": "Healthy Herds, Safer Milk: somatic cell count (SCC), the measure of udder infection and milk quality India does not regulate, and the case for a national limit."
+    },
+    {
+      "slug": "hidden-costs-piggery",
+      "title": "Hidden Costs of Piggery Operations in India",
+      "shelf": "research",
+      "drive": "1OigazDKppHhDateqLwdFmvcsPyNwau0D",
+      "pdf": "resources/Hidden Costs of Piggery Operations in India.pdf",
+      "kind": "Research",
+      "blurb": "How India's unregulated piggery sector threatens public health: the waste piggery units discard, its impact, and what should change."
+    },
+    {
+      "slug": "dairy-scoping-report",
+      "title": "Dairy Scoping Report",
+      "shelf": "scoping",
+      "drive": "1lWohKj71RN0vNrF1S2qgvhHweKBF_Z9N",
+      "pdf": "resources/Dairy Scoping Report (10.06.2025).pdf",
+      "kind": "Scoping report",
+      "blurb": "Do India's financial incentives for dairy reward animal welfare, environmental sustainability and public health? The schemes assessed, with recommendations."
+    },
+    {
+      "slug": "pig-scoping-report",
+      "title": "Pig Scoping Report",
+      "shelf": "scoping",
+      "drive": "1Of6P8rPUGcb1jVm0TG3mpqhipSAA0Rch",
+      "pdf": "resources/Piggery Scoping Report.pdf",
+      "kind": "Scoping report",
+      "blurb": "India's financial incentives for piggery, weighed against animal welfare and environmental sustainability, with a close look at Assam, Nagaland and Karnataka."
+    },
+    {
+      "slug": "poultry-scoping-report",
+      "title": "Poultry Scoping Report",
+      "shelf": "scoping",
+      "drive": "11-z6biKcSFUIFIeNXN-KQIa3NLez7sSg",
+      "pdf": "resources/Poultry Scoping Report (03.07.2025).pdf",
+      "kind": "Scoping report",
+      "blurb": "The government schemes and subsidies behind egg production in India, assessed against animal welfare and sustainability, and the case for cage-free."
+    }
+  ]
+}

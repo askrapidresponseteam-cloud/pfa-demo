@@ -22,7 +22,8 @@ const SITE = 'https://peopleforanimalsindia.org';
    newsroom story that does not exist yet. Indexing it would surface it in site
    search before that story is written. Delete it from this list on the day the
    story goes up. */
-const EXCLUDE = new Set(['admin.html', '404.html', 'search.html', 'patron-card-preview.html', 'caregiver-card.html', 'animal.html', 'winner.html', 'submission-collage.html']);
+/* read.html is the library's reader: one page for every document, chosen by ?r=, so it is reached from library.html, which is indexed, never on its own. */
+const EXCLUDE = new Set(['admin.html', '404.html', 'search.html', 'patron-card-preview.html', 'caregiver-card.html', 'animal.html', 'winner.html', 'submission-collage.html', 'read.html']);
 
 /* Not the same idea as EXCLUDE. search.html is public, it just is not a
    destination worth indexing. These must never reach a visitor

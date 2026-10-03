@@ -18,7 +18,7 @@ test('every page carries the chrome exactly as the source renders it', () => {
 });
 
 test('every page in the tree is known to the chrome table', () => {
-  const pages = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html') && f !== 'submission-collage.html' && f !== 'admin.html');
+  const pages = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html') && f !== 'submission-collage.html' && f !== 'admin.html' && f !== 'read.html');
   const unknown = pages.filter((p) => !PAGES[p]);
   assert.deepEqual(unknown, [], `add these to PAGES in scripts/sync-chrome.js: ${unknown.join(', ')}`);
 });

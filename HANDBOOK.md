@@ -407,3 +407,11 @@ The top of `newsroom.html`, the nameplate, the front page and the desks, is writ
 2. Run `node scripts/build-newsroom.js`. It refuses bad data and names the story and the field. `DEPLOY.command` runs it for you, and the tests stop a deploy whose page is out of date (`npm run check:newsroom`).
 3. A story with no photograph is set in type with its date large, so leave `image` out rather than use a stand-in picture.
 
+
+## 12. The library and its reader
+
+`library.html` lists every document from PFA's resources page on four shelves; `read.html?r=<slug>` opens one in the reader. The shelves are written from `data/library.json`, and the PDFs are the ones PFA put in `resources/`. `LIBRARY.md` explains every field and how the reader works.
+
+1. **To add or change a document,** put its PDF in `resources/` and give it an entry in `data/library.json`: title, shelf, Google Drive file id, `pdf` path, and a description of at most 180 characters that says only what the document says. Then run `node scripts/build-library.js --extract`. The script refuses bad data and names the entry and the field. The tests stop a deploy whose page or reading editions are out of date (`npm run check:library`, `test/library.test.js`).
+2. **The script prints a verdict for each document:** "reading edition", or "original pages only" with the reason (a scan, an OCR layer, or Hindi in a font that scrambles its letters). Either way the reader works, and the original pages are always one tap away under Aa. Open each new document once and look.
+3. **A document with no PDF here** opens in Google Drive's viewer. `npm run media:library`, which `DEPLOY.command` runs, tries to download it from Drive; Drive refuses a file not shared with "Anyone with the link".

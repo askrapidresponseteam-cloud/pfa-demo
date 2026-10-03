@@ -262,8 +262,11 @@ test('every page that takes an entry loads the rules, and loads them first', () 
 test('no page with a data entry box was left out', () => {
   /* academy.html carries a search box and the dose checker, neither of which
      is an entry anyone submits. */
+  /* library.html and read.html carry a find box each (a title on the shelves,
+     a word in the document); nothing typed there leaves the browser. */
   const skip = new Set(['admin.html', 'search.html', 'quiz.html', 'laws.html',
-    'academy.html', 'units.html', 'shop.html', 'submission-collage.html']);
+    'academy.html', 'units.html', 'shop.html', 'submission-collage.html',
+    'library.html', 'read.html']);
   const missed = [];
   for (const file of fs.readdirSync(ROOT).filter((f) => f.endsWith('.html'))) {
     if (skip.has(file) || WIRED.includes(file)) continue;

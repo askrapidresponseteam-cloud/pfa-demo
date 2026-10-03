@@ -116,7 +116,11 @@ function audit() {
         /* The query is not part of the filename. Only the relative branch used
            to strip it, so a root-absolute link carrying one was looked up on
            disk with the query attached and reported as a missing page. */
-        const bare = file.split('?')[0];
+        /* and a percent-encoded name is the file of the decoded name: the
+           library's documents keep PFA's own file names, spaces and
+           Devanagari included (resources/AWBI%20ULB.pdf). */
+        let bare = file.split('?')[0];
+        try { bare = decodeURIComponent(bare); } catch (e) { /* a stray % stays as written */ }
         const target = bare.startsWith('/') ? path.join(ROOT, bare.slice(1)) : path.join(ROOT, bare);
         const isDynamic = rewrites.some((r) => new RegExp('^' + r.replace(/:[a-z]+\*?/g, '.*').replace(/\//g, '\\/') + '$').test('/' + rel(target)));
         if (!exists(target) && !isDynamic && !exists(path.join(target, 'index.html'))) problems.push(`${name}: link to missing page ${href}`);

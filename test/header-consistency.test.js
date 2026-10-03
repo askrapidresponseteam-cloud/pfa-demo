@@ -20,7 +20,9 @@ const test = require('node:test');
 const assert = require('node:assert');
 
 const ROOT = path.join(__dirname, '..');
-const pages = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html') && f !== 'submission-collage.html' && f !== 'admin.html');
+/* read.html is the library's full-screen reader and carries no site header
+   (scripts/sync-chrome.js, SKIP). */
+const pages = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html') && f !== 'submission-collage.html' && f !== 'admin.html' && f !== 'read.html');
 
 function header(page) {
   const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
@@ -46,6 +48,7 @@ const NAV = [
   'achievements.html|Policies and achievements',
   'laws.html|Learn',
   'laws.html|What the law says',
+  'library.html|Resources library',
   'academy.html|Academy',
   'someone.html|Someone, not something',
   'quiz.html|Test yourself',
@@ -82,6 +85,7 @@ const EXPECTED = {
   'ask.html':          ['Contact',                   'founder.html'],
   'laws.html':         ['What the law says',         'laws.html'],
   'academy.html':      ['Academy',                   'laws.html'],
+  'library.html':      ['Resources library',         'laws.html'],
   'someone.html':      ['Someone, not something',   'laws.html'],
   'quiz.html':         ['Test yourself',             'laws.html'],
   'units.html':        ['Units: find help near you', 'units.html'],

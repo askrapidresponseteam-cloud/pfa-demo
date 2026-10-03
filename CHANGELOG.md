@@ -1,3 +1,18 @@
+## v1.362
+
+- **The PFA Library: every document on PFA's resources page, on four shelves, with a reader.** Asked for on 3 Oct 2026: a premium online reading library rather than a list of PDF links. The 19 documents are the ones supplied (PFA Resources, Downloadable Links), under their supplied titles. They sit on four shelves: Essential handbooks, Handbooks and training manuals, Research and policy briefs, and Financial scoping reports. The PDFs are the 18 PFA added to `resources/`; Piggery Handbook Uttarakhand has none yet, so it opens in Google Drive's viewer.
+- **library.html.** It sits under Learn as Resources library, in the header and the footer. Each document has a cover set in the site's type rather than a thumbnail of a letterhead, plus a description written from the document itself, its page count, its language, its reading time, its file size, Read now and Download. Continue reading shows the last document opened, how far in, and the others being read; every card shows its own progress. There is a find box and shelf filters. The shelves are plain HTML, written by `scripts/build-library.js` from `data/library.json`.
+- **read.html.** It is a full-screen reading room with no site chrome. A quiet bar (Library, title, Aa, Search, Download) steps aside while you read, and a running head, page and percentage stay faint at the edges. The Aa panel offers:
+  - **Paper:** Light, Sepia or Dark, none of them pure white or black.
+  - **Font:** Literata, the site's sans, or OpenDyslexic.
+  - **Size:** A-, a slider, A+.
+  - **Spacing:** lines, paragraphs and margins.
+  - **Layout:** left or justified, one or two columns, page turns or scroll.
+
+  You turn pages by key, click, swipe or wheel; a slider takes you anywhere and shows where you will land. Contents come from the document's headings. Search lists every hit with its page in the original; choosing one marks it and offers "Back to page N", so your place is never lost. Your place, kept as a character in the text, survives a new font, a new size, a turned phone or another visit.
+- **Reading editions.** `scripts/library-extract.js` reads each PDF's text with pdf.js, a dev dependency, and builds headings, paragraphs, lists and tables. It drops running heads and page numbers, joins hyphenated line ends and paragraphs that cross a page, and points to the printed contents page instead of setting it. It changes no words; a test holds every block to the PDF's own text. It declines a document whose text cannot be trusted, and the reader then shows the original pages, drawn by pdf.js (vendored under `assets/vendor/pdfjs/` as `.js`, so the deploy keeps it) with search marked on the printed page. That is the case for the PCA Act (a scanned 1960 Gazette whose OCR misreads words), the UP UD handbook and Shvaan Pashu (Hindi their fonts scramble), and Kanha Gaushala (a scan). The other 14 have reading editions.
+- **Tests and checks.** `read.html` is in sync-chrome's `SKIP`, out of site search, and `noindex`. Google Drive's viewer is in the CSP `frame-src` on both hosts, and Firebase now publishes `resources/`. `scripts/audit-site.js` decodes percent-encoded links before looking on disk. `DEPLOY.command` runs `npm run media:library`. New: `test/library.test.js`, with small PDFs in `test/fixtures/library/` shaped like the real documents. Verified in Chromium at 1440x900 and on an iPhone 13, including from the minified `dist/`. LIBRARY.md and HANDBOOK.md section 12 have the rest.
+
 ## v1.361
 
 - **The events page is now a growing archive of dated photo cards, and the newsroom a front page.** Asked for on 17 Sep 2026 with two references, and built in PFA's own type, colour and photographs rather than the references' logos or artwork.

@@ -24,7 +24,8 @@ const PUBLIC = path.join(ROOT, 'public');
 const FN = path.join(ROOT, 'functions');
 
 /* ---- what the world may download ------------------------------------- */
-const PUBLIC_DIRS = ['assets', 'fonts', 'img', 'media', '.well-known'];
+/* resources/ holds the library's documents, the PDFs PFA supplied. */
+const PUBLIC_DIRS = ['assets', 'fonts', 'img', 'media', '.well-known', 'resources'];
 const PUBLIC_FILES = [
   'pfa-search.js', 'pfa-search.css', 'pfa-forms.js',
   'search-index.json', 'search-index.js', 'sitemap.xml', 'robots.txt'
