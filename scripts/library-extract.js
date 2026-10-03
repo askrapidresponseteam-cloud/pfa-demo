@@ -26,7 +26,7 @@
 
 /* Bump when a change here would change an edition, so build-library.js
    --extract redoes editions made by the older reading. */
-const VERSION = 6;
+const VERSION = 10;
 
 const OPS_IMAGES = ['paintImageXObject', 'paintInlineImageXObject', 'paintImageMaskXObject', 'paintImageXObjectRepeat', 'paintInlineImageXObjectGroup'];
 
@@ -34,6 +34,38 @@ let pdfjsPromise = null;
 function loadPdfjs() {
   if (!pdfjsPromise) pdfjsPromise = import('pdfjs-dist/legacy/build/pdf.mjs');
   return pdfjsPromise;
+}
+
+/* pdf.js decodes scanned images (JBIG2, JPEG 2000) with WebAssembly and
+   draws the standard fonts from its own files; in Node it reads both from
+   disk. Without them a scan like the 1960 Gazette draws as a blank page. */
+function pdfjsOptions(data) {
+  const base = require('path').dirname(require.resolve('pdfjs-dist/package.json')) + '/';
+  return { data, verbosity: 0, useSystemFonts: false, isEvalSupported: false, wasmUrl: base + 'wasm/', standardFontDataUrl: base + 'standard_fonts/' };
+}
+
+/* The document's own first page, as the cover on its shelf: a WebP image
+   `width` pixels wide. Needs @napi-rs/canvas, which pdfjs-dist installs. */
+async function renderCover(buffer, width = 520, pageNumber = 1) {
+  const pdfjs = await loadPdfjs();
+  const data = buffer instanceof Uint8Array ? new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength) : new Uint8Array(buffer);
+  const task = pdfjs.getDocument(pdfjsOptions(data.slice()));
+  try {
+    const doc = await task.promise;
+    const page = await doc.getPage(Math.min(Math.max(1, pageNumber), doc.numPages));
+    const one = page.getViewport({ scale: 1 });
+    const view = page.getViewport({ scale: width / one.width });
+    const w = Math.round(view.width);
+    const h = Math.round(view.height);
+    const target = doc.canvasFactory.create(w, h);
+    target.context.fillStyle = '#ffffff';
+    target.context.fillRect(0, 0, w, h);
+    await page.render({ canvasContext: target.context, viewport: view }).promise;
+    const image = await target.canvas.encode('webp', 82);
+    return { image, w, h };
+  } finally {
+    await task.destroy();
+  }
 }
 
 /* ---- text hygiene ------------------------------------------------------ */
@@ -106,7 +138,7 @@ function round(n) { return Math.round(n * 10) / 10; }
 async function readPdf(buffer) {
   const pdfjs = await loadPdfjs();
   const data = buffer instanceof Uint8Array ? new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength) : new Uint8Array(buffer);
-  const task = pdfjs.getDocument({ data: data.slice(), verbosity: 0, useSystemFonts: false, isEvalSupported: false });
+  const task = pdfjs.getDocument(pdfjsOptions(data.slice()));
   const doc = await task.promise;
   const imageOps = new Set(OPS_IMAGES.map((k) => pdfjs.OPS[k]).filter((v) => v !== undefined));
   const pages = [];
@@ -144,7 +176,7 @@ async function readPdf(buffer) {
 /* Some tools fill the bookmarks with ids or the file names of the PDFs they
    merged ("ee2613e3defed6fd....pdf") rather than titles. */
 function saneTitle(t) {
-  return /\p{L}{2}/u.test(t) && !/\.(pdf|docx?|indd|ai|png|jpe?g|tiff?)$/i.test(t) && !/^[0-9a-f]{16,}$/i.test(t.replace(/\s/g, ''));
+  return /\p{L}{2}/u.test(t) && !/\.(pdf|docx?|indd|ai|png|jpe?g|tiff?)$/i.test(t) && !/^[0-9a-f]{16,}$/i.test(t.replace(/\s/g, '')) && !/^page\s*\d+$/i.test(t.trim());
 }
 
 async function flattenOutline(doc, items, level) {
@@ -238,7 +270,7 @@ function stripFurniture(pages) {
 
 /* The document's own contents or index page: near the front, titled so, or
    mostly lines that end in a page number ("Introduction .... 5", "9 - 12").
-   The reader has its own contents, so the printed one is pointed to, not set. */
+   Its entries become the reader's Contents (readContents, below). */
 const PAGE_REF = /(?:\.{2,}|\u2026|\s)\s*\d{1,3}(?:\s*[-\u2013]\s*\d{1,3})?$/;
 const CONTENTS_TITLE = /^(table of contents|contents|content|index|\u0935\u093F\u0937\u092F[- ]?\u0938\u0942\u091A\u0940|\u0905\u0928\u0941\u0915\u094D\u0930\u092E\u0923\u093F\u0915\u093E)\b/i;
 function contentsTitled(p) {
@@ -258,6 +290,198 @@ function contentsPage(p, total, afterContents, afterTitle) {
   /* or untitled, with a page number for every line or two of titles (some
      set the numbers in a column of their own) */
   return (titled && refs >= 3) || (refs >= 5 && refs >= others * 0.5) || (afterContents && refs >= 3 && entries / p.lines.length >= 0.4);
+}
+
+/* The document's own contents, read off its contents pages: each entry in
+   its own words, with the page number printed beside it where there is one.
+   Numbers set in a column of their own go to the nearest line beside them
+   (to its left, a chapter's number; to its right, its page); a title run
+   over onto a second line is joined up again. */
+const NUM_ONLY = /^(?:\d{1,3}(?:\s*[-\u2013]\s*\d{1,3})?|\(?[ivxlc]{1,6}\)?)$/i;
+const PAGE_TOKEN = /^(\d{1,3})(?:\s*[-\u2013]\s*\d{1,3})?$/;
+const ENUM_START = /^(\(?\d{1,3}(?:\.\d{1,3})*[.)]?\s|\(?[a-z][.)]\s|\(?[ivxlc]{1,6}[.)]\s|[\u00B7\u2022\u25CF\u25AA\u25A0\u2013\u2014*-]\s*|(chapter|part|section|annexure|annex|appendix|schedule)\b)/i;
+const HEADER_ROW = /^(s\.?\s*no\.?|sr\.?\s*no\.?|sl\.?\s*no\.?)?\s*(particulars|topics?|subject|content|contents|title|name of the chapter|chapters?)?\s*page\s*(no\.?|number\(?s?\)?)?$/i;
+
+function trailingPage(text) {
+  const m = text.match(/^(.*?\p{L}.*?)(?:\s*(?:\.{2,}|\u2026+|_{2,})\s*|\s+)(\(?[ivxlc]{1,6}\)?|\d{1,3}(?:\s*[-\u2013]\s*\d{1,3})?)$/iu);
+  if (!m) return null;
+  /* a roman numeral at the end of a title is part of it ("Chapter IV"), unless set off */
+  if (/^[ivxlc]+$/i.test(m[2]) && !/[.\u2026_]{2,}\s*\S+$/.test(text)) return null;
+  return { title: m[1], page: PAGE_TOKEN.test(m[2]) ? Number(m[2].match(/\d+/)[0]) : null };
+}
+
+function readContents(contentsPages) {
+  const out = [];
+  for (const p of contentsPages) {
+    const lines = p.lines.filter((l) => l.text.trim());
+    const nums = lines.filter((l) => NUM_ONLY.test(l.text.trim()));
+    const texts = lines.filter((l) => !NUM_ONLY.test(l.text.trim()));
+    const pairs = [];
+    for (const n of nums) for (const l of texts) {
+      const dy = Math.abs(n.y - l.y);
+      if (dy < 0.8 * Math.max(n.size, l.size)) pairs.push({ n, l, dy });
+    }
+    pairs.sort((a, b) => a.dy - b.dy);
+    const pageOf = new Map();
+    const labelOf = new Map();
+    const used = new Set();
+    for (const { n, l } of pairs) {
+      if (used.has(n)) continue;
+      const side = n.x0 > l.x0 ? pageOf : labelOf;
+      if (side.has(l)) continue;
+      side.set(l, n.text.trim());
+      used.add(n);
+    }
+    let prev = null;
+    for (const l of texts) {
+      let text = l.text.replace(/\s+/g, ' ').trim();
+      if ((CONTENTS_TITLE.test(text) && text.length <= 24) || HEADER_ROW.test(text) || /^annex(e|ure)s$/i.test(text)) { prev = null; continue; }
+      const own = trailingPage(text);
+      let page = null;
+      let paged = false;
+      if (own) { text = own.title; page = own.page; paged = true; }
+      if (pageOf.has(l)) { const tok = pageOf.get(l); paged = true; page = PAGE_TOKEN.test(tok) ? Number(tok.match(/\d+/)[0]) : null; }
+      if (labelOf.has(l)) text = `${labelOf.get(l)} ${text}`;
+      /* run over from the line above: begun in lower case, or hung under the
+         words of the line above, or set close beneath it */
+      const dy = prev ? prev.y - l.y : 0;
+      const runOn = prev && !labelOf.has(l) && !ENUM_START.test(text) && Math.abs(l.size - prev.size) < 0.6 && l.x0 >= prev.x0 - 2 && dy > 0 &&
+        ((/^[a-z]/.test(text) && dy <= 2.2 * l.size) || (!prev.ownPage && ((l.x0 > prev.x0 + 8 && dy <= 2.2 * l.size) || dy <= 1.45 * l.size)));
+      if (runOn) {
+        prev.t = `${prev.t} ${text}`;
+        prev.y = l.y;
+        if (paged && !prev.paged) { prev.paged = true; prev.printed = page; }
+        if (own) prev.ownPage = true;
+        continue;
+      }
+      if (!/\p{L}{2}/u.test(text)) { prev = null; continue; }
+      prev = { t: text, printed: page, paged, ownPage: !!own, x: l.x0, x0: l.x0, y: l.y, size: l.size };
+      out.push(prev);
+    }
+  }
+  return out.map((e) => ({
+    t: e.t.replace(/^(\d{1,2})\s+(?=\d{1,2}\s+\p{L})/u, '').replace(/^\d{1,2}\.\s+(?=(chapter|part|annex))/i, '')
+      .replace(/[\s.\u2026_\u00B7:,;\u2013-]+$/, '').replace(/\s+/g, ' ').trim(),
+    printed: e.printed,
+    x: e.x
+  }));
+}
+
+/* a title without its number or label, and its words to compare by: lower
+   case, & as and, a plural s let go */
+function bareTitle(t) {
+  let s = t.trim();
+  for (let k = 0; k < 3; k++) {
+    const before = s;
+    s = s.replace(/^(chapter|part|section|annexure|annex|appendix|schedule)\s*[-\u2013]?\s*([0-9]+|[ivxlcdm]+|[a-z])\b\s*[-\u2013:.]?\s*/i, '')
+      .replace(/^\(?\d{1,2}(?:\.\d{1,2})*(?!\d)[.)]?\s*/, '')
+      .replace(/^\(?[ivxlc]{1,6}[.)]\s*/i, '')
+      .replace(/^\(?[a-z][.)]\s+/i, '')
+      .replace(/^[\u00B7\u2022\u25CF\u25CB\u25AA\u25A0\u2013\u2014*-]\s*/, '');
+    if (s === before) break;
+  }
+  return s;
+}
+function titleWords(t) {
+  return bareTitle(t).normalize('NFKD').toLowerCase().replace(/&/g, ' and ').split(/[^\p{L}\p{N}]+/u).filter(Boolean)
+    .map((w) => (w.length > 3 ? w.replace(/s$/, '') : w));
+}
+
+/* Each entry on the PDF page where it begins. Printed page numbers seldom
+   equal the PDF's (a cover and front matter come first, a full-page picture
+   goes unnumbered), so every title is looked for where it starts a line:
+   near where its number says once the numbers have proved out, else the
+   first place it is set as a heading. An entry not found by its words keeps
+   its number only where the entries found on either side agree on the
+   offset; one that cannot be placed is left out rather than guessed. */
+function placeContents(entries, pages, firstBody) {
+  const sizes = new Map();
+  for (const p of pages) for (const l of p.lines) sizes.set(Math.round(l.size), (sizes.get(Math.round(l.size)) || 0) + l.text.length);
+  const body = Number(mode(sizes)) || 10;
+  const index = [];
+  for (const p of pages) {
+    if (p.n < firstBody) continue;
+    p.lines.forEach((l, i) => {
+      const own = titleWords(l.text);
+      if (!own.length) return;
+      const next = p.lines[i + 1];
+      index.push({ n: p.n, w: own.concat(next ? titleWords(next.text) : []), own: own.length, big: l.size >= body * 1.12 || l.bold });
+    });
+  }
+  /* the first two words the same, and three in four of the first eight */
+  const cands = entries.map((e) => {
+    const tw = titleWords(e.t).slice(0, 8);
+    if (!tw.length || tw.join('').length < 4) return [];
+    const need = Math.max(Math.min(tw.length, 3), Math.ceil(tw.length * 0.75));
+    const seen = new Map();
+    for (const r of index) {
+      let hit = false;
+      for (let j = 0; j <= 1 && !hit; j++) {
+        if (j === 1 && r.own < 2) break;
+        if (r.w[j] !== tw[0] || (tw.length > 1 && r.w[j + 1] !== tw[1])) continue;
+        hit = tw.filter((w, k) => r.w[j + k] === w).length >= need;
+      }
+      if (hit && (!seen.has(r.n) || r.big)) seen.set(r.n, { n: r.n, big: r.big || seen.get(r.n)?.big || false });
+    }
+    return [...seen.values()];
+  });
+  const strong = cands.map((cs) => (cs.some((c) => c.big) ? cs.filter((c) => c.big) : cs));
+  const votes = new Map();
+  entries.forEach((e, i) => {
+    if (e.printed == null) return;
+    for (const o of new Set(strong[i].map((c) => c.n - e.printed))) votes.set(o, (votes.get(o) || 0) + 1);
+  });
+  let offset = null;
+  let top = 0;
+  for (const [o, v] of votes) if (v > top || (v === top && Math.abs(o) < Math.abs(offset))) { top = v; offset = o; }
+  if (top < 3) offset = null;
+  const placed = entries.map(() => null);
+  const rank = (want) => (a, b) => (b.big - a.big) || (Math.abs(a.n - want) - Math.abs(b.n - want));
+  let last = firstBody;
+  let found = 0;
+  entries.forEach((e, i) => {
+    /* an entry with its own number may sit a page or two before the one
+       above it (contents are not always in page order); one without may not */
+    const cs = cands[i].filter((c) => c.n >= last - (e.printed == null ? 0 : 3));
+    let pick = null;
+    if (e.printed != null) {
+      const want = e.printed + (offset === null ? 0 : offset);
+      pick = cs.filter((c) => (offset === null ? c.n - e.printed >= -3 && c.n - e.printed <= 30 : c.n >= want - 2 && c.n <= want + 6)).sort(rank(want))[0] || null;
+    }
+    if (!pick) pick = cs.filter((c) => c.big && c.n <= last + 40).sort((a, b) => a.n - b.n)[0] || null;
+    if (!pick && e.printed == null) pick = cs.filter((c) => c.n <= last + 20).sort(rank(last))[0] || null;
+    if (!pick) return;
+    placed[i] = pick.n;
+    found++;
+    if (e.printed != null) offset = pick.n - e.printed;
+    last = pick.n;
+  });
+  entries.forEach((e, i) => {
+    if (placed[i] !== null || e.printed == null) return;
+    let a = i - 1;
+    while (a >= 0 && (placed[a] === null || entries[a].printed == null)) a--;
+    let b = i + 1;
+    while (b < entries.length && (placed[b] === null || entries[b].printed == null)) b++;
+    if (a < 0 || b >= entries.length) return;
+    const oa = placed[a] - entries[a].printed;
+    if (oa === placed[b] - entries[b].printed && e.printed + oa >= placed[a] && e.printed + oa <= placed[b]) placed[i] = e.printed + oa;
+  });
+  if (found < 3 || found < entries.length * 0.5) return null;
+  const out = [];
+  entries.forEach((e, i) => { if (placed[i] !== null) out.push({ t: e.t, p: placed[i], x: e.x, k: i }); });
+  out.sort((a, b) => a.p - b.p || a.k - b.k);
+  /* levels from the numbering where the entries are numbered, else from the indents */
+  const NUMBERED = /^((?:\d{1,2}\.){1,3}\d{0,2}|\d{1,2})\s/;
+  if (out.filter((t) => NUMBERED.test(t.t)).length >= out.length * 0.6) {
+    return out.map((t) => { const m = t.t.match(NUMBERED); return { t: t.t, l: m ? Math.min(3, m[1].split('.').filter(Boolean).length) : 1, p: t.p }; });
+  }
+  const steps = [];
+  for (const x of out.map((t) => t.x).sort((a, b) => a - b)) if (!steps.length || x - steps[steps.length - 1] > 8) steps.push(x);
+  return out.map((t) => {
+    let k = 0;
+    steps.forEach((s, i) => { if (t.x >= s - 0.01) k = i; });
+    return { t: t.t, l: /^(chapter|part)\b/i.test(t.t) ? 1 : Math.min(3, k + 1), p: t.p };
+  });
 }
 
 /* Devanagari that a font has mapped to the wrong characters: a word that
@@ -366,6 +590,7 @@ function buildEdition(raw, opts = {}) {
     afterContents = c;
     afterTitle = contentsTitled(p);
   }
+  const printed = readContents(pages.filter((p) => contentsSet.has(p.n)));
   const furniture = stripFurniture(pages);
   const quality = assess(pages);
   const edition = {
@@ -572,8 +797,11 @@ function buildEdition(raw, opts = {}) {
   }
   edition.blocks = out;
 
-  /* contents: the PDF's own outline when it has a real one, else the headings */
+  /* contents: the PDF's own outline when it has a real one, else its
+     printed contents page, else the headings */
   const outline = (raw.outline || []).filter((o) => o.level <= 2);
+  const own = printed.length >= 3 ? placeContents(printed, pages, contentsSet.size ? Math.max(...contentsSet) + 1 : 1) : null;
+  const blockAt = (p) => { const b = out.findIndex((blk) => blk[2] >= p); return b < 0 ? out.length - 1 : b; };
   if (outline.length >= 3) {
     edition.toc = outline.map((o) => {
       let b = out.findIndex((blk) => blk[2] >= o.page);
@@ -581,6 +809,8 @@ function buildEdition(raw, opts = {}) {
       const near = out.findIndex((blk, i) => i >= b && blk[2] === o.page && blk[0][0] === 'h' && headKey(blk[1]).startsWith(headKey(o.title).slice(0, 12)));
       return { t: o.title, l: o.level, p: o.page, b: near >= 0 ? near : b };
     });
+  } else if (own) {
+    edition.toc = own.map((t) => ({ t: t.t, l: t.l, p: t.p, b: blockAt(t.p) }));
   } else {
     /* The first level with three headings or more carries the contents; the
        bigger, rarer ones above it (a title, "References") sit beside it, and
@@ -621,6 +851,7 @@ function buildEdition(raw, opts = {}) {
     /* what sits above the first chapter on the cover is the cover */
     const firstTop = edition.toc.findIndex((t) => t.l === 1);
     if (firstTop > 0) edition.toc = edition.toc.filter((t, k) => k >= firstTop || t.p > 1);
+    if (pages.length > 4) edition.toc = edition.toc.filter((t) => t.p > 1);
     if (edition.toc.length > 160) edition.toc = edition.toc.filter((t) => t.l === 1);
   }
 
@@ -633,4 +864,4 @@ async function extract(buffer, opts) {
   return buildEdition(await readPdf(buffer), opts);
 }
 
-module.exports = { VERSION, readPdf, readingOrder, buildEdition, extract, linesFromItems, assess, stripFurniture, contentsPage, fixDevanagari, devanagariDamage, unreadable, saneTitle, joinLine, words, clean };
+module.exports = { VERSION, readPdf, renderCover, readingOrder, buildEdition, extract, linesFromItems, assess, stripFurniture, contentsPage, fixDevanagari, devanagariDamage, unreadable, saneTitle, joinLine, words, clean, readContents, placeContents };

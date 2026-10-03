@@ -7,11 +7,11 @@
 <meta name="theme-color" content="#faf8f4">
 <meta name="robots" content="noindex, follow">
 <title>Reader | People for Animals</title>
-<meta name="description" content="Read a document from the PFA Library: adjustable type, three paper colours, search, and your place kept for you.">
-<!-- The library's reading room. No site header or footer on purpose (scripts/sync-chrome.js, SKIP):
-     the bar below is the whole of the interface, and it steps aside while you read.
-     Everything here is driven by assets/reader.js from window.PFA_LIBRARY (assets/library-data.js). -->
-<link rel="preload" href="fonts/literata-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="description" content="Read a document from the PFA Library as it was published: page by page or scrolling, three paper colours, search, and your place kept for you.">
+<!-- The library's reading room: each document as it was published, page by page. No site header
+     or footer on purpose (scripts/sync-chrome.js, SKIP): the bar below is the whole of the
+     interface, and it steps aside while you read. Driven by assets/reader.js, which draws the PDF
+     with assets/reader-pdf.js, from window.PFA_LIBRARY (assets/library-data.js). -->
 <script>
 /* The saved paper colour, set before the first paint so a dark reader is never flashed white. */
 (function () {
@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="assets/reader.css">
 </head>
 <body class="rd rd-chrome" data-mode="loading">
-<a class="rd-skip" href="#rdStage">Skip to the text</a>
+<a class="rd-skip" href="#rdPages">Skip to the document</a>
 <div class="rd-progress" id="rdProgress" aria-hidden="true"></div>
 
 <header class="rd-bar" id="rdBar">
@@ -50,13 +50,8 @@
   </div>
 </header>
 
-<div class="rd-head" id="rdHead" aria-hidden="true"><span id="rdHeadText"></span></div>
-
-<main class="rd-stage" id="rdStage" tabindex="-1" aria-label="Document">
-  <div class="rd-frame" id="rdFrame">
-    <article class="rd-flow" id="rdText" aria-live="off"></article>
-  </div>
-  <div class="rd-pages" id="rdPages" hidden></div>
+<main class="rd-stage" id="rdStage" aria-label="Document">
+  <div class="rd-book" id="rdPages" tabindex="-1"></div>
 </main>
 
 <button class="rd-turn rd-turn--prev" type="button" id="rdPrev" aria-label="Previous page">
@@ -106,84 +101,32 @@
         <button class="rd-theme" type="button" data-k="theme" data-v="sepia" aria-pressed="false">Aa<small>Sepia</small></button>
         <button class="rd-theme" type="button" data-k="theme" data-v="dark" aria-pressed="false">Aa<small>Dark</small></button>
       </div>
-    </div>
-
-    <div class="rd-row" data-for="both">
-      <p class="rd-row__label">Edition</p>
-      <div class="rd-seg" role="group" aria-label="Edition">
-        <button type="button" data-k="mode" data-v="text" aria-pressed="true">Reading text</button>
-        <button type="button" data-k="mode" data-v="pages" aria-pressed="false">Original pages</button>
-      </div>
-      <p class="rd-row__note" id="rdModeNote">The original pages show the document as it was printed, with its tables and pictures.</p>
-    </div>
-
-    <div class="rd-row" data-for="text">
-      <p class="rd-row__label">Font</p>
-      <div class="rd-seg rd-seg--fonts" role="group" aria-label="Font">
-        <button type="button" data-k="font" data-v="serif" aria-pressed="true">Serif</button>
-        <button type="button" data-k="font" data-v="sans" aria-pressed="false">Sans</button>
-        <button type="button" data-k="font" data-v="dyslexic" aria-pressed="false">Dyslexic</button>
-      </div>
+      <p class="rd-row__note">Sepia warms the pages and Dark dims them, for reading in low light.</p>
     </div>
 
     <div class="rd-row">
-      <p class="rd-row__label"><span id="rdSizeLabel">Size</span><output id="rdSizeOut" for="rdSize">19 px</output></p>
+      <p class="rd-row__label"><span id="rdSizeLabel">Page size</span><output id="rdSizeOut" for="rdSize">Fit</output></p>
       <div class="rd-size">
         <button type="button" id="rdSizeDown" aria-label="Smaller">A</button>
-        <input type="range" id="rdSize" min="0" max="10" step="1" value="5" aria-labelledby="rdSizeLabel">
+        <input type="range" id="rdSize" min="0" max="10" step="1" value="4" aria-labelledby="rdSizeLabel">
         <button type="button" id="rdSizeUp" aria-label="Larger">A</button>
       </div>
     </div>
 
-    <div class="rd-row" data-for="text">
-      <p class="rd-row__label">Spacing</p>
-      <div class="rd-sub">
-        <span>Lines</span>
-        <div class="rd-seg" role="group" aria-label="Line spacing">
-          <button type="button" data-k="line" data-v="tight" aria-pressed="false" aria-label="Tight line spacing"><svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><path d="M2 3h16M2 7h16M2 11h16" stroke="currentColor" stroke-width="1.3"/></svg></button>
-          <button type="button" data-k="line" data-v="normal" aria-pressed="true" aria-label="Normal line spacing"><svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><path d="M2 2h16M2 7h16M2 12h16" stroke="currentColor" stroke-width="1.3"/></svg></button>
-          <button type="button" data-k="line" data-v="loose" aria-pressed="false" aria-label="Loose line spacing"><svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M2 1.5h16M2 8h16M2 14.5h16" stroke="currentColor" stroke-width="1.3"/></svg></button>
-        </div>
-      </div>
-      <div class="rd-sub">
-        <span>Paragraphs</span>
-        <div class="rd-seg" role="group" aria-label="Paragraph spacing">
-          <button type="button" data-k="para" data-v="book" aria-pressed="false">Indent</button>
-          <button type="button" data-k="para" data-v="normal" aria-pressed="true">Space</button>
-          <button type="button" data-k="para" data-v="open" aria-pressed="false">More</button>
-        </div>
-      </div>
-      <div class="rd-sub">
-        <span>Margins</span>
-        <div class="rd-seg" role="group" aria-label="Margins">
-          <button type="button" data-k="margin" data-v="narrow" aria-pressed="false" aria-label="Narrow margins"><svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M3 2h14M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.3"/></svg></button>
-          <button type="button" data-k="margin" data-v="medium" aria-pressed="true" aria-label="Medium margins"><svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M5 2h10M5 6h10M5 10h10M5 14h10" stroke="currentColor" stroke-width="1.3"/></svg></button>
-          <button type="button" data-k="margin" data-v="wide" aria-pressed="false" aria-label="Wide margins"><svg width="20" height="16" viewBox="0 0 20 16" aria-hidden="true"><path d="M7 2h6M7 6h6M7 10h6M7 14h6" stroke="currentColor" stroke-width="1.3"/></svg></button>
-        </div>
-      </div>
-    </div>
-
-    <div class="rd-row" data-for="text">
+    <div class="rd-row">
       <p class="rd-row__label">Layout</p>
-      <div class="rd-sub">
-        <span>Align</span>
-        <div class="rd-seg" role="group" aria-label="Text alignment">
-          <button type="button" data-k="align" data-v="left" aria-pressed="true" aria-label="Align left"><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><path d="M1 2h16M1 6h11M1 10h16M1 13.5h9" stroke="currentColor" stroke-width="1.3"/></svg></button>
-          <button type="button" data-k="align" data-v="justify" aria-pressed="false" aria-label="Justify"><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><path d="M1 2h16M1 6h16M1 10h16M1 13.5h9" stroke="currentColor" stroke-width="1.3"/></svg></button>
-        </div>
-      </div>
-      <div class="rd-sub rd-cols-two">
-        <span>Columns</span>
-        <div class="rd-seg" role="group" aria-label="Columns">
-          <button type="button" data-k="cols" data-v="1" aria-pressed="true">One</button>
-          <button type="button" data-k="cols" data-v="2" aria-pressed="false">Two</button>
-        </div>
-      </div>
       <div class="rd-sub">
         <span>Turning</span>
         <div class="rd-seg" role="group" aria-label="Page turning">
-          <button type="button" data-k="flow" data-v="paged" aria-pressed="true">Pages</button>
-          <button type="button" data-k="flow" data-v="scroll" aria-pressed="false">Scroll</button>
+          <button type="button" data-k="layout" data-v="paged" aria-pressed="true">Pages</button>
+          <button type="button" data-k="layout" data-v="scroll" aria-pressed="false">Scroll</button>
+        </div>
+      </div>
+      <div class="rd-sub rd-cols-two">
+        <span>Side by side</span>
+        <div class="rd-seg" role="group" aria-label="Pages side by side">
+          <button type="button" data-k="spread" data-v="1" aria-pressed="true">One page</button>
+          <button type="button" data-k="spread" data-v="2" aria-pressed="false">Two pages</button>
         </div>
       </div>
       <p class="rd-row__note"><button class="rd-pill" type="button" id="rdReset">Back to the defaults</button></p>
@@ -207,7 +150,6 @@
       <div class="rd-toc__bar"><span id="rdTocBar"></span></div>
       <div class="rd-toc__acts">
         <button class="rd-pill" type="button" id="rdTocStart">From the beginning</button>
-        <button class="rd-pill" type="button" id="rdTocMode" hidden>Original pages</button>
         <a class="rd-pill" id="rdTocDl" href="library.html">Download the original</a>
       </div>
     </div>
@@ -230,7 +172,7 @@
   <p class="rd-find__count" id="rdFindCount" aria-live="polite"></p>
   <div class="rd-panel__body">
     <ol class="rd-find__list" id="rdFindList"></ol>
-    <p class="rd-find__tips" id="rdFindTips">Results show the page of the original each one is on. Choose one to go there; you can always come back to where you were.</p>
+    <p class="rd-find__tips" id="rdFindTips">Results show the page each one is on. Choose one to go there, marked on the page; you can always come back to where you were.</p>
   </div>
 </aside>
 

@@ -1,31 +1,29 @@
 /* ======================================================================
    The PFA reader (read.html).
 
-   A reading room, not a viewer. The page is the whole screen; the controls
-   are a quiet bar that comes when it is wanted and goes when reading starts.
-   Square corners and hairlines, as everywhere on the site; the pop is kept
-   for the progress line, the current place, and the search highlight.
+   A reading room, not a viewer. The document's own pages fill the screen;
+   the controls are a quiet bar that comes when it is wanted and goes when
+   reading starts. Square corners and hairlines, as everywhere on the site;
+   the pop is kept for the progress line, the current place, and the search
+   highlight.
 
    Three papers, none of them pure white or pure black: Light is a warm
-   white with near-black ink, Sepia a soft paper with brown ink at a little
-   less contrast, Dark a warm charcoal with grey-white ink.
+   white, Sepia a soft paper, Dark a warm charcoal. The pages take the paper
+   through a filter on their canvas (--rd-page-filter): warmed for Sepia,
+   dimmed for Dark rather than inverted, because inverting turns a report's
+   photographs and covers into negatives. The PDF itself is never altered.
 
-   Measurements the script needs (page width, column width, gap) are set as
-   custom properties on #rdText by assets/reader.js; everything else is here.
+   Page sizes are set by assets/reader-pdf.js, which fits each page or pair
+   of pages to the room it has; everything else is here.
    ====================================================================== */
 
 @view-transition{navigation:auto}
 @media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}
 
 /* ---------- faces ---------- */
-@font-face{font-family:'Literata';font-style:normal;font-weight:400;font-display:swap;src:url("../fonts/literata-latin-400.woff2") format('woff2')}
-@font-face{font-family:'Literata';font-style:italic;font-weight:400;font-display:swap;src:url("../fonts/literata-latin-400-italic.woff2") format('woff2')}
-@font-face{font-family:'Literata';font-style:normal;font-weight:700;font-display:swap;src:url("../fonts/literata-latin-700.woff2") format('woff2')}
-@font-face{font-family:'OpenDyslexic';font-style:normal;font-weight:400;font-display:swap;src:url("../fonts/opendyslexic-latin-400.woff2") format('woff2')}
-@font-face{font-family:'OpenDyslexic';font-style:normal;font-weight:700;font-display:swap;src:url("../fonts/opendyslexic-latin-700.woff2") format('woff2')}
 @font-face{font-family:'Marcellus';font-style:normal;font-weight:400;font-display:swap;src:url("../fonts/marcellus-latin.woff2") format('woff2')}
 /* Georgia and Times in Marcellus's measurements, as on every page (see
-   track.html), so the title page does not reflow when the face arrives. */
+   track.html), so the contents' title does not reflow when the face arrives. */
 @font-face{font-family:'Marcellus Fallback';src:local('Georgia');size-adjust:102.13%;ascent-override:95.38%;descent-override:27.39%;line-gap-override:0%}
 @font-face{font-family:'Marcellus Fallback Times';src:local('Times New Roman'),local('Times'),local('Liberation Serif'),local('Tinos');size-adjust:112.07%;ascent-override:86.92%;descent-override:24.96%;line-gap-override:0%}
 
@@ -35,13 +33,11 @@
   --rd-bar:rgba(250,248,244,.92);--rd-panel:#fffefb;--rd-raise:rgba(35,33,29,.05);--rd-press:#23211d;--rd-on-press:#faf8f4;
   --rd-hit:rgba(255,59,24,.2);--rd-hit-on:rgba(255,59,24,.42);--rd-pop:#ff3b18;--rd-link:#9a3412;
   --rd-shadow:0 18px 50px -18px rgba(35,33,29,.28),0 2px 6px rgba(35,33,29,.06);
-  --rd-page-filter:none;--rd-sheet:#fff;
+  --rd-page-filter:none;--rd-sheet:#fff;--rd-desk:#efebe3;
   --rd-ui:'Helvetica Neue',Helvetica,Arial,sans-serif;
   --rd-display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
-  --rd-serif:'Literata',Georgia,'Noto Serif Devanagari','Kohinoor Devanagari','Nirmala UI','Mangal',serif;
-  --rd-sans:'Helvetica Neue',Helvetica,Arial,'Noto Sans Devanagari','Kohinoor Devanagari','Nirmala UI','Mangal',sans-serif;
-  --rd-dys:'OpenDyslexic','Comic Sans MS',Verdana,'Noto Sans Devanagari','Kohinoor Devanagari','Nirmala UI',sans-serif;
-  --rd-bar-h:52px;--rd-top:72px;--rd-bottom:60px;
+  --rd-serif:Georgia,'Times New Roman','Noto Serif Devanagari','Kohinoor Devanagari','Nirmala UI','Mangal',serif;
+  --rd-bar-h:52px;--rd-bottom:44px;
   --rd-safe-t:env(safe-area-inset-top,0px);--rd-safe-b:env(safe-area-inset-bottom,0px);
   color-scheme:light;
 }
@@ -50,14 +46,14 @@ html[data-theme="sepia"]{
   --rd-bar:rgba(244,236,218,.93);--rd-panel:#f9f2e3;--rd-raise:rgba(59,47,34,.06);--rd-press:#3b2f22;--rd-on-press:#f4ecda;
   --rd-hit:rgba(214,92,30,.22);--rd-hit-on:rgba(214,92,30,.42);--rd-link:#8a3a12;
   --rd-shadow:0 18px 50px -18px rgba(59,47,34,.32),0 2px 6px rgba(59,47,34,.08);
-  --rd-page-filter:sepia(.32) saturate(.92) brightness(.97);--rd-sheet:#fbf4e4;
+  --rd-page-filter:sepia(.32) saturate(.92) brightness(.97);--rd-sheet:#f7f0de;--rd-desk:#ebe1cb;
 }
 html[data-theme="dark"]{
   --rd-bg:#161514;--rd-ink:#d9d5cd;--rd-soft:#a8a39a;--rd-faint:#78746c;--rd-rule:rgba(217,213,205,.12);
   --rd-bar:rgba(22,21,20,.92);--rd-panel:#1f1e1c;--rd-raise:rgba(217,213,205,.06);--rd-press:#d9d5cd;--rd-on-press:#161514;
   --rd-hit:rgba(255,140,100,.24);--rd-hit-on:rgba(255,140,100,.46);--rd-pop:#ff6a4a;--rd-link:#f2a27e;
   --rd-shadow:0 22px 60px -20px rgba(0,0,0,.7),0 2px 6px rgba(0,0,0,.4);
-  --rd-page-filter:invert(.88) hue-rotate(180deg) brightness(1.02) contrast(.92);--rd-sheet:#e9e5dd;
+  --rd-page-filter:brightness(.74) contrast(.94) sepia(.12);--rd-sheet:#bbb6ad;--rd-desk:#121110;
   color-scheme:dark;
 }
 
@@ -90,15 +86,13 @@ button{font:inherit;color:inherit}
 .rd-tools{display:flex;align-items:center;gap:2px}
 .rd-sep{width:1px;height:20px;margin:0 6px;background:var(--rd-rule)}
 
-/* the running head and foot, there while the bar is not */
-.rd-head,.rd-foot{position:fixed;left:0;right:0;z-index:5;display:flex;align-items:center;gap:16px;padding:0 max(20px,env(safe-area-inset-left,0px));
+/* the running foot, there while the bar is not: the section, the page */
+.rd-foot{position:fixed;left:0;right:0;bottom:var(--rd-safe-b);z-index:5;display:flex;align-items:center;justify-content:space-between;gap:16px;height:var(--rd-bottom);padding:0 max(20px,env(safe-area-inset-left,0px));
   font-size:11px;letter-spacing:.06em;color:var(--rd-faint);pointer-events:none;transition:opacity .3s;font-variant-numeric:tabular-nums}
-.rd-head{top:var(--rd-safe-t);height:var(--rd-bar-h);justify-content:center;text-transform:uppercase;letter-spacing:.14em;font-size:10.5px}
-.rd-head span{max-width:60ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rd-foot{bottom:var(--rd-safe-b);height:var(--rd-bottom);justify-content:space-between}
 .rd-foot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rd-foot .rd-foot__pct{flex:0 0 auto}
-.rd-chrome .rd-head,.rd-chrome .rd-foot{opacity:0}
+.rd-chrome .rd-foot{opacity:0}
+.rd[data-layout="scroll"] .rd-foot{background:linear-gradient(to top,var(--rd-bg) 45%,transparent)}
 
 /* the dock: where you are, and a way to get anywhere */
 .rd-dock{position:fixed;inset:auto 0 0;z-index:30;display:flex;align-items:center;gap:16px;min-height:calc(var(--rd-bottom) + var(--rd-safe-b));padding:8px max(18px,env(safe-area-inset-right,0px)) calc(8px + var(--rd-safe-b)) max(18px,env(safe-area-inset-left,0px));
@@ -113,77 +107,51 @@ button{font:inherit;color:inherit}
 .rd-scrub.is-dragging .rd-scrub__tip{opacity:1}
 
 /* ---------- the stage and the book ---------- */
-.rd-stage{position:fixed;inset:0;z-index:1;outline:none}
-.rd-stage.is-scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-behavior:auto;overscroll-behavior:contain}
-.rd-frame{position:absolute;top:calc(var(--rd-top) + var(--rd-safe-t));bottom:calc(var(--rd-bottom) + var(--rd-safe-b));left:50%;width:var(--rd-frame-w,640px);transform:translateX(-50%);overflow:hidden}
-.is-scroll .rd-frame{position:relative;top:auto;bottom:auto;left:auto;transform:none;margin:0 auto;padding:calc(var(--rd-top) + var(--rd-safe-t) + 8px) 0 calc(var(--rd-bottom) + var(--rd-safe-b) + 40vh);overflow:visible}
-
-.rd-flow{--rd-size:19px;--rd-lh:1.62;--rd-para:.8em;--rd-font:var(--rd-serif);
-  height:100%;width:var(--rd-flow-w,640px);column-width:var(--rd-col-w,640px);column-gap:var(--rd-gap,48px);column-fill:auto;
-  font-family:var(--rd-font);font-size:var(--rd-size);line-height:var(--rd-lh);color:var(--rd-ink);text-align:left;
-  font-kerning:normal;font-variant-ligatures:common-ligatures;font-optical-sizing:auto;text-rendering:optimizeLegibility;overflow-wrap:break-word;
-  transform:translate3d(var(--rd-x,0px),0,0);will-change:transform}
-.rd-flow.is-turning{transition:transform .42s cubic-bezier(.25,.75,.2,1)}
-.is-scroll .rd-flow{height:auto;columns:auto;column-width:auto;transform:none;will-change:auto}
-.rd-flow[data-font="sans"]{--rd-font:var(--rd-sans)}
-.rd-flow[data-font="dyslexic"]{--rd-font:var(--rd-dys);letter-spacing:.01em;word-spacing:.08em}
-.rd-flow[data-align="justify"]{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
-.rd-flow[data-align="justify"] .rd-h,.rd-flow[data-align="justify"] .rd-table{text-align:left}
-
-/* type */
-.rd-flow p{margin:0 0 var(--rd-para);orphans:2;widows:2}
-.rd-flow[data-para="book"] p{margin-bottom:0}
-.rd-flow[data-para="book"] p.rd-p + p.rd-p{text-indent:1.5em}
-.rd-flow[data-para="book"] .rd-h,.rd-flow[data-para="book"] .rd-li,.rd-flow[data-para="book"] .rd-table,.rd-flow[data-para="book"] .rd-fig{margin-bottom:.8em}
-.rd-flow[data-para="book"] .rd-li + .rd-p,.rd-flow[data-para="book"] .rd-table + .rd-p,.rd-flow[data-para="book"] .rd-fig + .rd-p{margin-top:.8em}
-.rd-h{margin:1.6em 0 .7em;font-weight:400;line-height:1.2;break-after:avoid;break-inside:avoid;text-wrap:balance}
-.rd-h1{font-family:var(--rd-display);font-size:1.62em;letter-spacing:.01em;line-height:1.14;padding-top:.5em}
-.rd-h1::before{content:"";display:block;width:30px;height:2px;margin-bottom:.75em;background:var(--rd-pop)}
-.rd-h2{font-family:var(--rd-display);font-size:1.3em;letter-spacing:.01em}
-.rd-h3{font-size:1.02em;font-weight:700;letter-spacing:.005em;margin-top:1.3em}
-.rd-flow[data-font="dyslexic"] .rd-h1,.rd-flow[data-font="dyslexic"] .rd-h2{font-family:var(--rd-dys);font-weight:700;letter-spacing:0}
-.rd-flow > :first-child,.rd-chunk > :first-child{margin-top:0}
-.rd-li{position:relative;padding-left:2.3em}
-.rd-li .rd-m{position:absolute;left:0;width:2em;text-align:left;color:var(--rd-soft);font-variant-numeric:tabular-nums}
-.rd-table{margin:1em 0 1.2em;overflow-x:auto;break-inside:auto;font-family:var(--rd-sans);font-size:.78em;line-height:1.45}
-.rd-table table{width:100%;border-collapse:collapse}
-.rd-table td{padding:.5em .7em .5em 0;border-bottom:1px solid var(--rd-rule);vertical-align:top}
-.rd-table tr:first-child td{font-weight:700;border-bottom-color:var(--rd-soft)}
-.rd-fig{margin:1.2em 0;break-inside:avoid}
-.rd-fig button{display:block;width:100%;padding:1.1em 1.2em;border:1px dashed var(--rd-rule);background:var(--rd-raise);text-align:left;cursor:pointer;font-family:var(--rd-ui);font-size:.72em;line-height:1.5;color:var(--rd-soft)}
-.rd-fig button:hover{border-style:solid;color:var(--rd-ink)}
-.rd-fig b{display:block;margin-top:.3em;font-size:1.05em;letter-spacing:.12em;text-transform:uppercase;color:var(--rd-ink)}
+.rd-stage{position:fixed;inset:0;z-index:1;outline:none;background:var(--rd-desk);transition:background-color .35s}
+/* paged: the page or the open pair, fitted between the bar and the foot */
+.rd-book{position:absolute;inset:calc(var(--rd-bar-h) + var(--rd-safe-t)) 0 calc(var(--rd-bottom) + var(--rd-safe-b));display:flex;overflow:auto;outline:none;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.rd-leaf{position:relative;display:flex;flex:0 0 auto;margin:auto;padding:20px;transition:transform .2s}
+.rd-leaf .rd-pg{max-width:none;margin:0;flex:0 0 auto}
+.rd-leaf .rd-pg__n{display:none}
+.rd-leaf.is-in-next{animation:rd-in-next .34s cubic-bezier(.2,.7,.2,1)}
+.rd-leaf.is-in-prev{animation:rd-in-prev .34s cubic-bezier(.2,.7,.2,1)}
+@keyframes rd-in-next{from{opacity:.25;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes rd-in-prev{from{opacity:.25;transform:translateX(-28px)}to{opacity:1;transform:none}}
+/* an open book: the fold shaded on both sides of the spine */
+.rd-leaf--spread .rd-pg::after{content:"";position:absolute;top:0;bottom:0;width:34px;z-index:2;pointer-events:none}
+.rd-leaf--spread .rd-pg:first-child::after{right:0;background:linear-gradient(to left,rgba(0,0,0,.13),rgba(0,0,0,.03) 40%,transparent)}
+.rd-leaf--spread .rd-pg:last-child::after{left:0;background:linear-gradient(to right,rgba(0,0,0,.11),rgba(0,0,0,.03) 40%,transparent)}
+.rd-leaf--spread .rd-pg:only-child::after{display:none}
+/* scroll: every page down one column, the full height of the screen */
+.rd-book.is-scroll{inset:0;display:block;padding:calc(var(--rd-bar-h) + var(--rd-safe-t) + 16px) 16px calc(var(--rd-bottom) + var(--rd-safe-b) + 24px)}
+.rd-column{width:var(--pg-w,800px);margin:0 auto}
+/* while pdf.js and the first page arrive: the cover */
+.rd-wait{display:block;margin:auto;width:auto;height:auto;max-width:min(62vw,340px);max-height:70%;box-shadow:0 1px 2px rgba(0,0,0,.08),0 18px 40px -20px rgba(0,0,0,.45);filter:var(--rd-page-filter);opacity:.9;animation:rd-breathe 1.8s ease-in-out infinite alternate}
+@keyframes rd-breathe{from{opacity:.9}to{opacity:.6}}
 mark.rd-hit{background:var(--rd-hit);color:inherit;border-radius:2px;box-shadow:0 0 0 2px var(--rd-hit)}
 mark.rd-hit.is-on{background:var(--rd-hit-on);box-shadow:0 0 0 2px var(--rd-hit-on)}
 
-/* the title page */
-.rd-cover{display:flex;flex-direction:column;justify-content:center;height:100%;break-after:column;padding:0 0 6%;text-align:left;font-family:var(--rd-ui)}
-.is-scroll .rd-cover{height:auto;min-height:min(62vh,640px);padding:4vh 0 8vh;margin-bottom:6vh;border-bottom:1px solid var(--rd-rule)}
-.rd-cover__kind{margin:0;padding-top:18px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--rd-soft);
+/* a link to a document the library does not have */
+.rd-missing{margin:auto;max-width:34em;padding:24px;font-family:var(--rd-ui)}
+.rd-missing__kind{margin:0;padding-top:18px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--rd-soft);
   background:linear-gradient(var(--rd-pop),var(--rd-pop)) 0 0 / 34px 3px no-repeat}
-.rd-cover__title{margin:22px 0 0;font-family:var(--rd-display);font-weight:400;font-size:clamp(30px,1.9em,52px);line-height:1.08;letter-spacing:.015em;text-transform:uppercase;text-wrap:balance;color:var(--rd-ink)}
-.rd-cover__blurb{margin:22px 0 0;max-width:34em;font-family:var(--rd-font,var(--rd-serif));font-size:max(15px,.9em);line-height:1.55;color:var(--rd-soft)}
-.rd-cover__facts{margin:28px 0 0;padding-top:16px;border-top:1px solid var(--rd-rule);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--rd-soft)}
-.rd-cover__mark{margin:auto 0 0;padding-top:28px;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--rd-faint)}
-.rd-cover__mark i{display:block;margin-top:4px;font-family:var(--rd-display);font-style:normal;font-weight:400;font-size:17px;letter-spacing:.03em;text-transform:none;color:var(--rd-soft)}
-.rd-cover__hint{margin:18px 0 0;font-size:12px;color:var(--rd-faint)}
-.rd-end{display:block;height:1px}
-.rd-fin{break-before:avoid;margin:2.4em 0 0;padding-top:1.2em;border-top:1px solid var(--rd-rule);font-family:var(--rd-ui);font-size:12px;letter-spacing:.06em;color:var(--rd-soft)}
-.rd-fin b{display:block;margin-bottom:.4em;font-family:var(--rd-display);font-weight:400;font-size:20px;letter-spacing:.01em;color:var(--rd-ink)}
-.rd-fin a{color:var(--rd-link)}
+.rd-missing__title{margin:22px 0 0;font-family:var(--rd-display);font-weight:400;font-size:clamp(28px,4.4vw,44px);line-height:1.08;letter-spacing:.015em;text-transform:uppercase;text-wrap:balance;color:var(--rd-ink)}
+.rd-missing__text{margin:18px 0 26px;font-size:15px;line-height:1.6;color:var(--rd-soft)}
 
-/* turning: invisible margins to tap, faint arrows on a desktop hover */
-.rd-turn{position:fixed;top:calc(var(--rd-bar-h) + var(--rd-safe-t));bottom:var(--rd-bottom);z-index:4;width:max(48px,calc((100vw - var(--rd-frame-w,640px)) / 2));border:0;background:none;padding:0;cursor:pointer;color:var(--rd-faint);opacity:0;transition:opacity .25s}
+/* turning: faint arrows at the edges on a desktop hover; on a touch screen
+   a tap near either edge does it (assets/reader.js) */
+.rd-turn{position:fixed;top:calc(var(--rd-bar-h) + var(--rd-safe-t));bottom:calc(var(--rd-bottom) + var(--rd-safe-b));z-index:4;display:none;width:64px;border:0;background:none;padding:0;cursor:pointer;color:var(--rd-soft);opacity:0;transition:opacity .25s}
+.rd[data-mode="pages"][data-layout="paged"] .rd-turn{display:block}
 .rd-turn--prev{left:0}
 .rd-turn--next{right:0}
 .rd-turn svg{margin:0 auto}
 @media (hover:hover){.rd-turn:hover{opacity:.9}}
 .rd-turn:focus-visible{opacity:1;outline-offset:-6px}
-.is-scroll ~ .rd-turn,.rd[data-mode="pages"] .rd-turn,.rd[data-mode="drive"] .rd-turn,.rd[data-mode="loading"] .rd-turn{display:none}
+@media (hover:none){.rd[data-mode="pages"][data-layout="paged"] .rd-turn{display:none}}
 
 /* back to where you were, after a search */
 .rd-return{position:fixed;left:50%;bottom:calc(var(--rd-bottom) + var(--rd-safe-b) + 16px);z-index:35;display:flex;align-items:stretch;transform:translateX(-50%);background:var(--rd-press);color:var(--rd-on-press);box-shadow:var(--rd-shadow);font-size:13px}
-.rd-chrome .rd-return{bottom:calc(var(--rd-bottom) + var(--rd-safe-b) + 24px)}
+.rd-chrome .rd-return{bottom:calc(var(--rd-bottom) + var(--rd-safe-b) + 34px)}
 .rd-return button{border:0;background:none;color:inherit;cursor:pointer;padding:12px 16px;display:flex;align-items:center;gap:10px;white-space:nowrap}
 .rd-return button + button{padding:12px 14px;border-left:1px solid rgba(127,127,127,.35)}
 
@@ -220,10 +188,6 @@ html[data-theme="dark"] .rd-scrim{background:rgba(0,0,0,.45)}
 .rd-seg button:hover{background:var(--rd-raise)}
 .rd-seg button[aria-pressed="true"]{background:var(--rd-press);color:var(--rd-on-press)}
 .rd-seg button[disabled]{opacity:.35;cursor:default;background:none;color:var(--rd-ink)}
-.rd-seg--fonts button{height:46px;font-size:16px}
-.rd-seg--fonts button[data-v="serif"]{font-family:var(--rd-serif)}
-.rd-seg--fonts button[data-v="sans"]{font-family:var(--rd-sans)}
-.rd-seg--fonts button[data-v="dyslexic"]{font-family:var(--rd-dys);font-size:14px}
 .rd-seg svg{display:block}
 .rd-themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .rd-theme{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:62px;border:1px solid rgba(127,127,127,.3);cursor:pointer;font-family:var(--rd-serif);font-size:20px;line-height:1;transition:box-shadow .15s}
@@ -235,6 +199,7 @@ html[data-theme="dark"] .rd-scrim{background:rgba(0,0,0,.45)}
 .rd-size{display:flex;align-items:center;gap:10px}
 .rd-size button{flex:0 0 auto;width:40px;height:40px;border:1px solid var(--rd-rule);background:none;cursor:pointer;font-family:var(--rd-serif);color:var(--rd-ink);line-height:1}
 .rd-size button:hover{background:var(--rd-raise)}
+.rd-size button[disabled]{opacity:.35;cursor:default;background:none}
 .rd-size button:first-child{font-size:13px}
 .rd-size button:last-child{font-size:21px}
 
@@ -268,6 +233,7 @@ html[data-theme="dark"] .rd-scrim{background:rgba(0,0,0,.45)}
 .rd-toc__list button:hover{background:var(--rd-raise)}
 .rd-toc__list button span:last-child{font-size:12px;color:var(--rd-faint);font-variant-numeric:tabular-nums;padding-top:2px}
 .rd-toc__list .is-l2 button{padding-left:36px;font-size:13px;color:var(--rd-soft)}
+.rd-toc__list .is-l3 button{padding-left:52px;font-size:12.5px;color:var(--rd-soft)}
 .rd-toc__list .is-here button{font-weight:700;color:var(--rd-ink)}
 .rd-toc__list .is-here button::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;background:var(--rd-pop)}
 .rd-toc__empty{padding:22px 20px;font-size:13px;line-height:1.55;color:var(--rd-soft)}
@@ -293,9 +259,8 @@ html[data-theme="dark"] .rd-scrim{background:rgba(0,0,0,.45)}
 .rd-find__more{display:block;width:calc(100% - 40px);margin:6px 20px 0}
 .rd-find__tips{padding:6px 20px;font-size:12.5px;line-height:1.6;color:var(--rd-faint)}
 
-/* ---------- original pages ---------- */
-.rd-pages{padding:calc(var(--rd-top) + var(--rd-safe-t)) 16px calc(var(--rd-bottom) + var(--rd-safe-b) + 24px)}
-.rd-pg{position:relative;width:var(--pg-w,800px);max-width:100%;margin:0 auto 22px;aspect-ratio:var(--pg-ar,0.7071);background:var(--rd-sheet);box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 28px -18px rgba(0,0,0,.35)}
+/* ---------- the pages ---------- */
+.rd-pg{position:relative;width:100%;margin:0 auto 26px;aspect-ratio:var(--pg-ar,0.7071);background:var(--rd-sheet);box-shadow:0 1px 2px rgba(0,0,0,.08),0 12px 30px -18px rgba(0,0,0,.38)}
 .rd-pg canvas{position:absolute;inset:0;width:100%;height:100%;filter:var(--rd-page-filter)}
 .rd-pg__n{position:absolute;left:0;right:0;top:100%;padding-top:5px;text-align:center;font-size:10.5px;letter-spacing:.1em;color:var(--rd-faint);font-variant-numeric:tabular-nums}
 .rd-pg .textLayer{position:absolute;inset:0;overflow:clip;line-height:1;text-align:initial;opacity:1;forced-color-adjust:none;transform-origin:0 0;z-index:1;
@@ -307,23 +272,21 @@ html[data-theme="dark"] .rd-scrim{background:rgba(0,0,0,.45)}
 .rd-pg .textLayer mark.rd-hit{color:transparent;background:rgba(255,59,24,.32);box-shadow:none;border-radius:1px}
 .rd-pg .textLayer mark.rd-hit.is-on{background:rgba(255,59,24,.55)}
 .rd-drive{position:fixed;left:0;right:0;bottom:0;top:calc(var(--rd-bar-h) + var(--rd-safe-t));width:100%;height:calc(100% - var(--rd-bar-h) - var(--rd-safe-t));border:0;background:var(--rd-bg)}
-.rd[data-mode="drive"] .rd-bar{transform:none;opacity:1}
-.rd[data-mode="pages"] .rd-head{display:none}
-.rd[data-mode="pages"] .rd-foot{background:linear-gradient(to top,var(--rd-bg) 40%,transparent)}
+.rd[data-mode="drive"] .rd-bar,.rd[data-mode="missing"] .rd-bar,.rd[data-mode="loading"] .rd-bar{transform:none;opacity:1}
 .rd[data-mode="missing"] .rd-dock,.rd[data-mode="missing"] .rd-foot,.rd[data-mode="missing"] .rd-sep{display:none}
-.rd[data-mode="drive"] .rd-head,.rd[data-mode="drive"] .rd-foot,.rd[data-mode="drive"] .rd-dock{display:none}
+.rd[data-mode="drive"] .rd-foot,.rd[data-mode="drive"] .rd-dock,.rd[data-mode="loading"] .rd-foot{display:none}
+.rd[data-mode="missing"] .rd-stage,.rd[data-mode="drive"] .rd-stage{background:var(--rd-bg)}
 .rd-note{position:fixed;left:50%;top:calc(var(--rd-bar-h) + var(--rd-safe-t) + 12px);z-index:20;transform:translateX(-50%);max-width:min(92vw,560px);padding:10px 14px;background:var(--rd-panel);border:1px solid var(--rd-rule);box-shadow:var(--rd-shadow);font-size:12.5px;line-height:1.5;color:var(--rd-soft);display:flex;gap:12px;align-items:flex-start}
 .rd-note button{flex:0 0 auto;border:0;background:none;cursor:pointer;color:var(--rd-ink);padding:0 2px;font-size:15px;line-height:1.2}
 .rd-noscript{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:15px;line-height:1.6}
 
 /* ---------- phones ---------- */
 @media (max-width:720px){
-  :root{--rd-bar-h:50px;--rd-top:58px;--rd-bottom:46px}
+  :root{--rd-bar-h:50px;--rd-bottom:40px}
   .rd-back span,.rd-title{display:none}
   .rd-bar{justify-content:space-between}
   .rd-tools{margin-left:auto}
   .rd-sep{display:none}
-  .rd-head{font-size:10px}
   .rd-foot{font-size:10.5px;padding:0 18px}
   .rd-dock{gap:12px;font-size:11.5px}
   .rd-dock__where{min-width:0}
@@ -331,20 +294,20 @@ html[data-theme="dark"] .rd-scrim{background:rgba(0,0,0,.45)}
   .rd-aa-panel.is-on{transform:none}
   .rd-aa-panel .rd-panel__body{padding-bottom:calc(20px + var(--rd-safe-b))}
   .rd-find{width:100vw}
-  .rd-pages{padding-left:8px;padding-right:8px}
+  .rd-book.is-scroll{padding-left:8px;padding-right:8px}
+  .rd-leaf{padding:8px}
   .rd-pg{margin-bottom:16px}
-  .rd-cover__title{font-size:clamp(26px,8.2vw,40px)}
 }
 @media (max-width:1023px){
   .rd-cols-two{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  .rd-flow.is-turning{transition:none}
-  .rd-bar,.rd-dock,.rd-panel,.rd-toast,.rd-head,.rd-foot,.rd-scrim{transition:none}
+  .rd-leaf.is-in-next,.rd-leaf.is-in-prev,.rd-wait{animation:none}
+  .rd-bar,.rd-dock,.rd-panel,.rd-toast,.rd-foot,.rd-scrim,.rd-leaf{transition:none}
   .rd-progress{animation:none;background:var(--rd-pop);opacity:.5}
 }
 @media print{
-  .rd-bar,.rd-dock,.rd-head,.rd-foot,.rd-turn,.rd-panel,.rd-scrim,.rd-return,.rd-toast{display:none!important}
-  .rd-stage,.rd-frame{position:static;transform:none;width:auto;overflow:visible}
-  .rd-flow{columns:auto;height:auto;transform:none;width:auto}
+  .rd-bar,.rd-dock,.rd-foot,.rd-turn,.rd-panel,.rd-scrim,.rd-return,.rd-toast{display:none!important}
+  .rd-stage,.rd-book{position:static;overflow:visible;background:none}
+  .rd-pg canvas{filter:none}
 }

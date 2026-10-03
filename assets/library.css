@@ -2,12 +2,9 @@
    The PFA Library: the shelves on library.html.
 
    The page's tokens (--ink, --muted, --line, --pop, --display, --gutter)
-   come from its own :root, like every page. Each document has a cover set
-   in type rather than a thumbnail of its first page: a first page is a
-   government letterhead at 200px wide, and nineteen of them read as a
-   folder. A cover reads as a book. Paper tones by shelf, the title in the
-   site's display face, the pop as a single rule, and a faint ring placed
-   differently on each so no two sit alike on a shelf.
+   come from its own :root, like every page. Each document's cover is its
+   own first page, rendered from the PDF by scripts/build-library.js into
+   media/library/covers/.
    ====================================================================== */
 
 @view-transition{navigation:auto}
@@ -27,7 +24,7 @@
 .lib-stack__book:nth-child(3):hover{transform:translateY(-4%)}
 .lib-stack__book:nth-child(4):hover{transform:rotate(4.5deg) translateY(-5%)}
 .lib-stack__book:nth-child(5):hover{transform:rotate(9deg) translateY(-6%)}
-.lib-stack .cover{box-shadow:0 1px 1px rgba(17,17,17,.06),0 18px 34px -18px rgba(17,17,17,.55)}
+.lib-stack .cover__img{box-shadow:0 1px 1px rgba(17,17,17,.06),0 20px 36px -18px rgba(17,17,17,.6)}
 
 /* ---------- hero facts ---------- */
 .lib-facts{padding:0}
@@ -83,7 +80,6 @@
 .book[hidden]{display:none}
 .book__cover{display:block;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
 .book__cover:hover{opacity:1;transform:translateY(-5px)}
-.book__cover:hover .cover{box-shadow:0 1px 1px rgba(17,17,17,.06),0 22px 34px -18px rgba(17,17,17,.5)}
 .book__body{display:flex;flex-direction:column;flex:1;padding-top:20px}
 .book__title{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(17px,1.32vw,20px);line-height:1.18;letter-spacing:.005em;text-wrap:balance}
 .book__title a{background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .3s}
@@ -102,28 +98,17 @@
 .book__dl{display:inline-flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--line);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;transition:border-color .25s}
 .book__dl:hover{opacity:1;border-color:var(--ink)}
 
-/* ---------- the cover ---------- */
-.cover{--cv-bg:#ebe5da;--cv-ink:#1b1a17;--cv-soft:rgba(27,26,23,.62);--cv-ring:rgba(27,26,23,.13);
-  position:relative;display:flex;flex-direction:column;aspect-ratio:5 / 7;padding:13% 11% 10% 15%;overflow:hidden;isolation:isolate;container-type:inline-size;
-  background:color-mix(in srgb,var(--cv-bg) calc(100% - var(--i,0) * 3%),#fff);color:var(--cv-ink);
-  box-shadow:0 1px 1px rgba(17,17,17,.06),0 12px 26px -16px rgba(17,17,17,.45);transition:box-shadow .45s}
-/* the spine: a crease and a catch of light down the left edge */
-.cover::before{content:"";position:absolute;inset:0 auto 0 0;width:8%;z-index:2;pointer-events:none;
-  background:linear-gradient(90deg,rgba(17,17,17,.12),rgba(17,17,17,.03) 62%,rgba(255,255,255,.5) 66%,rgba(255,255,255,0) 100%)}
-/* the ring: one faint circle, moved along by each book's index */
-.cover::after{content:"";position:absolute;z-index:-1;width:118%;aspect-ratio:1;border-radius:50%;border:1px solid var(--cv-ring);
-  right:calc(-74% + var(--i,0) * 9%);bottom:calc(-58% + var(--i,0) * 5%)}
-.cover--essential{--cv-bg:#ebe3d4;--cv-ring:rgba(140,92,40,.2)}
-.cover--handbooks{--cv-bg:#e2e7ea;--cv-ring:rgba(40,72,96,.18)}
-.cover--research{--cv-bg:#e4eae0;--cv-ring:rgba(56,92,52,.2)}
-.cover--scoping{--cv-bg:#eee3dd;--cv-ring:rgba(132,70,48,.2)}
-.cover__shelf{display:block;padding-top:9cqi;font-size:5.6cqi;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cv-soft);
-  background:linear-gradient(var(--pop),var(--pop)) 0 0 / 18cqi 1.6cqi no-repeat}
-.cover__title{display:block;margin-top:10cqi;font-family:var(--display);font-size:11.5cqi;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance;overflow-wrap:break-word;hyphens:manual}
-.cover--long .cover__title{font-size:9.6cqi}
-.cover--short .cover__title{font-size:14cqi}
-.cover__mark{display:block;margin-top:auto;font-size:5.2cqi;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cv-soft)}
-.cover__mark i{display:block;margin-top:1.5cqi;font-family:var(--display);font-style:normal;font-weight:400;font-size:8cqi;letter-spacing:.04em;text-transform:none;color:var(--cv-ink)}
+/* ---------- the cover: the document's own first page ----------
+   Covers keep their own proportions and stand on the shelf's baseline, as
+   books do; the frame only reserves the room, so nothing jumps as they load. */
+.cover{position:relative;display:flex;align-items:flex-end;justify-content:center;aspect-ratio:5 / 7}
+.cover__img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;background:#fff;
+  box-shadow:0 1px 1px rgba(17,17,17,.08),0 14px 30px -16px rgba(17,17,17,.5);transition:box-shadow .45s}
+.book__cover:hover .cover__img{box-shadow:0 1px 1px rgba(17,17,17,.08),0 24px 38px -18px rgba(17,17,17,.55)}
+/* a document with no PDF here yet has no cover to show: its title, plainly */
+.cover__plate{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:12% 11%;background:#efece6;border:1px solid var(--line)}
+.cover__title{font-family:var(--display);font-size:18px;line-height:1.15;text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+.cover__none{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 
 /* ---------- about these documents ---------- */
 .lib-note{border-top:1px solid var(--line)}
