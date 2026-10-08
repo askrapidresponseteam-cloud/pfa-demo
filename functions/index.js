@@ -90,7 +90,7 @@ exports.caregiverEmailWorker = onSchedule(
    can only do this once a day; Cloud Scheduler does it every ten minutes,
    so a reply is in the panel within minutes of being sent. */
 exports.inboundMailCheck = onSchedule(
-  { region: REGION, schedule: 'every 10 minutes', timeZone: 'Asia/Kolkata', memory: '512MiB', timeoutSeconds: 120, secrets: SECRETS },
+  { region: REGION, schedule: 'every 10 minutes', timeZone: 'Asia/Kolkata', memory: '512MiB', timeoutSeconds: 300, secrets: SECRETS },
   async () => {
     const route = require('./lib/routes/inbound-mail.js');
     const token = String(process.env.CRON_SECRET || process.env.PFA_ADMIN_TOKEN || '');
@@ -99,7 +99,36 @@ exports.inboundMailCheck = onSchedule(
       headers: token ? { authorization: `Bearer ${token}` } : {}
     };
     const response = { statusCode: 200, _body: '', setHeader() {}, end(body) { this._body = body || ''; } };
-    await route(request, response);
-    console.log('inbound mail check', response.statusCode, String(response._body).slice(0, 300));
+    try {
+      await route(request, response);
+      console.log('inbound mail check', response.statusCode, String(response._body).slice(0, 300));
+    } catch (error) {
+      console.error('inbound mail check failed', String(error && error.message).slice(0, 300));
+    }
+
+    /* 8 Oct 2026: two more jobs ride on this schedule, each on its own so
+       one failing never stops the others.
+       - Emails waiting for another try are sent within minutes, not at
+         3am the next day (the panel said "next try 04:38 pm" and nothing
+         ran until the night). A refused login backs off on its own
+         (lib/caregiver-store.js), so this never hammers the mailbox.
+       - The panel's search index takes in what changed since the last run
+         (lib/admin-search.js). */
+    try {
+      const worker = require('./lib/routes/caregiver/email-worker.js');
+      const out = { statusCode: 200, _body: '', setHeader() {}, end(body) { this._body = body || ''; } };
+      await worker({ method: 'POST', url: '/api/caregiver/email-worker', query: {}, body: {}, headers: request.headers }, out);
+      console.log('email worker (every ten minutes)', out.statusCode, String(out._body).slice(0, 200));
+    } catch (error) {
+      console.error('email worker failed', String(error && error.message).slice(0, 300));
+    }
+    try {
+      const SEARCH = require('./lib/admin-search.js');
+      const { getDb } = require('./lib/firebase.js');
+      const ran = await SEARCH.sync(getDb(), { budgetMs: 60000 });
+      console.log('admin search index', JSON.stringify(ran));
+    } catch (error) {
+      console.error('admin search index not brought up to date', String(error && error.message).slice(0, 300));
+    }
   }
 );

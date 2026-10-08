@@ -66,7 +66,11 @@ test('C2 a refused login (535): the page does not blame the address, nothing is 
   const failing = await atTime(t, () => require('../lib/routes/admin/mail-check')._private.failingEmails(W.db));
   assert.ok(failing.some((r) => `caregiverEmails/${r.id}` === rowId), JSON.stringify(failing.map((r) => r.id)));
   fixed = true;
-  t += 16 * 60 * 1000;
+  /* After eight refused logins the worker leaves the mailbox alone for an
+     hour at most (lib/caregiver-store.js loginGate, 8 Oct 2026: it now runs
+     every ten minutes, and repeated bad logins can lock the mailbox); the
+     panel's Send again does not wait. */
+  t += 61 * 60 * 1000;
   await atTime(t, () => H.call(worker, { token: null, headers: cron }));
   await atTime(t, () => H.call(worker, { token: null, headers: cron }));
   assert.equal(W.smtp.sent.filter((m) => m.to === PERSON_A).length, 1);

@@ -63,7 +63,7 @@ test('every reading copy that is here is a whole, linearized PDF of its document
 });
 
 test('the heaviest books are now light enough for a phone', () => {
-  for (const slug of ['kanha-gaushala-up', 'pig-scoping-report', 'poultry-scoping-report', 'scc-policy-brief']) {
+  for (const slug of ['kanha-gaushala-up', 'scc-policy-brief']) {
     const it = lib.items.find((i) => i.slug === slug);
     if (!fs.existsSync(path.join(ROOT, 'resources/read', slug + '.pdf'))) continue;
     const before = fs.statSync(path.join(ROOT, it.pdf)).size;

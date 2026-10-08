@@ -166,10 +166,6 @@
      "label": "The evidence, in brief"
     },
     {
-     "id": "shelf-scoping",
-     "label": "Following the money"
-    },
-    {
      "id": "about-documents",
      "label": "Read here, cite the original"
     }
@@ -957,7 +953,6 @@
    "shelf-essential-h": "shelf-essential",
    "shelf-handbooks-h": "shelf-handbooks",
    "shelf-research-h": "shelf-research",
-   "shelf-scoping-h": "shelf-scoping",
    "libNoteH": "about-documents"
   },
   "academy": {

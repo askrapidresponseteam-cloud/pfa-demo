@@ -116,6 +116,22 @@ button{font:inherit;color:inherit}
 .bar h1{font-family:var(--display);font-weight:400;font-size:22px;margin:0}
 .bar .note{color:var(--muted);font-size:12px}
 .bar .spring{margin-left:auto;display:flex;gap:8px;align-items:center}
+/* One search for everything (8 Oct 2026). The list sits inside the bar's own
+   layer (20), above the panes and under the case drawer (90). */
+.gsearch{position:relative;flex:1 1 300px;max-width:560px;align-self:center;margin-left:auto}
+.gsearch input{width:100%;height:38px;padding:0 40px 0 12px;border:1px solid var(--line);background:var(--paper);font:inherit;font-size:13px;color:var(--ink)}
+.gsearch input:focus{border-color:var(--ink);outline:none}
+.gkey{position:absolute;right:9px;top:50%;transform:translateY(-50%);font:11px/1.4 var(--body);color:var(--muted);border:1px solid var(--line);padding:0 6px;pointer-events:none}
+.gsearch input:focus ~ .gkey,.gsearch input:not(:placeholder-shown) ~ .gkey{display:none}
+.gres{position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--paper);border:1px solid var(--ink);max-height:min(70vh,560px);overflow-y:auto;overscroll-behavior:contain;z-index:30;box-shadow:0 14px 34px rgba(0,0,0,.14)}
+.gres h4{margin:0;padding:11px 14px 5px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.gres .gr{display:flex;gap:12px;align-items:baseline;width:100%;text-align:left;padding:9px 14px;border:0;background:none;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+.gres .gr[aria-selected="true"],.gres .gr:hover{background:#f1f1f1}
+.gr .t{font-weight:600;white-space:nowrap;flex:0 0 auto;max-width:62%;overflow:hidden;text-overflow:ellipsis}
+.gr .l{color:var(--muted);flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gr .s{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex:0 0 auto}
+.gres .gnote{padding:12px 14px;color:var(--muted);font-size:12px;margin:0}
+.bar .spring{margin-left:0}
 .pane{padding:30px 34px 64px;display:none}
 .pane[data-live]{display:block}
 /* Sections folded into another (Donations, Verify, Issue, Audit) stack under
@@ -328,6 +344,12 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
   .rail{position:static;height:auto;flex-direction:column}
   .railfoot{margin-top:18px}
   .bar,.pane{padding-left:20px;padding-right:20px}
+  .gsearch{flex-basis:100%;max-width:none;order:3;margin-left:0}
+  .bar .spring{margin-left:auto}
+  /* a phone: the number and its state on one line, what it is under them */
+  .gres .gr{flex-wrap:wrap;row-gap:2px}
+  .gr .t{max-width:none;flex:1 1 auto}
+  .gr .l{flex-basis:100%;order:3;white-space:normal}
   .lead .huge{font-size:56px}
 }
 @media (prefers-reduced-motion:reduce){
@@ -402,6 +424,14 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
     <div class="bar">
       <h1 id="paneTitle">Overview</h1>
       <span class="note" id="paneNote"></span>
+      <div class="gsearch" role="search">
+        <input type="search" id="gq" autocomplete="off" spellcheck="false" enterkeyhint="search"
+          placeholder="Search everything: a name, number, email, reference or words"
+          aria-label="Search everything: names, mobiles, emails, references, order and card numbers, words in a report, a reply or a note"
+          role="combobox" aria-controls="gres" aria-expanded="false" aria-autocomplete="list">
+        <kbd class="gkey" aria-hidden="true">/</kbd>
+        <div class="gres" id="gres" role="listbox" aria-label="Search results" hidden></div>
+      </div>
       <span class="spring"><button class="ghost" type="button" id="refresh">Refresh</button></span>
     </div>
 
@@ -477,6 +507,7 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
           <option value="failed">Failed</option><option value="unverified">Unverified</option>
           <option value="abandoned">Abandoned</option><option value="started">Started, not finished</option>
         </select>
+        <input type="search" id="payQ" placeholder="Name, email, mobile or order" aria-label="Find a payment by name, email, mobile, order or bank reference">
         <button class="ghost" type="button" id="payGo">Apply</button>
         <button class="ghost" type="button" id="payCsv">Download CSV</button>
       </div>
@@ -1407,6 +1438,7 @@ window.addEventListener('unhandledrejection', function (event) {
     var url = '/api/admin/records?type=payments&limit=25';
     if ($('#payType').value) url += '&purpose=' + encodeURIComponent($('#payType').value);
     if ($('#payStatus').value) url += '&status=' + encodeURIComponent($('#payStatus').value);
+    if ($('#payQ') && $('#payQ').value.trim()) url += '&q=' + encodeURIComponent($('#payQ').value.trim());
     return url;
   }
   function payments(reset) {
@@ -2532,6 +2564,7 @@ window.addEventListener('unhandledrejection', function (event) {
   on('#volMore', 'click', function () { volunteers(false); });
   on('#donMore', 'click', function () { donations(false); });
   on('#payGo', 'click', function () { payments(true); });
+  on('#payQ', 'keydown', function (e) { if (e.key === 'Enter') payments(true); });
   on('#payMore', 'click', function () { payments(false); });
   on('#payCsv', 'click', function () {
     token().then(function (id) {
@@ -2553,6 +2586,260 @@ window.addEventListener('unhandledrejection', function (event) {
   on('#auMore', 'click', function () { auditLog(false); });
   on('#vfGo', 'click', verify);
   on('#vfQ', 'keydown', function (e) { if (e.key === 'Enter') verify(); });
+
+  /* ---- one search for everything ------------------------------------------
+     Owner, 8 Oct 2026: "there needs to be a univeral/global search bar to
+     search anything and everything". One box at the top of every section.
+     The server searches the records (cases and everything said in them,
+     payments, colony cards, emails, the audit log, staff accounts) through
+     a small index, so a search costs a few dozen reads however many records
+     there are (lib/admin-search.js), and answers only with what this account
+     may open. The panel's own sections and the public site's pages and
+     sections are matched here, at once, while the server's answer comes.
+     "/" or Ctrl/Cmd+K jumps to the box from anywhere. */
+  var gs = { seq: 0, rows: [], at: -1, timer: null, server: [], client: [], q: '', site: null, siteAsked: false, busy: false };
+  var GS_GROUPS = [['case', 'Cases'], ['payment', 'Payments'], ['card', 'Colony cards'], ['email', 'Emails'],
+    ['person', 'People'], ['audit', 'Audit log'], ['page', 'Website: pages and sections'], ['panel', 'In the panel']];
+  var GS_PANEL = [
+    { title: 'Overview', line: 'What is waiting, what arrived', tab: 'overview', words: 'dashboard home today waiting numbers' },
+    { title: 'Submissions', line: 'Every case from the site’s forms', tab: 'submissions', words: 'cases reports inbox tickets queries register' },
+    { title: 'Volunteers', line: 'Volunteer applications', tab: 'volunteers', words: 'volunteer applications shortlisted' },
+    { title: 'Payments & donations', line: 'Every card payment', tab: 'payments', words: 'payments donations money ccavenue receipts transactions orders' },
+    { title: 'Pending payments', line: 'Payments still waiting for CCAvenue', tab: 'payments', anchor: '#payPending', words: 'pending stuck awaited ccavenue check status photograph' },
+    { title: 'Download payments as CSV', line: 'Payments & donations', tab: 'payments', anchor: '#payCsv', words: 'csv export download spreadsheet excel' },
+    { title: 'Colony cards', line: 'Issued caregiver cards', tab: 'caregivers', words: 'caregiver cards colony cct' },
+    { title: 'Verify a card', line: 'The same answer the public check gives', tab: 'caregivers', anchor: '#vfQ', words: 'verify check card valid' },
+    { title: 'Issue cards', line: 'Print and email cards', tab: 'caregivers', anchor: '[data-pane="cards"]', words: 'issue print pdf bulk email cards' },
+    { title: 'Website', line: 'Show or hide pages and sections', tab: 'website', words: 'website visibility visible hidden hide show pages sections public site' },
+    { title: 'People & audit', line: 'Who can use the panel, and what they did', tab: 'people', words: 'people staff admins accounts access permissions invite roles' },
+    { title: 'Audit log', line: 'Every action taken in the panel', tab: 'people', anchor: '#auQ', words: 'audit log history actions who did' },
+    { title: 'Copies to PFA’s inbox', line: 'Email to gandhim, failures and Send again', tab: 'overview', anchor: '#mailbox', module: 'submissions', words: 'email mail inbox gandhim smtp godaddy sent failed resend send again test copies' },
+    { title: 'Replies', line: 'Emails read back from the mailbox', tab: 'overview', anchor: '#replies', module: 'submissions', words: 'replies imap mailbox read inbound parked' }
+  ];
+
+  function gsFold(value) {
+    return String(value == null ? '' : value).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '');
+  }
+  function gsWords(q) {
+    return gsFold(q).split(/[^\p{L}\p{M}\p{N}@.+-]+/u).filter(Boolean);
+  }
+  /* every word but the last must appear whole or as a word's beginning; the
+     last may still be being typed */
+  function gsHits(hay, words) {
+    var text = ' ' + gsFold(hay).replace(/[^\p{L}\p{M}\p{N}@.+-]+/gu, ' ') + ' ';
+    return words.every(function (w) { return text.indexOf(' ' + w) !== -1 || (text.indexOf(w) !== -1 && w.length >= 4); });
+  }
+
+  function gsSite() {
+    if (gs.site || gs.siteAsked || !can('website')) return;
+    gs.siteAsked = true;
+    api('/api/admin/site').then(function (data) { gs.site = data; if (gs.q) gsLocal(gs.q); }).catch(function () { gs.siteAsked = false; });
+  }
+
+  function gsLocal(q) {
+    var words = gsWords(q);
+    var out = [];
+    if (!words.length) { gs.client = []; return gsPaint(); }
+    GS_PANEL.forEach(function (p) {
+      if (!reachable(p.tab) || (p.module && !can(p.module))) return;
+      if (gsHits(p.title + ' ' + p.line + ' ' + p.words, words)) out.push({ type: 'panel', id: p.title, title: p.title, line: p.line, item: p });
+    });
+    var data = gs.site || site;
+    if (data && can('website')) {
+      var st = (data.state || {}).hidden || {};
+      (data.pages || []).forEach(function (p) {
+        var hiddenPage = Boolean((st.pages || {})[p.id]);
+        if (gsHits([p.title, p.menu, p.group, p.id, p.file].join(' '), words)) {
+          out.push({ type: 'page', id: p.id, kind: 'page', title: p.menu || p.title || p.id, line: (p.group ? p.group + ', ' : '') + (p.file || p.id + '.html'), status: hiddenPage ? 'Hidden' : 'Visible' });
+        }
+        (p.modules || []).forEach(function (m) {
+          var key = m.key || (p.id + '#' + m.id);
+          if (gsHits([m.label, m.id, key, p.title, p.menu].join(' '), words)) {
+            out.push({ type: 'page', id: key, kind: 'module', title: m.label || key, line: 'Section of ' + (p.menu || p.title || p.id), status: ((st.modules || {})[key] || hiddenPage) ? 'Hidden' : 'Visible' });
+          }
+        });
+      });
+    }
+    gs.client = out.slice(0, 12);
+    gsPaint();
+  }
+
+  function gsAsk(q) {
+    var mine = ++gs.seq;
+    gs.busy = true;
+    gsPaint();
+    api('/api/admin/search?q=' + encodeURIComponent(q)).then(function (data) {
+      if (mine !== gs.seq) return;
+      gs.busy = false;
+      gs.server = data.results || [];
+      gs.more = Boolean(data.more);
+      gs.failed = '';
+      gsPaint();
+    }).catch(function (e) {
+      if (mine !== gs.seq) return;
+      gs.busy = false;
+      gs.server = [];
+      gs.failed = (e && e.message) || 'The search could not be run just now.';
+      gsPaint();
+    });
+  }
+
+  function gsWhen(at) {
+    if (!at) return '';
+    var d = new Date(at);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: d.getFullYear() === new Date().getFullYear() ? undefined : 'numeric' });
+  }
+
+  function gsPaint() {
+    var box = $('#gres');
+    var input = $('#gq');
+    if (!box || !input) return;
+    if (!gs.q) { box.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+    var all = gs.server.concat(gs.client);
+    gs.rows = [];
+    var html = [];
+    GS_GROUPS.forEach(function (g) {
+      var rows = all.filter(function (r) { return r.type === g[0]; });
+      if (!rows.length) return;
+      html.push('<h4>' + esc(g[1]) + '</h4>');
+      rows.forEach(function (r) {
+        var i = gs.rows.length;
+        gs.rows.push(r);
+        var side = [r.status, gsWhen(r.at)].filter(Boolean).join(' · ');
+        html.push('<button type="button" class="gr" role="option" id="gr' + i + '" data-gi="' + i + '" aria-selected="' + String(i === gs.at) + '">'
+          + '<span class="t">' + esc(r.title) + '</span><span class="l">' + esc(r.line || '') + '</span>'
+          + (side ? '<span class="s">' + esc(side) + '</span>' : '') + '</button>');
+      });
+    });
+    if (gs.busy) html.push('<p class="gnote">Searching the records…</p>');
+    else if (gs.failed) html.push('<p class="gnote">' + esc(gs.failed) + '</p>');
+    else if (!gs.rows.length) html.push('<p class="gnote">Nothing found for “' + esc(gs.q) + '”. Try a name, a mobile, an email, a reference such as PFA-Q-2026-00001, or a word from what was written.</p>');
+    else if (gs.more) html.push('<p class="gnote">More match than are shown. Add a word to narrow it.</p>');
+    box.innerHTML = html.join('');
+    box.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+    if (gs.at >= 0 && gs.rows[gs.at]) input.setAttribute('aria-activedescendant', 'gr' + gs.at); else input.removeAttribute('aria-activedescendant');
+  }
+
+  function gsClose() {
+    var box = $('#gres');
+    if (box) box.hidden = true;
+    if ($('#gq')) $('#gq').setAttribute('aria-expanded', 'false');
+    gs.at = -1;
+  }
+
+  /* Runs `then` with the element once it is on the page (sections fill
+     after their data arrives), for up to six seconds. */
+  function gsWait(selector, then) {
+    var tries = 0;
+    (function look() {
+      var node = $(selector);
+      if (node) return then(node);
+      if ((tries += 1) < 60) setTimeout(look, 100);
+      return undefined;
+    })();
+  }
+  function gsLand(node) {
+    try { node.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) { node.scrollIntoView(); }
+    if (typeof node.focus === 'function' && /^(INPUT|BUTTON|SELECT|TEXTAREA|A)$/.test(node.tagName)) node.focus({ preventScroll: true });
+  }
+
+  function gsOpen(r) {
+    if (!r) return;
+    gsClose();
+    $('#gq').blur();
+    if (r.type === 'case') return showCase(r.id);
+    if (r.type === 'payment') {
+      show('payments');
+      if ($('#payQ')) $('#payQ').value = r.id;
+      if ($('#payType')) $('#payType').value = '';
+      if ($('#payStatus')) $('#payStatus').value = '';
+      return payments(true);
+    }
+    if (r.type === 'card') { show('caregivers'); $('#cgQ').value = r.id; return caregivers(true); }
+    if (r.type === 'email') { show('overview'); return gsWait('#mailbox', gsLand); }
+    if (r.type === 'audit') {
+      show('people');
+      var who = /^[^\s:]+@[^\s:]+/.exec(r.line || '');
+      if (who && $('#auQ')) { $('#auQ').value = who[0]; auditLog(true); }
+      return gsWait('#auRows', gsLand);
+    }
+    if (r.type === 'person') {
+      show('people');
+      return gsWait('[data-pane="people"] table', function () {
+        var hit = $$('[data-pane="people"] tr').filter(function (tr) { return tr.textContent.toLowerCase().indexOf(String(r.id).toLowerCase()) !== -1; })[0];
+        gsLand(hit || $('[data-pane="people"]'));
+      });
+    }
+    if (r.type === 'page') {
+      show('website');
+      return gsWait('[data-vis="' + r.kind + '"][data-id="' + String(r.id).replace(/"/g, '') + '"]', gsLand);
+    }
+    if (r.type === 'panel') {
+      show(r.item.tab);
+      if (r.item.anchor) gsWait(r.item.anchor, gsLand);
+    }
+    return undefined;
+  }
+
+  function gsType() {
+    var q = $('#gq').value.trim();
+    gs.q = q;
+    gs.at = -1;
+    clearTimeout(gs.timer);
+    if (q.length < 2) { gs.server = []; gs.client = []; gs.seq += 1; gs.busy = false; return q ? gsLocal(q) : gsClose(); }
+    gsSite();
+    gsLocal(q);
+    gs.timer = setTimeout(function () { gsAsk(q); }, 220);
+    return undefined;
+  }
+
+  on('#gq', 'input', gsType);
+  on('#gq', 'focus', function () {
+    /* On a phone the rail sits above the bar: bring the box to the top of
+       the screen, so the results have the screen below it. */
+    if (window.innerWidth <= 900) {
+      var top = $('.bar').getBoundingClientRect().top;
+      if (top > 8) window.scrollTo(0, window.pageYOffset + top);
+    }
+    if (gs.q) gsPaint();
+  });
+  on('#gq', 'keydown', function (e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!gs.rows.length) return;
+      e.preventDefault();
+      gs.at = e.key === 'ArrowDown' ? Math.min(gs.rows.length - 1, gs.at + 1) : Math.max(0, gs.at - 1);
+      gsPaint();
+      var sel = $('#gr' + gs.at);
+      if (sel) sel.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (gs.rows.length) gsOpen(gs.rows[gs.at >= 0 ? gs.at : 0]);
+      else if (gs.q.length >= 2) { clearTimeout(gs.timer); gsAsk(gs.q); }
+    } else if (e.key === 'Escape') {
+      if (!$('#gres').hidden) { e.preventDefault(); gsClose(); } else { $('#gq').value = ''; gsType(); $('#gq').blur(); }
+    }
+  });
+  on('#gres', 'mousedown', function (e) { e.preventDefault(); });   // keep the focus in the box while choosing
+  on('#gres', 'click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-gi]') : null;
+    if (b) gsOpen(gs.rows[Number(b.getAttribute('data-gi'))]);
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('.gsearch')) gsClose();
+  });
+  document.addEventListener('keydown', function (e) {
+    if ($('#app').hidden) return;
+    var t = e.target;
+    var typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    if ((e.key === '/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) || ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === 'k')) {
+      if ($('#caseDrawer').getAttribute('data-open') === '1' && e.key === '/') return;
+      e.preventDefault();
+      $('#gq').focus();
+      $('#gq').select();
+    }
+  });
 
   /* ---- getting in ---------------------------------------------------------- */
 

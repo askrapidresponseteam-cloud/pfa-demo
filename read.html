@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.407">
+<meta name="pfa-build" content="v1.409">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#faf8f4">
 <meta name="robots" content="noindex, follow">
@@ -10,8 +10,10 @@
 <meta name="description" content="Read a document from the PFA Library as it was published: page by page or scrolling, three paper colours, search, and your place kept for you.">
 <!-- The library's reading room: each document as it was published, page by page. No site header
      or footer on purpose (scripts/sync-chrome.js, SKIP): the bar below is the whole of the
-     interface, and it steps aside while you read. Driven by assets/reader.js, which draws the PDF
-     with assets/reader-pdf.js, from window.PFA_LIBRARY (assets/library-data.js). -->
+     interface, and it stays on screen (8 Oct 2026: it used to step aside while reading, and the
+     owner found no way back). Back returns to the page the reader came from, the mark goes home.
+     Driven by assets/reader.js, which draws the PDF with assets/reader-pdf.js, from
+     window.PFA_LIBRARY (assets/library-data.js). -->
 <script>
 /* The saved paper colour, set before the first paint so a dark reader is never flashed white. */
 (function () {
@@ -34,6 +36,7 @@
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
     <span>Library</span>
   </a>
+  <a class="rd-btn rd-home" id="rdHome" href="index.html" aria-label="People for Animals home"><img src="img/mail/logo-mark.png" alt="" width="34" height="30"></a>
   <button class="rd-btn" type="button" id="rdTocBtn" aria-label="Contents" aria-controls="rdToc" aria-expanded="false">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg>
   </button>

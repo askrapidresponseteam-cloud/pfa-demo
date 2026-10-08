@@ -18,11 +18,6 @@ window.PFA_LIBRARY = {
    "id": "research",
    "name": "Research and policy briefs",
    "short": "Research"
-  },
-  {
-   "id": "scoping",
-   "name": "Financial scoping reports",
-   "short": "Scoping reports"
   }
  ],
  "items": [
@@ -326,66 +321,6 @@ window.PFA_LIBRARY = {
    "words": 8158,
    "minutes": 35,
    "cover": "media/library/covers/hidden-costs-piggery.webp",
-   "coverW": 520,
-   "coverH": 735
-  },
-  {
-   "slug": "dairy-scoping-report",
-   "title": "Dairy Scoping Report",
-   "shelf": "scoping",
-   "kind": "Scoping report",
-   "blurb": "Do India's financial incentives for dairy reward animal welfare, environmental sustainability and public health? The schemes assessed, with recommendations.",
-   "drive": "1lWohKj71RN0vNrF1S2qgvhHweKBF_Z9N",
-   "file": "resources/Dairy%20Scoping%20Report%20(10.06.2025).pdf",
-   "read": "resources/read/dairy-scoping-report.pdf",
-   "name": "Dairy Scoping Report (10.06.2025).pdf",
-   "bytes": 9870656,
-   "pages": 52,
-   "lang": "en",
-   "index": "media/library/dairy-scoping-report.json",
-   "words": 8654,
-   "minutes": 38,
-   "cover": "media/library/covers/dairy-scoping-report.webp",
-   "coverW": 520,
-   "coverH": 735
-  },
-  {
-   "slug": "pig-scoping-report",
-   "title": "Pig Scoping Report",
-   "shelf": "scoping",
-   "kind": "Scoping report",
-   "blurb": "India's financial incentives for piggery, weighed against animal welfare and environmental sustainability, with a close look at Assam, Nagaland and Karnataka.",
-   "drive": "1Of6P8rPUGcb1jVm0TG3mpqhipSAA0Rch",
-   "file": "resources/Piggery%20Scoping%20Report.pdf",
-   "read": "resources/read/pig-scoping-report.pdf",
-   "name": "Piggery Scoping Report.pdf",
-   "bytes": 54516225,
-   "pages": 40,
-   "lang": "en",
-   "index": "media/library/pig-scoping-report.json",
-   "words": 5957,
-   "minutes": 26,
-   "cover": "media/library/covers/pig-scoping-report.webp",
-   "coverW": 520,
-   "coverH": 735
-  },
-  {
-   "slug": "poultry-scoping-report",
-   "title": "Poultry Scoping Report",
-   "shelf": "scoping",
-   "kind": "Scoping report",
-   "blurb": "The government schemes and subsidies behind egg production in India, assessed against animal welfare and sustainability, and the case for cage-free.",
-   "drive": "11-z6biKcSFUIFIeNXN-KQIa3NLez7sSg",
-   "file": "resources/Poultry%20Scoping%20Report%20(03.07.2025).pdf",
-   "read": "resources/read/poultry-scoping-report.pdf",
-   "name": "Poultry Scoping Report (03.07.2025).pdf",
-   "bytes": 54824895,
-   "pages": 61,
-   "lang": "en",
-   "index": "media/library/poultry-scoping-report.json",
-   "words": 9009,
-   "minutes": 39,
-   "cover": "media/library/covers/poultry-scoping-report.webp",
    "coverW": 520,
    "coverH": 735
   }

@@ -51,6 +51,20 @@ const START = '<!-- library:start. Written by scripts/build-library.js from data
 const END = '<!-- library:end -->';
 const STACK_START = '<!-- library-stack:start. Written by scripts/build-library.js. -->';
 const STACK_END = '<!-- library-stack:end -->';
+/* The filter chips and the count, one chip a shelf (8 Oct 2026: they were
+   written by hand, so a shelf taken off the data left its chip and the old
+   count behind). */
+const CHIPS_START = '<!-- library-chips:start. Written by scripts/build-library.js. -->';
+const CHIPS_END = '<!-- library-chips:end -->';
+
+function chipsMarkup(data) {
+  const n = data.items.length;
+  return [
+    '      <button class="chip" type="button" data-shelf="all" aria-pressed="true">All</button>',
+    ...data.shelves.map((s) => `      <button class="chip" type="button" data-shelf="${esc(s.id)}" aria-pressed="false">${esc(s.short || s.name)}</button>`),
+    `      <span class="count" id="libCount" aria-live="polite">${n} ${n === 1 ? 'document' : 'documents'}</span>`
+  ].join('\n');
+}
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DRIVE_ID = /^[A-Za-z0-9_-]{20,64}$/;
@@ -266,7 +280,8 @@ function between(page, start, end, inner, label) {
 }
 
 function render(page, data, metas) {
-  return between(between(page, START, END, shelvesMarkup(data, metas), 'library'), STACK_START, STACK_END, stackMarkup(data, metas), 'library-stack');
+  return between(between(between(page, START, END, shelvesMarkup(data, metas), 'library'), STACK_START, STACK_END, stackMarkup(data, metas), 'library-stack'),
+    CHIPS_START, CHIPS_END, chipsMarkup(data), 'library-chips');
 }
 
 function clientData(data, metas) {

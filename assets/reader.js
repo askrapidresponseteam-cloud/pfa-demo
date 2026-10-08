@@ -124,14 +124,14 @@
     clearTimeout(hideTimer);
     if (!stay) hideTimer = setTimeout(hideChrome, 3600);
   }
+  /* The bar and the dock no longer step aside (owner, 8 Oct 2026: a page
+     open and no way back). These stay as the places that used to hide
+     them, so every caller keeps working; the chrome is simply always on. */
   function hideChrome() {
     clearTimeout(hideTimer);
-    if (panel || mode !== 'pages' || overChrome || scrubbing) return;
-    var a = document.activeElement;
-    if (a && ($('rdBar').contains(a) || $('rdDock').contains(a)) && a.matches(':focus-visible')) return;
-    body.classList.remove('rd-chrome');
+    body.classList.add('rd-chrome');
   }
-  function toggleChrome() { if (chromeOn()) hideChrome(); else showChrome(); }
+  function toggleChrome() { showChrome(true); }
 
   ['rdBar', 'rdDock'].forEach(function (id) {
     var el = $(id);
@@ -914,14 +914,25 @@
     showChrome(true);
   }
 
-  $('rdBack').addEventListener('click', function (event) {
-    /* Back to the shelves the reader came from, at the same scroll, when it came from there. */
+  /* Back: to the page of this site the reader came from (the shelves, a law,
+     a search result), at the same scroll, and it says so; otherwise to the
+     library. Opened from outside the site, or in a new tab, it is "Library". */
+  var cameFrom = (function () {
     var ref = document.referrer || '';
-    if (ref && ref.indexOf(location.origin) === 0 && /\/library(\.html)?([?#]|$)/.test(ref.slice(location.origin.length)) && history.length > 1) {
-      event.preventDefault();
-      save();
-      history.back();
-    }
+    if (!ref || ref.indexOf(location.origin) !== 0) return '';
+    var where = ref.slice(location.origin.length);
+    if (/^\/read(\.html)?([?#]|$)/.test(where)) return '';
+    return history.length > 1 ? where : '';
+  }());
+  if (cameFrom && !/^\/library(\.html)?([?#]|$)/.test(cameFrom)) {
+    $('rdBack').querySelector('span').textContent = 'Back';
+    $('rdBack').setAttribute('aria-label', 'Back to the page you came from');
+  }
+  $('rdBack').addEventListener('click', function (event) {
+    if (!cameFrom) return;
+    event.preventDefault();
+    save();
+    history.back();
   });
 
   function start() {

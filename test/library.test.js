@@ -48,12 +48,10 @@ const SUPPLIED = {
   research: [
     ['SCC Policy Brief', '1AD3a39onjZaAexJBH2FCAqzAD7DgzyEo'],
     ['Hidden Costs of Piggery Operations in India', '1OigazDKppHhDateqLwdFmvcsPyNwau0D']
-  ],
-  scoping: [
-    ['Dairy Scoping Report', '1lWohKj71RN0vNrF1S2qgvhHweKBF_Z9N'],
-    ['Pig Scoping Report', '1Of6P8rPUGcb1jVm0TG3mpqhipSAA0Rch'],
-    ['Poultry Scoping Report', '11-z6biKcSFUIFIeNXN-KQIa3NLez7sSg']
   ]
+  /* The Financial scoping reports shelf (Dairy, Pig and Poultry Scoping
+     Reports) was removed entirely on the owner's word, 8 Oct 2026:
+     data/library-withdrawn.json. */
 };
 
 /* ---- the catalogue ------------------------------------------------------ */
@@ -64,7 +62,7 @@ test('the shelves hold exactly the supplied documents, as supplied, and nothing 
     const got = DATA.items.filter((it) => it.shelf === shelf).map((it) => [it.title, it.drive]);
     assert.deepEqual(got, SUPPLIED[shelf], `shelf ${shelf}`);
   }
-  assert.equal(DATA.items.length, 19);
+  assert.equal(DATA.items.length, 16);
 });
 
 test('data/library.json passes its own validation', () => {
@@ -328,4 +326,64 @@ test('the printed contents become the contents, each entry on the page where it 
   ]);
   /* not one entry found by its words: no contents is better than wrong pages */
   assert.equal(X.placeContents(entries, pages.slice(0, 2), 3), null);
+});
+
+/* ---- withdrawn on purpose ----------------------------------------------- */
+
+const WITHDRAWN = JSON.parse(read('data/library-withdrawn.json'));
+
+test('the Financial scoping reports shelf is gone entirely: no shelf, no document, no file, no chip, no word', () => {
+  assert.deepEqual(WITHDRAWN.withdrawn.map((w) => w.slug).sort(), ['dairy-scoping-report', 'pig-scoping-report', 'poultry-scoping-report']);
+  assert.ok(!DATA.shelves.some((s) => s.id === 'scoping'), 'no shelf');
+  for (const w of WITHDRAWN.withdrawn) {
+    assert.ok(!DATA.items.some((it) => it.slug === w.slug), `${w.slug} is on no shelf`);
+    for (const f of w.files) assert.ok(!fs.existsSync(path.join(ROOT, f)), `${f} is deleted`);
+    for (const f of [`media/library/${w.slug}.json`, `media/library/covers/${w.slug}.webp`]) assert.ok(!fs.existsSync(path.join(ROOT, f)), `${f} is deleted`);
+  }
+  for (const f of ['library.html', 'assets/library-data.js', 'search-index.json', 'assets/site-modules.json']) {
+    assert.doesNotMatch(read(f), /[Ss]coping|Following the money/, `${f} still mentions them`);
+  }
+});
+
+test('the filter chips and the count are written from the data, one chip a shelf', () => {
+  const page = read('library.html');
+  const chips = [...page.matchAll(/<button class="chip" type="button" data-shelf="([a-z-]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(chips, ['all'].concat(DATA.shelves.map((s) => s.id)));
+  assert.match(page, new RegExp(`id="libCount"[^>]*>${DATA.items.length} documents<`));
+});
+
+test('a deploy deletes the withdrawn files it copies in from the live tree, and only under resources/', () => {
+  const os = require('node:os');
+  const W = require('../scripts/withdraw-library.js');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pfa-withdraw-'));
+  fs.mkdirSync(path.join(tmp, 'data'));
+  fs.mkdirSync(path.join(tmp, 'resources', 'read'), { recursive: true });
+  const list = JSON.parse(JSON.stringify(WITHDRAWN));
+  list.withdrawn.push({ slug: 'evil', files: ['data/library.json', 'resources/../data/library.json'] });
+  fs.writeFileSync(path.join(tmp, 'data', 'library-withdrawn.json'), JSON.stringify(list));
+  fs.writeFileSync(path.join(tmp, 'data', 'library.json'), '{}');
+  for (const w of WITHDRAWN.withdrawn) for (const f of w.files) fs.writeFileSync(path.join(tmp, f), 'pdf');
+  fs.writeFileSync(path.join(tmp, 'resources', 'Keep me.pdf'), 'pdf');
+  const removed = W.withdraw(tmp);
+  assert.equal(removed.length, 6);
+  assert.ok(fs.existsSync(path.join(tmp, 'resources', 'Keep me.pdf')), 'nothing else is touched');
+  assert.ok(fs.existsSync(path.join(tmp, 'data', 'library.json')), 'nothing outside resources/');
+  assert.match(read('DEPLOY.command'), /node scripts\/withdraw-library\.js/);
+  fs.rmSync(tmp, { recursive: true, force: true });
+});
+
+/* ---- the reader: a way back, always ------------------------------------- */
+
+test('the reader keeps its bar and dock on screen, with Back and Home, and never hides them', () => {
+  const css = read('assets/reader.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  const bar = /\.rd-bar\{[^}]*\}/.exec(css)[0];
+  const dock = /\.rd-dock\{[^}]*\}/.exec(css)[0];
+  assert.doesNotMatch(bar, /translateY\(-100%\)|opacity:0/, 'the bar is not moved off screen');
+  assert.doesNotMatch(dock, /translateY\(100%\)|opacity:0/, 'nor the dock');
+  const js = read('assets/reader.js');
+  assert.doesNotMatch(js.replace(/\/\*[\s\S]*?\*\//g, ''), /classList\.remove\('rd-chrome'\)/, 'nothing takes the chrome away');
+  const html = read('read.html');
+  assert.match(html, /id="rdBack" href="library\.html"/);
+  assert.match(html, /id="rdHome" href="index\.html" aria-label="People for Animals home"/);
+  assert.match(js, /Back to the page you came from/, 'Back says where it goes when it goes back');
 });

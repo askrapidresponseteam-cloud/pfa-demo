@@ -73,8 +73,14 @@ button{font:inherit;color:inherit}
 /* ---------- the bar ---------- */
 .rd-bar{position:fixed;inset:0 0 auto;z-index:30;display:flex;align-items:center;gap:2px;height:calc(var(--rd-bar-h) + var(--rd-safe-t));padding:var(--rd-safe-t) max(10px,env(safe-area-inset-right,0px)) 0 max(10px,env(safe-area-inset-left,0px));
   background:var(--rd-bar);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);border-bottom:1px solid var(--rd-rule);
-  transform:translateY(-100%);opacity:0;transition:transform .32s cubic-bezier(.2,.7,.2,1),opacity .25s,background-color .35s}
-.rd-chrome .rd-bar,.rd-bar:focus-within{transform:none;opacity:1}
+  transition:background-color .35s}
+/* Always on screen (owner, 8 Oct 2026, a page of the ABC module open and
+   nothing else: "how to nav back"). The bar used to step aside a few
+   seconds into reading and came back only on a tap, a move to the top edge
+   or Escape, none of which anyone is told. The pages are laid out below it
+   and above the dock, so neither covers a page. */
+.rd-home{padding:0 8px}
+.rd-home img{display:block;width:auto;height:30px}
 .rd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;height:44px;padding:0 10px;border:0;background:none;color:var(--rd-ink);cursor:pointer;text-decoration:none;font-size:13px;letter-spacing:.02em;transition:background-color .2s,opacity .2s}
 .rd-btn:hover{background:var(--rd-raise)}
 .rd-btn[aria-expanded="true"]{background:var(--rd-raise)}
@@ -92,14 +98,13 @@ button{font:inherit;color:inherit}
   font-size:11px;letter-spacing:.06em;color:var(--rd-faint);pointer-events:none;transition:opacity .3s;font-variant-numeric:tabular-nums}
 .rd-foot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rd-foot .rd-foot__pct{flex:0 0 auto}
-.rd-chrome .rd-foot{opacity:0}
+.rd-chrome .rd-foot,.rd-foot{opacity:0}
 .rd[data-layout="scroll"] .rd-foot{background:linear-gradient(to top,var(--rd-bg) 45%,transparent)}
 
 /* the dock: where you are, and a way to get anywhere */
 .rd-dock{position:fixed;inset:auto 0 0;z-index:30;display:flex;align-items:center;gap:16px;min-height:calc(var(--rd-bottom) + var(--rd-safe-b));padding:8px max(18px,env(safe-area-inset-right,0px)) calc(8px + var(--rd-safe-b)) max(18px,env(safe-area-inset-left,0px));
   background:var(--rd-bar);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);border-top:1px solid var(--rd-rule);
-  font-size:12px;color:var(--rd-soft);font-variant-numeric:tabular-nums;transform:translateY(100%);opacity:0;transition:transform .32s cubic-bezier(.2,.7,.2,1),opacity .25s,background-color .35s}
-.rd-chrome .rd-dock,.rd-dock:focus-within{transform:none;opacity:1}
+  font-size:12px;color:var(--rd-soft);font-variant-numeric:tabular-nums;transition:background-color .35s}
 .rd-dock__where{flex:0 0 auto;min-width:9.5em}
 .rd-dock__pct{flex:0 0 auto;min-width:4.5em;text-align:right}
 .rd-scrub{position:relative;flex:1;min-width:0;height:28px;display:flex;align-items:center}
@@ -141,7 +146,7 @@ mark.rd-hit.is-on{background:var(--rd-hit-on);box-shadow:0 0 0 2px var(--rd-hit-
 
 /* turning: faint arrows at the edges on a desktop hover; on a touch screen
    a tap near either edge does it (assets/reader.js) */
-.rd-turn{position:fixed;top:calc(var(--rd-bar-h) + var(--rd-safe-t));bottom:calc(var(--rd-bottom) + var(--rd-safe-b));z-index:4;display:none;width:64px;border:0;background:none;padding:0;cursor:pointer;color:var(--rd-soft);opacity:0;transition:opacity .25s}
+.rd-turn{position:fixed;top:calc(var(--rd-bar-h) + var(--rd-safe-t));bottom:calc(var(--rd-bottom) + var(--rd-safe-b));z-index:4;display:none;width:64px;border:0;background:none;padding:0;cursor:pointer;color:var(--rd-soft);opacity:.45;transition:opacity .25s}
 .rd[data-mode="pages"][data-layout="paged"] .rd-turn{display:block}
 .rd-turn--prev{left:0}
 .rd-turn--next{right:0}

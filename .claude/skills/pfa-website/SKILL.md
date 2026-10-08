@@ -107,6 +107,22 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
   isolates transactions as Firestore does. test/review-recheck-*.test.js keeps the review's 47
   defects from coming back.
 
+## The panel's search (owner, 8 Oct 2026)
+- One box for everything (admin.html `gs*` functions, `/api/admin/search`, lib/admin-search.js).
+  Records are found through the `adminSearch` index: one entry per record, `terms` holding prefixes
+  of names, numbers, emails and mobiles, and whole words of free text; ids sort newest first.
+- A new collection that people should find: add a source to `SOURCES` in lib/admin-search.js (a
+  field every write moves: a number, an ISO string or a Timestamp) and an entity builder with its
+  module. Changing how terms are made: raise `VERSION` (the next sync rebuilds from the start).
+- Never search by scanning collections in the request: a search must stay a few reads.
+
+## Library and reader (owner, 8 Oct 2026)
+- The reader (read.html, assets/reader.js) keeps its bar and dock on screen: never hide the way back.
+  Back returns to the page the document was opened from.
+- To take a document off the shelves: remove it from data/library.json, list its files in
+  data/library-withdrawn.json, delete them, and run node scripts/build-library.js (it writes the
+  shelves, the chips and the count). DEPLOY.command deletes withdrawn PDFs from resources/.
+
 ## Emergency help, and site search
 - There is no help.html any more (retired; its script is in `_retired-assets/help.js`), and no
   `assets/data.js` or `build:help`. The units are data inside `units.html` (`var UNITS`), with

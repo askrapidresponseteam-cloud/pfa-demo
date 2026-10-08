@@ -31,7 +31,10 @@ test('every admin route names its module, and the guard refuses with 403, not 40
     const source = fs.readFileSync(path.join(dir, f), 'utf8');
     const calls = [...source.matchAll(/requireAdmin\(request, response(?:, ([^)]+))?\)/g)];
     assert.ok(calls.length, `${f} uses the guard`);
-    calls.forEach((c) => { if (!c[1] && f !== 'records.js') unguarded.push(f); });
+    /* records.js (who am I) and search.js (one box for everything, each
+       result kept only if this account opens its section, 8 Oct 2026) are
+       for any administrator, and filter by module themselves. */
+    calls.forEach((c) => { if (!c[1] && f !== 'records.js' && f !== 'search.js') unguarded.push(f); });
   });
   assert.deepEqual(unguarded, [], 'routes without a module');
 

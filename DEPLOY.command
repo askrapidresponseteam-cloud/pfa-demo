@@ -67,6 +67,9 @@ if [ ! -d resources ] || [ ! -d test/fixtures ]; then
     rm -rf "$TMP_RES"
   fi
 fi
+# Documents taken off the shelves on purpose (data/library-withdrawn.json):
+# their PDFs are deleted here, so the deploy removes them from the repository.
+node scripts/withdraw-library.js
 echo "  $(ls resources | wc -l | tr -d ' ') library documents, $(ls test/fixtures/library 2>/dev/null | wc -l | tr -d ' ') test PDFs"
 
 

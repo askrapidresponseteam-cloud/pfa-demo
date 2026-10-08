@@ -1,0 +1,35 @@
+{
+  "about": "Documents taken off the shelves on purpose, and the files that went with them. DEPLOY.command deletes these files from resources/ before the tests run (resources/ lives on GitHub, not in the zip), so the deploy removes them from the repository too; test/library.test.js checks none of them is on a shelf or on disk. Never reuse a withdrawn slug for a different document.",
+  "withdrawn": [
+    {
+      "slug": "dairy-scoping-report",
+      "title": "Dairy Scoping Report",
+      "when": "2026-10-08",
+      "why": "Owner, 8 Oct 2026: remove the Financial scoping reports shelf entirely (3 documents).",
+      "files": [
+        "resources/Dairy Scoping Report (10.06.2025).pdf",
+        "resources/read/dairy-scoping-report.pdf"
+      ]
+    },
+    {
+      "slug": "pig-scoping-report",
+      "title": "Pig Scoping Report",
+      "when": "2026-10-08",
+      "why": "Owner, 8 Oct 2026: remove the Financial scoping reports shelf entirely (3 documents).",
+      "files": [
+        "resources/Piggery Scoping Report.pdf",
+        "resources/read/pig-scoping-report.pdf"
+      ]
+    },
+    {
+      "slug": "poultry-scoping-report",
+      "title": "Poultry Scoping Report",
+      "when": "2026-10-08",
+      "why": "Owner, 8 Oct 2026: remove the Financial scoping reports shelf entirely (3 documents).",
+      "files": [
+        "resources/Poultry Scoping Report (03.07.2025).pdf",
+        "resources/read/poultry-scoping-report.pdf"
+      ]
+    }
+  ]
+}

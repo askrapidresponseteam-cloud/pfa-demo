@@ -91,9 +91,13 @@ const check = (method, body) => quietly(() => call(require('../lib/routes/admin/
 const rows = () => Object.entries(db.dump()).filter(([k]) => /^caregiverEmails\/[^/]+$/.test(k)).map(([k, v]) => Object.assign({ id: k.split('/')[1] }, v));
 const row = (template) => rows().find((r) => r.template === template);
 /* time passing, without a clock: every row is made due now */
+/* Time passing: every row due, and the mailbox's login gate open again
+   (lib/caregiver-store.js loginGate, 8 Oct 2026). */
 const allDue = async () => {
   const past = new Date(Date.now() - 1000).toISOString();
   for (const r of rows()) await db.collection('caregiverEmails').doc(r.id).set({ nextAttemptAt: past, leaseUntil: past }, { merge: true });
+  const gate = await db.collection('mailHealth').doc('login').get();
+  if (gate.exists) await db.collection('mailHealth').doc('login').set({ nextTryAt: past }, { merge: true });
 };
 const to = (address) => smtp.sent.filter((m) => m.to === address);
 

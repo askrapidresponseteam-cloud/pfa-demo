@@ -21,13 +21,6 @@
       "name": "Research and policy briefs",
       "short": "Research",
       "note": "Evidence and argument for policy makers."
-    },
-    {
-      "id": "scoping",
-      "head": "Following the money",
-      "name": "Financial scoping reports",
-      "short": "Scoping reports",
-      "note": "The money behind three animal farming sectors in India: dairy, pigs and poultry."
     }
   ],
   "items": [
@@ -177,33 +170,6 @@
       "pdf": "resources/Hidden Costs of Piggery Operations in India.pdf",
       "kind": "Research",
       "blurb": "How India's unregulated piggery sector threatens public health: the waste piggery units discard, its impact, and what should change."
-    },
-    {
-      "slug": "dairy-scoping-report",
-      "title": "Dairy Scoping Report",
-      "shelf": "scoping",
-      "drive": "1lWohKj71RN0vNrF1S2qgvhHweKBF_Z9N",
-      "pdf": "resources/Dairy Scoping Report (10.06.2025).pdf",
-      "kind": "Scoping report",
-      "blurb": "Do India's financial incentives for dairy reward animal welfare, environmental sustainability and public health? The schemes assessed, with recommendations."
-    },
-    {
-      "slug": "pig-scoping-report",
-      "title": "Pig Scoping Report",
-      "shelf": "scoping",
-      "drive": "1Of6P8rPUGcb1jVm0TG3mpqhipSAA0Rch",
-      "pdf": "resources/Piggery Scoping Report.pdf",
-      "kind": "Scoping report",
-      "blurb": "India's financial incentives for piggery, weighed against animal welfare and environmental sustainability, with a close look at Assam, Nagaland and Karnataka."
-    },
-    {
-      "slug": "poultry-scoping-report",
-      "title": "Poultry Scoping Report",
-      "shelf": "scoping",
-      "drive": "11-z6biKcSFUIFIeNXN-KQIa3NLez7sSg",
-      "pdf": "resources/Poultry Scoping Report (03.07.2025).pdf",
-      "kind": "Scoping report",
-      "blurb": "The government schemes and subsidies behind egg production in India, assessed against animal welfare and sustainability, and the case for cage-free."
     }
   ]
 }
