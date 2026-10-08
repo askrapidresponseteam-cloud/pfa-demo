@@ -465,6 +465,15 @@ html.pfa-screen-idle .cursor-layer{opacity:0;transition:opacity .45s ease}
 .band--stone{background:var(--stone)}
 .band--bone{background:var(--bone)}
 .band--deep{background:var(--stone);color:var(--ink)}
+/* This page's deep bands are paper, not ink. assets/pfa-theme.css sets a deep
+   band's head for dark ground (white label, white number, white rule), which
+   here put every section's label, number and rule white on white: "This
+   year", "About", "Roll of honour" and the rest were there and could not be
+   seen (found 9 Oct 2026, after "why no header for this section"). Set back
+   to the theme's paper head: ink label and rule, grey number. */
+.band.band--deep > .band__head{border-top-color:var(--ink)}
+.band.band--deep > .band__head > .eyebrow{color:var(--ink)}
+body:has(.band ~ .band) .band.band--deep > .band__head > .eyebrow::before{color:var(--muted)}
 /* Ink on paper is the selection everywhere except the surfaces that are
    themselves ink, where it would read as nothing having been selected. */
 .band--deep ::selection{background:#fff;color:var(--deep)}
@@ -673,6 +682,12 @@ html{scroll-behavior:smooth}
 .rbox__foot a{color:rgba(17,17,17,.6);border-bottom:1px solid rgba(17,17,17,.35);padding-bottom:2px}
 /* a phone frame is about 200px tall: the button sits higher and smaller, clear of the title */
 @media (max-width:700px){.night__icon{top:38%;width:54px;height:54px}.night__t{font-size:clamp(18px,5.6vw,24px)}.night__kick{font-size:10px}.night__label{gap:4px}}
+/* the roll's own heading, after the reels: the 2025 roll's head (hairline,
+   label, title), one step smaller and without a section number, as an h3
+   inside this year's section */
+.honours .roll__head{margin-top:clamp(56px,6vw,96px);padding-top:22px;border-top:1px solid var(--ink)}
+.honours .roll__head .eyebrow{color:var(--ink)}
+.honours .roll__head h3{margin-top:14px;font-size:clamp(26px,3.2vw,48px);max-width:16ch}
 .honours .roll{margin-top:clamp(28px,3.4vw,48px);border:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
 @media (max-width:1100px){.honours .roll{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .honours .roll li{position:relative;display:block;padding:0;border:0;aspect-ratio:3/4;overflow:hidden;background:#151515;
@@ -1440,6 +1455,17 @@ if (root.document && root.document.head) apply(read());
         <span class="ckreel__foot"><button type="button" class="ckreel__go" aria-label="Play: John Abraham, CineKind 2026"><span class="ckreel__play"><svg viewBox="0 0 12 14" aria-hidden="true"><path d="M0 0l12 7-12 7z"/></svg></span>Play</button></span>
       </div>
       </div>
+    </div>
+    <!-- The roll had no heading of its own (owner, 9 Oct 2026: "why no header
+         for this section"): the section's title is above the red carpet film
+         and the reels, a screen or more away by the time the portraits
+         arrive. It is headed the way the 2025 roll further down the page is,
+         "Roll of honour" over the count, one step smaller as it sits inside
+         this year's section rather than opening one: no section number, so
+         the sections after it keep theirs. -->
+    <div class="roll__head" id="roll-2026">
+      <p class="eyebrow">Roll of honour</p>
+      <h3 class="display">The eleven&nbsp;honours.</h3>
     </div>
     <ol class="roll">
       <li id="h26-01"><img src="media/cinekind-2026/anant-ambani.webp" alt="" loading="lazy" decoding="async"><span class="n">01</span><span class="cap"><span class="t">Change of Heart / Heart of Gold</span><span class="w">Anant Ambani</span></span></li>

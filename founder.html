@@ -256,44 +256,10 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    themselves ink, where it would read as nothing having been selected. */
 .msg ::selection,.watch ::selection{background:#fff;color:var(--deep)}
 .msg__in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,84px);align-items:start}
-/* The heading keeps its place beside the three parts as they pass, so the
-   left column is never an empty field under a title. */
-.msg__head{position:sticky;top:calc(var(--ann) + var(--nav) + 32px)}
 .msg h2{font-size:clamp(27px,3.5vw,52px);max-width:13ch}
 .msg .eyebrow{color:rgba(17,17,17,.55);margin-bottom:18px}
-.msg__index{list-style:none;margin:clamp(26px,3vw,44px) 0 0;padding:0;border-top:1px solid var(--line);max-width:26ch}
-.msg__index li{border-bottom:1px solid var(--line)}
-.msg__index a{position:relative;display:flex;gap:14px;align-items:baseline;padding:11px 0 11px 0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.55);text-decoration:none;transition:color .25s,padding-left .25s}
-.msg__index a:hover{color:var(--ink)}
-/* the part in view, as the reader passes it (a small script below) */
-.msg__index a[aria-current="true"]{color:var(--ink);padding-left:14px}
-.msg__index a::before{content:"";position:absolute;left:0;top:50%;width:2px;height:0;background:var(--ink);transform:translateY(-50%);transition:height .25s}
-.msg__index a[aria-current="true"]::before{height:60%}
-.msg__index span,.msg__kicker span{font-family:var(--display);font-weight:400;font-size:15px;letter-spacing:.02em;color:var(--ink)}
-.msg__body{display:grid;gap:0}
-.msg__part{padding:clamp(30px,3.2vw,48px) 0;border-top:1px solid var(--line)}
-.msg__part:first-child{padding-top:0;border-top:0}
-.msg__part:last-child{padding-bottom:0}
-.msg__kicker{display:flex;gap:14px;align-items:baseline;margin:0 0 clamp(16px,1.8vw,24px);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.55)}
-.msg__claim{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(24px,2.7vw,42px);line-height:1.12;text-transform:uppercase;letter-spacing:.01em;color:var(--ink);max-width:20ch}
-.msg__lede{margin:clamp(18px,2vw,26px) 0 0;max-width:58ch;font-size:clamp(15px,1.2vw,17px);line-height:1.7;color:rgba(17,17,17,.82)}
-.msg__invite{margin:clamp(18px,2vw,26px) 0 0;padding-left:18px;border-left:2px solid var(--ink);max-width:46ch;font-size:clamp(16px,1.35vw,19px);line-height:1.5;color:var(--ink)}
-.msg__text{margin:0;max-width:58ch;font-size:clamp(15px,1.2vw,17px);line-height:1.7;color:rgba(17,17,17,.82)}
-.msg__text--strong{font-family:var(--display);font-size:clamp(20px,1.9vw,28px);line-height:1.25;color:var(--ink);max-width:30ch}
-.msg h3{margin:0 0 12px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.55)}
-.msg__cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin-top:clamp(22px,2.4vw,32px);background:var(--line);border:1px solid var(--line)}
-.msg__col{background:#fff;padding:clamp(18px,1.8vw,26px)}
-.msg__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 18px}
-.msg__list li{padding:7px 0;border-bottom:1px solid var(--line);font-family:var(--display);font-size:clamp(15px,1.25vw,18px);line-height:1.3;color:var(--ink)}
-.msg__reach{margin-top:clamp(22px,2.4vw,32px)}
-.msg__chain{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));counter-reset:step}
-.msg__chain li{position:relative;padding:16px 18px 0 0;border-top:1px solid var(--line);font-size:13px;line-height:1.5;color:rgba(17,17,17,.82);counter-increment:step}
-.msg__chain li::before{content:counter(step,decimal-leading-zero);display:block;margin-bottom:6px;font-family:var(--display);font-size:15px;color:var(--ink)}
-.msg__chain li::after{content:"";position:absolute;left:0;top:-4px;width:7px;height:7px;border-radius:50%;background:var(--ink)}
-.msg__facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin-top:clamp(22px,2.4vw,32px);background:var(--line);border:1px solid var(--line)}
-.msg__fact{background:#fff;padding:clamp(22px,2.2vw,32px)}
-.msg__fact b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(24px,2.3vw,36px);line-height:1.05;letter-spacing:.01em;text-transform:uppercase;color:var(--ink)}
-.msg__fact p{margin:14px 0 0;font-size:13.5px;line-height:1.62;color:rgba(17,17,17,.78);max-width:38ch}
+.msg p{margin:0 0 22px;max-width:64ch;font-size:15px;line-height:1.72;color:rgba(17,17,17,.8)}
+.msg p:last-of-type{margin-bottom:0}
 
 .aims{padding:var(--band) var(--gutter-lg) clamp(40px,4vw,64px)}
 .aims__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(30px,3.6vw,52px)}
@@ -507,16 +473,8 @@ body.theatre-lock{overflow:hidden}
   .fhero__in{grid-template-columns:1fr;gap:26px}
   .plate .frame{aspect-ratio:4/3;max-height:none}
   .msg__in,.close{grid-template-columns:1fr}
-  .msg__head{position:static}
-  .msg__index{display:none}
-  .msg__chain{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:18px}
   .gal__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gal .frame:nth-child(4),.gal .frame:nth-child(5){grid-column:span 2}
-}
-@media (max-width:600px){
-  .msg__cols,.msg__facts{grid-template-columns:1fr}
-  .msg__chain{grid-template-columns:1fr}
-  .msg__chain li{padding-right:0}
 }
 @media (max-width:620px){
   .figs{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -843,73 +801,16 @@ if (root.document && root.document.head) apply(read());
     <div><b>1M+</b><span>Lives touched</span></div>
   </section>
 
-  <!-- Owner, 8 Oct 2026: "this looks bland and not well formatted". The same
-       words, set as an argument, a movement and a standing: the heading holds
-       its place while the three parts pass beside it, the claim leads in the
-       display face, the lists read as lists, and the two facts stand as
-       figures, in the page's own hairline grid. -->
   <section class="msg" id="her-words">
     <div class="msg__in">
-      <header class="msg__head">
+      <div>
         <p class="eyebrow">In her words</p>
         <h2 class="display">A&nbsp;circle of&nbsp;love around all life.</h2>
-        <ol class="msg__index" aria-label="In this section">
-          <li><a href="#her-argument"><span>01</span>The argument</a></li>
-          <li><a href="#her-movement"><span>02</span>The movement</a></li>
-          <li><a href="#her-standing"><span>03</span>The standing</a></li>
-        </ol>
-      </header>
-
-      <div class="msg__body">
-        <article class="msg__part" id="her-argument" aria-labelledby="msg-a">
-          <p class="msg__kicker" id="msg-a"><span>01</span>The argument</p>
-          <p class="msg__claim">Her argument starts with self-interest, not sentiment.</p>
-          <p class="msg__lede">Every species, from bees to elephants, holds up a shield around human life, and the quality of our own lives rests on theirs. Eat them, exploit them, breed one kind while wiping out another, and the damage lands back on us: as each species goes, our own world gets poorer.</p>
-          <p class="msg__invite">Her invitation is simply to join the circle of care around all living things.</p>
-        </article>
-
-        <article class="msg__part" id="her-movement" aria-labelledby="msg-b">
-          <p class="msg__kicker" id="msg-b"><span>02</span>The movement</p>
-          <p class="msg__text">People for Animals turned animal welfare in India from a quiet cause into an organised, assertive movement.</p>
-          <div class="msg__cols">
-            <div class="msg__col">
-              <h3>Its members are</h3>
-              <ul class="msg__list">
-                <li>Lawyers</li><li>Film actors</li><li>Business leaders</li><li>Civil servants</li><li>Teachers</li><li>Students</li>
-              </ul>
-            </div>
-            <div class="msg__col">
-              <h3>Its wins have come in</h3>
-              <ul class="msg__list">
-                <li>Courtrooms</li><li>Research laboratories</li><li>Racecourses</li><li>Temples</li><li>Circuses</li><li>Zoos</li>
-              </ul>
-            </div>
-          </div>
-          <div class="msg__reach">
-            <h3>The work runs from</h3>
-            <ol class="msg__chain">
-              <li>Shelters and ambulances</li>
-              <li>Fighting cases in court</li>
-              <li>Training judges, police officers and bureaucrats</li>
-              <li>Publishing material that teaches people how to care for animals</li>
-            </ol>
-          </div>
-        </article>
-
-        <article class="msg__part" id="her-standing" aria-labelledby="msg-c">
-          <p class="msg__kicker" id="msg-c"><span>03</span>The standing</p>
-          <p class="msg__text msg__text--strong">PFA is now counted among the strongest animal groups anywhere in the world.</p>
-          <div class="msg__facts">
-            <div class="msg__fact">
-              <b>The foreword</b>
-              <p>When the first International Animal Welfare Directory was assembled, its British publishers asked PFA to write the foreword.</p>
-            </div>
-            <div class="msg__fact">
-              <b>2001</b>
-              <p>The first Padma Shri awarded in this field went to a PFA member, Dr Norma Alvares.</p>
-            </div>
-          </div>
-        </article>
+      </div>
+      <div>
+        <p>Her argument starts with self-interest, not sentiment. Every species, from bees to elephants, holds up a shield around human life, and the quality of our own lives rests on theirs. Eat them, exploit them, breed one kind while wiping out another, and the damage lands back on us: as each species goes, our own world gets poorer. Her invitation is simply to join the circle of care around all living things.</p>
+        <p>People for Animals turned animal welfare in India from a quiet cause into an organised, assertive movement. Its members are lawyers, film actors, business leaders, civil servants, teachers and students. The work runs from shelters and ambulances through to fighting cases in court, training judges, police officers and bureaucrats, and publishing material that teaches people how to care for animals. Its wins have come in courtrooms, in research laboratories, and at racecourses, temples, circuses and zoos.</p>
+        <p>PFA is now counted among the strongest animal groups anywhere in the world. When the first International Animal Welfare Directory was assembled, its British publishers asked PFA to write the foreword. In 2001 the first Padma Shri awarded in this field went to a PFA member, Dr Norma Alvares.</p>
       </div>
     </div>
   </section>
@@ -1154,23 +1055,6 @@ if (root.document && root.document.head) apply(read());
 <script>
 (function(){
   'use strict';
-
-  /* "In her words": the index beside the three parts marks the one being
-     read (8 Oct 2026). Only where the index shows, and only with an
-     IntersectionObserver; without one the index is simply three links. */
-  (function(){
-    var links = [].slice.call(document.querySelectorAll('.msg__index a'));
-    if (!links.length || !('IntersectionObserver' in window)) return;
-    var mark = function(id){ links.forEach(function(a){ a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + id)); }); };
-    var seen = {};
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ seen[e.target.id] = e.isIntersecting ? e.intersectionRect.height : 0; });
-      var best = '', most = 0;
-      Object.keys(seen).forEach(function(id){ if (seen[id] > most){ most = seen[id]; best = id; } });
-      if (best) mark(best);
-    }, { rootMargin: '-30% 0px -40% 0px', threshold: [0, .25, .5, .75, 1] });
-    links.forEach(function(a){ var part = document.querySelector(a.getAttribute('href')); if (part) io.observe(part); });
-  })();
 
   /* The plate blooms into colour when it arrives on screen - the same
      mechanism as the founder band on the home page. See the note beside

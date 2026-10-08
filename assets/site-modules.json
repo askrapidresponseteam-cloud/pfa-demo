@@ -1066,6 +1066,7 @@
    "night-2026": "honours-2026",
    "reels-2026": "honours-2026",
    "ckreelsH": "honours-2026",
+   "roll-2026": "honours-2026",
    "h26-01": "honours-2026",
    "h26-02": "honours-2026",
    "h26-03": "honours-2026",
@@ -1106,12 +1107,6 @@
    "vgrid": "watch",
    "vcap": "watch",
    "reels": "watch",
-   "her-argument": "her-words",
-   "msg-a": "her-words",
-   "her-movement": "her-words",
-   "msg-b": "her-words",
-   "her-standing": "her-words",
-   "msg-c": "her-words",
    "rrt-title": "rapid-response"
   },
   "careers": {
