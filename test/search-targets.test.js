@@ -25,8 +25,10 @@ const path = require('node:path');
 const ROOT = path.join(__dirname, '..');
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 
+/* `u:` as a row's own key, not the end of another key: the synonym table
+   has `gau: 'cow cattle'`, which is not a link. */
 function curatedTargets(source) {
-  return [...source.matchAll(/u:\s*'([^']+)'/g)].map((m) => m[1]);
+  return [...source.matchAll(/(?:^|[\s{,])u:\s*'([^']+)'/g)].map((m) => m[1]);
 }
 
 function builderExcludes() {
@@ -43,12 +45,14 @@ test('every curated search target lands on a real page and a real anchor', () =>
   ]);
   const broken = [];
   for (const u of targets) {
-    const [page, anchor] = u.split('#');
+    const [address, anchor] = u.split('#');
+    const page = address.split('?')[0];
     if (!fs.existsSync(path.join(ROOT, page))) {
       broken.push(`${u} (no such page)`);
       continue;
     }
-    if (anchor && !read(page).includes(`id="${anchor}"`)) {
+    /* an id attribute of its own: data-id="23" once passed for id="23" */
+    if (anchor && !new RegExp(`\\sid="${anchor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`).test(read(page))) {
       broken.push(`${u} (no such anchor)`);
     }
   }

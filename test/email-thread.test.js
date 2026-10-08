@@ -546,7 +546,7 @@ test('the mailbox is read over IMAP: the raw email is parsed, filed, and the mai
   assert.equal(run.json.fetched, 2);
   assert.equal(run.json.filed, 1);
   assert.equal(run.json.unmatched, 1);
-  assert.equal(calls[0][1], 'imap.titan.email');
+  assert.equal(calls[0][1], 'imap.secureserver.net', 'GoDaddy\'s own IMAP server first, as its settings page says (8 Oct 2026)');
   assert.equal(calls[0][2], SITE_MAILBOX, 'the sending mailbox is read, no second password needed');
 
   const m = messagesOf(ref).find((x) => x.type === 'reply');
@@ -612,4 +612,52 @@ test('a send that outlasts the page\'s wait is still recorded as sent, so the wo
   assert.equal(results.length, 2);
   assert.equal(results[1].ok, true);
   assert.equal(results[1].providerId, '<late@pfa>');
+});
+
+
+/* 8 Oct 2026: the panel said "Mailbox could not be read: Command failed".
+   Reading tried imap.titan.email first, which turned the login away, and
+   stopped there; GoDaddy's own server, imap.secureserver.net, was never
+   tried. lib/imap-open.js now tries GoDaddy's first, moves on when a server
+   refuses the login, and reports what each server said. */
+function refusingLogin(host) {
+  return Object.assign(new Error('Command failed'), { authenticationFailed: true, serverResponseCode: 'AUTHENTICATIONFAILED', responseText: `Invalid credentials (${host})` });
+}
+
+test('a server that refuses the login is not the end: the next one is tried, and the one that opens is used', async () => {
+  const IMAP = require('../lib/imap-open');
+  const tried = [];
+  const opened = await IMAP.open((options) => ({
+    async connect() { tried.push(options.host); if (options.host === 'imap.secureserver.net') throw refusingLogin(options.host); },
+    async logout() {}
+  }));
+  assert.deepEqual(tried, ['imap.secureserver.net', 'imap.titan.email']);
+  assert.equal(opened.host, 'imap.titan.email');
+});
+
+test('when every server refuses, the panel is told what each one said, not "Command failed"', async () => {
+  INBOUND._setClient((options) => ({ async connect() { throw refusingLogin(options.host); }, async logout() {} }));
+  const out = await call(require('../lib/routes/inbound-mail'), { body: {}, headers: cron });
+  assert.equal(out.json.ok, false);
+  assert.equal(out.json.authentication, true);
+  assert.match(out.json.error, /GoDaddy did not accept the login/);
+  assert.match(out.json.error, /imap\.secureserver\.net: \[AUTHENTICATIONFAILED\] Invalid credentials/);
+  assert.match(out.json.error, /imap\.titan\.email: \[AUTHENTICATIONFAILED\]/);
+  assert.doesNotMatch(out.json.error, /^Mailbox could not be read: Command failed$/);
+  const status = await call(require('../lib/routes/inbound-mail'), { method: 'GET', headers: cron });
+  assert.match(status.json.lastError, /imap\.secureserver\.net: \[AUTHENTICATIONFAILED\]/, 'the panel shows the same words');
+});
+
+test('once the mailbox is open, a refusal is that mailbox\'s answer, reported as it is and not retried elsewhere', async () => {
+  const tried = [];
+  INBOUND._setClient((options) => ({
+    mailbox: { uidValidity: 1 },
+    async connect() { tried.push(options.host); },
+    async getMailboxLock() { return { release() {} }; },
+    async search() { throw Object.assign(new Error('Command failed'), { responseText: 'SEARCH not allowed' }); },
+    async logout() {}
+  }));
+  const out = await call(require('../lib/routes/inbound-mail'), { body: {}, headers: cron });
+  assert.deepEqual(tried, ['imap.secureserver.net']);
+  assert.match(out.json.error, /imap\.secureserver\.net answered SEARCH not allowed/);
 });

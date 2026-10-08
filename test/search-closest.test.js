@@ -15,7 +15,9 @@ const first = (q) => S.search(q, { limit: 3 }).rows.map((r) => r.t)[0];
 
 test('site search: typos, run-together words and short forms still land on the right page', () => {
   assert.equal(first('reportcruelty'), 'Report cruelty');
-  assert.equal(first('hosptial'), 'Animal hospitals');
+  /* PFA has no hospitals (23 Aug 2026): a search for one is answered with
+     the nearest unit to call, under a name that says so. */
+  assert.equal(first('hosptial'), 'Find a unit near you');
   assert.equal(first('colony caregivr card'), 'Apply for a colony caregiver card');
   assert.equal(first('donte'), 'Donate');
   assert.equal(first('cruality report'), 'Report cruelty');

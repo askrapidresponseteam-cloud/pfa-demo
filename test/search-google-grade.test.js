@@ -99,7 +99,9 @@ test('every row the engine can hand out resolves', () => {
     const page = pageAndQuery.split('?')[0];
     if (!fs.existsSync(path.join(ROOT, page))) { broken.push(`${row.u} (no such page)`); continue; }
     const html = read(page);
-    if (anchor && !html.includes(`id="${anchor}"`)) broken.push(`${row.u} (no such anchor)`);
+    /* an id attribute of its own: data-id="23" once passed for id="23",
+       and the shop's rows pointed at anchors no element had */
+    if (anchor && !new RegExp(`\\sid="${anchor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`).test(html)) broken.push(`${row.u} (no such anchor)`);
     if (pageAndQuery.includes('?q=') && !/id="u?q"/.test(html)) broken.push(`${row.u} (no filter box to hand the query to)`);
   }
   assert.deepEqual(broken, [], 'unresolvable rows:\n  ' + broken.join('\n  '));

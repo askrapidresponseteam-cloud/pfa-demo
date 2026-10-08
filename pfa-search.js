@@ -20,18 +20,25 @@
 
   /* ================================================================ INDEX */
   /* t title · s section · y type (action|place|law|page|article)
-     u url · d description · k keywords                                      */
+     u url · d description · k keywords
+     q the searches this row is the answer to ("best bets"): when a query is
+       one of these, or holds every word of one, the row goes to the top.
+       This is how the box answers what people actually type, in their own
+       words, rather than what the page happens to be titled.                */
   var CURATED = [
     /* ---- Do something ---- */
     { t: 'Report cruelty', s: 'Do something', y: 'action', u: 'report.html',
       d: 'Tell PFA about an animal being hurt, neglected or abandoned. A named person picks it up, you get a reference, and you can follow it.',
-      k: 'report abuse beaten beating hurt neglect abandoned injured emergency rescue complaint cruelty animal dog cat cow street stray poisoning police' },
+      k: 'report abuse beaten beating hurt neglect abandoned injured emergency rescue complaint cruelty animal dog cat cow street stray poisoning police',
+      q: ['report', 'report cruelty', 'cruelty', 'complaint', 'animal abuse', 'dog beaten', 'dog beating', 'beating dog', 'beating animal', 'hitting dog', 'torture', 'abandoned dog', 'neglect'] },
     { t: 'Careers: Zonal Head', s: 'Do something', y: 'action', u: 'careers.html',
       d: 'PFA is hiring Zonal Heads for its nine Zones: field-based coordinators for the Unit network. Two years, \u20b935,000 a month plus travel. Apply in two minutes.',
-      k: 'careers jobs job work hiring vacancy vacancies openings zonal head zone coordinator employment recruit apply position salary' },
+      k: 'careers jobs job work hiring vacancy vacancies openings zonal head zone coordinator employment recruit apply position salary',
+      q: ['careers', 'jobs', 'job', 'hiring', 'vacancy', 'work with pfa', 'work at pfa'] },
     { t: 'Ask us anything', s: 'Do something', y: 'action', u: 'ask.html',
       d: 'A question about an animal, a law, a unit, adoption or anything else. A named person answers, and you get a reference.',
-      k: 'ask question help contact email call talk someone query enquiry inquiry doubt advice support helpline' },
+      k: 'ask question help contact email call talk someone query enquiry inquiry doubt advice support helpline',
+      q: ['ask', 'question', 'ask a question', 'enquiry', 'inquiry', 'advice', 'help'] },
     { t: 'Who to report cruelty to, and which sections', s: 'Laws', y: 'law', u: 'laws.html#a33',
       d: 'Filing with the police yourself: BNS 325 with PCA s.11, why it is cognizable, and what to do if the FIR is refused.',
       k: 'report cruelty police fir section 325 cognizable refuse superintendent magistrate complaint' },
@@ -40,40 +47,68 @@
       k: 'complaint write draft file fir police letter evidence sections report' },
     { t: 'Police refuse to register an FIR', s: 'Do something', y: 'action', u: 'laws.html#b48',
       d: 'What to do when a station will not take your complaint: BNSS Section 173(4) and 175(3).',
-      k: 'fir refuse refused police station magistrate bnss 173 175 complaint' },
+      k: 'fir refuse refused police station magistrate bnss 173 175 complaint',
+      q: ['fir refused', 'fir not registered', 'police refuse fir', 'police not helping', 'police refuse'] },
     { t: 'Apply for a colony caregiver card', s: 'Do something', y: 'action', u: 'get-involved.html#caregiver',
       d: 'The application: about you, your colony, a \u20b950 fee, and a named person at PFA decides. You get an application number the moment the fee clears.',
-      k: 'become a caregiver colony caregiver card apply id identity feeder feeding community dogs colony caregiver application register form abc rules rwa' },
+      k: 'become a caregiver colony caregiver card apply id identity feeder feeding community dogs colony caregiver application register form abc rules rwa',
+      q: ['caregiver card', 'colony caregiver', 'become a caregiver', 'feeder card', 'feeder id', 'feeding card', 'dog feeder id card'] },
     { t: 'Is feeding community dogs legal? Caregiver rights', s: 'Laws', y: 'law', u: 'laws.html#a10',
       d: 'Feeding community dogs is lawful under the ABC Rules 2023. What the law says about caregivers, and the RWA rules.',
-      k: 'feeding community dogs legal lawful abc rules 2023 rwa caregiver rights society stop feeding' },
+      k: 'feeding community dogs legal lawful abc rules 2023 rwa caregiver rights society stop feeding',
+      q: ['feeding street dogs', 'feeding stray dogs', 'feeding dogs legal', 'is feeding dogs legal', 'stop feeding', 'neighbour stop feeding', 'feeding law'] },
     { t: 'Can my RWA ban pets or feeding?', s: 'Do something', y: 'action', u: 'laws.html#a11',
       d: 'No. What the ABC Rules 2023 and the courts say about societies that try to stop feeding or keeping pets.',
       k: 'rwa society apartment ban pets feeding stray dogs colony resident welfare' },
     { t: 'Donate', s: 'Do something', y: 'action', u: 'donate.html',
-      d: 'Fund a rescue outright, or buy food at cost for a shelter you choose. Tax-deductible.',
-      k: 'donate donation give money support fund sponsor monthly 80g tax deductible pay' },
+      d: 'Give once or monthly, in rupees or dollars. Rupee donations are tax-deductible under Section 80G.',
+      k: 'donate donation give money support fund sponsor monthly 80g tax deductible pay',
+      q: ['donate', 'donation', 'give money', 'monthly donation', 'donate monthly', 'support pfa', 'fund', 'sponsor'] },
+    /* Owner, 8 Oct 2026: a gift certificate, like the old site's
+       make-a-gift page. The footer's "Make a gift" opens the same place. */
+    { t: 'Give as a gift', s: 'Do something', y: 'action', u: 'donate.html?gift=1',
+      d: 'Give in someone\u2019s name, for a birthday, a wedding, a new baby or in memory. They are posted a Certificate of Appreciation signed by Smt. Maneka Sanjay Gandhi. From \u20b91,000.',
+      k: 'gift gifts certificate present tribute memorial honour honor occasion in memory name',
+      q: ['gift', 'make a gift', 'give a gift', 'gift certificate', 'donation certificate', 'certificate of appreciation', 'gift in someone name', 'donate in someone name', 'donation in name of', 'in memory', 'in memory of', 'tribute', 'memorial donation', 'birthday gift', 'wedding gift', 'anniversary gift', 'present'] },
+    { t: 'Your 80G tax receipt', s: 'Do something', y: 'action', u: 'donate.html#fine1',
+      d: 'Rupee donations to People for Animals are eligible for tax deduction under Section 80G. The receipt is emailed to you, in your name; add your PAN when you give.',
+      k: '80g tax receipt deduction exemption income pan certificate rebate',
+      q: ['80g', '80g receipt', 'tax receipt', 'tax exemption', 'tax deduction', 'tax benefit', 'income tax', 'donation receipt', 'receipt'] },
     { t: 'Send food to a shelter', s: 'Do something', y: 'action', u: 'donate.html#flowGive',
       d: 'Buy feed at cost for a shelter you pick by state and district, delivered in your name.',
-      k: 'food feed shelter donate kibble bulk district village pin' },
+      k: 'food feed shelter donate kibble bulk district village pin',
+      q: ['send food', 'food to shelter', 'feed a shelter', 'donate food'] },
     { t: 'Volunteer', s: 'Do something', y: 'action', u: 'get-involved.html#volunteer',
-      d: 'Give a few hours a week at a shelter, hospital or rescue unit near you.',
-      k: 'volunteer volunteering help join work weekend internship student foster' },
+      d: 'Read what each area of the work involves, pick the ones that fit your time, and apply. A named person reads every application.',
+      k: 'volunteer volunteering help join work weekend internship student intern',
+      q: ['volunteer', 'volunteering', 'internship', 'intern', 'student volunteer', 'help out'] },
+    { t: 'Become a member', s: 'Do something', y: 'action', u: 'get-involved.html#membership',
+      d: 'Join People for Animals as a member: a card in your name, and a say in the work near you.',
+      k: 'member membership join card sign up subscribe',
+      q: ['member', 'membership', 'become a member', 'join', 'join pfa', 'membership card'] },
     { t: 'Send a rescue story to The Wall', s: 'Do something', y: 'action', u: 'wall.html#submit',
       d: 'Submit a video of an animal you helped, long or short form.',
       k: 'submit send upload video story rescue wall reel instagram' },
     /* ---- Places ---- */
-    { t: 'Animal hospitals', s: 'Places', y: 'place', u: 'units.html',
-      d: 'PFA hospitals, shelters, mobile clinics and rescue teams, city by city.',
-      k: 'hospital hospitals clinic vet veterinary doctor treatment surgery sterilisation sterilization vaccination near me shelter unit units centre center location city' },
+    /* Was "Animal hospitals: PFA hospitals, shelters, mobile clinics and
+       rescue teams". PFA runs none of those (PFA, 23 Aug 2026); each unit is
+       a named person and a number. Searches for a hospital, a vet or an
+       ambulance still land here, because calling the nearest unit is what
+       PFA itself tells someone with an animal in trouble (ask.html). */
+    { t: 'Find a unit near you', s: 'Places', y: 'place', u: 'units.html',
+      d: 'PFA\u2019s people in towns and cities across India, by state, each with a name and a number. Call the nearest when an animal near you needs help.',
+      k: 'unit units near me nearest local contact phone number call city town state district hospital hospitals clinic vet veterinary doctor treatment ambulance rescue shelter injured sick emergency centre center branch office location ngo',
+      q: ['unit', 'units', 'unit near me', 'near me', 'nearest unit', 'pfa near me', 'vet', 'vet near me', 'doctor', 'animal doctor', 'hospital', 'animal hospital', 'hospital near me', 'clinic', 'ambulance', 'animal ambulance', 'rescue', 'animal rescue', 'rescue near me', 'shelter near me', 'ngo near me', 'injured animal', 'injured dog', 'injured cat', 'injured cow', 'sick animal', 'dog hit by car', 'accident dog', 'help animal', 'help dog', 'help injured animal', 'animal in trouble', 'stray dog help'] },
     { t: 'Events near you', s: 'Places', y: 'place', u: 'events.html',
-      d: 'Adoption drives, vaccination camps, walks and talks, searchable by city.',
-      k: 'events event camp drive walk talk calendar upcoming city venue date' },
+      d: 'Adoption drives, camps, CineKind screenings and shelter open days, searchable by city.',
+      k: 'events event camp drive walk talk calendar upcoming city venue date adoption adopt',
+      q: ['events', 'event', 'adopt', 'adoption', 'adopt a dog', 'adopt a puppy', 'adopt a cat', 'adoption drive', 'camp'] },
 
     /* ---- Laws ---- */
     { t: 'Animal laws in India', s: 'Laws', y: 'law', u: 'laws.html',
       d: 'Answers on animal law in India, each citing the section it rests on: dogs, cattle, husbandry, and horses.',
-      k: 'law laws legal rights act rules court police fir section ipc bns constitution pca questions' },
+      k: 'law laws legal rights act rules court police fir section ipc bns constitution pca questions',
+      q: ['law', 'laws', 'animal law', 'animal laws', 'legal', 'rights', 'animal rights', 'pca act'] },
     { t: 'Laws: dogs', s: 'Laws', y: 'law', u: 'laws.html#part-a',
       d: 'Fifty questions on street dogs, pets, feeding, bites, RWAs and the ABC Rules.',
       k: 'law dog dogs street stray pet bite abc rules feeding' },
@@ -93,40 +128,57 @@
       d: 'Cases, campaigns and what changed this week, with the record of how each one moved.',
       /* `wire` stays in the keywords on purpose: the section was called The
          Wire, and anyone who remembers that should still land here. */
-      k: 'news dispatch dispatches wire updates blog stories press campaign latest cases record' },
+      k: 'news dispatch dispatches wire updates blog stories press campaign latest cases record',
+      q: ['news', 'newsroom', 'press', 'press release', 'media', 'latest', 'updates', 'blog', 'cases'] },
     { t: 'The Wall', s: 'Explore', y: 'page', u: 'wall.html',
       d: 'Rescue videos sent in by people across the country, long form and short form.',
       k: 'wall gallery videos photos rescued animals reel' },
     { t: 'CineKind Awards', s: 'Explore', y: 'page', u: 'cinekind.html',
       d: 'The award for cinema that moves a country towards kindness, and its honourees.',
-      k: 'cinekind film films movie cinema award awards honourees ceremony' },
+      k: 'cinekind film films movie cinema award awards honourees ceremony',
+      q: ['cinekind', 'film award', 'awards', 'cinema', 'movie award'] },
     { t: 'Academy: animal healthcare made legible', s: 'Explore', y: 'page', u: 'academy.html',
       d: 'Ten modules on medicines, antibiotics, vaccines, antivenom, immunoglobulins, first aid and dosages, written for India and cited line by line.',
       k: 'academy learn course lessons module health healthcare medicine medicines medical veterinary animal care guide education training' },
     { t: 'Dog and cat vaccination schedule', s: 'Explore', y: 'article', u: 'academy.html#d2',
       d: 'The Indian schedule for puppies, kittens, adult dogs and cats: distemper, parvo, rabies, leptospirosis, and why one shot is not vaccination.',
-      k: 'vaccine vaccines vaccination schedule puppy kitten dog cat rabies parvo distemper lepto shot shots booster wsava' },
+      k: 'vaccine vaccines vaccination schedule puppy kitten dog cat rabies parvo distemper lepto shot shots booster wsava',
+      q: ['vaccination schedule', 'vaccine schedule', 'puppy vaccination', 'puppy vaccine', 'dog vaccine', 'dog vaccination', 'cat vaccine', 'kitten vaccine'] },
     { t: 'Cattle, buffalo, goat and sheep vaccination schedules', s: 'Explore', y: 'article', u: 'academy.html#d5',
       d: 'FMD, HS, BQ, brucellosis, PPR, goat pox, LSD: the NDDB and ICAR calendars and the national programme.',
       k: 'cattle cow buffalo goat sheep livestock vaccine vaccination fmd hs bq brucellosis ppr lumpy skin lsd nadcp farm dairy schedule' },
     { t: 'Snakebite: first aid and antivenom', s: 'Explore', y: 'article', u: 'academy.html#e4',
       d: 'Keep the animal still and go straight to antivenom. No tourniquet, no cutting, no ice. What Indian polyvalent antivenom neutralises.',
-      k: 'snake snakebite bite bitten antivenom asv venom cobra krait viper russell first aid emergency' },
+      k: 'snake snakebite bite bitten antivenom asv venom cobra krait viper russell first aid emergency',
+      q: ['snake bite', 'snakebite', 'snake bit dog', 'cobra bite', 'antivenom'] },
     { t: 'Dog bite: rabies prophylaxis for the person bitten', s: 'Explore', y: 'article', u: 'academy.html#f2',
       d: 'Wash for fifteen minutes, then immunoglobulin and the vaccine the same day. The national protocol, step by step, for caregivers and volunteers.',
-      k: 'rabies bite bitten dog bite prophylaxis pep vaccine immunoglobulin rig scratch wound wash injection anti rabies clinic' },
+      k: 'rabies bite bitten dog bite prophylaxis pep vaccine immunoglobulin rig scratch wound wash injection anti rabies clinic',
+      q: ['dog bite', 'dog bit me', 'bitten by dog', 'rabies injection', 'anti rabies', 'rabies vaccine human', 'cat scratch'] },
     { t: 'Heatstroke in dogs and cattle: cool first, transport second', s: 'Explore', y: 'article', u: 'academy.html#g6',
       d: 'Water over the whole body, airflow, immersion for a young healthy dog; no wet towels, no ice. Stop at 39.4 degrees.',
-      k: 'heatstroke heat stroke summer hot panting collapse cooling dog cattle buffalo first aid emergency' },
+      k: 'heatstroke heat stroke summer hot panting collapse cooling dog cattle buffalo first aid emergency',
+      q: ['heatstroke', 'heat stroke', 'dog panting', 'summer heat', 'heat'] },
+    { t: 'First aid for an injured animal', s: 'Explore', y: 'article', u: 'academy.html#part-g',
+      d: 'The first hour, before the vet: approaching safely, the sixty-second check, road accidents, bleeding, fractures, heatstroke, poisoning, burns and newborns.',
+      k: 'first aid injured injury hurt accident road hit car bleeding wound fracture broken leg emergency sick dying unconscious collapse help what to do',
+      q: ['first aid', 'injured', 'injured dog', 'injured animal', 'dog hit by car', 'road accident', 'accident', 'bleeding', 'wound', 'broken leg', 'what to do injured'] },
+    { t: 'Found a puppy or kitten on its own', s: 'Explore', y: 'article', u: 'academy.html#g10',
+      d: 'Newborns and orphans: warm before you feed, and never plain cow\u2019s milk. What to do in the first hours.',
+      k: 'puppy puppies kitten kittens newborn orphan orphaned abandoned found baby mother milk warm feed',
+      q: ['found puppy', 'found kitten', 'abandoned puppy', 'abandoned kitten', 'orphan puppy', 'newborn puppy', 'puppy without mother', 'kitten without mother'] },
     { t: 'Poisoning: rat poison, insecticide, chocolate, paracetamol', s: 'Explore', y: 'article', u: 'academy.html#g7',
       d: 'What each poison looks like in an animal and what matters in the first hour. Never induce vomiting with salt.',
-      k: 'poison poisoned poisoning rat poison bromadiolone zinc phosphide chocolate xylitol paracetamol ibuprofen insecticide toxic vomiting first aid' },
+      k: 'poison poisoned poisoning rat poison bromadiolone zinc phosphide chocolate xylitol paracetamol ibuprofen insecticide toxic vomiting first aid',
+      q: ['dog poisoned', 'poisoned dog', 'cat poisoned', 'poisoning', 'rat poison', 'dog ate poison', 'dog ate chocolate'] },
     { t: 'Check a prescription dose: mg per kg to tablets or mL', s: 'Explore', y: 'page', u: 'academy.html#h4',
       d: 'Enter the weight, the written dose and the strength on the pack; the checker does the arithmetic and flags what cannot be measured.',
-      k: 'dose dosage calculator mg kg tablet ml prescription arithmetic check weight strength medicine' },
+      k: 'dose dosage calculator mg kg tablet ml prescription arithmetic check weight strength medicine',
+      q: ['dose calculator', 'dosage calculator', 'how much medicine', 'medicine dose', 'mg per kg'] },
     { t: 'Medicines that kill cats and dogs', s: 'Explore', y: 'article', u: 'academy.html#i2',
       d: 'Paracetamol, permethrin, ibuprofen, ivermectin in Collies, Dettol on cats: the contraindications by species, breed, pregnancy and kidney.',
-      k: 'paracetamol crocin permethrin ibuprofen diclofenac dettol toxic cat dog kill dangerous medicine never give contraindication safe' },
+      k: 'paracetamol crocin permethrin ibuprofen diclofenac dettol toxic cat dog kill dangerous medicine never give contraindication safe',
+      q: ['paracetamol dog', 'paracetamol cat', 'crocin dog', 'dettol cat', 'human medicine dog', 'medicine for dog'] },
     { t: 'Antibiotics: the rules of a course and milk withdrawal', s: 'Explore', y: 'article', u: 'academy.html#c3',
       d: 'Right diagnosis, drug, dose, interval and duration; culture and sensitivity; the colistin ban; when treated milk may be sold.',
       k: 'antibiotic antibiotics amoxicillin doxycycline enrofloxacin resistance course withdrawal milk colistin tick fever infection' },
@@ -138,7 +190,8 @@
 
     { t: 'Track a submission or an order', s: 'Do something', y: 'page', u: 'track.html',
       d: 'Follow a report, a question or an application with the number you were given.',
-      k: 'track follow status where is my order application reference number check progress complaint' },
+      k: 'track follow status where is my order application reference number check progress complaint',
+      q: ['track', 'status', 'reference number', 'track report', 'track order', 'order status', 'application status'] },
 
     { t: 'Policies and achievements: what PFA has changed', s: 'About', y: 'page', u: 'achievements.html',
       d: 'Thirty years of rules rewritten, orders obtained and practices ended, on eight fronts.',
@@ -147,40 +200,130 @@
     /* ---- About ---- */
     { t: 'Founder: Maneka Sanjay Gandhi', s: 'About', y: 'page', u: 'founder.html',
       d: 'The person who started People for Animals, and what she set out to build.',
-      k: 'founder maneka gandhi history started who' }
+      k: 'founder maneka gandhi history started who',
+      q: ['maneka gandhi', 'maneka', 'founder', 'who started pfa'] },
+    /* Where PFA is and how to reach it: the footer on every page carries it
+       (id="contact"), so the answer is in the row itself. */
+    { t: 'Contact People for Animals', s: 'About', y: 'page', u: 'index.html#contact',
+      d: '4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001. +91 11 2081 8191 or +91 11 2081 8194. gandhim@exmpls.sansad.in',
+      k: 'contact address office head phone number telephone call email mail reach write delhi barakhamba',
+      q: ['contact', 'contact us', 'contact pfa', 'phone', 'phone number', 'telephone', 'email', 'email address', 'address', 'head office', 'office address'] }
   ];
 
   var SECTIONS = ['Do something', 'Places', 'Laws', 'Explore', 'About'];
   var TYPE_BOOST = { action: 1.15, place: 1.1, law: 1.0, page: 1.0, article: 0.95 };
 
-  /* What visitors type → what the index says. */
+  /* What visitors type → what the index says. A value may name more than
+     one word; each is looked for, a little below the word itself.
+
+     Hindi and Hinglish, as people type it in Roman letters (8 Oct 2026):
+     "kutta" used to be corrected to "dutta" and land on a unit whose head
+     is called Dutta; "gau" became "gap". The animals, the urgent words and
+     the everyday ones are here so they mean what they mean.
+
+     A vet, a doctor, a clinic or a hospital means the nearest unit: PFA has
+     no hospitals, and calling the unit is what PFA tells people to do. */
   var SYNONYMS = {
-    vet: 'hospital', veterinary: 'hospital', doctor: 'hospital', clinic: 'hospital', treatment: 'hospital',
-    abuse: 'cruelty', abused: 'cruelty', beating: 'cruelty', beaten: 'cruelty', torture: 'cruelty',
-    hurt: 'cruelty', hurting: 'cruelty', poison: 'cruelty', kicked: 'cruelty', violence: 'cruelty',
+    vet: 'unit', vets: 'vet unit', veterinarian: 'vet unit', veterinary: 'vet unit', doctor: 'vet unit',
+    clinic: 'vet unit', hospital: 'unit vet', hospitals: 'unit vet', treatment: 'vet unit', ambulance: 'unit injured',
+    abuse: 'cruelty', abused: 'cruelty', beating: 'cruelty', beaten: 'cruelty', beat: 'cruelty', torture: 'cruelty',
+    hurt: 'cruelty', hurting: 'cruelty', poison: 'poisoning cruelty', poisoned: 'poisoning cruelty', kicked: 'cruelty', violence: 'cruelty',
+    hitting: 'cruelty', hit: 'cruelty', killing: 'cruelty', killed: 'cruelty', cruel: 'cruelty',
     stray: 'street', strays: 'street', puppies: 'puppy', kittens: 'kitten',
-    id: 'card', identity: 'card', feeder: 'caregiver', feeding: 'caregiver',
-    money: 'donate', give: 'donate', giving: 'donate', payment: 'donate', pay: 'donate', contribute: 'donate',
+    injury: 'injured', injuries: 'injured', wounded: 'injured wound', accident: 'road injured', bleeding: 'injured wound',
+    ill: 'sick', unwell: 'sick', dying: 'sick emergency',
+    id: 'card', identity: 'card', feeder: 'caregiver', feeding: 'caregiver feed',
+    money: 'donate', give: 'donate', giving: 'donate', payment: 'donate', pay: 'donate', contribute: 'donate', donation: 'donate', donations: 'donate',
+    tribute: 'gift', memorial: 'gift memory', present: 'gift', certificate: 'gift', honour: 'gift', honor: 'gift',
+    tax: '80g', receipt: '80g',
+    adopt: 'adoption', adopting: 'adoption', foster: 'adoption',
     legal: 'law', rights: 'law', act: 'law', police: 'fir', complaint: 'report', report: 'cruelty',
-    location: 'units', locations: 'units', branch: 'units', branches: 'units',
+    location: 'units', locations: 'units', branch: 'units', branches: 'units', nearest: 'unit',
     centre: 'units', center: 'units', centres: 'units', centers: 'units', office: 'contact',
-    film: 'cinekind', films: 'cinekind', movie: 'cinekind', movies: 'cinekind',
-    news: 'wire', update: 'wire', updates: 'wire',
+    phone: 'contact', number: 'contact', telephone: 'contact', helpline: 'contact unit', call: 'contact',
+    film: 'cinekind', films: 'cinekind', movie: 'cinekind', movies: 'cinekind', cinema: 'cinekind',
+    /* the section's old name still finds the Newsroom */
+    news: 'newsroom', update: 'newsroom', updates: 'newsroom', press: 'newsroom', release: 'newsroom', media: 'newsroom', wire: 'newsroom',
+    job: 'careers', jobs: 'careers', vacancy: 'careers', hiring: 'careers', intern: 'volunteer', internship: 'volunteer',
+    member: 'membership', join: 'membership',
     kibble: 'food', treats: 'food', meds: 'medicine', medication: 'medicine', dewormer: 'medicine', leash: 'gear', collar: 'gear',
     vaccinate: 'vaccine', vaccinated: 'vaccine', jab: 'vaccine', antivenin: 'antivenom', firstaid: 'aid',
-    overdose: 'dose', dosing: 'dose', tablets: 'tablet', learn: 'academy', lesson: 'academy', lessons: 'academy'
+    overdose: 'dose', dosing: 'dose', tablets: 'tablet', learn: 'academy', lesson: 'academy', lessons: 'academy',
+    fireworks: 'firecrackers', firework: 'firecrackers', crackers: 'firecrackers', cracker: 'firecrackers',
+    parrot: 'bird', parrots: 'bird', parakeet: 'bird', pigeon: 'bird', pigeons: 'bird', myna: 'bird', crow: 'bird',
+    puppy: 'puppy dog', kitten: 'kitten cat', calf: 'calf cow', calves: 'calf cow', cow: 'cattle', cows: 'cattle', ox: 'bullock cattle',
+    spay: 'sterilisation sterilised', spayed: 'sterilisation sterilised', neuter: 'sterilisation sterilised', neutered: 'sterilisation sterilised',
+    sterilization: 'sterilisation', sterilize: 'sterilisation sterilised', sterilized: 'sterilisation sterilised', sterilise: 'sterilisation sterilised',
+    castration: 'castrate sterilisation', appetite: 'sick', vomit: 'vomiting', diarrhoea: 'diarrhea', mangy: 'mange',
+    poaching: 'wildlife', poacher: 'wildlife', hunting: 'wildlife', hunter: 'wildlife', ivory: 'elephant wildlife',
+    leopard: 'wildlife', tiger: 'wildlife', deer: 'wildlife', wild: 'wildlife', zoo: 'zoo wildlife', zoos: 'zoo wildlife',
+    fur: 'skins', wool: 'sheep', vegan: 'sentience farm', vegetarian: 'sentience farm',
+    /* Hindi and Hinglish */
+    kutta: 'dog', kutte: 'dog', kutton: 'dog', kuttey: 'dog', kuta: 'dog', kute: 'dog', kukur: 'dog',
+    billi: 'cat', billiyan: 'cat', billa: 'cat',
+    gai: 'cow cattle', gaay: 'cow cattle', gaai: 'cow cattle', gau: 'cow cattle', gou: 'cow cattle', gaumata: 'cow cattle', gomata: 'cow cattle', gauvansh: 'cow cattle', govansh: 'cow cattle',
+    goshala: 'gaushala', gowshala: 'gaushala', gaushalas: 'gaushala',
+    saand: 'bull', bhains: 'buffalo', bhens: 'buffalo', bakri: 'goat', bakra: 'goat', bhed: 'sheep',
+    ghoda: 'horse', ghodi: 'horse', ghora: 'horse', ghode: 'horse', gadha: 'donkey', gadhe: 'donkey', khachar: 'mule', oont: 'camel', unt: 'camel',
+    bandar: 'monkey', bander: 'monkey', saanp: 'snake', saap: 'snake', sanp: 'snake', naag: 'snake', haathi: 'elephant', hathi: 'elephant',
+    chidiya: 'bird', pakshi: 'bird', panchhi: 'bird', parinda: 'bird', tota: 'bird', kabutar: 'bird',
+    murga: 'chicken poultry', murgi: 'chicken poultry', suar: 'pig', suwar: 'pig',
+    janwar: 'animal', jaanwar: 'animal', janvar: 'animal', jaanvar: 'animal', pashu: 'animal', jeev: 'animal',
+    madad: 'help', sahayata: 'help', bachao: 'help rescue',
+    daan: 'donate', chanda: 'donate', upahaar: 'gift', uphaar: 'gift', tohfa: 'gift',
+    kanoon: 'law', kanun: 'law', kaanoon: 'law', kaanun: 'law', niyam: 'rules law',
+    shikayat: 'complaint report', shikayet: 'complaint report',
+    ghayal: 'injured', zakhmi: 'injured', jakhmi: 'injured', chot: 'injured', bimar: 'sick', beemar: 'sick',
+    dawai: 'medicine', dawa: 'medicine', dava: 'medicine', teeka: 'vaccine', tika: 'vaccine', tikakaran: 'vaccine',
+    khana: 'food feed', khilana: 'feeding feed', pani: 'water',
+    maar: 'cruelty', maarna: 'cruelty', maarte: 'cruelty', peet: 'cruelty', peetna: 'cruelty', pitai: 'cruelty', zulm: 'cruelty', atyachar: 'cruelty',
+    zeher: 'poisoning', zehar: 'poisoning', jahar: 'poisoning', kaata: 'bite', kata: 'bite', kaat: 'bite', katna: 'bite', pagal: 'rabies',
+    awara: 'street', aawara: 'street', raksha: 'protection', suraksha: 'protection', seva: 'care',
+    naukri: 'careers', sadasya: 'membership', sadasyata: 'membership', sampark: 'contact'
   };
-  var STOP = /^(a|an|the|to|of|for|in|on|is|it|i|my|me|do|how|what|who|can|and|or|being|near|with|about|want|need|please|where|when|there|any|some|get|find|show|open|page|pfa)$/;
+  var STOP = /^(not|no|dont|don|t|a|an|the|to|of|for|in|on|is|it|i|my|me|do|how|what|who|can|and|or|being|near|with|about|want|need|please|where|when|there|any|some|get|find|show|open|page|pfa|someone|somebody|anyone|anybody|this|that|these|those|does|did|are|was|were|will|would|should|could|if|at|by|from|be|been|have|has|had|we|you|your|our|us|they|them|he|she|his|her|its|am|very|so|just|also|which|kya|kaise|kahan|hai|ko|ka|ki|ke|se|mein|me|par|aur|ya|ek)$/;
 
   /* Shown before anyone types. */
-  var QUICK = ['Report cruelty', 'Ask us anything', 'Animal hospitals', 'Animal laws in India', 'Apply for a colony caregiver card', 'Donate'];
+  var QUICK = ['Report cruelty', 'Find a unit near you', 'Ask us anything', 'Animal laws in India', 'Apply for a colony caregiver card', 'Donate'];
   /* Seed only. Real "most asked" comes from /api/search-popular; this is what
      shows on a cold start, offline, or on a build with no API behind it. */
-  var CURATED_FALLBACK = ['Report cruelty', 'Animal hospitals', 'Apply for a colony caregiver card',
-                          'Animal laws in India', 'Events near you', 'Donate'];
+  var CURATED_FALLBACK = ['Report cruelty', 'Find a unit near you', 'Apply for a colony caregiver card',
+                          'Animal laws in India', 'Give as a gift', 'Donate'];
+
+  /* Best bets for crawled rows, by address. The crawl knows what a page
+     says; this knows what people type to reach it. Each key must be a row
+     of the shipped index (test/search-supreme.test.js checks). */
+  var BEST_BETS = {
+    'academy.html#b8': ['sick dog', 'sick street dog', 'dog not eating', 'dog weak', 'dog fever', 'dog sick'],
+    'academy.html#g9': ['diwali', 'firecrackers', 'fireworks', 'burn', 'burns', 'acid'],
+    'academy.html#g12': ['injured bird', 'bird fell', 'baby bird', 'injured pigeon', 'injured monkey', 'wild animal injured', 'bird rescue'],
+    'academy.html#g3': ['road accident', 'dog hit by car', 'hit by vehicle', 'broken back'],
+    'laws.html#a3': ['killing dogs', 'dog killed', 'kill dog', 'dogs killed', 'killing dogs illegal'],
+    'laws.html#a4': ['poisoning dogs', 'neighbour poisoned dog', 'poisoning community dogs', 'poisoned dogs law'],
+    'laws.html#a5': ['abc rules', 'abc rules 2023', 'animal birth control', 'abc programme'],
+    'laws.html#a7': ['dog relocation', 'relocate dogs', 'dogs removed', 'municipality took dogs', 'dog catchers', 'dogs picked up'],
+    'laws.html#a8': ['supreme court', 'supreme court dogs', 'sc judgment', 'supreme court judgment'],
+    'laws.html#a12': ['dog barking', 'barking complaint', 'barking dog'],
+    'laws.html#a17': ['pet shop licence', 'pet shop license', 'pet shop rules'],
+    'laws.html#a18': ['buy puppy', 'puppy online', 'buy dog', 'puppy for sale'],
+    'laws.html#a22': ['dog chained', 'chained dog', 'tied dog', 'dog tied'],
+    'laws.html#a24': ['train with dog', 'dog on train', 'travel with dog'],
+    'laws.html#a27': ['dog bite compensation', 'compensation dog bite'],
+    'laws.html#a34': ['dog in car', 'dog locked in car'],
+    'laws.html#a36': ['landlord pets', 'landlord dog', 'rent with dog', 'tenant pet', 'tenant dog'],
+    'laws.html#a33': ['which section', 'section 11', 'bns 325', 'ipc 428', 'ipc 429', 'file fir'],
+    'laws.html#b11': ['cattle smuggling', 'cow smuggling'],
+    'laws.html#b44': ['jallikattu', 'bull taming'],
+    'laws.html#c46': ['animal sacrifice', 'sacrifice'],
+    'laws.html#d7': ['horse wedding', 'wedding horse', 'baraat horse']
+  };
 
   /* ================================================================ TEXT */
+  /* Words whose plural-looking end is not a plural: "news" is not "new"
+     (it matched every unit on a "New C G Road"). */
+  var STEM_KEEP = { news: 1, species: 1, series: 1, rabies: 1, diabetes: 1, herpes: 1, scabies: 1, mumps: 1 };
   function stem(w) {
+    if (STEM_KEEP[w]) return w;
     if (w.length > 5 && /ing$/.test(w)) return w.slice(0, -3);
     if (w.length > 4 && /ies$/.test(w)) return w.slice(0, -3) + 'y';
     if (w.length > 4 && /es$/.test(w))  return w.slice(0, -2);
@@ -188,7 +331,11 @@
     return w;
   }
   function tokens(str) {
-    return String(str).toLowerCase().replace(/[^a-z0-9()-]+/g, ' ').trim().split(/\s+/).filter(Boolean);
+    return String(str).toLowerCase().replace(/[^a-z0-9()-]+/g, ' ').trim().split(/\s+/).map(function (w) {
+      /* "(dog)" is "dog"; "11(1)" keeps its brackets, a section number */
+      w = w.replace(/^[(-]+/, '').replace(/-+$/, '');
+      return w.indexOf('(') < 0 ? w.replace(/\)+$/, '') : w;
+    }).filter(Boolean);
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
@@ -214,8 +361,15 @@
       row.tt = tokens(row.t).map(stem);
       row.kt = tokens(row.k || '').map(stem);
       row.dt = tokens(row.d || '').map(stem);
+      /* a unit's street address: findable ("chandkheda"), but it must not
+         make every unit a result for "road" or "school" */
+      row.at = tokens(row.a || '').map(stem);
+      /* best-bet phrases, each kept as its content words, stemmed */
+      row.qp = (row.q || []).map(function (ph) {
+        return tokens(ph).filter(function (x) { return !STOP.test(x); }).map(stem);
+      }).filter(function (w) { return w.length; });
       var seen = {};
-      [row.tt, row.kt, row.dt].forEach(function (list) {
+      [row.tt, row.kt, row.dt, row.at].concat(row.qp).forEach(function (list) {
         list.forEach(function (w) {
           if (!seen[w]) { seen[w] = 1; DF[w] = (DF[w] || 0) + 1; }
           if (!VOCAB[w]) {
@@ -236,7 +390,14 @@
     var best = null, bestD = 99, bestDf = 0;
     Object.keys(counts).forEach(function (c) {
       if (counts[c] < 2 || Math.abs(c.length - w.length) > maxD) return;
+      /* People rarely mistype the first letter, and a fix that changes it
+         is usually a different word: "kutta" is not "dutta", "parrot" is
+         not "narrow". Swapped first two letters are still a typo. */
+      if (c[0] !== w[0] && !(c[0] === w[1] && c[1] === w[0])) return;
       var d = editDistance(w, c);
+      /* Two edits that only shorten the word turn one real word into
+         another ("tribute" into "tribe", "release" into "lease"). */
+      if (d === 2 && Math.abs(c.length - w.length) > 1) return;
       if (d <= maxD && (d < bestD || (d === bestD && (DF[c] || 0) > bestDf))) { best = c; bestD = d; bestDf = DF[c] || 0; }
     });
     return best;
@@ -287,9 +448,9 @@
   function forms(w0) {
     var out = [], push = function (w, c) { if (w && !out.some(function (o) { return o.w === w; })) out.push({ w: w, c: c }); };
     push(w0, 1); push(stem(w0), 1);
-    if (SYNONYMS[w0]) { push(SYNONYMS[w0], 0.85); push(stem(SYNONYMS[w0]), 0.85); }
-    var st = stem(w0);
-    if (!VOCAB[w0] && !VOCAB[st]) {
+    var st = stem(w0), syn = SYNONYMS[w0] || SYNONYMS[st];
+    if (syn) syn.split(' ').forEach(function (sw) { push(sw, 0.85); push(stem(sw), 0.85); });
+    if (!VOCAB[w0] && !VOCAB[st] && !syn && !PLACE_WORDS[w0]) {
       var c = correct(w0) || correct(st);
       if (c) push(c, 0.6);
       var parts = split(w0);
@@ -297,14 +458,133 @@
     }
     return out;
   }
-  function fieldHit(list, w) {     /* 1 exact, .55 prefix, 0 none */
+  /* 1 exact, `pre` for a prefix (the word still being typed), 0 none */
+  function fieldHit(list, w, pre) {
     var best = 0;
+    if (pre === undefined) pre = 0.55;
     for (var i = 0; i < list.length; i++) {
       if (list[i] === w) return 1;
-      if (w.length > 2 && list[i].indexOf(w) === 0) best = 0.55;
+      if (pre && w.length > 2 && list[i].indexOf(w) === 0) best = pre;
     }
     return best;
   }
+  /* How much a prefix counts for the query word at i. The last word may be
+     half typed, so "careg" finds "caregiver". A word that is already a
+     whole word on this site is probably finished: "cat" is about cats, not
+     cattle, and "news" is not "newspaper". */
+  function prefixWeight(q, i) {
+    var known = VOCAB[q[i]] || VOCAB[stem(q[i])];
+    if (i === q.length - 1) return known ? 0.1 : 0.55;
+    return known ? 0 : 0.4;
+  }
+  /* ============================================================ PLACES
+     Big towns with no unit of their own. Someone in Delhi, Chennai or
+     Kolkata who searches their city should be handed the nearest units,
+     not a policy from 1998 that mentions Delhi. Units carry where they are
+     (g: [lat, lon], from units.html via the index builder); these are the
+     towns people search from, to measure from. A town that gets a unit of
+     its own is answered by that unit's row, and this list steps aside. */
+  var PLACES = {
+    'delhi': [28.61, 77.21], 'new delhi': [28.61, 77.21], 'noida': [28.54, 77.39], 'greater noida': [28.47, 77.50],
+    'chennai': [13.08, 80.27], 'madras': [13.08, 80.27], 'kolkata': [22.57, 88.36], 'calcutta': [22.57, 88.36], 'howrah': [22.59, 88.31],
+    'hyderabad': [17.39, 78.49], 'pune': [18.52, 73.86], 'poona': [18.52, 73.86], 'thane': [19.22, 72.98], 'navi mumbai': [19.03, 73.03],
+    'surat': [21.17, 72.83], 'vadodara': [22.31, 73.18], 'baroda': [22.31, 73.18], 'rajkot': [22.30, 70.80], 'gandhinagar': [23.22, 72.65],
+    'patna': [25.59, 85.14], 'gaya': [24.79, 85.00], 'muzaffarpur': [26.12, 85.39], 'ranchi': [23.34, 85.31], 'jamshedpur': [22.80, 86.20],
+    'dhanbad': [23.80, 86.43], 'raipur': [21.25, 81.63], 'bilaspur': [22.08, 82.15],
+    'chandigarh': [30.73, 76.78], 'mohali': [30.70, 76.72], 'panchkula': [30.69, 76.86], 'ludhiana': [30.90, 75.85], 'amritsar': [31.63, 74.87],
+    'patiala': [30.34, 76.39], 'bathinda': [30.21, 74.95], 'ambala': [30.38, 76.78], 'panipat': [29.39, 76.97], 'sonipat': [28.99, 77.02],
+    'karnal': [29.69, 76.98], 'rohtak': [28.90, 76.61], 'hisar': [29.15, 75.72],
+    'srinagar': [34.08, 74.80], 'jammu': [32.73, 74.86], 'leh': [34.15, 77.58],
+    'varanasi': [25.32, 82.99], 'banaras': [25.32, 82.99], 'benares': [25.32, 82.99], 'kashi': [25.32, 82.99],
+    'prayagraj': [25.44, 81.85], 'allahabad': [25.44, 81.85], 'meerut': [28.98, 77.71], 'mathura': [27.49, 77.67], 'vrindavan': [27.58, 77.70],
+    'aligarh': [27.88, 78.08], 'gorakhpur': [26.76, 83.37], 'ayodhya': [26.80, 82.20], 'jhansi': [25.45, 78.57], 'saharanpur': [29.96, 77.55],
+    'kochi': [9.93, 76.27], 'cochin': [9.93, 76.27], 'ernakulam': [9.98, 76.28], 'kottayam': [9.59, 76.52], 'alappuzha': [9.50, 76.34],
+    'kannur': [11.87, 75.37], 'palakkad': [10.79, 76.65],
+    'coimbatore': [11.02, 76.96], 'salem': [11.66, 78.15], 'erode': [11.34, 77.72], 'tirunelveli': [8.71, 77.76], 'vellore': [12.92, 79.13],
+    'kanchipuram': [12.83, 79.70], 'thanjavur': [10.79, 79.14], 'ooty': [11.41, 76.70], 'puducherry': [11.94, 79.81], 'pondicherry': [11.94, 79.81],
+    'kanyakumari': [8.08, 77.54], 'nagercoil': [8.18, 77.41],
+    'visakhapatnam': [17.69, 83.22], 'vizag': [17.69, 83.22], 'vijayawada': [16.51, 80.65], 'guntur': [16.31, 80.44], 'tirupati': [13.63, 79.42],
+    'nellore': [14.44, 79.99], 'kurnool': [15.83, 78.04], 'warangal': [17.97, 79.59],
+    'mangalore': [12.91, 74.86], 'mangaluru': [12.91, 74.86], 'udupi': [13.34, 74.75], 'belgaum': [15.85, 74.50], 'belagavi': [15.85, 74.50],
+    'davangere': [14.46, 75.92], 'shimoga': [13.93, 75.57], 'shivamogga': [13.93, 75.57],
+    'panaji': [15.49, 73.83], 'panjim': [15.49, 73.83], 'margao': [15.27, 73.96],
+    'gwalior': [26.22, 78.18], 'jabalpur': [23.18, 79.95], 'ujjain': [23.18, 75.78],
+    'jodhpur': [26.24, 73.02], 'bikaner': [28.02, 73.31], 'ajmer': [26.45, 74.64], 'pushkar': [26.49, 74.55], 'jaisalmer': [26.92, 70.91],
+    'cuttack': [20.46, 85.88], 'puri': [19.81, 85.83], 'rourkela': [22.26, 84.85],
+    'gangtok': [27.33, 88.61], 'darjeeling': [27.04, 88.26], 'imphal': [24.82, 93.94], 'agartala': [23.83, 91.29], 'aizawl': [23.73, 92.72],
+    'kohima': [25.67, 94.11], 'dimapur': [25.91, 93.73], 'itanagar': [27.08, 93.61], 'dibrugarh': [27.47, 94.91], 'silchar': [24.83, 92.78],
+    'port blair': [11.62, 92.73],
+    'nainital': [29.38, 79.46], 'rishikesh': [30.09, 78.27], 'mussoorie': [30.46, 78.07], 'haldwani': [29.22, 79.51],
+    'dharamshala': [32.22, 76.32], 'manali': [32.24, 77.19], 'solan': [30.91, 77.10],
+    'solapur': [17.66, 75.91], 'sangli': [16.85, 74.58], 'satara': [17.69, 74.00], 'jalgaon': [21.00, 75.56], 'akola': [20.70, 77.00],
+    'amravati': [20.93, 77.75], 'nanded': [19.15, 77.31]
+  };
+  var PLACE_WORDS = {};
+  Object.keys(PLACES).forEach(function (k) { k.split(' ').forEach(function (w) { PLACE_WORDS[w] = 1; }); });
+  /* Words that, next to a town's name, still mean "who can I reach there". */
+  var PLACE_INTENT = /^(unit|units|near|nearest|nearby|contact|contacts|phone|number|call|vet|vets|doctor|hospital|hospitals|clinic|clinics|help|helpline|shelter|shelters|ngo|ngos|rescue|ambulance|office|branch|centre|center|people|animal|animals|welfare|dog|dogs|cat|cats|cow|cows|injured|sick|emergency|city|local|around|team|madad|janwar|kutta|ghayal)$/;
+
+  function placeIn(raw) {
+    for (var i = 0; i < raw.length; i++) {
+      var two = raw[i] + ' ' + (raw[i + 1] || '');
+      if (raw[i + 1] && PLACES[two]) return { name: two, at: [i, i + 1], g: PLACES[two] };
+      if (PLACES[raw[i]]) return { name: raw[i], at: [i], g: PLACES[raw[i]] };
+    }
+    return null;
+  }
+  function km(a, b) {
+    var r = Math.PI / 180, dLa = (b[0] - a[0]) * r, dLo = (b[1] - a[1]) * r;
+    var h = Math.sin(dLa / 2) * Math.sin(dLa / 2) + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLo / 2) * Math.sin(dLo / 2);
+    return 6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+  }
+  function aboutKm(d) { return d < 10 ? 'Under 10 km' : 'About ' + (d < 100 ? Math.round(d / 5) * 5 : Math.round(d / 10) * 10) + ' km'; }
+  function titleCase(s) { return s.replace(/\b[a-z]/g, function (c) { return c.toUpperCase(); }); }
+
+  /* The units nearest a town that has none, as copies of their rows that
+     say how far, or null when the query is not that kind of question. */
+  function nearestFor(raw) {
+    var place = placeIn(raw);
+    if (!place) return null;
+    var own = INDEX.some(function (r) { return r.g && (' ' + r.tt.join(' ') + ' ').indexOf(' ' + place.name + ' ') > -1; });
+    if (own) return null;
+    var rest = raw.filter(function (w, i) { return place.at.indexOf(i) < 0 && !STOP.test(w); });
+    if (!rest.every(function (w) { return PLACE_INTENT.test(w) || PLACE_INTENT.test(stem(w)); })) return null;
+    var units = INDEX.filter(function (r) { return r.g; }).map(function (r) { return { row: r, d: km(place.g, r.g) }; })
+      .sort(function (a, b) { return a.d - b.d; }).slice(0, 3)
+      .filter(function (x, i) { return i === 0 || x.d < 250; });
+    if (!units.length) return null;
+    var name = titleCase(place.name);
+    return units.map(function (x) {
+      return Object.assign({}, x.row, { d: aboutKm(x.d) + ' from ' + name + '. ' + x.row.d });
+    });
+  }
+
+  /* A row's best-bet phrases against the query: every word of a phrase
+     found among the query's words (as typed, stemmed, a synonym, or a
+     corrected typo). The whole query being the phrase beats it being part
+     of the query. */
+  function phraseBonus(row, termForms) {
+    var best = 0;
+    row.qp.forEach(function (ph) {
+      var used = {};
+      var ok = ph.every(function (pw) {
+        for (var i = 0; i < termForms.length; i++) {
+          if (used[i]) continue;
+          if (termForms[i].some(function (f) { return f.w === pw; })) { used[i] = 1; return true; }
+        }
+        return false;
+      });
+      if (!ok) return;
+      var whole = Object.keys(used).length === termForms.length;
+      /* one word is a best bet only when it is the whole query: "complaint"
+         means the report form, "dog barking complaint" does not */
+      if (!whole && ph.length < 2) return;
+      var b = whole ? 40 : 14 + 5 * ph.length;
+      if (b > best) best = b;
+    });
+    return best;
+  }
+
   /* Returns {rows, corrected} - corrected is the query with typos fixed, or null. */
   function search(query, opts) {
     opts = opts || {};
@@ -313,55 +593,84 @@
     if (!q.length) return { rows: [], corrected: null };
     var full = String(query).toLowerCase().trim();
     var termForms = q.map(forms), corrected = null;
+    var pre = q.map(function (w, i) { return prefixWeight(q, i); });
+    /* The whole query found in a title counts at word edges only, and at
+       the end only when the last word may still be half typed: "cat" is
+       not the start of "Cattle, buffalo...". */
+    var lastWord = raw[raw.length - 1], openEnd = !(VOCAB[lastWord] || VOCAB[stem(lastWord)] || STOP.test(lastWord));
+    var fullRe = new RegExp('(^|[^a-z0-9])' + full.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + (openEnd ? '' : '(?![a-z0-9])'));
 
     var scored = [];
     INDEX.forEach(function (row) {
       if (opts.section && row.s !== opts.section) return;
       var score = 0, matched = 0;
-      termForms.forEach(function (fs) {
-        var best = 0;
+      termForms.forEach(function (fs, ti) {
+        var best = 0, p = pre[ti];
         fs.forEach(function (f) {
-          var s = (fieldHit(row.tt, f.w) * 8 + fieldHit(row.kt, f.w) * 4 + fieldHit(row.dt, f.w) * 1.5) * f.c * idf(f.w);
+          var s = (fieldHit(row.tt, f.w, p) * 8 + fieldHit(row.kt, f.w, p) * 4 + fieldHit(row.dt, f.w, p) * 1.5 +
+                   (row.at.length ? fieldHit(row.at, f.w, 0) * 0.6 : 0)) * f.c * idf(f.w);
           if (s > best) best = s;
         });
         if (best) matched++;
         score += best;
       });
-      if (!matched) return;
-      if (q.length > 2 && matched < Math.ceil(q.length / 2)) return;
+      var bet = row.qp && row.qp.length ? phraseBonus(row, termForms) : 0;
+      if (!matched && !bet) return;
+      if (!bet && q.length > 2 && matched < Math.ceil(q.length / 2)) return;
       score *= Math.pow(matched / q.length, 2) * 1.5 + 0.25;              /* coverage */
       var tl = row.t.toLowerCase();
-      if (tl === full) score += 30; else if (tl.indexOf(full) === 0) score += 14; else if (tl.indexOf(full) > -1) score += 7;
-      else if ((row.d || '').toLowerCase().indexOf(full) > -1) score += 3;   /* phrase */
+      var at = tl === full ? 0 : tl.search(fullRe);
+      if (tl === full) score += 30; else if (at === 0) score += 14; else if (at > 0) score += 7;
+      else if (fullRe.test((row.d || '').toLowerCase())) score += 3;   /* phrase */
+      score += bet;   /* best bet */
       score *= TYPE_BOOST[row.y] || 1;
       scored.push({ row: row, score: score });
     });
     scored.sort(function (a, b) { return b.score - a.score || a.row.t.localeCompare(b.row.t); });
+    /* When the top answer is strong, what scores under a tenth of it is a
+       stray word match ("make a gift" was followed by "Helped consumers
+       make informed choices"), not a result. */
+    if (scored.length && scored[0].score >= 30) {
+      var floor = scored[0].score * 0.1;
+      scored = scored.filter(function (x) { return x.score >= floor; });
+    }
 
     /* Did you mean: rebuild the query with corrections where a word was unknown. */
     var fixed = raw.map(function (w) {
-      if (VOCAB[w] || VOCAB[stem(w)] || STOP.test(w) || SYNONYMS[w]) return w;
+      if (VOCAB[w] || VOCAB[stem(w)] || STOP.test(w) || SYNONYMS[w] || SYNONYMS[stem(w)] || PLACE_WORDS[w]) return w;
       var parts = split(w); if (parts) return parts.join(' ');
       return correct(w) || correct(stem(w)) || w;
     });
     if (fixed.join(' ') !== raw.join(' ')) corrected = fixed.join(' ');
 
-    var rows = scored.slice(0, opts.limit || 100).map(function (x) { return x.row; });
+    var rows = scored.map(function (x) { return x.row; });
+    /* "units in delhi", "chennai", "vet near kolkata": the nearest units
+       first, each saying how far, then everything else. */
+    var near = (!opts.section || opts.section === 'Places') ? nearestFor(raw) : null;
+    if (near) {
+      var front = {}; near.forEach(function (r) { front[r.id] = 1; });
+      rows = near.concat(rows.filter(function (r) { return !front[r.id]; }));
+      if (corrected && raw.every(function (w) { return VOCAB[w] || VOCAB[stem(w)] || STOP.test(w) || SYNONYMS[w] || PLACE_WORDS[w] || PLACE_INTENT.test(w); })) corrected = null;
+    }
+    rows = rows.slice(0, opts.limit || 100);
     var via = null;
     if (!rows.length && !opts.noFallback) {
       var alt = corrected ? search(corrected, { limit: opts.limit, section: opts.section, noFallback: true }).rows : [];
       if (alt.length) { rows = alt; via = 'corrected'; }
       else { rows = closest(query, Math.min(opts.limit || 6, 6)).filter(function (r) { return !opts.section || r.s === opts.section; }); if (rows.length) via = 'closest'; }
     }
-    return { rows: rows, corrected: corrected, via: via };
+    var out = { rows: rows, corrected: corrected, via: via };
+    if (opts.explain) out.scores = scored.slice(0, 12).map(function (x) { return [Math.round(x.score * 10) / 10, x.row.t]; });
+    return out;
   }
 
   /* Query completions: titles and popular phrases that continue what was typed. */
   function complete(query, limit) {
     var qn = String(query).toLowerCase().trim(); if (!qn) return [];
     var phrases = INDEX.map(function (r) { return r.t; }).concat(
-      ['report cruelty', 'report a dog being beaten', 'hospital near me', 'colony caregiver card', 'street dog rights',
-       'how to file an FIR', 'adopt a puppy', 'donate monthly', 'volunteer near me']);
+      ['report cruelty', 'report a dog being beaten', 'unit near me', 'injured dog', 'dog bite', 'colony caregiver card',
+       'street dog rights', 'feeding street dogs', 'how to file an FIR', 'make a gift', 'gift certificate', 'donate monthly',
+       '80G receipt', 'adoption drives', 'volunteer near me', 'first aid']);
     var out = [], seen = {};
     phrases.forEach(function (p) {
       var pl = p.toLowerCase();
@@ -527,7 +836,7 @@
         '<label for="pfa-q" class="pfa-search__ask">What would you like to do today?</label>' +
         '<div class="pfa-search__field">' +
           '<input id="pfa-q" name="q" type="search" autocomplete="off" spellcheck="false" ' +
-            'placeholder="Report cruelty, hospitals, laws, colony caregiver card…" ' +
+            'placeholder="Report cruelty, a unit near you, laws, a gift…" ' +
             'role="combobox" aria-expanded="false" aria-controls="pfa-results" aria-autocomplete="list">' +
           '<button type="submit" aria-label="Search">→</button>' +
         '</div>' +
@@ -582,6 +891,8 @@
     q = q.trim();
     var rows, mode = 'results';
     chips.innerHTML = '';
+    /* on a phone the quick links give way to the results once typing starts */
+    overlay.classList.toggle('has-query', !!q);
     if (!q) {
       var rec = recent();
       rows = popularRows(POPULAR_SHOWN);
@@ -604,6 +915,8 @@
         label.innerHTML = 'Showing results for <a href="#" data-fill="' + esc(res.corrected) + '">' + esc(res.corrected) + '</a>. No pages match “' + esc(q) + '”.';
       } else if (res.via === 'closest') {
         label.innerHTML = 'No exact match for “' + esc(q) + '”. The closest:';
+        /* a guess is shown, not opened: Enter goes to the results page */
+        mode = 'closest';
       } else if (rows.length) {
         label.innerHTML = esc(rows.length === 1 ? 'One result' : 'Top ' + rows.length) + seeAll;
         if (res.corrected) label.innerHTML += ' <span class="pfa-search__dym">Did you mean <a href="#" data-fill="' + esc(res.corrected) + '">' + esc(res.corrected) + '</a>?</span>';
@@ -800,22 +1113,43 @@
   function isPrivate(u) { return PRIVATE.test(String(u == null ? '' : u).trim()); }
 
   function mergeCrawl(done) {
-    if (!window.fetch) { done(); return; }
-    function grab(url, opts) {
-      return fetch(url, opts).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
-    }
-    grab('search-index.json', { cache: 'no-cache' }).then(function (result) {
+    function take(result) {
       /* The builder ships { pages, rows }: pages for tests and the sitemap,
          rows in this file's own shape - every public page, every anchored
          heading, every unit - so the engine searches the site, not just the
          curated shortlist. A bare array is still accepted for old files. */
       var extra = result && Array.isArray(result.rows) ? result.rows
         : (Array.isArray(result) ? result : []);
-      var have = {}; CURATED.forEach(function (r) { have[r.u] = 1; });
-      var add = extra.filter(function (r) { return r && r.t && r.u && !have[r.u] && !isPrivate(r.u); });
+      /* Curated rows win on the same address, and on the same title on the
+         same page: the crawl's "Volunteer" at get-involved.html#top is the
+         curated "Volunteer" twice. */
+      var have = {}, named = {};
+      var page = function (u) { return String(u).split(/[?#]/)[0]; };
+      CURATED.forEach(function (r) { have[r.u] = 1; named[page(r.u) + '|' + r.t.toLowerCase()] = 1; });
+      var add = extra.filter(function (r) {
+        return r && r.t && r.u && !have[r.u] && !named[page(r.u) + '|' + String(r.t).toLowerCase()] && !isPrivate(r.u);
+      });
+      add.forEach(function (r) { if (BEST_BETS[r.u] && !r.q) r.q = BEST_BETS[r.u]; });
       if (add.length) build(CURATED.concat(add));
       done();
-    }).catch(done);
+    }
+    /* A page opened from the disk (file://) cannot fetch; the builder writes
+       search-index.js for exactly that, and a script tag can load it. */
+    function fromScript() {
+      if (window.__PFA_SEARCH_INDEX) { take(window.__PFA_SEARCH_INDEX); return; }
+      if (!(location && location.protocol === 'file:') || !document.createElement) { done(); return; }
+      var tag = document.createElement('script');
+      tag.src = 'search-index.js';
+      tag.onload = function () { take(window.__PFA_SEARCH_INDEX); };
+      tag.onerror = function () { done(); };
+      (document.head || document.body).appendChild(tag);
+    }
+    if (window.__PFA_SEARCH_INDEX || !window.fetch) { fromScript(); return; }
+    fetch('search-index.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (result) { if (result) take(result); else fromScript(); })
+      .catch(done);
   }
   /* Hand a ?q= from the site search to a page that has its own filter box
      (laws, events), so a result can land on the page already narrowed. */

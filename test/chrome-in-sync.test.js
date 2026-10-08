@@ -65,7 +65,9 @@ test('the registered office and how to reach it are in the footer of every page,
      cached for an hour and the HTML is not, so for up to an hour after a
      deploy this markup is read by the previous chrome.css. Written as inline
      spans, the address, the numbers and the mailbox ran into one paragraph. */
-  assert.ok(/<address class="pfa-footer__where">\s*<div>/.test(footer),
+  /* (id="contact" is the anchor site search sends "contact" and "phone
+     number" to; any attribute may follow the class) */
+  assert.ok(/<address class="pfa-footer__where"[^>]*>\s*<div>/.test(footer),
     'the contact lines must be block-level in the markup, not styled into place');
 
   const pages = Object.keys(PAGES).filter((p) => fs.existsSync(path.join(ROOT, p)));

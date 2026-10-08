@@ -53,7 +53,9 @@ html.pfa-search-open{overflow:hidden}
 .pfa-search__field:focus-within{border-bottom-color:#111;box-shadow:0 1px 0 #111}
 .pfa-search__hint{margin:12px 0 0;font-size:13px;color:#6a6a6a}
 
-/* quick actions: always visible between the field and the results */
+/* quick actions: between the field and the results. On a phone they stack
+   six deep and pushed the first result below the fold, so once a visitor
+   types they step aside for the results (8 Oct 2026); desktop keeps them. */
 .pfa-search__quick{max-width:1560px;width:100%;margin:0 auto;padding:clamp(20px,3vw,32px) var(--g) 0}
 .pfa-search__quick ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
 .pfa-search__quick a{display:inline-block;padding:13px 22px;border:1px solid #111;background:#111;color:#fff;
@@ -177,3 +179,4 @@ html.pfa-search-open{overflow:hidden}
   .pfa-search__hint{display:none}
 }
 @media (prefers-reduced-motion:reduce){.pfa-search{transition:none;transform:none}}
+@media (max-width:860px){.pfa-search.has-query .pfa-search__quick{display:none}}

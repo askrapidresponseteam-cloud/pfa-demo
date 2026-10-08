@@ -58,17 +58,27 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
   The 96 entries in `data.js` are *local contacts*: a named person and a number. Public copy
   must never describe them, or PFA, as more than that. Write "PFA contact", not "unit".
 - No "largest", "oldest", "5 lakh members" or any figure without a source in the repo.
-- `help.html` and the footer put the vet first; keep it that way.
 - **PFA offers no services.** No page may take a request for an appointment, vaccination,
   sterilisation, transport or consultation. `test/no-services.test.js` enforces it.
 
-## Emergency help page
-- `help.html` is generated in part: the unit list between `<!--PFA_UNITS_START/END-->`
-  comes from `assets/data.js` via `npm run build:help` (also run by `build:search`).
-  Edit the page around the markers, never inside them. It must keep working with no
-  script: no `data.js`, no search index, a real `<form method="post">`.
-- Every page's header carries `<a class="header-help" href="help.html">` and the
-  mobile menu opens with `a.mobile-help`; `test/help-in-header.test.js` enforces both.
+## Emergency help, and site search
+- There is no help.html any more (retired; its script is in `_retired-assets/help.js`), and no
+  `assets/data.js` or `build:help`. The units are data inside `units.html` (`var UNITS`), with
+  their contacts beside them; `scripts/build-search-index.js` reads both. Someone with an animal
+  in trouble is sent to the nearest unit to call (ask.html says so) and to the Academy's first aid.
+- `pfa-search.js` (owner, 8 Oct 2026: "ensure the PFA search is truly supreme"):
+  - Curated rows may carry `q`, the searches they are the answer to (best bets); crawled rows get
+    theirs by address in `BEST_BETS`. Add a phrase there before touching the ranking maths.
+  - `SYNONYMS` values may name several words; Hindi and Hinglish in Roman letters live there.
+    A word in SYNONYMS or PLACES is never "corrected".
+  - `PLACES` is towns with no unit of their own; a place question there gets the nearest units
+    with "About N km from X". If a unit opens in one of them, remove the town (a test says so).
+  - Never describe PFA as running hospitals, ambulances, rescue teams or clinics in a row's title
+    or description; test/search-supreme.test.js fails if one does.
+  - test/search-supreme.test.js is the list of what people type and what must come first. When a
+    change breaks one, the change is wrong unless the owner says the answer has changed.
+  - After editing a page, `npm run build:search` rebuilds search-index.json, its .js twin and the
+    sitemap. Rows never come from inside a form, a hidden block, or an err/empty/done block.
 
 ## Product pages
 - `/products/<handle>` is server-rendered by `lib/routes/product-page.js` from the
@@ -123,4 +133,5 @@ The owner's words: "need the submissions to work perfectly. it should go to gand
 - Mail leaves the site through PFA's own GoDaddy mailbox, info@peopleforanimalsindia.org, by SMTP (`PFA_SMTP_USER`, `PFA_SMTP_PASS` in Vercel; owner, 7 Oct 2026). Resend (`PFA_MAIL_API_KEY`) is only the fallback when no mailbox is set. The panel's Overview, "Copies to PFA's inbox", shows it, sends a test, and resends copies that were refused.
 - Replies come back through the same mailbox (v1.399): the copy to gandhim names info@ as a second Reply-To after the sender, `lib/inbound-mail.js` reads info@ over IMAP (Cloud Scheduler every 10 minutes on Firebase, the daily cron or the panel's "Read the mailbox now" on Vercel) and files each reply on the submission it answers, found from In-Reply-To/References plus the record's `threadId` (`lib/mail-thread.js`). Never match a conversation on a name, address or subject alone. Every email about a submission carries a deterministic Message-ID from `threadHeaders()`; keep that when adding a template.
 - Everything sent through the mailbox is also saved in info@'s Sent folder (owner, 8 Oct 2026: "have copies in info@'s Sent folder. fool proof way"), by `lib/sent-copy.js`: kept in Firestore `sentCopies` the moment SMTP accepts it, put into Sent over IMAP at once (Vercel `waitUntil` keeps the function alive), and retried by every reading of replies until it is in; never twice (searched by Message-ID first). It never holds up or fails a send. Do not move the `SENT.keep()` call inside anything that could make a failed copy look like a failed send: that would send the email twice. `PFA_SENT_COPY=off` turns it off; tests run with it off except test/sent-copy.test.js.
+- Reading and the Sent copies open the mailbox through `lib/imap-open.js` only: GoDaddy's imap.secureserver.net first, imap.titan.email second, the next tried after a refused login, every server's answer kept for the panel (8 Oct 2026: Titan-first gave "Mailbox could not be read: Command failed"). `npm run check:mailbox` checks reading and sending from a Mac with the real password, at a hidden prompt. Vercel's cron calls with GET (vercel-cron/1.0); `lib/routes/inbound-mail.js` reads on a scheduled GET from it and only reports status on the panel's GET (test/inbound-mail-cron.test.js). Hobby allows one cron run a day; Firebase reads every ten minutes.
 - On Firebase, `functions/index.js` carries the two settings that are not secrets (PFA_SMTP_USER, PUBLIC_SITE_URL); the password is the PFA_SMTP_PASS secret. Do not move them back into functions/.env only: a fresh unzip has no such file, and on 8 Oct 2026 that switched email off.

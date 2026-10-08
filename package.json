@@ -31,6 +31,7 @@
     "check:chrome": "node scripts/sync-chrome.js --check",
     "check:admin": "node scripts/check-admin-setup.js",
     "check:project": "node scripts/firebase-project.js",
+    "check:mailbox": "node scripts/check-mailbox.js",
     "build:mobile": "node scripts/mobile-pass.js",
     "check:mobile": "node scripts/mobile-pass.js --check",
     "build:min": "node scripts/minify.js",
