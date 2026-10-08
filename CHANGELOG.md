@@ -1,0 +1,698 @@
+## v1.402
+
+- **Compact footer on every page.** Owner, 8 Oct 2026: "make footer compact in the whole site. properly". It was 1,029px tall on a laptop, 885 at 1024, 1,022 on a tablet and 1,393 on a phone: 110px of padding, the name at 118px on a band of its own, Get Involved nine rows long and 70px between every band. Now 301, 374, 536 and 705. One band: the name, the registered office, the numbers, the mailbox and the visit counter on the left, the four link groups on the right, with Get Involved in two short columns; the legal line underneath. On small tablets the four groups stay in one row; on phones they go two by two, with About as one line and 28px rows for fingers. Nothing was dropped: every link, the address, both numbers, the mailbox, the counter and the social links are all still there. One source as before (assets/chrome-footer.html and the footer block of assets/chrome.css), stamped into all 22 pages by npm run sync:chrome. The markup stays block-level, so for the hour after a deploy when a page can meet the previous stylesheet it still reads top to bottom.
+- **Removed: the "Giving safely" section under the donate form** (owner, 8 Oct 2026: "remove this section"), with its styles. Nothing links to it any more: .well-known/security.txt dropped its Policy line that pointed there (Policy is optional in RFC 9116; Contact, Expires and Canonical stay) and now says the file itself is the statement of our domains and payment hosts. BRAND-PROTECTION.md and test/impersonation.test.js follow; the test now fails if anything links to #verify again. The search index is rebuilt without it.
+
+## v1.401
+
+- **New: Make a gift, on the donate page.** Owner, 8 Oct 2026: "make a gift cert should be there, like peopleforanimalsindia.org/make-a-gift.html, payment to follow the same donate flow". Donate now opens with Donate or Give as a gift. A gift is the same donation through the same CCAvenue flow, receipt and 80G (in the donor's name); the person it is for is posted a Certificate of Appreciation signed by Smt. Maneka Sanjay Gandhi, as on the old page. As there, a gift of Rs 1,000 or more comes with a certificate; the page and lib/payment.js hold the same floor. Gifts are in rupees (the certificate goes by post, and a dollar gift goes through PayPal, which carries none of the details), so choosing a gift switches the page to rupees.
+- **What it asks.** Who it is for (as it should read on the certificate), their postal address and PIN code, the occasion, and their email for a digital copy (optional; the old page offered one on request). The same field rules on the page and the server (assets/field-rules.js: giftTo, giftAddress, giftPin, giftEmail). None of it is sent to CCAvenue, which is given only the donor's details.
+- **Where it goes.** One PFA-DON record, titled "Gift of INR 2500 for <name>, from <donor>", with the gift straight after the amount, so the copy in gandhim's inbox opens with "To do: Post a Certificate of Appreciation", "Certificate for" and "Post the certificate to". Reply-To is still the donor. The panel shows the same rows. The donor's receipt and the page after the bank both say who the certificate is for and where it is posted.
+- **How people reach it.** "Make a gift" in the Get Involved column of every footer, donate.html?gift=1 (or #gift) for campaign links, and the old address /make-a-gift.html redirects there on both Vercel and Firebase, so it keeps working when peopleforanimalsindia.org moves to this site.
+- Spacing: the gift section keeps the site's 22px between fields at every width, including PIN code and Occasion when they stack on a phone.
+- Tests: test/donation-flow.test.js drives a gift from the form through CCAvenue and back (record, inbox copy, receipt, letter), refuses one under Rs 1,000, without a name, address or PIN, or in dollars, and checks an ordinary donation carries no gift.
+
+## v1.400
+
+- **Fixed: membership form fields sat on the box above.** Owner, 7 Oct 2026, screenshot of "Who is joining". v1.399 fixed the paired-field grids but missed the membership steps: their fields sit straight in `.gi__body`, which had no gap at all, so "Mobile number" and "Email" (and City, State, District on the address step) sat 0px under the box before them. `.gi__body` is now a grid with the site's 22px between items; the tier note and the pay button drop the top margins that would have doubled it.
+- **Fixed: the membership "Paid, Kit dispatched, Kit delivered" stages had no styling** and ran together as plain words. They now use the same chips and arrows as the volunteer and caregiver forms.
+- **Tighter gaps brought to 22px:** the "Follow a question / report / application" forms on Ask, Report and Careers on phones (were 12px), the Careers application steps (18px), the panel sign-in (16px).
+- **How this was checked:** every form on every page, every step of the stepped forms, at 1440px and 390px, measured in Chromium for the distance from each field's box to the next label. All are now 22px or more.
+- **Fixed: on Firebase the admin panel said "could not reach its own API".** The function bundle built by scripts/build-firebase.js holds only api/ and lib/, but lib/ loads ../assets/field-rules.js and ../assets/india-districts.js. Vercel ships the whole tree so it never showed there; on Firebase every API route crashed on load with "Cannot find module '../assets/field-rules.js'". Both files are now copied into functions/assets/, and the build refuses to finish if any file api/ or lib/ loads is missing from the bundle. Verified by building the bundle and calling /api/admin/records?type=session: it now answers 401 to a request with no sign-in, as it should, and all 50 API modules load.
+- **Fixed: a missing secret could block every functions deploy.** v1.399 named PFA_SMTP_PASS and CRON_SECRET on every function unconditionally, and Firebase fails the deploy if a named secret was never created. scripts/firebase-secrets.js (now part of npm run deploy:firebase) asks the project which secrets exist and names only those, so a missing one turns off only its own feature.
+- New tests in test/firebase-deploy.test.js for both.
+- **Fixed: reply attachments in the panel were links to "#"** (v1.399), which the site's link check rightly fails. They are buttons now; clicking one still fetches the file with the sign-in token.
+- **Fixed: a case's conversation could show messages out of order.** Messages are read in time order to the millisecond; two written in the same millisecond (a reply and a note back to back, or the inbox copy and a quick first reply) came back in random order, because the database breaks ties by document id. Every message now carries `seq` in write order and ties are sorted by it (lib/message-order.js); `at` is unchanged and older messages keep their order. This is what failed test/email-thread.test.js on a fast Mac on 8 Oct 2026 while it passed elsewhere. The whole suite was then run with every step forced into the same instant and all of it passes. New: test/message-order.test.js.
+- **Fixed: on Firebase, no submission reached gandhim** (owner, 8 Oct 2026: "i need the submissions to go to gandhim"). The mailbox name, PFA_SMTP_USER, lived only in functions/.env in an earlier folder; a deploy from a fresh unzip had no such file, so the function had the password (in Secret Manager) but no mailbox, and the panel said "No email can leave the site". functions/index.js now carries the two settings that are not secrets: PFA_SMTP_USER (info@peopleforanimalsindia.org) and PUBLIC_SITE_URL. functions/.env still overrides either.
+- **PUBLIC_SITE_URL on Firebase is https://pfa-new-website.web.app, not peopleforanimalsindia.org.** It is where the panel link in each inbox copy, the tracking link people get and the CCAvenue return point, and on 8 Oct 2026 peopleforanimalsindia.org still served PFA's old site. Change the default in functions/index.js when the domain moves to this site.
+- **Submissions that never had a copy are listed in the panel and sent on one press.** A copy is queued only when email is set up at the moment a form arrives, so what came in while it was not had no copy anywhere and nothing would ever send one. Overview, Copies to PFA's inbox now lists them by reference, and "Send those N submissions to the inbox" makes each copy exactly as the form would have (photographs, Reply to the sender, noted on the conversation, retried if refused). Nothing old is sent on its own, in case some were tests. Pressing twice sends nothing twice.
+- **Everything the site sends is saved in info@'s Sent folder** (owner, 8 Oct 2026: "have copies in info@'s Sent folder. fool proof way"). SMTP never put anything in Sent, so the folder stayed empty while every email went. lib/sent-copy.js keeps the exact message (same Message-ID, date, photographs) in Firestore the moment SMTP accepts it, puts it into Sent over IMAP straight away (on Vercel, waitUntil keeps the function alive for it), and the reading of replies (every ten minutes on Firebase) saves anything that did not get in, retrying until it does. Before adding a copy, Sent is searched for its Message-ID, so nothing is ever there twice. It never holds up or fails the email itself. Saving into a folder is not sending, so it does not count against GoDaddy's 500-a-day SMTP limit. Checked against a real IMAP server, including a mailbox that is down when the email goes and back later. The panel's test email says when its copy is in Sent, and Overview says if any are still on the way. PFA_SENT_COPY=off turns it off. New: test/sent-copy.test.js.
+- **The panel's mail instructions name the right host.** They all said "In Vercel" even on the Firebase deployment; they now say where the setting lives on whichever host is answering.
+- **The Firebase deploy warns when it cannot see the secrets.** If scripts/firebase-secrets.js cannot ask the project (not logged in) and functions/.env names none, it says that email will be off for that deploy.
+- **Fixed: a ship filled the Mac's disk** (8 Oct 2026: "No space left on device" half way through updating ~/Desktop/PFA_Website). scripts/ship.sh backed up the whole live tree with cp -R, .git and node_modules included, kept every backup, and copied public/ (the Firebase bundle, with a second 480 MB copy of the library's PDFs) into the live tree. Now: built output (public/, functions/node_modules, functions/api, functions/lib, functions/assets) is never copied, backed up or committed (.gitignore); the backup leaves out .git and node_modules; only the newest earlier backup is kept; and free space is checked before anything is touched, with the amount needed in the message if it is short.
+- **The deploy commit message fits again.** The first line of this entry is what ship.sh uses as the commit message, and test/ship-script.test.js caps it at 110 characters.
+- Not in this zip: resources/ (the library's 18 PDFs and their reading copies, about 450 MB) and test/fixtures/library/*.pdf. They are in the GitHub repo; the deploy command fetches them from there. Without them 11 library tests fail and ship.sh stops, and a Firebase deploy publishes the library without its PDFs. With them the full suite is green: 892 of 892.
+
+## v1.399
+
+- **One conversation per submission, both ways.** Owner, 7 Oct 2026: the copy to gandhim@exmpls.sansad.in is sent as info@peopleforanimalsindia.org with Reply-To the person who wrote in; Madam presses Reply and the person is already in To; her reply reaches them directly, and is at the same time kept on the submission in the admin panel, with no second record.
+- **How the reply comes back.** The copy names the site's own mailbox (info@) as a second Reply-To, after the person's address. A Reply from the inbox is therefore addressed to the person and to info@, and the site reads info@ over IMAP (GoDaddy's Titan mail; nothing to buy or switch on) and files what arrived on the submission it answers. On Firebase, Cloud Scheduler reads it every ten minutes; on Vercel the daily cron reads it, and the panel's Overview has "Read the mailbox now". PFA_CAPTURE_REPLIES=off takes the second address away again.
+- **Which submission.** Every record now carries a thread id, and every email the site sends about it carries a Message-ID naming the reference and that id, as <PFA-CR-2026-00042.9f3a1c7e2b4d.forward@peopleforanimalsindia.org>. A reply keeps that in In-Reply-To and References (Gmail, Outlook and Apple Mail all do), so the record is found from the header and the thread id checked against it; names, addresses and subject lines are never what a conversation is matched on. Mail with no threading headers at all is accepted only with the reference in its subject AND from an address already on the conversation, and the panel says it was matched that way. The same email read twice is one message.
+- **Both sides.** A message from the person (a reply to their letter, or Reply all to Madam) is filed and relayed to the inbox in the same conversation there, Reply-To the person, so the inbox sees the whole exchange and answers with one click. Madam's own replies are not sent back to her. Attachments that come with a reply are kept beside the submission's photographs and open from the panel.
+- **The letter threads too.** A reply written in the panel now goes out as "Re:" the letter's own subject, with In-Reply-To and References naming the letter, so the person sees one conversation; and its fine print says to reply to it, now that replies are read.
+- **Donations and shop orders are conversations as well.** A paid donation opens a case under PFA-DON (amount, cause, PAN for the 80G certificate) and a paid shop order a case under its own order number (PFA-SHP), both sent to the inbox with Reply-To the donor or shopper, both listed in the panel. The payment ledger and the pfa-oldsite order book are unchanged. The public intake refuses the paid kinds outright (PFA-CG, PFA-MEM, PFA-DON, PFA-SHP): a caregiver application or a membership could be posted straight to the API with no fee behind it.
+- **Fixed: the panel's History labelled every reply and note "Change by".** The case route writes `type`; the panel read `kind`. The panel now shows the whole conversation oldest first: the submission, the copy sent to the inbox, each reply either way with who wrote it and to whom, each note, each move.
+- **Fixed: the inbox could get a submission twice.** The page waited 2.5 seconds for the mail provider, which was sized for Resend's API; a connection to GoDaddy routinely takes longer, and a send cut off at that point was not stopped, only marked unsent and sent again by the nightly worker. The mailbox gets nine seconds, and a send that finishes after the wait is still recorded as sent.
+- **Fixed: two CCAvenue callbacks landing together could open two membership or application records.** The stored number is read again before a second is minted.
+- **Fixed: on Firebase, every route died on its first database call.** lib/firebase.js demanded a service-account key in the environment, as Vercel is set up; DEPLOY-FIREBASE.md rightly said a Cloud Function needs none, but the code never used the project's own credentials. Inside a function it now does (application default credentials, project from the runtime), and the panel's "could not reach its own API" on the Firebase address goes away. Vercel is unchanged.
+- **Fixed: on Firebase, no function named the secrets it reads.** `firebase functions:secrets:set` stores a value; a function only sees it if its options name it, and none did, so PFA_SMTP_PASS, CRON_SECRET and the CCAvenue keys were never reaching the Cloud Function. PFA_SMTP_PASS and CRON_SECRET are named on every function; any other secret is listed in functions/.env as PFA_FUNCTION_SECRETS. The runtime moves to Node 22 (Node 20 stops taking deploys on 30 Oct 2026).
+- **Fixed: functions/package.json did not list nodemailer**, so email through info@ failed on the Firebase deployment with "Cannot find module". It, imapflow and mailparser are listed now.
+- **Continue with Google on the panel's sign-in** (owner, 7 Oct 2026). Firebase's own sign-in library is fetched from Google only when that button is pressed, opens the account chooser, and hands the panel the same tokens the password form gets; the library keeps nothing on the device and is signed out of at once. Who may open the panel is unchanged: an account that has not been given it is refused, and a super administrator adds it on the People page. A Google sign-in with the same email as a password account is the same account. The Firebase console must list each domain the panel is opened from under Authentication, Settings, Authorized domains (web.app and firebaseapp.com are there by default; add peopleforanimalsindia.org and the Vercel address).
+- **Forms: room between fields, on every page** (owner, 7 Oct 2026: "mobile number text is too close to the box above"). On Get involved the next field's label sat 8px under the box before it: the paired fields were laid out as a subgrid, and Safari gives a subgrid's own 8px gap to the gutter after it too. The subgrid is gone; fields start level and rows are 22px apart in every browser. On Report, Ask and Careers the paired rows were picking up the padding and hairline rule of a list elsewhere on the page that shares the class name `.row`, so pairs stood 40px apart with a line under them while single fields stood 18px apart; the form's rows now carry neither. Every form keeps 22px between fields (Report, Ask, Careers, Events, CineKind, Donate, Get involved, the Wall, the shop checkout).
+- New: lib/mail-thread.js, lib/inbound-mail.js, lib/routes/inbound-mail.js (GET status; POST reads the mailbox, or files one message handed in by a webhook), the Replies section of the panel's Overview, test/email-thread.test.js (both directions, every kind, attachments, duplicates, forged ids, IMAP, the panel). Settings: PFA_IMAP_USER, PFA_IMAP_PASS, PFA_IMAP_HOST, PFA_IMAP_PORT (all optional; the sending mailbox is read by default), PFA_CAPTURE_REPLIES.
+- Not in this zip: resources/ (the library's 18 PDFs) and test/fixtures/library/*.pdf were missing from v1.398's zip too. They are not generated; copy the two folders in from the working tree on the Mac before deploying, or library.html's download links answer 404 and 11 library tests fail.
+
+## v1.398
+
+- **Library books on iPhones: no more blank pages.** Owner, 7 Oct 2026: "everything appearing blank in resource library book when opened on phone".
+- The same books drew in Chromium and in WebKit itself (WebKitGTK 2.52, driven by script), so every path that only an iPhone takes now uses the plainest one: on Safari and every iPhone browser, pdf.js decodes images without OffscreenCanvas or ImageDecoder.
+- A page's picture now goes on screen the moment it is drawn. It used to wait for the selectable text layer, so a text layer that failed left the page blank.
+- Sepia and Dark paper are drawn into the page itself instead of being a CSS filter on the canvas, which iPhones have drawn blank. Dark is the default on a phone set to dark mode.
+- Every page says "Loading page" until its picture arrives, instead of standing as a blank sheet.
+- If no page has appeared after 20 seconds, the reader says so and offers the PDF itself and Google's viewer.
+- read.html?r=<book>&debug=1 shows, on the screen, what the reader did (browser, screen, each step and any error), for a phone where something still goes wrong.
+- **Email through PFA's own mailbox.** Owner, 7 Oct 2026: "info@peopleforanimalsindia.org is ready on godaddy ... all submissions to go to gandhim email id. through info". With PFA_SMTP_USER and PFA_SMTP_PASS set in Vercel, every email (the copy of each submission to gandhim, with Reply to the sender and photographs attached, and every confirmation) is sent from info@peopleforanimalsindia.org through GoDaddy's mail server, trying Titan's if GoDaddy's cannot be reached. The admin panel's test email names the mailbox and explains a refused password in plain words. No Resend account is needed.
+- Reading copies for any book added later are built on GitHub after a push (.github/workflows/reading-copies.yml), so they never have to travel in the zip again; until a copy exists the reader opens the original. A few large page images were recompressed.
+
+## v1.397
+
+- **Phone pass: library books load fast, everything stays on screen, one Close.** Owner, 7 Oct 2026.
+- **The library on a phone.** Measured on an emulated iPhone over 4G: most books showed their first page in 3 to 8 seconds, and the Hindi gaushala manual (68 MB, a 300 dpi scan with its text drawn as outlines) showed nothing for a minute and a half. Each book now has a reading copy in resources/read/ (scripts/build-reading-copies.py): the same pages, photographs sized for a screen (1,600 pixels on the long side), pages drawn only as outlines turned into one picture each, and linearized so the first page comes first. Every book now shows its first page in 2.6 to 6.8 seconds on the same 4G; the gaushala manual in 6.7, the piggery report from 54.5 MB to 8.2 MB. Download still gives the original PDF. The copies (about 140 MB together) are too large for the site's zip, so GitHub builds them after the push (.github/workflows/reading-copies.yml, a few minutes) and commits them; until a copy exists, the reader opens the original, as before.
+- The reader no longer throws away and redraws every page when a phone's address bar slides away or the keyboard opens for a search.
+- **Inside the screen.** On iPhones the reel boxes on CineKind and the founder page, the CineKind nomination panel and the shop's product view sat under the notch and the home bar; they now keep clear of both, in either orientation. The check-before-sending dialog every form uses was sized to 100vh, which on iPhone Safari runs under the toolbar and could hide its Send button; it is now sized to the visible screen.
+- CineKind and Donate were 35 pixels wider than a 320 pixel phone, which zoomed the whole page out and pushed everything, the reels included, past the edge: a heading held "permission first" together with a non-breaking space, and Donate's form column would not shrink below its buttons. Every page now fits at 320, 360, 375, 390 and 412 pixels, checked in a browser.
+- Rows that scroll sideways (the library's shelves, Laws, Academy, Achievements, the shop, Units) fade at the edge with more beyond it, instead of cutting the last chip off.
+- **One Close.** Every panel, viewer and dialog now closes with the same control: the word Close in the site's small bold capitals with a drawn cross, 44 pixels tall. It replaces an underlined CLOSE, a bordered CLOSE box, a black square, bordered crosses and bare crosses in different places. The announcement bar keeps its single cross.
+- **One form style.** Field labels are the same small bold capitals on every form (Ask, Careers, Report and Quiz used sentence case); fields have the same padding and type; the Events dropdown is no longer drawn in Arial. Section labels are one size everywhere (some were 14 to 16 pixels); display headings are in capitals everywhere; the check-before-sending dialog's buttons and heading match the rest of the site.
+- **Reels play the same way.** A founder reel with its video on the site now plays on the first press, exactly as the CineKind reels do. Without that file it plays in Instagram's own player inside the same box, which needs Instagram's Play pressed again: the four founder reel videos are needed for the two to match.
+
+## v1.396
+
+- **Every submission reaches gandhim's inbox and the admin panel.** Owner, 7 Oct 2026: "need the submissions to work perfectly. it should go to gandhim email id. records to be kept in the admin panel."
+- Checked in a browser on every form, filled in the way a visitor fills it (the question, job, cruelty report, event, volunteer, CineKind nomination and wall forms, and the paid membership and colony caregiver applications): each one files its record, sends the sender a confirmation, sends gandhim@exmpls.sansad.in a full copy with Reply set to the sender, and appears in the admin panel's Submissions list.
+- Fixed: a paid membership was filed without the field the admin list is ordered by, so Firestore left it out of the list. New memberships carry it, and any filed before now are put back in the list the first time the panel is opened.
+- The copy to the inbox now carries the photographs and documents themselves, attached, instead of a line saying they are in the admin panel, which that mailbox cannot open. Each field is named the way the form asks it ("What is happening", "Who is doing it"), in the email and in the panel's record view.
+- New in the admin panel's Overview: "Copies to PFA's inbox". It says whether email can leave the site at all, where copies go and which address they are sent as; "Send a test email" sends one to the inbox and, if the mail provider refuses it, says why in plain words and what to change; the last copies sent are listed with what happened to each; "Send the copies that did not go" sends any refused ones again once the settings are right.
+- Admin panel: the open section in the side menu was black on black, and the others pale grey on white. Readable now.
+- No long dashes: the job application's role, the admin panel's empty cells and the library reader's page range used them. The dash test now also catches en dashes and dashes written as code escapes, and the remaining ones in notes and docs are hyphens.
+- A new test, test/submissions-end-to-end.test.js, drives every form kind and both paid applications through the real server code to the inbox and the admin list, and fails for any page that sends a kind it does not cover.
+
+## v1.395
+
+- **The CineKind leader no longer sits on a frozen 1.** Owner, 7 Oct 2026: "cinekind getting stuck here", a black 1 on screen. Nothing on the server was broken; the live page was served whole. The leader held its last frame until the CineKind page had parsed to the end, and the parse waits for every script on the page. On a slow line, with the wall's posters downloading beside those scripts, that was five seconds and more of a still black 1 (measured on the built site at 1.5 Mbps), which reads as a hang.
+- The 1 now keeps its sweep turning while it waits, on the home page after the click and on the CineKind page, so it reads as a page on its way.
+- The CineKind page lets the frame go after at most 1.8 seconds from arrival (1.2 seconds after its own count on a direct visit), whatever is still loading under it. The marquee is first in the page, so it is ready by then; the wall and the forms finish loading under the open page.
+- Three new tests: the frame leaves by the ceiling on a page that never finishes parsing, from the hand-over and on a direct visit; and the sweep turns while the home page waits for the next page.
+
+## v1.394
+
+- **The CineKind wall, to its reference.** Owner, 7 Oct 2026: "cinekind tiles look and feel should exactly match the references" (omrimalka.art). Measured against the reference screenshots at the same size, and changed where it differed:
+- **Many pieces, of more than one kind.** The wall was the eleven honourees, three crops each, so the same faces came round again and again. It now also carries the six reels from the night and twelve photographs from the first edition (Kolkata, 2025), each in a shape of its own, so it reads as a wall of distinct pieces.
+- **A filter, as on the reference.** A white tab bar at the top of the wall: all, honours, reels, 2025, the lit tab yellow. A tab deals the wall again from that kind alone.
+- **The corner.** The name of the piece under the hand in a bold sans, sentence case, with one small line under it saying what it is ("honour 2026 · Kindness Catalyst", "reel · 0:37", "the first edition, 2025"). At rest, "CineKind 2026" the same way.
+- **The controls** (nominate, shuffle, PR, archive) are small white tiles, icon over a lowercase word, lit yellow under the pointer. On a phone they stay a row along the foot.
+- **The map** is always in the corner, framed in white, not only while the wall moves.
+- **Pasted by hand.** Each piece sits a little off its row and up to a degree and a half off level, and the piece in hand comes well out of the wall (an eighth larger, further forward).
+- **Reels move.** A reel under the hand plays on the wall, muted; pressing it plays it with sound in the reel box, on this site. A 2025 photograph opens the 2025 archive. Honours still go to their line of the roll.
+- Reels from the night, under the film: the whole tile now plays its reel, the title included. Before, a tap on the title (the middle of the tile on a phone) did nothing; only the picture's edges and Play did.
+
+## v1.393
+
+- **Six reels from CineKind 2026, all playing on the PFA site.** Owner, 7 Oct 2026, with the five further videos supplied. "Reels from the night" now sits under the red carpet film and before the roll of honours, in the founder page's reel grid: three across on a desktop, two on a tablet and a phone, each tile with its number, its title and a Play button, the still graded grey until the cursor reaches it. Play opens the reel box and plays the site's own copy; the box takes each reel's own shape, so the two square clips are not letterboxed into a tall frame. No reel sends anyone to Instagram.
+- The reels, in order: A little glimpse of CineKind 2026; The room at The Leela; On the red carpet, in conversation; In the hall; Nikhar Juneja, Ray of Sunshine; John Abraham, CineKind 2026. Titles are what each reel shows on screen or plainly pictures; nobody is named from their face alone. "Open on Instagram" shows in the box only for the two reels whose Instagram id is known (DeKJ9RQzhf0, DeHQShiu3BG).
+- Every video is H.264 and AAC, 540 wide, index first, 0.3 to 4.6 MB each (13.8 MB for all six). Stills are frames of the videos. Files are named for the reel (media/cinekind-2026/reels/<name>.mp4 and .jpg); scripts/fetch-reel-stills.js follows each tile's own paths and its Instagram id.
+
+## v1.392
+
+- **Playing a CineKind reel no longer starts the PR film too.** Owner, 7 Oct 2026. The page opens its PR screening on a press of anything carrying `data-film`, through a listener on the whole document; the reel tile named its video in `data-film` as well, so a press on the reel opened the reel and the screening together. The reel's video is now named in `data-video`. Checked in a browser on desktop and phone, on the built site: the reel's Play and its picture open only the reel box, the PR button opens only the screening, and the red carpet film opens only the theatre. A test now fails if anything but the PR button carries `data-film`.
+- Reel tiles no longer ask the network whether their video exists before showing. A tile goes on the page only together with its file, and the test suite checks every named video and still is in the tree. Reel 02 (John Abraham) joins when its video is supplied.
+
+## v1.391
+
+- **CineKind reel 01 is on the page and plays on the PFA site.** Owner, 7 Oct 2026: the owner supplied the video of "A little glimpse of CineKind 2026" (Instagram DeKJ9RQzhf0). It is media/cinekind-2026/reels/DeKJ9RQzhf0.mp4, H.264 and AAC at 720 x 1280, 37 seconds, 6.2 MB, with its index at the front so it starts at once. Its tile stands beside the red carpet film and plays in the reel box, with no Instagram. Its still is now a frame of the video itself, so no Instagram play disc. Reel 02 (John Abraham, DeHQShiu3BG) appears the same way when its video is added.
+- **Lighter pages.** The 26 photographs of the first CineKind (media/cinekind-2025/ffi/, 800 x 533) were 11 MB between them; re-saved at JPEG quality 85 they are 2.6 MB, same size and look. The home page's hero (img/hero-caregiver.webp) was 1.9 MB and is 89 KB, same picture. This also keeps the full package under its upload size with the reel in it.
+
+## v1.390
+
+- **CineKind reels play on the PFA site, never on Instagram.** Owner, 7 Oct 2026, as an implementation requirement: pressing Play on a CineKind reel sent the visitor to Instagram. The cause: these reels opened in Instagram's embed, which plays a reel inside another site only when its sound allows it. The founder reels (pfa.official, original audio) do; these two answer "Watch on Instagram", and the press leaves the site. Now:
+- The tiles are built the way the founder page's reels are: "Instagram" and the reel's number at the top, its title ("A little glimpse of CineKind 2026", "John Abraham, CineKind 2026"), a Play button at the foot, the still full-bleed and graded grey until the cursor reaches it. They are buttons, not links: nothing on a tile can leave the site.
+- Play opens the same reel box as the founder page and plays the site's own copy of the reel (media/cinekind-2026/reels/<id>.mp4) with native controls, inline on a phone. The Instagram embed is no longer used for these reels.
+- `npm run media:reels` now fetches each reel's video as well as its still. A tile whose video is not on the site is taken off the page, so a reel is only ever offered where it can play here; the film then has the row to itself.
+- The stills were cleaned of the dark play disc Instagram bakes into its covers.
+- The requirement is written into .claude/skills/pfa-website/SKILL.md, and test/cinekind-reels.test.js fails the build if a reel tile becomes a link, uses the Instagram embed, or plays anything but a file on this site.
+
+## v1.389
+
+- **CineKind reels play from PFA's own copy.** Owner, 7 Oct 2026: "exact same UX" as the founder reels. The CineKind reels open in the same reel box as the founder page, and the code is the same, but Instagram answered "Watch on Instagram" inside the box for these two: Instagram plays a reel inside another site only when its sound allows it, and the founder reels are the account's own audio. So the box now plays the site's own copy of a reel when it has one (media/cinekind-2026/reels/<id>.mp4, poster from the reel's still, native controls, plays inline on a phone), and only stands the Instagram embed in when there is no file. Drop the two videos in at those paths and they play on the page, no Instagram.
+- The reel tiles' play ring is sized to cover the dark play disc Instagram bakes into every cover, so a tile shows one play button, not two.
+- The two stills and the founder film's fetched title and still from the v1.386 and v1.388 pushes are now part of the package, so a push no longer removes them and fetches them again.
+
+## v1.388
+
+- **CineKind 2026: the two reels stand beside the red carpet film, with their own stills.** Owner, 7 Oct 2026. The film and the two reels now share one row, the film at 16:9 and each reel at 9:16 at the film's exact height; on a phone the film takes the width and the reels sit two-up beneath it. Each reel tile wears a still from the reel, with its play ring and "Instagram, Reel 01/02". Pressing it plays the reel on this page in the reel box, as on the founder page; nothing leaves for Instagram. Of the links sent, DeKJ9RQzhf0 appeared twice, so there are two reels.
+- The stills are served from this site, never hot-linked from Instagram (its links are signed and expire). `npm run media:reels` (scripts/fetch-reel-stills.js) reads the reels from the page, asks Instagram for each reel's cover and saves it as media/cinekind-2026/reels/<id>.jpg. The tile lays the still in only once it has decoded, so until it is fetched the tile is dark with its play ring, never a broken image. A still cut by hand can be saved at the same path.
+- The text strip of reels from v1.387 is replaced by these tiles.
+
+## v1.387
+
+- **CineKind 2026: two Instagram reels under the red carpet film.** Owner, 7 Oct 2026. "More from CineKind 2026" sits between the film and the roll of honours: two dark tiles, reel 01 (DeKJ9RQzhf0) and reel 02 (DeHQShiu3BG). Of the three links sent, two were the same reel. Pressing a tile plays the reel on the page in a 9:16 frame, the same reel box as the founder page, with Close, Escape and "Open on Instagram". Nothing is fetched from Instagram until a reel is pressed, and the frame is removed on close. Without a script each tile is a link to the reel.
+- Instagram gives no still or caption to a page without its script, so the tiles carry no picture and no invented title.
+
+## v1.386
+
+- **Founder page: film 04 is a new film.** Owner, 7 Oct 2026. The Bengaluru masterclass (YouTube TLUW99Hd7T8) is taken off "Her, in motion" and https://www.youtube.com/watch?v=BVbpSc_EXlI takes its place, fourth of the eight, playing in the same theatre. Its still is removed from media/founder-films/.
+- Its title and still come from YouTube, as the other seven did, by `npm run media:founder -- --rewrite` (the build machine could not reach YouTube). Until that has run, the tile shows its number and source only, which is the page's documented state for a film not yet fetched.
+
+## v1.385
+
+- **Donate: a new life ring, the same for every donor.** Owner, 6 Oct 2026. The picture under "Donate." is now a red and white life ring with a red heart and a paw print at its centre, its rope trailing away (img/donate-lifering.webp, 1000 x 587, 103 KB, transparent, cut from the owner's artwork). It replaces the ring made of a 500 rupee note, which swapped for a ring made of a 100 dollar note when USD was chosen: with no money in the picture, rupee and dollar donors see the same ring and nothing swaps. The two note rings and the swap script are removed.
+
+## v1.384
+
+- **Shop: the discount no longer runs into the struck price.** Owner, 5 Oct 2026. In the closer look at a piece the price row read "₹5,00050% OFF": the struck price had a space before it and the discount none. The row is now laid out with an even gap between all three, and the discount is a small red tag, the same red as the "50% off" sticker on Shop in the header, so it reads as a label on the price rather than more digits. The shop tiles already had their gap and keep their plain "50% off".
+
+## v1.383
+
+- **Side-by-side boxes line up across the site.** Owner, 5 Oct 2026, after the CineKind scene picker. Every page was measured in a browser at 1000, 1100, 1280 and 1440px wide for boxes beside one another whose tops did not match, and each one found is fixed:
+- Ask, Careers and Report, "follow up on a reference": the button stood 7px taller than the two fields beside it. Fields and button are now all 50px, sharing a top and a bottom.
+- Events, under the cards: "Most recent" sat 22px higher than "Bring one to your area" in the column beside it. The two labels are now level.
+- Someone, "Who would you underestimate?": the four portraits were each nudged a few pixels up or down, and the photographs pushed the grid past the white card. They are now a level 2 x 2 inside the card.
+- The shop's designer mosaic keeps its deliberate staggered columns.
+- Long dashes taken out of the site: the quiz citations, two achievements records, a unit address, the theatre's keyboard list, two library contents entries and some code comments now use plain hyphens. On Careers, "human-wildlife conflict rescue" reads "rescues where people and wildlife share space".
+
+## v1.382
+
+- **CineKind: the scene picker's answer box lines up with the choices.** Owner, 5 Oct 2026. Under "Before the camera rolls", the answer box started level with the "What is in the scene?" label, above the first choice. It now starts level with the first choice and ends level with the last; when an answer runs longer, the five choices share the extra height so both edges still line up. On a phone it sits under the choices as before.
+
+## v1.381
+
+- **The CineKind 2026 red carpet film plays in the site's theatre.** It is the same player as The Wall, the founder page and the academy (owner, 5 Oct 2026). Pressing the still opens it full screen with the theatre's own bar: play and pause, seek, back and forward ten seconds, sound, speed, full screen, copy a link to the moment, and the keyboard keys. It remembers where someone stopped. Close, or Escape, hands the page back. It replaces v1.380's frame dropped in place.
+- assets/theatre.css: the theatre's idle video is now hidden on every page. cinekind.html sets every video to display:block for its own films, which outranked the hidden attribute and left a black video sitting over the YouTube film.
+
+## v1.380
+
+- **The CineKind 2026 red carpet film is on the CineKind page.** Owner, 5 Oct 2026. It sits at the head of the 2026 honours, between "Presented at The Leela, Mumbai" and the roll of eleven honourees, so the night is seen before the names are read: the red carpet at The Leela on 4 October 2026, with Anant Ambani, Raveena Tandon, Rupali Ganguly and other guests. Film by BollywoodHelpline on YouTube, credited under it.
+- It shows as a still with a play button and loads nothing from YouTube until pressed; pressing it plays the film in place from youtube-nocookie.com. Without script it is a plain link to the film on YouTube.
+
+## v1.379
+
+- **The newsroom is PFA's work for animals, CineKind and its cases. Policy and law are not newsroom stories** (owner, 5 Oct 2026). The policy and law desk is gone, with its six stories (the Supreme Court judgment, the Delhi, J&K, UGC and transport orders, the University of Delhi MoU); all of them stay, stated factually, on achievements.html and laws.html. scripts/build-newsroom.js no longer accepts a policy or law story.
+- **A new desk, "For the animals": rescues and welfare outcomes reported in the press**, each linking to its report (opens in a new tab): 52,401 wild animals rescued, treated and released by PFA's wildlife hospital in Bengaluru, including a cobra treated for nearly 11 months and returned to the wild (ETV Bharat, 7 Aug 2026); four young donkeys rescued from a Dehradun building site by PFA Uttarakhand and kept at the Happy Home Sanctuary by court order (Pioneer Edge, June 2026); a high-welfare pig housing model opened in Rishikesh by the PFA Public Policy Foundation with the Animal Husbandry Department (Garhwal Post, June 2026); an Indian roofed turtle saved from sale in Chandigarh on a PFA complaint (The Tribune, Feb 2026); birds hurt by kite string flying again within days at PFA's Bengaluru wildlife hospital (The Better India, Jan 2026); over 400 animals saved from the Gadhimai sacrifice and rehomed, with HSI/India (Dec 2024). The front page is CineKind 2026, Case 001, Bengaluru's wildlife and the Dehradun donkeys.
+- **The whole site speaks about animals from the welfare side, with every fact kept.** Animals are sentient beings whose safety, welfare and humane treatment stay central. Laws: "community dogs" for "stray dogs" outside statute wording; the Supreme Court answers no longer raise blanket culling or "re-release", and say dogs from schools, hospitals and similar premises are given safe placement in designated shelters; euthanasia is "humane euthanasia on three grounds assessed by veterinary experts"; relocation, municipal pick-up, barking, abandoned cattle, the rabies programme and the poisoning answers are reworded in the same way. Academy: a bitten, unvaccinated dog "needs a veterinarian at once", not "a public health problem, not a patient"; an injured animal "may bite out of pain and fear". Careers and the library blurbs likewise.
+- The rules are in .claude/skills/pfa-website/SKILL.md, and test/animal-language.test.js fails the build if the worst phrasing returns to any page or data file.
+
+## v1.378
+
+- **Newsroom: CineKind 2026, held.** Owner, 5 Oct 2026. The lead story is now the ceremony itself: the second CineKind Awards, presented by the Film Federation of India with People for Animals at The Leela, Mumbai, on 4 October 2026, World Animal Day, eleven honours. It read "announced ahead of" the event; so did the 2026 honours on cinekind.html, which now say they were presented there. The Events page already turns the event to "Held" by the date.
+- **Two new stories.** The second edition's announcement in Mumbai on 11 September 2026, where Maneka Gandhi, with the Film Federation of India's Abhay Sinha and Sandeep Marwah, called on cinema to become a voice for animals. And the most recent dated work on PFA's record: the MoU with the Faculty of Law, University of Delhi, signed on 16 October 2025, to build animal law into its teaching, research and policy work (achievements, record 103).
+- The front page is CineKind 2026, Case 001, the Supreme Court's May 2026 judgment and the CineKind announcement; the first edition moves to the CineKind desk. Ten stories on the record.
+
+## v1.377
+
+- **The phone pass, without the parts that looked worse.** Owner, 4 Oct 2026. Set side by side with the site before v1.376 on an iPhone, several changes had made pages look heavier, and they are taken back:
+- The announcement bar is back on one line (its original size and spacing).
+- Shop keeps its name in the header on phones from 360px up, with its shirt and sticker, beside Donate and the new menu button. Only a 320px phone shows the shirt alone.
+- The shop filter bar is its original single row again, instead of a taller two-row bar covering the T-shirts as you scroll. "50% off" no longer starts with an indent when it drops a line.
+- Small capitals labels ("Limited edition" and the like) are back at their designed 10px. Only labels set at 8 or 9px are lifted, to 10px.
+- The laws, academy and library search bars keep their original single swiping row; the search box keeps a usable width instead of shrinking to its icon.
+- Academy's video tiles keep their dark fade, with the titles in white so they read.
+- Two unit photographs were camera originals: media/units/parbhani.jpg was 9.8 MB (4000 x 6000) and dehradun.jpg 770 KB, for a portrait shown a few hundred pixels wide. Both are resized in place (1000px and 800px, same names), so the Units page no longer pulls 10 MB on a phone.
+- What stays from v1.376: the menu on phones and tablets, no page zoom on form fields, the search page field you can see, the CineKind controls and Events filters that fit, and the larger tap targets.
+
+## v1.376
+
+- **The site works on a phone.** Owner, 4 Oct 2026. Every page was walked by an automated browser at 320, 360, 375, 390, 414, 768 and 1024px wide, in portrait and held sideways, checking for anything running off the edge, controls too small to tap, type too small to read, script errors and broken images. Every page was then read screen by screen on a phone, and the shop, the forms, the players and the menus were driven by taps. What was wrong is fixed:
+- **A menu on phones and tablets.** Below 900px the four sections were simply hidden, so a phone could only move around the site through the footer. The header now has a menu button (three bars that turn into a cross) opening a full panel of every section and page, built from the desktop menus so the two always match. It locks the page behind it, closes on Escape, on a link, or when the window widens, and keeps focus inside while open.
+- **The header fits a 320px phone.** Shop ran off the edge at 320 and 360px. On the narrowest phones Shop is its shirt mark in a square with its "50%" sticker, Donate tightens, and the mark steps down a size.
+- **No more page zoom when a field is tapped.** Almost every form field was under 16px, so an iPhone zoomed the page in on every tap and left it zoomed, the shop checkout included. Fields are 16px on touch screens and phones.
+- **Shop.** The sort and the piece count were off the right edge of the filter bar; on a phone they sit on a second row. "50% off" no longer breaks over two lines. State and District stack on the narrowest phones. Held sideways, the closer look sets the photo beside the details. The toast spans the screen. Everything clears an iPhone's home bar.
+- **Other pages.** The search page's field was white on white at every size and is now ink. Search results ran off a tablet's edge. Laws, Academy and Library put the search box and topic chips in one row that hid the last topics and "Expand all" off screen; on a phone the box has its own row and the chips wrap. Academy's video titles were dark type on a dark gradient (at every size) and now sit on a paper fade; its module aims were 320px tall cards with a sideways caption and are a list on a phone. CineKind's wall controls ran off both edges on a phone and now fit, Shuffle and PR as marks. Events filter names were cut to "EVERY EVE..." and now wrap. Founder told touch screens to "hover a frame"; it says "Tap a frame to play" there.
+- **Reach and reading.** Labels set at 8 to 10.5px are 11px on phones and touch screens (scripts/mobile-pass.js, `npm run build:mobile`, collects them from each page and stylesheet, so new ones are covered). Search boxes, accordion headers, text buttons, footer links, the announcement close and consent boxes have proper tap targets. Desktop with a mouse is unchanged.
+- test/mobile-pass.test.js keeps the phone rules current and pins the menu, the 16px fields and the search field.
+
+## v1.375
+
+- **Every email is now a letter from PFA.** Owner, 4 Oct 2026. White paper, black type, the logo the only colour: the logo alone at the top, a serif headline ("Your report is in."), "Dear Asha," and the message in serif, the number to quote set large in bold over a black rule, the details as plain ruled lines, one black button, and "With thanks, People for Animals". It replaces the electric blue letter and the grey card, so every acknowledgement (all seven forms, membership, colony caregiver application, donation, shop order) and every other email (card issued, shipping, a reply from PFA, staff invite) looks the same. No timelines: the stage lists are gone from the emails.
+- **The acknowledgement says more.** Received (date and time, India), type, who filed it, and how many photographs came with it. The button names the thing: "Track your report", "Track your application", "Track your nomination".
+- **CineKind nominations have their own wording.** "Your nomination is in.", in the words of the CineKind page: the committee reads every nomination, and a nomination is a proposal, not a promise of an award. It used to get the generic "We have it."
+- The logo for white paper is img/mail/logo-ink.png, the site logo with its lettering in ink. "Colony Animal Colony Caregiver Card" now reads "Colony Caregiver Card" in the card email, the payment page and the card check.
+
+## v1.374
+
+- **The logo tee comes in four colours.** Owner, 4 Oct 2026. Red, yellow, white and pink, chosen with swatches on its tile, in the closer look and in the logo tee panel. Choosing a colour names it and shows it: the tile swaps to that colour's photographs, the closer look shows that colour's front and back, and in the panel the matching photograph is marked (pressing a photograph chooses its colour). The bag shows the colour on each line, and the same tee in two colours is two lines.
+- **The colour is part of the order.** lib/shop.js lists the colours; checkout refuses a logo tee without one of them, and the order, its summary, the stock key, the admin ledger note, the confirmation page and both emails read "PFA logo T-shirt, Red, size L". A designer piece has one colour and ignores any sent for it. A logo tee already in a bag from before takes red, shown on the line.
+
+## v1.373
+
+- **New shop photographs.** Owner, 4 Oct 2026. Eleven designer tees and the PFA logo tee now show the new photoshoot: Sabyasachi, Rocky Star, Geisha Designs, Muzaffar Ali, Nida Mahmood, J J Valaya, Gaurav Gupta (charcoal), Monisha Jaisingh, Varun Bahl (design 2), Raw Mango and Ashima Singh. Shots that held a front and a back side by side are split into two photos, front first. The logo tee shows red, yellow, white and pink. Gaurav Gupta, Varun Bahl and Masaba Gupta had no new photo and keep their old ones.
+- Photos are in media/shop/v2 as WebP (about 2 MB for all 26). The 27 old images no longer used, and the raw incoming-shop-photos folder, are removed. The top mosaic shows four of the new shots, and the logo tee panel shows the four colours as model shots instead of flat cut-outs.
+
+## v1.372
+
+- **Every submission is emailed to PFA's inbox; a Reply goes straight to the sender.** Owner, 3 Oct 2026. The inbox is gandhim@exmpls.sansad.in. Each form (cruelty report, question, job application, film for the Wall, volunteer, event request, CineKind nomination) and each paid application (membership, colony caregiver application) is forwarded once, as soon as it is on record: the subject is the reference, the type and the sender's name; the body is who sent it, how to reach them, and every field they filled in; photographs are pointed to in the admin panel rather than attached. The email's Reply-To is the sender's own address, so pressing Reply in that mailbox writes to them directly. Nothing is asked of the government mailbox; the site only sends to it.
+- **Never at the cost of the form.** The forward rides the confirmations' outbound queue and is sent beside the sender's acknowledgement, so the page waits once, a mail outage delays it, and a retry never sends it twice. PFA_SUBMISSIONS_INBOX can name other or several inboxes, or `off`. A Reply-To is passed to the provider only if it is a clean address.
+- scripts/check-emails.js (and its test, which ship.sh runs) now checks every form and paid application for both emails: the acknowledgement to the sender and the forward to the inbox with Reply-To set. test/submission-forward.test.js pins the inbox, the email, and what the provider is told.
+
+## v1.371
+
+- **The Shop button no longer has paw prints.** Owner, 3 Oct 2026. The line of paw prints that walked along the button's foot on hover is gone, with its animation. Under the pointer the shirt mark still hops and the "50% off" sticker straightens; nothing else moves. chrome.css has a new fingerprint, so the change reaches every browser at once.
+
+## v1.370
+
+- **Shop is a button, to the right of Donate.** Owner, 3 Oct 2026. On the live site Shop arrived as the plain word "Shop", left of Donate. The markup was right; the stylesheet was not there yet: assets/ is cached for an hour and served stale for a day, the HTML for five minutes, so the new header was read by the previous chrome.css. Shop now follows Donate, as its own bordered button with the T-shirt mark and the "50% off" sticker, at every width.
+- **A changed header can no longer arrive unstyled.** scripts/sync-chrome.js links chrome.css and chrome.js with a fingerprint of their contents (?v=...), so a changed file is a new address that browsers fetch at once, and an unchanged one keeps its cache. `npm run sync:chrome -- --check` (and its test) fails if either file changes and the pages were not stamped again. The site audit and four tests read ?v= as a cache tag, not part of the file name.
+
+## v1.369
+
+- **The shop takes payment now, the way donations do, and has its own button beside Donate.** Owner, 3 Oct 2026. Checkout showed "Online orders are not open yet" because it had nowhere to write an order without the pfa-oldsite key. It now writes to pfa-oldsite when PFA_SHOP_FIREBASE_SERVICE_ACCOUNT is set, and otherwise to this site's own Firestore (shopOrders, shopStock, shopTotals) through the connection donations already use, in the same order shape. A key for the wrong project is still refused, never fallen back from.
+- **Every shop order is in the admin panel.** Each one is also a row in transactions with type 'shop', so the Payments tab lists it (filter: Shop order) with the shopper, amount, outcome, CCAvenue tracking ID and what was bought, and the dashboard counts it. /api/payment/health reports where orders are going as shopOrders.
+- **Shop sits beside Donate in the header on every page**, as its own control rather than a second Donate: paper with an ink rule, a T-shirt mark, and a tilted "50% off" sticker. Under the pointer the shirt hops and a line of paw prints walks along its foot; still for reduced motion. It left the Get Involved menu, so the shop has one way in. The scrolling strip stays gone.
+
+## v1.368
+
+- **The PFA shop's money is PFA's, so it goes through PFA's CCAvenue: written into the rules.** Owner, 3 Oct 2026. The assistant rules (.claude/skills/pfa-website) and ARCHITECTURE.md said store money never goes through CCAvenue; that was written for the Paws & Tails store, where the money was the seller's. They now say what is true: every payment whose money is PFA's (donations, memberships, caregiver applications and the shop) goes through PFA's CCAvenue, and a seller's money never does. No code changed.
+
+## v1.367
+
+- **The fourteen designer T-shirts are half price, at ₹2,500, with ₹5,000 struck through.** Owner, 3 Oct 2026. Set in lib/shop.js, so it is what CCAvenue is asked for, and shown on each card and in the closer look as the old price struck through and "50% off". The logo tee keeps ₹350, down from ₹450.
+- **Checkout asks for the place once.** The City field is gone: the state, then its district from the list. The district fills CCAvenue's city and the order's city in the pfa-oldsite record, and the confirmation page and email no longer print the same place twice.
+
+## v1.366
+
+- **The shop takes real orders: checkout, payment, an order in pfa-oldsite, and a confirmation.** Asked for on 3 Oct 2026. The bag on shop.html now goes to a checkout (name, mobile, email, delivery address with state, district and PIN), then to CCAvenue on PFA's own account, the one donations use. The WhatsApp hand-off is gone.
+- **Real items.** The pieces, product ids, prices and sizes are the old site's, from the PFAcurrent snapshot, now held in lib/shop.js, the only place a price is trusted: the browser sends pieces, sizes and quantities, and the server prices them, adds the old cart's flat ₹150 delivery, and asks CCAvenue for that total. The 43 photographs are in media/shop/ as WebP (1.6 MB, from 46 MB of PNG), so localise-shop.sh is no longer needed and has gone.
+- **Orders go to the pfa-oldsite backend** (owner's instruction), the database pfa-oldsite.web.app's panel reads, in the old checkout's own shape: orders/{id} written 'initiated' before payment, stock reserved per size in the same write (99 a size for each designer piece, as before), and completed 'paid', 'cancelled', 'failed' or 'verification_failed' by the callback, with aggregates/store counted once. A key of its own, PFA_SHOP_FIREBASE_SERVICE_ACCOUNT, refused for any other project; pfa-oldsite stays retired as the site's server key. If the order cannot be written, no payment starts.
+- **Confirmation.** A paid order lands on a confirmation page with its order number, pieces, total and delivery address, empties the bag, and is emailed to the shopper; PFA_SHOP_ORDERS_EMAIL, if set, gets a note too. A purchase carries no 80G wording. A repeated callback changes nothing; a cancelled payment returns its stock and keeps the bag; a payment for the wrong amount or merchant is held for a person to check.
+- **The running strip of designers' names is gone** (owner).
+- New routes: /api/shop/checkout and /api/shop/response. test/shop.test.js covers pricing, the page against the catalogue, the backend key, stock, and settling an order once.
+
+## v1.365
+
+- **A shop, with every item on PFA's merchandise page.** Asked for on 3 Oct 2026, laid out after the store the owner supplied as a reference: the announcement bar, a running strip of the designers' names, a campaign opening, the collection as tall image blocks, one feature banner, and a row of promises above the footer, in this site's own type on white. It lives at shop.html, under Get Involved in the header and in the footer.
+- **The items, as peopleforanimalsindia.org lists them.** Fourteen designer T-shirts at ₹5,000 each (Sabyasachi, Gaurav Gupta and Gaurav Gupta in charcoal, Varun Bahl and Varun Bahl Design 2, Rocky Star, Geisha Designs, Muzaffar Ali, Nida Mahmood, J J Valaya, Monisha Jaisingh, Raw Mango, Masaba Gupta, Ashima Singh), each a unisex drop shoulder tee in 100% cotton, and the PFA logo T-shirt at ₹350, down from ₹450. Every piece in L and XL. The cards are plain HTML, so the page reads without JavaScript and is in the search index and the sitemap.
+- **Ordering.** Choose a size, add to the bag, and send the bag to PFA as one WhatsApp message to +91 99533 13319, or call that number, which is what the merchandise page asks shoppers to do. The page takes no money; PFA confirms payment and delivery. A closer look at any piece shows every photograph and its details. The bag is kept in the browser.
+- **Photographs.** They are served from peopleforanimalsindia.org/uploads/product/ for now, which the content security policy already allows. Run `./localise-shop.sh` from the site root to copy all 43 into media/shop/ and point the page at them, before this site replaces the old one at the same address. A photograph that fails to load shows the designer's name set in type, never a broken image.
+
+## v1.364
+
+- **The record's cards spell out their titles, and the drum drifts on its own.** Asked for on 3 Oct 2026. A card with a year or a figure used to draw that number in its digit art and then print it again large beneath. The art now spells the entry's title in capitals, set in Marcellus at the largest size that fits and built out of the year's or figure's digits, over a faint solid print of the same words so the letters read at any size; the number stays printed once, beneath. Cards without a number keep their pattern.
+- **The cards keep moving.** The drum drifts slowly to the left, about one card every seven seconds, and goes round: the first card follows the last. A front too short to go round drifts to its end, rests, and drifts back. The drift eases to a stop while a mouse is over the cards, while the drum has keyboard focus, while a card is open or the arc is off screen, and picks up again about three seconds after the last turn by hand. The middle card can be opened while it moves. Reduced motion keeps the drum still, as before.
+
+## v1.363
+
+- **The library's reader shows each document as its own PDF, with its real cover.** Asked for on 3 Oct 2026, after v1.362: no title page made by the reader, no typographic covers, no retyped text. Every document opens as its own PDF, drawn page by page by pdf.js with range requests. It turns like a book (one page, or two side by side on a wide screen) or scrolls, the default on a phone, with Light, Sepia and Dark paper, page size, contents, search marked where it is printed, and the place kept. Dark dims the page on a dark desk rather than inverting it, which turned photographs and covers into negatives. The reflowed text mode, its CSS and the Literata and OpenDyslexic fonts are gone.
+- **Covers.** The build renders each PDF's cover page to `media/library/covers/<slug>.webp`, and the shelves and the hero fan show it. An entry's `coverPage` picks another page; the UP UD handbook's is 2, because a foreword is bound in front of its cover.
+- **Contents are the document's own.** `scripts/library-extract.js` reads each printed contents page and finds the page where each entry starts by its words. It handles page numbers set in a column of their own and titles that run onto a second line, and an entry it cannot place is left out rather than guessed. Twelve documents get their printed contents. The Revised ABC Module and the Lucknow Blue Book get their headings, because their contents pages do not match their pages. The PCA Act, Kanha Gaushala, the UP UD handbook and Shvaan Pashu have no text to trust, so they get none. Bookmarks that are bare page numbers are refused.
+- **The record on achievements.html is an arc of cards, not a globe.** Asked for on 3 Oct 2026, after the record-book carousel on jjettas.com/on-field, on white. The globe's cards were small and its type unreadable at a glance. Under a large "What changed.", tall cards stand on a shallow drum: the middle one faces you, and the rest turn away and blur with distance. You turn it by dragging, swiping, a sideways scroll, the arrow keys or the buttons at its sides; a vertical scroll is left to the page. Tabs underneath show one front at a time.
+- **The cards.** Each card's art is a field of digits drawn on a canvas, after the reference's numeral portraits. An entry whose title carries a figure (`data-fig`, seven of them, such as 10,000 pigs) or that has a year has that number built out of its own digits, set large below with the front and the title. Any other entry has its own pattern, one of the six the cards always had, with its title in display type. The middle card breathes: a few digits turn over while it is looked at, but not under reduced motion. Choosing it flies it out as a held print beside the whole entry, with Read it in the record, Another, and Back to the cards. The list below is still the one source of the record, and without JavaScript the section stays hidden.
+- Verified in Chromium at 1440x900 and on an iPhone 13, from the minified build too, with no console errors from either page. 795 tests pass, and `npm run lint` is clean.
+
+## v1.362
+
+- **The PFA Library: every document on PFA's resources page, on four shelves, with a reader.** Asked for on 3 Oct 2026: a premium online reading library rather than a list of PDF links. The 19 documents are the ones supplied (PFA Resources, Downloadable Links), under their supplied titles. They sit on four shelves: Essential handbooks, Handbooks and training manuals, Research and policy briefs, and Financial scoping reports. The PDFs are the 18 PFA added to `resources/`; Piggery Handbook Uttarakhand has none yet, so it opens in Google Drive's viewer.
+- **library.html.** It sits under Learn as Resources library, in the header and the footer. Each document has a cover set in the site's type rather than a thumbnail of a letterhead, plus a description written from the document itself, its page count, its language, its reading time, its file size, Read now and Download. Continue reading shows the last document opened, how far in, and the others being read; every card shows its own progress. There is a find box and shelf filters. The shelves are plain HTML, written by `scripts/build-library.js` from `data/library.json`.
+- **read.html.** It is a full-screen reading room with no site chrome. A quiet bar (Library, title, Aa, Search, Download) steps aside while you read, and a running head, page and percentage stay faint at the edges. The Aa panel offers:
+  - **Paper:** Light, Sepia or Dark, none of them pure white or black.
+  - **Font:** Literata, the site's sans, or OpenDyslexic.
+  - **Size:** A-, a slider, A+.
+  - **Spacing:** lines, paragraphs and margins.
+  - **Layout:** left or justified, one or two columns, page turns or scroll.
+
+  You turn pages by key, click, swipe or wheel; a slider takes you anywhere and shows where you will land. Contents come from the document's headings. Search lists every hit with its page in the original; choosing one marks it and offers "Back to page N", so your place is never lost. Your place, kept as a character in the text, survives a new font, a new size, a turned phone or another visit.
+- **Reading editions.** `scripts/library-extract.js` reads each PDF's text with pdf.js, a dev dependency, and builds headings, paragraphs, lists and tables. It drops running heads and page numbers, joins hyphenated line ends and paragraphs that cross a page, and points to the printed contents page instead of setting it. It changes no words; a test holds every block to the PDF's own text. It declines a document whose text cannot be trusted, and the reader then shows the original pages, drawn by pdf.js (vendored under `assets/vendor/pdfjs/` as `.js`, so the deploy keeps it) with search marked on the printed page. That is the case for the PCA Act (a scanned 1960 Gazette whose OCR misreads words), the UP UD handbook and Shvaan Pashu (Hindi their fonts scramble), and Kanha Gaushala (a scan). The other 14 have reading editions.
+- **Tests and checks.** `read.html` is in sync-chrome's `SKIP`, out of site search, and `noindex`. Google Drive's viewer is in the CSP `frame-src` on both hosts, and Firebase now publishes `resources/`. `scripts/audit-site.js` decodes percent-encoded links before looking on disk. `DEPLOY.command` runs `npm run media:library`. New: `test/library.test.js`, with small PDFs in `test/fixtures/library/` shaped like the real documents. Verified in Chromium at 1440x900 and on an iPhone 13, including from the minified `dist/`. LIBRARY.md and HANDBOOK.md section 12 have the rest.
+
+## v1.361
+
+- **The events page is now a growing archive of dated photo cards, and the newsroom a front page.** Asked for on 17 Sep 2026 with two references, and built in PFA's own type, colour and photographs rather than the references' logos or artwork.
+- **Events.** One card per event on a strip that scrolls sideways as the list grows, newest first: number, date, city, tags, a note and up to three real photographs on white cards with a handwritten caption (Kalam, by Indian Type Foundry, under the SIL Open Font License in fonts/OFL-Kalam.txt). Bars show one kind at a time with counts; a kind with nothing on the record yet asks for one and sets the request form to it. A coming-next bar counts down to the soonest event, and that event stands beside the request form. Which event is next, the countdown and which have been held are worked out in the visitor's browser, so nothing needs changing when a date passes. The archive holds the two CineKind editions today; CineKind 2026 in Mumbai was missing from the old page.
+- **Newsroom.** A nameplate across the page, a front page of up to four stories with headlines on their photographs (Case 001, CineKind 2026, the Supreme Court judgment of 19 May 2026, CineKind 2025), and a Policy and law desk of the four government orders PFA helped bring about, each linking to its record. A story with no photograph is set in type with its date large. Case 001's full record and the closing band are byte-identical to v1.360, and field notes stay off the page as before.
+- **How both grow.** data/events.json and data/newsroom.json are the only places an event or a story is written. scripts/build-events.js and scripts/build-newsroom.js write them into the pages, refuse bad data naming the entry and the field (real dates, photographs on disk or allowed by img-src, links that must land on a real page and anchor, caption length, no em dashes), and never read today's date, so their --check gives the same answer every day. DEPLOY.command runs both, and HANDBOOK.md sections 10 and 11 explain every field. Events also go out as schema.org Event data.
+- Both pages start their headline exactly where the rest of the site's do: 72px below the bar and nav, 36px on a phone. They left the shared hero, so test/hero-alignment.test.js now expects nine hero pages instead of ten, and a new test there holds these two pages to the same height (it fails if either moves). Verified in Chromium at 1440x900, 1536x864, 1280x800, 1920x1080 and on an iPhone 13: no sideways scroll, every photograph loads, the newsroom's lead headline is above the fold, desk headlines align, no console errors; the request form's two-step preview still opens.
+- New tests: test/events-archive.test.js and test/newsroom-front.test.js. The search index and sitemap were rebuilt for the new pages.
+
+## v1.360
+
+- **Email is required on every form, and each one shows a final check before it sends or pays.** Asked for on 16 Sep 2026, so PFA always knows who sent what and every confirmation has somewhere to go. Report, Ask, Careers, The Wall, Events, the CineKind nomination, Volunteer, Membership, the caregiver card and Donate all require an email, and the server refuses a submission of any of the 17 kinds, or a donation, membership or caregiver application, without a valid one, so a crafted request cannot skip it. The Wall's single "Email or phone" box is now a required Email and an optional Mobile. Records filed before this still work in the panel, and replying to one with no email on file still offers the mobile to call.
+- **assets/form-preview.js, called by every form after its own checks and before anything is sent, uploaded or paid.** Step 1 lists everything being sent under the labels the person saw. Step 2 shows the email and mobile large, offers a one-tap fix for a likely typo in a big provider's domain (gmial.com), and will not send until the person ticks that they are right; a blank optional mobile is shown as not given, with email as the only way back. Back, close and Escape send nothing and return focus to the form. It is a native modal dialog where the browser has one and a focus-trapped overlay where it does not, values are always written as text, and a second press cannot send twice. Every form reads its fields again once confirmed, so the corrected email is the one sent: the first build, driven in Chromium, sent the typo. On the caregiver card the preview comes before the photograph is uploaded. A page meeting an old cached pfa-forms.js, or without the preview, sends as before, and the server still requires the email.
+- Verified in Chromium on twelve paths: Report on desktop and phone, Ask with and without a mobile, Careers, Events, The Wall, CineKind, Volunteer, Membership, the caregiver card with a real photograph, and Donate. New tests: test/form-preview.test.js and test/email-required.test.js. scripts/check-emails.js now requires that a submission without an email is refused and nothing is filed.
+
+## v1.359
+
+- **The seven 2025 honouree photographs are back, from the links on the page supplied on 16 Sep 2026.** v1.356 pointed Dr Harsha Atmakuri, Dolly Vyas Ahuja, Rupali Ganguly, Kushagra Dixit, Pooja Bhatt, Dr Sandhya Sekar and Mohit Chauhan at local files that were never supplied, so those tiles showed names only. Each src is the owner's link again, and nothing else on the page changed. The seven hosts are named in the Content-Security-Policy, so enforcing it would not blank them. The LinkedIn link carries its own expiry, 8 Oct 2026.
+
+## v1.358
+
+- **Every form and paid application is checked for its admin record and its acknowledgement.** Asked whether a membership triggers its email and whether every submission sends one. scripts/check-emails.js (npm run check:emails) drives the seven public forms through /api/pfa-submissions and membership and the caregiver card through CCAvenue's create and callback, offline, with a mail provider that records instead of sending, and reads each record back from the Submissions register the admin panel lists. All nine file and all nine send: report, question, job, film, volunteer, event and CineKind nomination get the submission letter; a paid membership gets the welcome letter with its member number; a paid caregiver application gets its application number. Where a form lets the email be left out, the record still files and no acknowledgement can go, and with email switched off every form still files and the page says the email did not go. test/check-emails.test.js holds all of it, so ship.sh stops a deploy in which any form stops filing or acknowledging.
+
+- **Production says whether email can leave.** /api/payment/health reports "mail": true or false, whether PFA_MAIL_API_KEY is set, never the key and not part of ok. DEPLOY.command prints the offline check before shipping and, after the live build stamp, EMAIL IS ON or EMAIL IS OFF.
+
+## v1.357
+
+- **The CineKind landing photograph is the new trophy, its name on the plinth.** img/cinekind-landing.webp (1557x1010, 122 KB, from the 2 MB PNG supplied on 16 Sep 2026) replaces img/cinekind-marquee.webp, which is deleted; cinekind.html shows it and the home page's leader warms it during the count. The new trophy stands from 12% to 64% of the picture where the old one stood from 17% to 54%, so at the old 46% frame the presenter credit ran across the plinth's gold on every common laptop window: 58px deep at 1366x657, 55 at 1536x730, 36 at 1512x760. No frame alone could fix it, because on those windows the whole trophy is taller than the space above the title group. The frame is 55% now, and on windows wider than 9:5, or up to 1280px wide and wider than 13:8, the big CINEKIND word stands down, since the plinth already says it, and the photograph drops to 28% so the reel sits below the announcement bar. The credit and the Enter door stay in the title group. Measured in Chromium at 34 window shapes, from phones to 2560x1440: the credit clears the gold and the reel clears the bar at every one. test/cinekind-credit.test.js holds the plate's size to the file and the rule to the top level of the sheet, where its first draft was not.
+
+## v1.356
+
+- **Clicking CineKind on the home page counts 3, 2, 1, then opens on the trophy.** The film leader already existed, but as cinekind.html's last script, so the header and the trophy painted first and the black frame landed on top of a page already on screen. It lives in assets/cinekind-leader.js now. On the home page the count starts on the click itself while cinekind.html and the marquee photograph are fetched; the CineKind page reads a one-time sessionStorage note, opens on the same last frame, and only burns off into the trophy, once the photograph is ready. A reload, a direct visit or a link from any other page still gets the whole count, and that count now mounts first in the body behind a black first frame set in the head, so no browser paints the page before it. Clicks meant for a new tab or window are left to the browser, reduced motion skips the leader everywhere, and a page restored from the back-forward cache comes back without the frame. test/cinekind-leader.test.js drives all of it through the real pages in jsdom.
+
+- **cinekind.html from 16 Sep 2026 ships at 179 KB, not 4.6 MB, and passes the seven tests it failed.** Three honouree portraits arrived as base64 inside the page; they are media/cinekind-2025/nirmal.webp, nitin.webp and ashish.webp now, 239 KB together and sized for the tile. Its thirteen media/cinekind-2025/ffi/ photographs were not in the tree, so the page asks the Federation's own addresses again, which the CSP names; DEPLOY.command's fetch with --rewrite localises them wherever they download. One em dash became a hyphen. Nitin Vemupati's tile looked for its frame twice instead of its tile when the portrait failed, which would have left white type on an empty box; fixed, and test/media-present.test.js now holds every tile to it.
+
+- **Seven honouree photographs point at local files again, not at other sites.** The page hot-linked Twitter, LinkedIn, Filmfare, Mongabay, an ANI photograph and two more. The Content-Security-Policy names none of those hosts, so enforcing it would blank them; the LinkedIn address is signed and expires on 8 Oct 2026; and media/cinekind-2025/README.md records that PFA holds no licence for press photographs. The tiles ask for harsha, dolly, rupali, kushagra, pooja, sandhya and mohit.webp and set themselves in type until those arrive. The README keeps every address the page used, so the choice of picture is not lost.
+
+- **The 2025 gate is a trailer now, as supplied on 16 Sep 2026.** The year at poster scale beside the edition's facts, the Federation's ceremony frames running as a strip of film that opens the archive, and the ten honourees rolling under it as end credits. Archive lands on the gate itself, and the act's second 2025 heading is gone.
+
+## v1.355
+
+- **CineKind nominations are open again, and this time the reference is real.** The old form on cinekind.html said "Nomination received, thank you" while sending nothing, and was removed. The form is back for the 2027 edition, wired the way the removal note demanded: a Nominate control on the poster wall and a "2027. Nominations are open." band both open a nomination room (a sheet from the right, in the site's own field grammar), and the form goes through pfa-forms.js with kind PFA-CK, so the button disables in flight and success is only ever the reference the server issued. A per-kind spec in lib/submission-fields.js makes the server require the nominee, a category from the list the page offers, the reason and the sender's name, with a mobile or an email; the admin register already names PFA-CK, so a nomination lands in the panel the moment it is filed, and it tracks on track.html like everything else. The tripwire in test/forms-wired.test.js that guarded this day now runs the full wiring checks against the page, and two end-to-end tests boot the real page, type into it and hand what it sends to the real validator.
+
+- **Archive lands at the head of 2025, not the foot.** The wall's Archive link pointed at #archive, which is the closing band of the 2025 act, so it dropped a visitor at the end of last year's story. It points at #cinekind-2025 now, the act's opening section; the gate still opens the act for any link into it, old #archive links still work as deep links, and the scroll lines the target up once more after settling in case late media moved it.
+
+- **The newsroom keeps its editorial cut, and the field-note form retires with the page it lived on.** The owner's newsroom (16 Sep 2026) carries no form, so its PFA-W wiring is unwound the same way PFA-CK's once was: the per-kind spec, the wired-forms rows and the confirmations check step aside with notes saying how to restore them, the kind stays in lib/submissions.js so filed notes keep their name in the panel, and /api/field-notes, the publish action and the photo route still serve everything the desk published. A new test holds the page to its actual state: no form, so no false thank-you is even possible.
+
+- **Act II rebuilt in the 2026 register.** The 2025 season used to step off the grand 2026 sections into fourteen-point type: a strip of frames, six photo-less cards, a plain list, a flat grid. It now opens grand (the edition's facts in display type), shows all ten honours as one wall in call order, the ceremony as an editorial mosaic with two double frames, and closes on "On the national record." A tile whose portrait is present is a poster in the 2026 roll's dress; a tile whose portrait is missing (six are on order, see media/cinekind-2025/README.md) or fails sets itself in type instead, so the wall is finished today, upgrades itself the day the files land, and can never show a grey box. Every old anchor (#winners, #honours, #ceremony, #archive) still resolves, and the Federation's photo credit stands.
+
+## v1.354
+
+- **Every submission is confirmed in the blue letter, and every page says where the email went.** The membership welcome letter was the one confirmation written to the brief. Every other form got the grey acknowledgement, a paid colony caregiver application got no email at all, and no page mentioned Spam, because no page knew whether an email had gone: /api/pfa-submissions answered `acknowledged` and pfa-forms.js kept only the reference.
+
+  The letter. lib/caregiver-mail.js draws every confirmation from one builder
+  taken from membership_welcome: the flat #2634f5, poster headline, the number
+  large between two white rules, one white button. The mark is
+  img/logo-dark.png, the on-dark version the header already uses, fetched from
+  the site that sent the email (the letter the owner sent over pointed at
+  /pfa-logo.png, which is not in the tree). The softer whites are solid
+  colours now, because Outlook ignores opacity, and a phone gets a 44px
+  headline and stacked rows.
+
+  The words. lib/confirmations.js holds them per kind, lifted from each page's
+  own success copy, with the number called what it is: Application number for
+  careers, volunteering and the caregiver card; Member number for membership;
+  Reference for a report, a question, an event request, a film or a field
+  note; PFA transaction ID for a donation. Headlines: Your report is in. Your
+  question is in. Your answers are in. You offered your time. Your request is
+  in. Your film is in. Your field note is in. Applied. Now a person reads it.
+  Your gift is in. You're one of us now. Each letter lists the stages the form
+  itself shows, and a test reads get-involved.html so the two cannot drift.
+
+  The caregiver card. A paid application is now sent
+  caregiver_application_received: the application number, the fee paid, where
+  they feed, the four stages, and what the fee is and is not, in the form's
+  words.
+
+  The sending. Every confirmation goes on the caregiverEmails queue first and
+  is tried at once. A provider that is slow or down costs a delay, not the
+  email: the daily worker sends what could not go. Confirmations carry an
+  Idempotency-Key, so a retry after a send that only looked like a failure
+  arrives once. Staff emails carry none, so a deliberate resend still goes.
+
+  The pages. /api/pfa-submissions answers with `confirmation`: sent, on its
+  way, not sent, or no address given, with the address and where to look.
+  pfa-forms.js keeps it by reference, and PFAForms.emailNote(reference) draws
+  it under the number on report, ask, careers, events, get-involved
+  (volunteer), newsroom and the wall: Check your email, the address in bold so
+  a typo is seen, then Spam or Junk, Gmail's Promotions and Updates tabs,
+  search for the number, mark it Not spam. The payment result page, the
+  membership welcome page and the page a form posted without script gets all
+  say the same. submit() still resolves with the reference alone, so no
+  caller changed shape.
+
+  test/confirmations.test.js pins all of it (13 tests). The donation flow test
+  now expects the address in bold, and the em dash test reads the letters.
+
+## v1.353
+
+- **The ring is made of dollars when dollars are on.** The picture on the
+  donate page was a life ring made from a five hundred rupee note whichever
+  currency was chosen, so a dollar gift was made beside a ring of rupees
+  (owner, 16 Sep 2026). It follows the currency seg now:
+  img/donate-lifebuoy-usd.webp, a life ring made from a hundred dollar note,
+  swaps in with an alt text to match, and the rupee ring comes back with
+  rupees.
+
+  Same size, exactly. The owner's picture arrived at 1372x1147 and cropped
+  close, so dropped into the rupee frame its ring would have drawn about 15%
+  larger. It is fitted into the rupee file's own 1000x835 instead: scaled to
+  86.3% and placed where the two ring outlines overlap best, leaving the rope
+  on the floor out of it (IoU 0.934), then set down 8px so the tops and the
+  floors meet. In the frame: ring top 145 against 144, floor 739 against 740,
+  height 594 against 596. The two renders differ a little in perspective, so
+  the hole sits 9px lower. The shadow ran off the foot of the original and is
+  faded over its last 48 rows so it does not stop on a line. 163KB, against
+  the rupee ring's 141.
+
+  On the page, measured at 1710x904 and 390x844: the image box is identical
+  in both currencies, 420x301 and 220x184, and the two pictures start on the
+  same top line; only the loose rope lies a little lower. The dollar file is
+  not fetched with the page. A pointer, a finger or the focus reaching for the
+  USD button fetches it, and the picture changes once it has decoded: never
+  to a blank, and not at all if it fails to arrive.
+
+  test/donate-art.test.js now holds the two files to one frame size, keeps the
+  dollar file out of the markup, and switches the currency both ways in jsdom.
+
+## v1.352
+
+- **The founder's line is "When the heart opens, it opens for all."** It
+  replaces "Compassion without action is evil" in the founder section at the
+  foot of the home page (owner, 16 Sep 2026). founder.html keeps the old line
+  as its pull quote, because that page argues from it - a section further down
+  is headed "Compassion, then action." - and changing the argument is the
+  owner's call, not a copy swap.
+
+  The new line is longer, and the old measure did not survive it. At 15ch it
+  set as WHEN THE HEART / OPENS, IT OPENS FOR ALL, the comma mid-line. So the
+  break is in the markup now, on the comma, with a space after the <br> so the
+  quote still reads as one sentence to a screen reader and to the index.
+  Broken there at the old size, the first line ran 59px further at 1710x1073,
+  the owner's window as measured off the screenshot, where COMPASSION WITHOUT
+  already ends against the dog's cheek. The type is 5.6% smaller,
+  clamp(34px,5.3vw,90px) from clamp(36px,5.6vw,96px), and the first line
+  stops short of where the old one did: 1228 against 1246px at 1710, 814
+  against 820 at 1190. On a 390px phone each half balances, WHEN THE / HEART
+  OPENS, / IT OPENS FOR ALL: three lines as before, and narrower, 304 against
+  338px.
+
+  The search index is rebuilt so search finds the new line. The rebuild also
+  brings CineKind's entry up to date, last indexed before that page's later
+  changes on 15 Sep, and moves every sitemap lastmod to 16 Sep, which is what
+  the build does.
+
+## v1.351
+
+- **The wall arrives bright, wherever the mouse is resting.** The wash came
+  down on pointerenter, and every way onto the wall moves the page under a
+  mouse that is standing still: the leader burns off over it, Enter scrolls
+  the wall up under the pointer that pressed it, a reload lands back on the
+  track. Each time, the browser checks what is now under the pointer and
+  tells the stage it has been entered. Measured in Chromium at 1190x746: a
+  trusted pointerenter with movementX and movementY 0, at the position the
+  mouse already had, and no pointermove at all. So the wall opened washed
+  back with nobody touching it - all 49 posters on screen after the leader
+  and after a reload, and 48 of 49 via Enter, with the face under the
+  pointer lifted out and named in the corner.
+
+  Arriving is only noted now. The wash, the lean and the poster in hand wait
+  for a pointermove that moved: movementX or movementY where the engine fills
+  them in, a changed position where it does not. Measured after, same
+  window: 0 of 49 on all three paths; a 15px move brings the wash down and
+  names the poster under the pointer; a wheel under a hand at rest keeps the
+  name on whatever poster is under it; leaving onto the header lifts it all;
+  drag, keyboard focus and touch as before. The move listener is no longer
+  behind the reduced-motion check, so a still wall still washes for a moving
+  mouse; only the lean is motion-only.
+
+  test/cinekind-wash.test.js sends the page's own script the events Chromium
+  sent. Against v1.350 it fails 5 of its 8.
+
+## v1.350
+
+- **The leader counts, and says nothing.** "CINEKIND · PICTURE START" is
+  off the foot of the countdown. The rest of it is unchanged: crosshairs, two
+  circles, the sweep, 3-2-1 at 700ms a beat, then the frame burns off into
+  the marquee. A real leader carries that line for the projectionist; this
+  one is two seconds of black in front of a page that says the name in 100px
+  type immediately afterwards.
+
+## v1.349
+
+- **A bigger mark in the header.** 56px, up from 42, and 46 from 38 at narrow
+  widths: 164x56 against 123x42 on a desktop. It grows into slack the nav
+  already had rather than taking any new room, because the nav is a fixed
+  80px and --nav is measured from the header's rendered height. Every sticky
+  offset on the site is keyed to --nav - the header's own top, the wall's
+  subnav dock and its anchor margin, the cinekind overlay's reserve - so a
+  taller header would have moved all of them at once. It is still 81px with
+  its border, and the mark now leaves 12px above and below.
+
+  The on-dark variant needed no second number: it is a background on the
+  anchor at background-size:contain with the image held at visibility:hidden,
+  so it sizes from the same rule. Checked on both.
+
+  A test holds the relationship, so the next bump fails rather than quietly
+  driving the header height and every offset under it.
+
+## v1.348
+
+- **Both halves of the academy's view toggle are visible, and two more found
+  with them.** The strip behind that toggle is #151515 and its buttons draw
+  no ground of their own, so the unpressed icon sat at rgba(17,17,17,.6):
+  the view you are not in was the one you could not see, which is the half
+  of a toggle that has something to tell you.
+
+  The check added in v1.342 was a hand-written list of places this had
+  already happened, so it sat green while this one shipped. It finds the
+  grounds itself now: any rule declaring a dark background is a ground, and
+  anything under one that sets dark type without a real background of its own
+  is the fault. Its first draft still missed the toggle, because it read
+  background:none as "this rule owns its ground" when that is precisely the
+  fault case. With that closed it swept the site and found two more:
+
+  quiz.html's featured offer, background:var(--deep), had its description,
+  eyebrow, price note, Add button text and border, stepper and struck-out old
+  price all in ink. The card the page is pushing was a black rectangle with a
+  name and a price on it and nothing else legible.
+
+  get-involved.html's quantity stepper is background:var(--ink) with white
+  type, and its minus and plus were color:var(--ink). The two controls the
+  stepper exists to offer could not be seen at all.
+
+## v1.347
+
+- **The credit reads above the word, not across the trophy.** v1.341 put it
+  in the sky over the reel, which held on the window it was measured on and
+  nowhere else. The sky is not a place on that page, it is a function of the
+  window: the reel starts at 16.9% of the picture's height and the picture is
+  object-fit:cover, so 1440x900 leaves 28px under the header, 1190x616 leaves
+  none with the reel's top already behind the navigation, and 1024x640 hides
+  the whole top of the trophy. No vertical position above the trophy survives
+  a short window.
+
+  Above the word there is between 275 and 476px of clear frame at every shape
+  measured, all of it plinth, rock and blurred ground, so the credit sits
+  there and the frame reads as a title card: who presents it, what it is,
+  the way in. Clearance from the gold, measured: 28px at 1190x616, 61 at
+  1512x760, 62 at 1024x640, 87 at 1680x850, 133 at 1440x900, 169 at 420x860.
+  The overlay still reserves the header on the layer that carries the copy,
+  which is what page-shell asks of a full-bleed hero.
+
+## v1.346
+
+- **One line on long form too, not just on short form.** v1.345 had the
+  subnav cover the header's rule when it docks, which fixed the pages where
+  it had already docked and missed the one place it had not. The bar sits
+  exactly 51px above #longform in the flow, so an anchor jump lands its top
+  at (ann + nav + N) - 51. N was 63, putting it at 127 against a dock point
+  of 114: thirteen pixels short, header rule above the links and its own
+  below. Short form is far enough down the page that the bar has docked
+  before you arrive, which is why one screen showed two lines and the other
+  one.
+
+  N is 44, so every jump docks it. The 63 came from 1 Sep 2026, to stop the
+  LONG FORM title landing under the bar, and the two requirements are in
+  direct conflict: clearing the bar with the scroll margin is what stops the
+  bar reaching its dock. The title is held clear by the section's own --band
+  instead, 76px at its smallest against the 6px of section top the docked bar
+  covers. Measured at all three anchors: bar docked at 114, section top 159,
+  title 281, one rule on the strip. The test now checks both halves, and
+  fails on the old 63 naming the reason.
+
+## v1.345
+
+- **One line under the wall's bar, not two.** The header carries a bottom
+  border and the sticky subnav carried its own, so docking the subnav put two
+  rules 51px apart with the section links fenced between them. The subnav
+  docks a pixel higher now and sits a layer above the header, covering that
+  border with its own background, and the single remaining rule is the one at
+  the foot of the whole bar where the chrome stops and the page starts.
+
+  That only works if the two backgrounds match. A flat white subnav under the
+  header's 96% white put a visible tonal step over the black panels, which is
+  trading a line for a smudge, so the subnav takes the header's own
+  background and blur. Measured over a black panel: the covered border reads
+  252 against neighbours at 252 and 253, and the strip carries one rule.
+  51 sits above the header at 50, below the announcement at 60, and well
+  below the theatre at 90, which still covers everything.
+
+## v1.344
+
+- **Every journey starts its title on the same line.** The guided flow shows
+  one step at a time in a section sized to the window, and the step was a
+  grid set to align-content:center. A grid row is as tall as its tallest
+  column, so centring it put the title wherever the column beside it happened
+  to end: membership's five tier cards are 486px and the caregiver card's
+  prose is 215px, which landed Join PFA. at y=200 and The card. at y=335. The
+  same jump was happening between steps inside one journey, because About you
+  and Pay are not the same height either. The step anchors to the top now.
+  Measured after: eyebrow at 195, title at 217, left edge at 58, identical
+  across volunteer, membership and caregiver, and the same on step two. The
+  room a short step does not need falls below it, where nobody is reading.
+
+## v1.343
+
+- **The Wall gets its dark panel back.** The waiting panel, which is the
+  largest thing on that page and stands on it twice, had been flipped to
+  background:var(--stone) with color:var(--ink): a white panel on a white
+  page. The button inside it is background:#fff;color:var(--deep), a white
+  chip built to be struck against black, and --deep is used nowhere else on
+  wall.html, so on white it had no edge and Submit your work read as bare
+  floating text. The sheen behind the type was a dark wash on white, which
+  is a smudge rather than a brushed light. The panel is var(--deep) again,
+  its type is white, and the sheen runs light across it.
+
+  Fourth instance of the sweep of 15 Sep 2026, and the first where the
+  background was flipped rather than the type, so the v1.342 check did not
+  see it. The panel is on that check's list now.
+
+- **The hero stops buying white it has nothing to put in.** It was capped at
+  56svh, which on a tall window left 388px of nothing under two buttons. The
+  cap is lower. It was sized for a hero with more in it: .wall-hero .meta is
+  still styled with nothing in the markup using it, and .hero::before is an
+  empty picture layer at background:none. Both are noted where they sit.
+
+## v1.342
+
+- **The hovered poster says whose face it is.** Putting a hand on the wall
+  swapped the corner title for the honouree's name, and the name was set to
+  color:var(--ink) - #111, on a wall of dark posters - so the one thing the
+  hover exists to tell you was the one thing you could not read. The award
+  line under it stayed legible the whole time, because it inherits from the
+  label's own white p rule and was never given a colour of its own. The name
+  is #fff now, which is what the title it replaces has always been.
+
+  Third time this has shipped: the membership tier in v1.339, the chosen
+  donate amount in v1.340, this. So there is a check for it now. It names
+  the grounds that are dark and fails on any rule standing on one that sets
+  ink type without setting a background of its own, which is the shape all
+  three had. It does not guess: a rule that makes its own ground, like the
+  gold Enter button holding #0a0a0a, is left alone.
+
+## v1.341
+
+- **CineKind gets its whole frame back, and its opening line.** The marquee
+  carried padding-top:calc(--ann + --nav) over a #0a0a0a background with a
+  transparent header on top of it, so the top 115px of the page was the
+  section's own black rather than the photograph: the black band, and the
+  reason the picture began under the navigation instead of behind it. The
+  padding is gone and the plate starts at the top of the viewport. The
+  presenter credit is back over the picture and above the trophy, in the
+  28px of sky between the header and the top of the reel, carrying its own
+  shadow because the clouds behind it are white in places. The .marquee__
+  eyebrow rule had been left in the stylesheet with nothing using it, which
+  is what the element used to be. The bar keeps the where and the when so it
+  is not saying the same sentence twice.
+
+## v1.340
+
+- **The donate panel has a picture, and dollars say what they buy.** The
+  left of the page was a heading, a screen of nothing, and one sentence
+  pinned to the floor; the ring made from a 500 note goes in the nothing,
+  between the word and the line about the gift. Dollars were four bare
+  figures beside a sentence that still described the last rupee amount, so
+  $25 read as "rabies shots for five street dogs" whatever it came to. Each
+  dollar preset now carries what it funds, the panel follows the dollars and
+  hands the rupee line back on the way out, and a typed figure is costed the
+  same way. Two faults found on the way: the caption on a selected amount was
+  rgba(17,17,17,.7) on #111, so the one card a donor had decided on was the
+  one card that would not say what it bought, and Other amount in dollars
+  toggled a class the stylesheet does not answer to, so it opened nothing.
+
+## v1.339
+
+- **The chosen tier speaks its whole line.** Selecting a membership
+  turned its card ink, and the card's description - "A PFA T-shirt and
+  the book...", the reason to choose it - went dark on dark: the
+  visibility sweep had flipped that rule to ink because it carries no
+  background of its own, the black living on the parent. The selected
+  description is white again, at its old weight, and the note beside
+  the rule says why so the next sweep walks past it.
+

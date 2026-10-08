@@ -1,0 +1,491 @@
+/* ======================================================================
+   PFA site chrome: announcement bar, fixed header, footer.
+
+   This is the ONLY place these rules live. Every page links this file
+   before its own <style>, so page CSS can still override a rule if it
+   must, but nothing needs to copy any of this.
+
+   Tokens used here (--ink, --deep, --gutter) are defined in each page's
+   :root; custom properties resolve at compute time, so the order of
+   <link> and <style> does not matter for them.
+
+   Layout model:
+     .announce     fixed, top:0,        height measured into --ann
+     header.site   fixed, top:--ann,    height measured into --nav
+     first section reserves calc(var(--ann) + var(--nav) + ...) itself.
+   assets/chrome.js does the measuring and the announcement close.
+   ====================================================================== */
+
+/* ---------- announcement bar ---------- */
+/* Paper like everything else since 15 Sep 2026 (the owner's no-black rule
+   covers bars too); the hairline under it keeps it a strip rather than a
+   blank margin. */
+.announce{position:fixed;left:0;right:0;top:0;z-index:60;min-height:34px;background:#fff;border-bottom:1px solid var(--line,#e4e2df);color:#111;display:flex;align-items:center;justify-content:center;padding:0 48px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.announce p{margin:0;text-align:center}
+.announce button{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:none;border:none;color:rgba(17,17,17,.55);cursor:pointer;font-size:12px;line-height:1;padding:0;transition:color .25s}
+.announce button:hover{color:#111}
+/* The bar is the one piece of chrome that is ink rather than paper, so the
+   ink selection every page sets would be invisible on it. */
+.announce ::selection,.announce::selection{background:#fff;color:var(--deep,#0a0a0a)}
+.announce[hidden]{display:none}
+
+/* ---------- header ----------
+   The home page's header, and now every page's: the mark on the left, four
+   named sections that open a menu on hover or keyboard focus, Donate at the
+   right end as a filled block.
+
+   Position stays `fixed` at `top:var(--ann)`, not `sticky`. Nineteen pages
+   reserve calc(var(--ann) + var(--nav) + ...) at the top of their first
+   section and assets/chrome.js measures both into those tokens; a sticky
+   header takes part in flow, so it would sit on top of that reservation and
+   leave an 80px hole under itself on every page. Pinned and measured, the
+   header looks the same and the pages still line up under it. */
+header.site{position:fixed;left:0;right:0;top:var(--ann,34px);z-index:50;padding:0 var(--gutter);background:rgba(255,255,255,.96);backdrop-filter:blur(12px);color:var(--ink,#111);border-bottom:1px solid rgba(17,17,17,.1)}
+header.site nav{position:relative;display:flex;align-items:center;justify-content:space-between;gap:32px;height:80px;padding:0}
+.navlinks{display:flex;align-items:center;gap:8px;height:100%}
+/* Full height, so the pointer can travel from a nav item into its menu
+   without crossing a gap that would close it on the way. */
+.navitem{position:relative;display:flex;align-items:center;height:100%}
+.navitem>a{font-size:12px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;padding:10px 14px;border-bottom:1px solid transparent;transition:border-color .25s}
+.navitem>a:hover,.navitem>a.in-section{border-bottom-color:currentColor}
+/* top:100% is the foot of the nav, which is the foot of the header: the menu
+   meets the header's rule whatever height the nav measures at. */
+.menu{display:none;position:absolute;top:100%;left:0;min-width:230px;background:var(--paper,#fff);border:1px solid rgba(17,17,17,.12);box-shadow:0 16px 40px rgba(0,0,0,.07);padding:20px 24px;flex-direction:column;gap:14px;font-size:13.5px;line-height:1.35}
+.menu.right{left:auto;right:0}
+.navitem:hover .menu,.navitem:focus-within .menu{display:flex}
+.menu a:hover{opacity:.6}
+.menu a.current{opacity:1;text-decoration:underline;text-underline-offset:4px}
+/* Group furniture inside a menu: a small caption over the entries that
+   belong together ("Join the tribe" over the three ways in), and a hairline
+   before the ones that do not. Both draw from currentColor, so they survive
+   the on-dark header variant without their own override. */
+.menu .menu-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.45}
+.menu .menu-sep{height:1px;background:currentColor;opacity:.15;margin:2px 0}
+
+.wordmark{display:block;padding:0;background:none}
+/* 56, up from 42. The nav around it is a fixed 80px, so the mark grows into
+   the slack it already had and the header stays 81px with its border: --nav
+   is measured from that height and every sticky offset on the site is keyed
+   to it - the header itself, the wall's subnav dock and its anchor margin,
+   the cinekind overlay - so a taller header would move all of them. 56
+   leaves 12px above and below.
+
+   The on-dark variant is a background on the anchor at background-size:
+   contain with this image held at visibility:hidden, so it sizes from this
+   rule too and needs no second number. */
+.wordmark img{height:56px;width:auto;display:block;filter:none;
+  /* The mark alights: it drops the last few pixels into place as the page
+     paints, rather than simply being there. One pass, and nothing left running
+     afterwards. Nothing in the header moves on its own.
+
+     The file itself is untouched. This moves the <img>, not the artwork.
+
+     fill-mode backwards rather than both: backwards holds the opening frame
+     before the animation starts, so there is no flash of the settled mark, but
+     it does not persist the closing frame afterwards. `both` would, and a
+     persisted animated transform outranks a declaration, so the hover below
+     would silently stop working. */
+  animation:pfa-alight .5s cubic-bezier(.2,.7,.3,1) backwards}
+@keyframes pfa-alight{
+  from{opacity:0;transform:translateY(-7px)}
+  to{opacity:1;transform:translateY(0)}
+}
+/* It is the way home, so it answers the pointer: a small lift, the same
+   gesture as the arrival, reversed. */
+@media (hover:hover) and (pointer:fine){
+  .wordmark img{transition:transform .22s ease}
+  .wordmark:hover img,
+  .wordmark:focus-visible img{transform:translateY(-2px)}
+}
+/* Stands still for anyone who asked for less movement, in both directions. */
+@media (prefers-reduced-motion:reduce){
+  .wordmark img{animation:none;transition:none}
+  .wordmark:hover img,
+  .wordmark:focus-visible img{transform:none}
+}
+
+/* ---------- Donate: the strongest call to action ---------- */
+/* A flex box with a fixed height, not inline-block: inline-block sits the
+   label on the text baseline, which reads as "sunk" beside the nav links
+   and shifts with the page's own line-height. Flex centres it outright. */
+/* A filled block, and the only filled thing in the header, so it does not
+   need a sweep of light or a pulsing halo to be found. Both are gone: they
+   were the header's two pieces of continuous motion, and on a bar that is
+   otherwise still they read as an advertisement rather than a button. */
+.donate{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;
+  margin-left:20px;padding:13px 30px;background:var(--ink,#111);color:#fff;border:1px solid var(--ink,#111);
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-indent:.14em;text-transform:uppercase;
+  line-height:1;white-space:nowrap;vertical-align:middle;
+  transition:background .3s,color .3s,border-color .3s,box-shadow .3s ease}
+.donate:hover{opacity:1;background:#000;box-shadow:0 0 0 5px rgba(17,17,17,.1)}
+
+/* ---------- Shop: beside Donate, and not another Donate ----------
+   Donate stays the one filled thing in the header. Shop is paper with an ink
+   rule, a T-shirt mark drawn in currentColor, and a sticker on its corner
+   saying what the shop is offering (the designer pieces are half price,
+   owner, 3 Oct 2026: change the words here when the offer changes). Its
+   life is under the pointer only: the shirt hops, the sticker straightens,
+   and nothing else moves. Still for anyone who asked
+   for less movement. Everything is drawn in CSS, so the link's own text is
+   just "Shop" and the header reads the same on every page. */
+.shop{position:relative;display:inline-flex;align-items:center;gap:9px;box-sizing:border-box;
+  margin-left:12px;padding:13px 22px 13px 18px;background-color:#fff;color:var(--ink,#111);border:1px solid var(--ink,#111);
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;line-height:1;white-space:nowrap;vertical-align:middle;
+  transition:box-shadow .3s ease,background-color .3s}
+.shop::before{content:"";flex:none;width:15px;height:15px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 3 3 6l2 4.2 2.2-1V21h9.6V9.2l2.2 1L21 6l-5.5-3c-.5 1.6-1.9 2.6-3.5 2.6S9 4.6 8.5 3z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 3 3 6l2 4.2 2.2-1V21h9.6V9.2l2.2 1L21 6l-5.5-3c-.5 1.6-1.9 2.6-3.5 2.6S9 4.6 8.5 3z'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.shop::after{content:"50% off";position:absolute;top:-10px;right:-12px;padding:4px 6px 3px;background:var(--pop,#ff3b18);color:#111;
+  font-size:9px;font-weight:800;letter-spacing:.06em;line-height:1;white-space:nowrap;transform:rotate(7deg);pointer-events:none;
+  box-shadow:0 2px 0 rgba(17,17,17,.18);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.shop:hover,.shop:focus-visible{opacity:1;box-shadow:0 0 0 5px rgba(17,17,17,.08)}
+.shop:hover::before,.shop:focus-visible::before{transform:translateY(-3px) rotate(-10deg)}
+.shop:hover::after,.shop:focus-visible::after{transform:rotate(-3deg) scale(1.08)}
+.shop.current{background-color:var(--stone,#f6f5f2)}
+html.header-on-dark header.site .shop{background-color:transparent;color:#fff;border-color:#fff}
+@media (max-width:1180px){
+  .shop{margin-left:10px;padding:13px 16px 13px 14px;letter-spacing:.1em}
+  .donate + .shop{margin-left:8px}
+}
+@media (max-width:560px){
+  .shop{padding:11px 11px;gap:7px;letter-spacing:.08em}
+  .shop::after{top:-9px;right:-8px;font-size:8px;padding:3px 4px 2px}
+}
+@media (prefers-reduced-motion:reduce){
+  .shop,.shop::before,.shop::after{transition:none!important;animation:none!important}
+  .shop:hover::before,.shop:hover::after{transform:none}
+}
+
+/* ---------- the header over a dark background ----------
+   The header is paper: white bar, ink type, the coloured mark with its
+   black wordmark. Over a dark surface every part of that is wrong, and the
+   worst of it is the logo, whose wordmark is black and vanishes. A page
+   whose top runs dark under the header - CineKind's poster wall is the
+   first - puts `header-on-dark` on <html> while that is so, and takes it
+   off when the next section arrives. The rules below do the rest: the bar
+   goes clear, the type goes white, Donate turns to paper, and the mark is
+   exchanged for img/logo-dark.png, the version drawn for dark grounds -
+   white wordmark, white fill, the blue kept. Not a filter on the paper
+   logo: inverting it made a flat white silhouette and lost the blue.
+
+   The exchange is a background on the link rather than a new <img>, for
+   two reasons. The header markup is one template stamped into every page
+   (scripts/sync-chrome.js) and a second image in it would be fetched by
+   twenty pages that never go dark; and the hidden <img> keeps its box, so
+   the link stays exactly the size it always was and nothing beside it
+   moves. contain follows whatever height the breakpoints give the mark.
+   The file is only fetched by a page that sets the class: a background
+   in a rule that matches nothing is a request never made.
+
+   The drop-down menus are left alone. They are paper panels that open
+   over whatever is there, and white type on them would be white on white. */
+html.header-on-dark header.site{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom-color:transparent;color:#fff}
+html.header-on-dark header.site .wordmark{background:url("../img/logo-dark.png") no-repeat left center;background-size:contain}
+html.header-on-dark header.site .wordmark img{visibility:hidden}
+html.header-on-dark header.site .navitem>a{color:#fff}
+html.header-on-dark header.site .navitem>a:hover,html.header-on-dark header.site .navitem>a.in-section{border-bottom-color:#fff}
+html.header-on-dark header.site .donate{background:#fff;color:var(--deep,#0a0a0a);border-color:#fff}
+html.header-on-dark header.site .donate:hover{background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.18)}
+html.header-on-dark header.site .menu{color:var(--ink,#111)}
+/* So the change is a fade and not a cut when the class comes and goes. */
+header.site{transition:background .35s ease,border-color .35s ease,color .35s ease}
+
+/* ---------- breakpoints: one set, every page ----------
+   The nav is now a flex row of four words and a button rather than three
+   grid tracks balanced around a centred mark, so the old 1440px/1000px
+   arithmetic no longer applies: the row simply tightens until the four
+   words and the button no longer fit beside the mark, and then stands
+   down to the mark and Donate. Every destination in the menus is also in
+   the footer, which is where a narrow screen reaches them. */
+@media (max-width:1180px){
+  header.site nav{gap:20px}
+  .navitem>a{padding:10px 10px;letter-spacing:.1em}
+  .donate{margin-left:10px;padding:13px 22px;letter-spacing:.1em;text-indent:.1em}
+}
+@media (max-width:900px){
+  .navlinks .navitem{display:none}
+  header.site nav{gap:10px}
+  .navlinks{gap:0;margin-left:auto}
+}
+@media (max-width:560px){
+  .announce{font-size:10px;padding:6px 34px 6px 10px;letter-spacing:0}
+  .announce button{right:2px;width:32px}
+  .wordmark img{height:46px}
+  .donate{padding:11px 18px;letter-spacing:.08em;text-indent:.08em}
+}
+/* Phones: the mark, Donate, Shop (still a word, still with its shirt and
+   sticker) and the menu button share one row. Each gives up a little room
+   rather than Shop giving up its name. */
+@media (max-width:440px){
+  header.site nav{gap:6px}
+  .wordmark img{height:40px}
+  .donate{margin-left:0;padding:11px 12px;letter-spacing:.06em;text-indent:.06em}
+  .shop,.donate + .shop{margin-left:6px;padding:11px 9px 11px 8px;gap:5px;letter-spacing:.06em}
+  .shop::before{width:13px;height:13px}
+  .shop::after{content:"50%";font-size:8px;top:-9px;right:-8px;padding:3px 4px 2px}
+  .burger{width:36px!important;margin:0 -6px 0 0!important}
+}
+/* Only the smallest phones (320px) set Shop as its shirt alone. */
+@media (max-width:359px){
+  .wordmark img{height:34px}
+  .donate{padding:11px 10px}
+  .shop,.donate + .shop{padding:0;width:36px;height:36px;justify-content:center;font-size:0;letter-spacing:0;gap:0}
+  .shop::before{width:15px;height:15px}
+}
+
+/* ---------- the menu on a phone or tablet ----------
+   Below 900px the four sections no longer fit beside the mark, so they
+   move behind one button: three bars that turn into a cross. It opens a
+   full panel under the header listing every section and every page in it,
+   built by assets/chrome.js from the desktop menus themselves, so the two
+   can never list different things. Large type, one destination to a line,
+   each line a comfortable thumb's height. */
+.burger{display:none}
+@media (max-width:900px){
+  .burger{display:inline-flex;flex:none;align-items:center;justify-content:center;width:44px;height:44px;margin:0 -10px 0 2px;padding:0;background:none;border:0;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+}
+.burger__bars,.burger__bars::before,.burger__bars::after{display:block;width:22px;height:2px;background:currentColor;transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .2s}
+.burger__bars{position:relative}
+.burger__bars::before,.burger__bars::after{content:"";position:absolute;left:0}
+.burger__bars::before{top:-7px}
+.burger__bars::after{top:7px}
+.burger[aria-expanded="true"] .burger__bars{background:transparent}
+.burger[aria-expanded="true"] .burger__bars::before{transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] .burger__bars::after{transform:translateY(-7px) rotate(-45deg)}
+.mnav{position:fixed;left:0;right:0;top:calc(var(--ann,0px) + var(--nav,81px));bottom:0;z-index:49;background:#fff;color:var(--ink,#111);
+  overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px var(--gutter,20px) 48px;
+  opacity:0;transform:translateY(-8px);transition:opacity .25s ease,transform .3s cubic-bezier(.2,.7,.2,1)}
+.mnav.is-open{opacity:1;transform:none}
+.mnav[hidden]{display:none}
+.mnav__group{padding:18px 0 14px;border-bottom:1px solid rgba(17,17,17,.12)}
+.mnav__group:last-child{border-bottom:0}
+.mnav__head{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6a6a6a}
+.mnav__sub{margin:12px 0 2px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8a8a8a}
+.mnav a{display:flex;align-items:center;min-height:44px;padding:6px 0;font-size:19px;line-height:1.25;color:inherit;text-decoration:none}
+.mnav a.current{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
+.mnav a:active{opacity:.55}
+html.mnav-open,html.mnav-open body{overflow:hidden}
+/* Clear of an iPhone's notch held sideways and its home bar: the pages
+   ask to run edge to edge (viewport-fit=cover), so the fixed chrome keeps
+   its own distance from both. */
+header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
+.mnav{padding-left:max(var(--gutter,20px),env(safe-area-inset-left,0px));padding-right:max(var(--gutter,20px),env(safe-area-inset-right,0px));padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+/* Every form field on a phone is set at 16px. Below that, an iPhone zooms
+   the whole page in when a field is tapped and leaves it zoomed: it did on
+   every form on the site, the shop checkout included. */
+@media (pointer:coarse),(max-width:700px){
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=hidden]):not([type=button]):not([type=submit]):not([type=reset]):not([type=color]),select,textarea{font-size:16px!important}
+}
+@media (min-width:901px){.mnav{display:none!important}}
+@media (prefers-reduced-motion:reduce){
+  .mnav,.burger__bars,.burger__bars::before,.burger__bars::after{transition:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .donate{transition:none!important}
+}
+
+/* ======================================================================
+   site footer: identical on every page
+   ====================================================================== */
+
+/* Paper, not ink: the footer sits on the same white as the page, opened by
+   a hairline. Everything is written against the tokens on .pfa-footer, so
+   the whole footer turns over on those lines.
+
+   Compact (owner, 8 Oct 2026: "make footer compact in the whole site"). It
+   was over 1,000px tall on a laptop and nearly 1,400px on a phone: 110px of
+   padding, the name at 118px on a band of its own, Get Involved nine rows
+   long, and 70px between every band. Now one band, who and where beside the
+   links, and the legal line under both. Every link, the office, the numbers,
+   the mailbox, the counter and the social links are all still here. */
+.pfa-footer{
+  --ff-bg:#fff;--ff-fg:#111;--ff-muted:#6a6a6a;--ff-line:rgba(17,17,17,.12);
+  --ff-body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ff-display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --ff-gutter:max(clamp(20px,5vw,84px),(100% - 1440px) / 2);
+  width:100%;padding:clamp(36px,4vw,52px) var(--ff-gutter) 22px;
+  background:var(--ff-bg);color:var(--ff-fg);font-family:var(--ff-body);
+  border-top:1px solid var(--ff-line);
+  display:flex;flex-direction:column;box-sizing:border-box}
+.pfa-footer *{box-sizing:border-box}
+.pfa-footer p{margin:0}
+.pfa-footer a{color:inherit;text-decoration:none}
+.pfa-footer a:hover{opacity:.6}
+
+/* who and where | the links */
+.pfa-footer__top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(32px,5vw,80px);align-items:start}
+.pfa-footer__mark{font-family:var(--ff-display);font-weight:400;text-transform:uppercase;
+  font-size:clamp(22px,2vw,28px);line-height:1.05;letter-spacing:.02em}
+/* <address> is italic by default and the rest of the footer is not. */
+.pfa-footer__where{margin:12px 0 0;font-style:normal;font-size:13px;line-height:1.55;color:var(--ff-muted)}
+.pfa-footer__where div + div{margin-top:2px}
+.pfa-footer__where a{white-space:nowrap;display:inline-block;padding:2px 0}
+
+.pfa-footer__links{display:grid;grid-template-columns:repeat(4,max-content);gap:clamp(24px,3.2vw,52px)}
+.pfa-footer__label{margin:0 0 8px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ff-muted)}
+.pfa-footer ul{margin:0;padding:0;list-style:none;font-size:13px;line-height:1.4}
+.pfa-footer ul a{display:inline-block;padding:3px 0}
+/* Get Involved is nine links long; in two short columns it stands as tall
+   as the other groups instead of twice as tall. */
+.pfa-footer__col--wide ul{columns:2;column-gap:clamp(20px,2.4vw,36px)}
+.pfa-footer__col--wide li{break-inside:avoid}
+
+/* ---------- visit tally ----------
+   An odometer: each digit is a 0-9 strip that slides to the right number, so a
+   change rolls rather than blinks. Pure transform, no library, and it degrades
+   to a plain readable number if transforms are unavailable. */
+.pfa-tally{margin:14px 0 0}
+/* The wheels wear the body face, not the display face, and it is not a
+   style call: Marcellus carries only old-style figures (its GSUB has frac
+   and liga, no lnum or tnum), so its zero is an x-height ring 0.806em wide
+   - odd and clipped in a 0.62em tile - while 3 and 4 trail descenders below
+   the baseline. The tabular-nums below was a silent no-op against it. An
+   odometer is an instrument; Helvetica's lining, near-tabular digits are
+   what these tile proportions were tuned for all along. */
+.pfa-tally__odo{display:inline-flex;align-items:stretch;gap:4px;
+  font-family:var(--ff-body);font-weight:400;line-height:1;
+  font-size:17px;font-variant-numeric:tabular-nums}
+.pfa-tally__d{position:relative;overflow:hidden;width:.62em;height:1.16em;
+  border:1px solid rgba(17,17,17,.16);background:rgba(17,17,17,.03);
+  border-radius:2px}
+/* the light that runs across the digits as they settle */
+.pfa-tally__d::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.10),transparent 42%,transparent 58%,rgba(0,0,0,.10))}
+.pfa-tally__strip{display:flex;flex-direction:column;align-items:center;
+  transition:transform 1.05s cubic-bezier(.2,.85,.2,1)}
+.pfa-tally__strip span{display:flex;align-items:center;justify-content:center;
+  height:1.16em;width:100%;color:var(--ff-fg)}
+.pfa-tally__sep{align-self:flex-end;padding:0 1px .18em;color:var(--ff-muted);
+  font-size:.72em;border:0;background:none}
+/* the digit that just changed gets a brief lift */
+/* The digit that just changed. On the black footer this was a white glow
+   behind a white numeral, which read as the wheel catching the light. The
+   same declaration inverted for paper is a dark blur behind a dark numeral,
+   which reads as a smudge, so the tile carries the state instead: it takes
+   the ink border and a heavier ground for the beat it is settling. */
+.pfa-tally__d.is-hot{border-color:var(--ff-fg);background:rgba(17,17,17,.07)}
+@media (prefers-reduced-motion: reduce){
+  .pfa-tally__strip{transition:none}
+}
+
+/* The legal line. Three columns, not space-between, so the social links
+   sit in the true centre whatever the other two say. */
+.pfa-footer__base{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  gap:8px 24px;margin-top:clamp(24px,3vw,36px);padding-top:14px;
+  border-top:1px solid var(--ff-line);font-size:12px;letter-spacing:.04em;color:var(--ff-muted)}
+.pfa-footer__base > :last-child{text-align:right}
+.pfa-footer__social{display:flex;flex-wrap:wrap;align-items:center;gap:4px 22px;text-transform:uppercase;letter-spacing:.14em}
+.pfa-footer__social a{display:inline-block;padding:6px 0;min-width:24px;text-align:center;color:var(--ff-muted);transition:color .2s}
+.pfa-footer__social a:hover{color:var(--ff-fg);opacity:1}
+
+/* Tablets: who and where across the top, the four groups in one row under it. */
+@media (max-width:1100px){
+  .pfa-footer__top{grid-template-columns:1fr;gap:26px}
+  .pfa-footer__brand{display:grid;grid-template-columns:auto 1fr;gap:4px 32px;align-items:baseline}
+  .pfa-footer__where{margin:0;grid-row:span 2;text-align:right}
+  .pfa-footer__links{grid-template-columns:repeat(4,minmax(0,max-content));justify-content:space-between}
+}
+/* Small tablets: who and where stacked, and Get Involved in one column so
+   the four groups still fit across in one row. */
+@media (max-width:900px){
+  .pfa-footer__brand{display:block}
+  .pfa-footer__where{margin-top:10px;text-align:left}
+  .pfa-footer__col--wide ul{columns:1}
+}
+/* Phones: two by two. Our Work beside Learn, then Get Involved across the
+   width in its two columns, then About as one line. */
+@media (max-width:720px){
+  .pfa-footer__links{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 20px}
+  .pfa-footer__col--wide{grid-column:1 / -1}
+  .pfa-footer__col--wide ul{columns:2;column-gap:20px}
+  .pfa-footer__col:last-child{grid-column:1 / -1}
+  .pfa-footer__col:last-child ul{display:flex;flex-wrap:wrap;gap:0 22px}
+  /* finger-sized targets: 13px text with 5px above and below, 28px a row */
+  .pfa-footer ul a{padding:5px 0}
+}
+/* The legal line, narrower: the social links first, then the two short
+   lines as one, left aligned, where three columns no longer fit unbroken. */
+@media (max-width:900px){
+  .pfa-footer__base{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 0;padding-top:10px}
+  .pfa-footer__social{order:-1;flex-basis:100%}
+  .pfa-footer__base > p:last-child{text-align:left}
+  .pfa-footer__base > p:last-child::before{content:"\00b7";margin:0 8px}
+}
+@media (max-width:480px){
+  .pfa-footer__base > p:last-child{flex-basis:100%}
+  .pfa-footer__base > p:last-child::before{content:none}
+}
+
+/* ======================================================================
+   hand-drawn cursor: the native pointer is hidden and redrawn by
+   assets/chrome.js, which also creates this layer. Only on devices that
+   hover, and never for people who asked for reduced motion.
+   ====================================================================== */
+/* The system cursor is hidden only while the drawn one is live: html.pfa-cursor
+   is set by the same code that draws it, in the same tick. A device without
+   hover, a page whose script failed, stalled or was blocked, never gets the
+   class - and keeps the system cursor. There is no moment, on any page or any
+   screen size, with no cursor at all. Content inside a cross-origin frame
+   draws its own; the Wall covers its driven embeds with a shield so the
+   pointer never enters them, and everywhere else the chevron steps aside at a
+   frame's edge (assets/chrome.js). */
+html.pfa-cursor, html.pfa-cursor *{cursor:none!important}
+/* Except under a modal. The top layer - a <dialog> shown modally, and its
+   backdrop - paints above every z-index there is, including the cursor
+   layer's, so the chevron sits underneath the panel: invisible on it, a
+   ghost through the backdrop, while cursor:none still holds. That is a
+   cursor that fails exactly where the visitor is working (the shop's
+   tracker, 2 Sep 2026). The contract is visibility, not the costume: while
+   any modal is open this hands the system pointer back, and chrome.js
+   stands the chevron down on the same beat. A browser too old for :has
+   drops this rule - and is too old for showModal, so it never has a modal
+   to fail under. */
+@supports not selector(:popover-open){
+html.pfa-cursor:has(dialog:modal), html.pfa-cursor:has(dialog:modal) *{cursor:revert!important}
+}
+/* As a popover the layer inherits the UA's popover dress - centred,
+   fit-content, bordered, canvas-coloured. Undressed here so it is exactly
+   the full-viewport, transparent, untouchable sheet it always was. */
+.cursor-layer{margin:0;border:0;padding:0;width:auto;height:auto;background:transparent;overflow:visible}
+.cursor-layer::backdrop{display:none}
+.cursor-layer{position:fixed;inset:0;z-index:2147483647;pointer-events:none}
+.cursor-layer svg{position:absolute;left:0;top:0;opacity:0;overflow:visible;will-change:transform;transform-origin:0 0;transition:opacity .2s ease}
+/* One stroke over a wider casing of the opposite colour: the OS-cursor
+   construction. Which way round follows the surface - assets/chrome.js reads
+   what is actually painted under the pointer and, on a dark one, sets these
+   two properties the other way about, so the chevron is black on white and
+   white on black everywhere without any page saying so.
+   The values here are the light-surface state and the fallback at the same
+   time: a page where the reading cannot be taken keeps a legible pointer
+   rather than half a switched one. Painted, never blended - a difference
+   blend recoloured the letters under the chevron and read as though it were
+   behind them. The last .on-dark page rules, dead since the class
+   stopped being applied, were swept in v1.247; the data-cursor hints are
+   read by the script. */
+#cursorCase{stroke:var(--cursor-case,#f2f0ec)}
+#cursorPath{stroke:var(--cursor-ink,var(--ink,#111))}
+
+/* A row that scrolls sideways fades at an edge with more beyond it
+   (assets/chrome.js marks the edges). */
+[data-more-right]{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent)}
+[data-more-left]{-webkit-mask-image:linear-gradient(to right,transparent,#000 44px);mask-image:linear-gradient(to right,transparent,#000 44px)}
+[data-more-left][data-more-right]{-webkit-mask-image:linear-gradient(to right,transparent,#000 44px,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to right,transparent,#000 44px,#000 calc(100% - 44px),transparent)}
+
+/* Close: one control wherever a panel, viewer or dialog closes (owner,
+   7 Oct 2026: "close button cannot be in small caps in 1 place and capitals
+   in another"). The word Close in the site's small bold capitals, a drawn
+   cross beside it, a 44px target. The announcement bar keeps its lone cross:
+   it is a one-line strip, and the mark is the same. Doubled class, so a page's
+   own button rules (font:inherit, borders, fixed sizes) cannot restyle it. */
+button.pfa-close.pfa-close{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;min-width:44px;width:auto;height:auto;margin:0;padding:0 4px;background:none;border:0;border-radius:0;box-shadow:none;color:inherit;font-family:var(--body,'Helvetica Neue',Helvetica,Arial,sans-serif);font-size:11px;font-weight:700;font-style:normal;letter-spacing:.14em;text-transform:uppercase;line-height:1;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none;opacity:1;transition:opacity .15s}
+button.pfa-close.pfa-close::after{content:"";flex:0 0 12px;width:12px;height:12px;background:linear-gradient(45deg,transparent calc(50% - .8px),currentColor calc(50% - .8px),currentColor calc(50% + .8px),transparent calc(50% + .8px)),linear-gradient(-45deg,transparent calc(50% - .8px),currentColor calc(50% - .8px),currentColor calc(50% + .8px),transparent calc(50% + .8px))}
+button.pfa-close.pfa-close:hover{opacity:.6}
+button.pfa-close.pfa-close:focus{outline:none}
+button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+
+/* Section labels (.eyebrow) keep one size wherever they sit. They are <p>
+   elements, and several blocks size every paragraph inside them
+   (.band__head p, .feature__body p ...), which made the label 14 to 16px in
+   those places and 11px everywhere else (7 Oct 2026). */
+.eyebrow.eyebrow.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase}

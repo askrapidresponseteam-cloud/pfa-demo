@@ -1,0 +1,57 @@
+/* The Store switch. Neutral enough to sit inside the admin panel without
+   competing with it; the only colour is on the state dot and the stop. */
+
+.sc { display: grid; gap: 20px; max-width: 720px; }
+
+.sc-now { display: flex; gap: 12px; align-items: flex-start; }
+.sc-dot {
+  width: 9px; height: 9px; border-radius: 50%; margin-top: 7px;
+  background: #1a7f4b; flex: 0 0 auto;
+  box-shadow: 0 0 0 3px rgba(26, 127, 75, .16);
+}
+.sc--closed .sc-dot { background: #b3261e; box-shadow: 0 0 0 3px rgba(179, 38, 30, .16); }
+
+.sc-state { margin: 0; font-size: 15px; line-height: 1.45; }
+.sc-meta { margin: 3px 0 0; font-size: 12px; color: #6b6b6b; }
+.sc-warn {
+  margin: 0; padding: 10px 12px; font-size: 12px; line-height: 1.5;
+  background: #fdf6e3; border: 1px solid #e8d9a8; color: #6a5308;
+}
+
+.sc-choices { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid #e6e4e1; }
+.sc-choice {
+  display: flex; gap: 20px; align-items: center; justify-content: space-between;
+  padding: 18px 0; border-bottom: 1px solid #e6e4e1;
+}
+.sc-choice--stop { border-bottom: 0; }
+.sc-choice.is-current .sc-choice__title { font-weight: 700; }
+.sc-choice__text { min-width: 0; }
+.sc-choice__title { margin: 0; font-size: 14px; line-height: 1.3; }
+.sc-choice__blurb { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: #6b6b6b; max-width: 52ch; }
+.sc-choice__count { margin: 6px 0 0; font-size: 12px; color: #6b6b6b; font-variant-numeric: tabular-nums; }
+
+.sc-current {
+  flex: 0 0 auto; font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: #6b6b6b;
+}
+.sc-btn {
+  flex: 0 0 auto; border: 1px solid #111; background: #fff; color: #111;
+  padding: 9px 16px; font: inherit; font-size: 13px; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.sc-btn:hover:not(:disabled) { background: #111; color: #fff; }
+.sc-btn:disabled { opacity: .45; cursor: default; }
+.sc-btn--stop { border-color: #b3261e; background: #b3261e; color: #fff; }
+.sc-btn--stop:hover:not(:disabled) { background: #8f1e18; border-color: #8f1e18; color: #fff; }
+.sc-btn--quiet { border-color: #d6d3ce; color: #6b6b6b; }
+
+.sc-confirm { display: flex; gap: 8px; align-items: center; flex: 0 0 auto; }
+
+.sc-note { margin: 0; font-size: 13px; line-height: 1.5; color: #6b6b6b; min-height: 1.2em; }
+.sc-note--good { color: #1a7f4b; }
+.sc-note--bad { color: #b3261e; }
+
+@media (max-width: 560px) {
+  .sc-choice { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .sc-confirm { width: 100%; }
+}
