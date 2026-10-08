@@ -29,7 +29,7 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
 - Ship changes as a **complete repo zip**, not as scripts that move files.
   A migration script was run twice on 22 Aug and broke every import.
 - The maintainer swaps folders; `.git` may not survive. Recovery is in HANDBOOK §4.
-- Deploys happen by `git push origin main` (Vercel Git integration). Never instruct
+- Deploys happen by `git push origin main` (Vercel Git integration). Never force-push: scripts/ship.sh fetches first and places the release on top of GitHub's tip (8 Oct 2026, after a force push replaced GitHub's history and the next ship was refused). test/ship-script.test.js runs that step against real git repositories. Never instruct
   `npx vercel --prod`; it deploys the local disk, which has shipped broken folders.
 - Commands the maintainer runs use `npx` for firebase-tools (no globals).
 

@@ -22,7 +22,11 @@ test('the wall holds pieces of three kinds, each poster tagged with its kind', (
 
 test('a filter for each kind, the way the reference splits its own', () => {
   for (const k of ['all', 'honours', 'reels', '2025']) assert.match(page, new RegExp(`<button type="button" data-show="${k}" aria-pressed="(true|false)">${k}</button>`));
-  assert.match(page, /\.hoarding__filter button\[aria-pressed="true"\]\{background:#ffe03a/);
+  /* The lit tab was yellow (#ffe03a) to match the reference; the owner asked
+     for it to change (8 Oct 2026: "make it classy ... change that bar
+     color"). Smoked glass, the lit tab a white pill, no yellow anywhere. */
+  assert.match(page, /\.hoarding__filter button\[aria-pressed="true"\]\{background:#fff;color:#111/);
+  assert.doesNotMatch(page, /#ffe03a/i, 'the yellow is gone from the wall, its tabs and its controls');
   assert.match(page, /kind === 'all' \|\| kindOf\(p\) === kind/);
 });
 

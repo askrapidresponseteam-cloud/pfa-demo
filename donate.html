@@ -325,8 +325,11 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .giftnote b{color:var(--ink);font-weight:700}
 .giftset{border:0;margin:0;padding:0;min-width:0;display:grid;gap:22px}
 .giftset[hidden]{display:none}
-.giftset legend{padding:0;margin:0 0 18px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
-.giftset__you{margin:4px 0 0;padding-top:22px;border-top:1px solid var(--line);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+/* The step bar already says "Who it is for"; the legend stays for screen
+   readers, which do not see the bar (it is aria-hidden), and is not shown twice. */
+.giftset legend{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.giftset__you{margin:0;font-size:13px;line-height:1.55;color:var(--muted)}
+.giftset__you[hidden]{display:none}
 /* Four bare figures fit across one row. Four figures each carrying the
    sentence of what they buy do not: at 130px a card the line broke to five
    words on five lines. The dollar presets are two by two, which gives them
@@ -478,7 +481,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
         <img src="img/donate-lifering.webp" width="1000" height="587" alt="A red and white life ring with a red heart and a paw print at its centre, its rope trailing away">
       </figure>
       <div class="impact" id="sideGive">
-        <p class="eyebrow">Your gift</p>
+        <p class="eyebrow" id="impactLabel">Your gift</p>
         <p id="impact" aria-live="polite">Rabies shots for five street dogs.</p>
       </div>
     </div>
@@ -496,7 +499,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
                and issues the receipt - steps 02 and 03 are PayPal's there,
                not ours. One class on the pane swaps the panels. -->
           <div class="seg" role="group" aria-label="Donate, or give it as a gift" id="giveKind"><button type="button" data-kind="self" aria-pressed="true">Donate</button><button type="button" data-kind="gift" aria-pressed="false">Give as a gift</button></div>
-          <p class="giftnote" id="giftNote" hidden>Give in someone's name. They are posted a <b>Certificate of Appreciation signed by Smt. Maneka Sanjay Gandhi</b>, and the 80G receipt stays in yours. A gift of &#8377;1,000 or more comes with a certificate.</p>
+          <p class="giftnote" id="giftNote" hidden>Give in someone's name. They are posted a Certificate of Appreciation signed by Smt. Maneka Sanjay Gandhi.</p>
           <div class="seg" role="group" aria-label="Currency" id="giveCur"><button type="button" data-gcur="INR" aria-pressed="true">&#8377; INR</button><button type="button" data-gcur="USD" aria-pressed="false">$ USD</button></div>
           <div id="usdPane" hidden>
             <div class="amts amts--usd" id="usdAmts" role="group" aria-label="Choose an amount in dollars"></div>
@@ -533,7 +536,40 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
             <figcaption class="gift__cap"><span id="giftN"></span> <span id="giftWhat"></span></figcaption>
           </figure>
           <button class="btn btn--full" type="button" id="next1">Continue</button>
-          <p class="fine">Donations to People for Animals are eligible for tax deduction under Section 80G. A receipt follows by email.</p>
+          <p class="fine" id="fine1">Donations to People for Animals are eligible for tax deduction under Section 80G. A receipt follows by email.</p>
+        </div>
+
+        <!-- A gift's own step: who it is for, on its own before the donor's
+             details, so the two are never mixed on one form. The fields sit
+             outside the form and join it through form="giveForm"; the
+             fieldset is disabled unless a gift is chosen, so nothing in it is
+             sent with an ordinary donation. lib/payment.js parseDonation()
+             checks them by the same rules (assets/field-rules.js). -->
+        <div class="pane" id="pG">
+          <div class="sum"><span id="sumGift"></span><button type="button" id="backGift">Change</button></div>
+          <fieldset class="giftset" id="giftSet" hidden disabled>
+            <legend>Who it is for</legend>
+            <input type="hidden" name="gift" value="yes" form="giveForm">
+            <div class="field"><label for="giftTo">Their name</label><input id="giftTo" name="giftTo" type="text" autocomplete="off" required form="giveForm"><span class="error">Add the name of the person the gift is for.</span><span class="hint">As it should read on the certificate.</span></div>
+            <div class="field"><label for="giftAddress">Their postal address</label><input id="giftAddress" name="giftAddress" type="text" autocomplete="off" required form="giveForm"><span class="error">Add the address the certificate should be posted to.</span></div>
+            <div class="field2">
+              <div class="field"><label for="giftPin">PIN code</label><input id="giftPin" name="giftPin" type="text" inputmode="numeric" maxlength="6" autocomplete="off" required form="giveForm"><span class="error">Enter the 6-digit PIN code.</span></div>
+              <div class="field"><label for="giftOccasion">The occasion</label>
+                <select id="giftOccasion" name="giftOccasion" form="giveForm">
+                  <option>Just because</option>
+                  <option>Birthday</option>
+                  <option>Anniversary</option>
+                  <option>Wedding</option>
+                  <option>A new baby</option>
+                  <option>Festival</option>
+                  <option>Thank you</option>
+                  <option>In memory</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label for="giftEmail">Their email (optional)</label><input id="giftEmail" name="giftEmail" type="email" autocomplete="off" form="giveForm"><span class="error">Check this email address.</span><span class="hint">For a digital copy of the certificate as well as the one by post.</span></div>
+            <button class="btn btn--full" type="button" id="nextGift">Continue</button>
+          </fieldset>
         </div>
 
         <div class="pane" id="p2">
@@ -546,32 +582,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
             <input type="hidden" name="amount" id="gAmount" value="1500">
             <input type="hidden" name="terms" id="gTerms" value="">
             <input type="hidden" name="client_ref" id="gRef" value="">
-            <!-- Only for a gift. Disabled otherwise, so nothing in it is sent
-                 with an ordinary donation; lib/payment.js parseDonation()
-                 checks it by the same rules (assets/field-rules.js). -->
-            <fieldset class="giftset" id="giftSet" hidden disabled>
-              <legend>Who it is for</legend>
-              <input type="hidden" name="gift" value="yes">
-              <div class="field"><label for="giftTo">Their name</label><input id="giftTo" name="giftTo" type="text" autocomplete="off" required><span class="error">Add the name of the person the gift is for.</span><span class="hint">As it should read on the certificate.</span></div>
-              <div class="field"><label for="giftAddress">Their postal address</label><input id="giftAddress" name="giftAddress" type="text" autocomplete="off" required><span class="error">Add the address the certificate should be posted to.</span></div>
-              <div class="field2">
-                <div class="field"><label for="giftPin">PIN code</label><input id="giftPin" name="giftPin" type="text" inputmode="numeric" maxlength="6" autocomplete="off" required><span class="error">Enter the 6-digit PIN code.</span></div>
-                <div class="field"><label for="giftOccasion">The occasion</label>
-                  <select id="giftOccasion" name="giftOccasion">
-                    <option>Just because</option>
-                    <option>Birthday</option>
-                    <option>Anniversary</option>
-                    <option>Wedding</option>
-                    <option>A new baby</option>
-                    <option>Festival</option>
-                    <option>Thank you</option>
-                    <option>In memory</option>
-                  </select>
-                </div>
-              </div>
-              <div class="field"><label for="giftEmail">Their email (optional)</label><input id="giftEmail" name="giftEmail" type="email" autocomplete="off"><span class="error">Check this email address.</span><span class="hint">For a digital copy of the certificate as well as the one by post.</span></div>
-              <p class="giftset__you">About you, for the 80G receipt</p>
-            </fieldset>
+            <p class="giftset__you" id="youHead" hidden>The 80G receipt is issued in your name.</p>
             <div class="field"><label for="gName">Full name</label><input id="gName" name="name" type="text" autocomplete="name" required><span class="error">Add your name for the receipt.</span></div>
             <div class="field"><label for="gMobile">Mobile number</label><input id="gMobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" required><span class="error">Enter a 10-digit Indian mobile number.</span><span class="hint">Used to trace the payment if anything goes wrong.</span></div>
             <div class="field"><label for="gEmail">Email</label><input id="gEmail" name="email" type="email" autocomplete="email" required><span class="error">Add a valid email for the receipt.</span></div>
@@ -730,15 +741,15 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
          runs into tens of thousands, so no single tier claims to cover one. */
       once:    [[500,'A week of food and care'],[1500,'Rabies shots for five street dogs'],[5000,'Emergency care for an injured animal']],
       monthly: [[300,'Two weeks of food for a street dog'],[1000,'Sponsors a kennel all year'],[2500,'Funds a clinic day each month']],
-      /* A gift starts at ₹1,000, as on the old make-a-gift page. Counted on
-         the same ₹250 a vaccination as the tiers above. */
-      gift:    [[1000,'Four rabies shots, in their name'],[2500,'Ten rabies shots, in their name'],[5000,'Emergency care for an injured animal, in their name']]
+      /* A gift starts at ₹1,000, as on the old make-a-gift page. Plain
+         figures: a gift is given in someone's name, and is not described as
+         what it buys (owner, 8 Oct 2026). */
+      gift:    [[1000,''],[2500,''],[5000,'']]
     };
     /* Lets an off-preset amount say what it buys, so a typed gift reads as real as a chosen one. */
     var UNIT = {
       once:    {step:500, one:'week of food and care',  many:'weeks of food and care'},
-      monthly: {step:300, one:'animal fed every month', many:'animals fed every month'},
-      gift:    {step:250, one:'rabies shot, in their name', many:'rabies shots, in their name'}
+      monthly: {step:300, one:'animal fed every month', many:'animals fed every month'}
     };
     var MIN = 10, MAX = 500000;
     /* Given as a gift: the same donation, through the same CCAvenue flow,
@@ -789,7 +800,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     /* ---------- render ---------- */
     function chips(){
       $('#amts').innerHTML = AMTS[tier()].map(function(a){
-        return '<button type="button" data-amt="' + a[0] + '" aria-pressed="' + (!custom && a[0] === amt) + '"><b>' + fmt(a[0]) + '</b><small>' + a[1] + '</small></button>';
+        return '<button type="button" data-amt="' + a[0] + '" aria-pressed="' + (!custom && a[0] === amt) + '"><b>' + fmt(a[0]) + '</b>' + (a[1] ? '<small>' + a[1] + '</small>' : '') + '</button>';
       }).join('');
     }
     /* How many of the thing the gift actually buys. One table, read by both
@@ -797,8 +808,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
        disagree about the same rupees. */
     var COUNT = {
       once:    {step:500, one:'week of food and care',   many:'weeks of food and care'},
-      monthly: {step:300, one:'animal fed every month',  many:'animals fed every month'},
-      gift:    {step:250, one:'rabies shot, in their name', many:'rabies shots, in their name'}
+      monthly: {step:300, one:'animal fed every month',  many:'animals fed every month'}
     };
     function counted(){
       var u = COUNT[tier()];
@@ -818,7 +828,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
     }
     function meter(){
       var box = $('#gift');
-      if (amt < minAmt()){ box.hidden = true; return; }
+      if (gift || amt < minAmt()){ box.hidden = true; return; }
       var c = counted(), whole = Math.min(c.whole, 40), part = c.n - c.whole;
       var marks = '';
       for (var i = 0; i < whole; i++) marks += '<i style="animation-delay:' + Math.min(i * 22, 500) + 'ms"></i>';
@@ -836,7 +846,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       box.hidden = false;
     }
     function line(){
-      if (amt < minAmt()) return gift ? tooLittle() : 'Choose an amount.';
+      if (gift) return 'A certificate in their name.';
+      if (amt < minAmt()) return 'Choose an amount.';
       var preset = AMTS[tier()].filter(function(a){ return a[0] === amt; })[0];
       if (preset) return preset[1] + '.';
       var u = UNIT[tier()], n = Math.floor(amt / u.step);
@@ -857,14 +868,22 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       $('#impact').textContent = line();
       meter();
       $('#payBtn').textContent = amt >= minAmt() ? 'Pay ' + fmt(amt) + (freq === 'monthly' && !gift ? ' monthly' : '') : 'Pay';
-      $('#sumLine').innerHTML = '<b>' + fmt(amt) + '</b> ' + (gift ? 'as a gift' : freq === 'monthly' ? 'every month' : 'once');
+      $('#sumLine').innerHTML = '<b>' + fmt(amt) + '</b> ' + (gift ? 'as a gift' + (giftName() ? ' for ' + escapeText(giftName()) : '') : freq === 'monthly' ? 'every month' : 'once');
+      $('#sumGift').innerHTML = '<b>' + fmt(amt) + '</b> as a gift';
       /* The server re-checks this against its own bounds; sending it keeps the
          amount the donor confirmed attached to the request. */
       $('#gAmount').value = String(amt);
       note();
     }
+    /* Donate: amount, details, done. A gift: amount, who it is for, your
+       details. Each pane is one question, so the two people are never on
+       one form. */
+    function panes(){ return gift ? ['#p1', '#pG', '#p2'] : ['#p1', '#p2', '#p3']; }
+    function giftName(){ var el = $('#giftTo'); return el ? el.value.trim() : ''; }
+    function escapeText(t){ var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
     function step(n){
-      [1,2,3].forEach(function(k){ $('#p' + k).classList.toggle('on', k === n); });
+      ['#p1', '#pG', '#p2', '#p3'].forEach(function(id){ $(id).classList.remove('on'); });
+      $(panes()[n - 1]).classList.add('on');
       document.querySelectorAll('#barGive span').forEach(function(sp){ var k = +sp.getAttribute('data-s'); sp.classList.toggle('on', k === n); sp.classList.toggle('done', k < n); });
       window.scrollTo({top:0, behavior:'smooth'});
     }
@@ -900,6 +919,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       set.hidden = !wantGift;
       set.disabled = !wantGift;
       $('#sideHead').textContent = wantGift ? 'Make a gift.' : 'Donate.';
+      $('#impactLabel').textContent = wantGift ? 'A gift' : 'Your gift';
+      $('#youHead').hidden = !wantGift;
+      $('#fine1').textContent = wantGift
+        ? 'A gift starts at ' + fmt(GIFT_MIN) + '. The 80G receipt is issued in your name.'
+        : 'Donations to People for Animals are eligible for tax deduction under Section 80G. A receipt follows by email.';
+      var labels = wantGift ? ['01 Amount', '02 Who it is for', '03 Your details'] : ['01 Amount', '02 Details', '03 Done'];
+      document.querySelectorAll('#barGive span').forEach(function(sp, i){ sp.textContent = labels[i]; });
       if (wantGift === gift) return;
       gift = wantGift;
       if (!custom) amt = AMTS[tier()][Math.min(idx, AMTS[tier()].length - 1)][0];
@@ -936,7 +962,22 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       err(''); step(2);
       setTimeout(function(){ $(gift ? '#giftTo' : '#gName').focus(); }, 300);
     });
-    $('#back').addEventListener('click', function(){ step(1); });
+    $('#back').addEventListener('click', function(){ step(gift ? 2 : 1); });
+    $('#backGift').addEventListener('click', function(){ step(1); });
+    function giftOk(){
+      var gt = $('#giftTo'), ga = $('#giftAddress'), gp = $('#giftPin'), ge = $('#giftEmail'), errs = 0;
+      errs += bad(gt, !gt.value.trim()) ? 1 : 0;
+      errs += bad(ga, ga.value.trim().length < 6) ? 1 : 0;
+      errs += bad(gp, !/^[1-9]\d{5}$/.test(gp.value.replace(/\D/g, ''))) ? 1 : 0;
+      errs += bad(ge, !!ge.value.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(ge.value.trim())) ? 1 : 0;
+      return errs === 0;
+    }
+    $('#nextGift').addEventListener('click', function(){
+      if (!giftOk()){ var first = $('#giftSet .is-bad input'); if (first) first.focus(); return; }
+      render(); step(3);
+      setTimeout(function(){ $('#gName').focus(); }, 300);
+    });
+    $('#giftSet').addEventListener('input', function(e){ var t = e.target; if (t.closest('.field')) bad(t, false); });
 
     function bad(el, on){ el.closest('.field').classList.toggle('is-bad', on); return on; }
     $('#giveForm').addEventListener('submit', function(e){
@@ -948,13 +989,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
       errs += bad(m, !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m.value)) ? 1 : 0;
       errs += bad(ad, ad.value.trim().length < 6) ? 1 : 0;
       errs += bad(pan, !!pan.value.trim() && !/^[A-Za-z]{5}[0-9]{4}[A-Za-z]$/.test(pan.value.trim())) ? 1 : 0;
-      if (gift){
-        var gt = $('#giftTo'), ga = $('#giftAddress'), gp = $('#giftPin'), ge = $('#giftEmail');
-        errs += bad(gt, !gt.value.trim()) ? 1 : 0;
-        errs += bad(ga, ga.value.trim().length < 6) ? 1 : 0;
-        errs += bad(gp, !/^[1-9]\d{5}$/.test(gp.value.replace(/\D/g, ''))) ? 1 : 0;
-        errs += bad(ge, !!ge.value.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(ge.value.trim())) ? 1 : 0;
-      }
+      if (gift && !giftOk()){ e.preventDefault(); step(2); return; }
       var agreed = $('#gAgree').checked;
       $('#gAgreeErr').classList.toggle('on', !agreed);
       if (errs || !agreed){

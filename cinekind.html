@@ -211,7 +211,9 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
      at once; at a fifth there are four and a half rows and the wall reads
      as a wall. 340px is where a face is as large as it needs to be. */
   --row:clamp(150px,22vh,340px);--seam:6px;--tilt:0deg}
-.hoarding.is-live{height:calc(100vh * 2.2);height:calc(100svh * 2.2)}
+/* 1.4 screens of runway (owner, 8 Oct 2026: "less scroll unnecessarily");
+   it was 2.2. The pan reads the section's height, so this one line sets it. */
+.hoarding.is-live{height:calc(100vh * 1.4);height:calc(100svh * 1.4)}
 /* 1300px again. It went to 1040 on a misreading of the wall this matches -
    the edge posters there looked strongly foreshortened, but most of that
    is the wash and the crop, not the turn. Rendered, the shorter perspective
@@ -599,12 +601,14 @@ html{scroll-behavior:smooth}
    the honours, each carrying its number, award and name the way the wall's
    corner does, and lifting under the hand the way the wall's posters do.
    Everything eases in as it arrives; without the script nothing is hidden. */
-.band--grand{padding:clamp(88px,10vw,160px) var(--gutter)}
-.band--grand .band__head h2,.band--grand .feature__body h2{font-size:clamp(40px,6.4vw,104px);max-width:12ch;margin-top:22px;line-height:.98}
-.band--grand .band__head p,.band--grand .feature__body p{font-size:clamp(15px,1.25vw,19px);max-width:44ch;margin-top:30px;line-height:1.6;color:rgba(17,17,17,.72)}
+.band--grand{padding:clamp(56px,6vw,96px) var(--gutter)}
+/* Quieter headings (owner, 8 Oct 2026: "classy, less crowded"): they were
+   up to 104px, a full screen of shout for one line. */
+.band--grand .band__head h2,.band--grand .feature__body h2{font-size:clamp(30px,4vw,60px);max-width:16ch;margin-top:14px;line-height:1.02}
+.band--grand .band__head p,.band--grand .feature__body p{font-size:clamp(15px,1.1vw,17px);max-width:52ch;margin-top:18px;line-height:1.65;color:rgba(17,17,17,.72)}
 .band--grand .eyebrow{color:rgba(17,17,17,.55)}
 /* The night: the red carpet film at the head of the 2026 honours. */
-.night{margin:clamp(36px,4.5vw,64px) 0 0;padding:0}
+.night{margin:clamp(28px,3vw,44px) 0 0;padding:0}
 .night__play{position:relative;display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#0a0a0a;color:#fff;text-decoration:none}
 .night__play img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1),opacity .4s}
 .night__play::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.05) 40%,rgba(10,10,10,.78) 100%)}
@@ -629,7 +633,7 @@ html{scroll-behavior:smooth}
 .ckreel::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(10,10,10,.8),rgba(10,10,10,.28) 46%,rgba(10,10,10,.14))}
 .ckreel__top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .ckreel__src,.ckreel__no{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8)}
-.ckreel__ttl{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;font-size:clamp(15px,1.3vw,19px);line-height:1.1;text-shadow:0 1px 3px rgba(0,0,0,.55)}
+.ckreel__ttl{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;font-size:clamp(14px,1.05vw,16px);line-height:1.12;text-shadow:0 1px 3px rgba(0,0,0,.55)}
 .ckreel__foot{display:flex;justify-content:flex-end}
 .ckreel__go{display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;cursor:pointer}
 .ckreel__play{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,255,255,.85);transition:background .25s,border-color .25s}
@@ -639,10 +643,18 @@ html{scroll-behavior:smooth}
 .ckreel__go:focus-visible{outline:2px solid #fff;outline-offset:4px}
 /* the grid the founder page sets its reels in (founder.html .reels): three
    across here for six reels, two on a tablet and on a phone */
-.ckreels{margin-top:clamp(36px,4.5vw,64px)}
+.ckreels{margin-top:clamp(24px,2.6vw,36px)}
 .ckreels__h{margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.55)}
-.ckreels__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-@media (max-width:900px){.ckreels__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.ckreels__grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.ckreels__grid .ckreel{padding:14px}
+@media (max-width:1100px){
+  /* A strip to swipe, one row, rather than three rows of two. */
+  .ckreels__grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(160px,28%);
+    overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  .ckreels__grid::-webkit-scrollbar{display:none}
+  .ckreels__grid .ckreel{scroll-snap-align:start}
+}
+@media (max-width:560px){.ckreels__grid{grid-auto-columns:minmax(150px,44%);gap:8px}}
 @media (max-width:420px){.ckreel{padding:14px}.ckreel__go{gap:8px}.ckreel__play{width:36px;height:36px}}
 @media (prefers-reduced-motion:reduce){.ckreel__bg,.ckreel__play{transition:none}}
 .rbox{position:fixed;inset:0;z-index:120;display:none;background:rgba(244,243,241,.98);padding:max(clamp(14px,3vw,40px),env(safe-area-inset-top,0px)) max(clamp(14px,3vw,40px),env(safe-area-inset-right,0px)) max(clamp(14px,3vw,40px),env(safe-area-inset-bottom,0px)) max(clamp(14px,3vw,40px),env(safe-area-inset-left,0px));color:var(--ink);font-family:var(--body)}
@@ -661,25 +673,27 @@ html{scroll-behavior:smooth}
 .rbox__foot a{color:rgba(17,17,17,.6);border-bottom:1px solid rgba(17,17,17,.35);padding-bottom:2px}
 /* a phone frame is about 200px tall: the button sits higher and smaller, clear of the title */
 @media (max-width:700px){.night__icon{top:38%;width:54px;height:54px}.night__t{font-size:clamp(18px,5.6vw,24px)}.night__kick{font-size:10px}.night__label{gap:4px}}
-.honours .roll{margin-top:clamp(40px,5vw,72px);border:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.honours .roll{margin-top:clamp(28px,3.4vw,48px);border:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+@media (max-width:1100px){.honours .roll{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .honours .roll li{position:relative;display:block;padding:0;border:0;aspect-ratio:3/4;overflow:hidden;background:#151515;
   transition:transform .55s cubic-bezier(.2,.7,.2,1),opacity .55s ease,outline-color .3s}
 .honours .roll img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 14%;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
 .honours .roll li::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,0) 42%,rgba(10,10,10,.9) 100%)}
 .honours .roll .n{position:absolute;left:18px;top:16px;z-index:1;font-family:var(--display);font-size:14px;letter-spacing:.06em;color:rgba(255,255,255,.7)}
-.honours .roll .cap{position:absolute;left:18px;right:18px;bottom:18px;z-index:1;display:flex;flex-direction:column;gap:8px}
-.honours .roll .t{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75);line-height:1.35}
-.honours .roll .w{font-family:var(--display);text-transform:uppercase;font-size:clamp(17px,1.5vw,24px);line-height:1.05;letter-spacing:.02em;color:#fff}
+.honours .roll .cap{position:absolute;left:14px;right:14px;bottom:14px;z-index:1;display:flex;flex-direction:column;gap:6px}
+.honours .roll .t{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75);line-height:1.35}
+.honours .roll .w{font-family:var(--display);text-transform:uppercase;font-size:clamp(15px,1.2vw,19px);line-height:1.08;letter-spacing:.02em;color:#fff}
 /* the wash and the lift, as on the wall */
 .honours .roll:hover li{opacity:.5}
 .honours .roll li:hover,.honours .roll li.is-lit{opacity:1!important;transform:scale(1.035);z-index:2;background:#151515}
 .honours .roll li:hover img{transform:scale(1.06)}
 .honours .roll li.is-lit{outline:2px solid #fff;outline-offset:-2px}
-.about .facts{margin-top:clamp(48px,6vw,88px);border-top:1px solid rgba(17,17,17,.22);padding-top:clamp(28px,3vw,44px);gap:24px}
+.about .facts{margin-top:clamp(28px,3vw,44px);border-top:1px solid rgba(17,17,17,.22);padding-top:clamp(20px,2vw,28px);gap:24px}
 .about .facts p.k{color:rgba(17,17,17,.5)}
-.about .facts p.v{font-family:var(--display);text-transform:uppercase;font-size:clamp(22px,2.6vw,40px);line-height:1.05;margin-top:12px;color:var(--ink)}
+.about .facts p.v{font-family:var(--display);text-transform:uppercase;font-size:clamp(18px,1.8vw,26px);line-height:1.08;margin-top:8px;color:var(--ink)}
 .trophy .feature:not(:has(.shot)){grid-template-columns:minmax(0,1fr)}
-.kindset .tool{margin-top:clamp(48px,6vw,80px)}
+.trophy .feature .shot{aspect-ratio:4/3}
+.kindset .tool{margin-top:clamp(28px,3vw,44px)}
 .kindset .tool h3{color:rgba(17,17,17,.5)}
 .kindset .tool__hint{margin:18px 0 0;font-size:12px;color:rgba(17,17,17,.5)}
 .kindset .choice{background:transparent;border:1px solid rgba(17,17,17,.3);color:var(--ink);font-size:15px;padding:20px 22px}
@@ -707,7 +721,7 @@ html{scroll-behavior:smooth}
 .honours .roll li.reveal{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
 .honours .roll li.reveal.is-in{transition:transform .55s cubic-bezier(.2,.7,.2,1),opacity .55s ease,outline-color .3s}
 @media (max-width:860px){.honours .roll{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:560px){.honours .roll{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.honours .roll .cap{left:12px;right:12px;bottom:12px;gap:5px}.honours .roll .t{font-size:9.5px}}
+@media (max-width:560px){.honours .roll{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.honours .roll li{aspect-ratio:4/5}.honours .roll .cap{left:12px;right:12px;bottom:12px;gap:5px}.honours .roll .t{font-size:9.5px}.honours .roll .w{font-size:15px}}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.honours .roll li,.honours .roll img{transition:none}}
 
 
@@ -804,7 +818,8 @@ html{scroll-behavior:smooth}
 }
 @media (max-width:560px){
   .people,.gallery,.reel{grid-template-columns:1fr}
-  .facts{grid-template-columns:1fr;gap:22px}
+  /* two by two still fits a phone, and is half the scroll of one column (8 Oct 2026) */
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 14px}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
@@ -938,7 +953,9 @@ html{scroll-behavior:smooth}
    last in the page's own styles so it is the word on the wall. What the
    reference does, and this now does:
    - a wall of many pieces of more than one kind, with a filter for each
-     kind (all, honours, reels, 2025) as a white tab bar, the lit tab yellow;
+     kind (all, honours, reels, 2025). Its colour changed on 8 Oct 2026
+     (owner: "classy ... change that bar color"): smoked glass over the
+     wall, the lit tab a white pill, and no yellow anywhere;
    - the name in the corner in a bold sans, sentence case, and one small
      line under it saying what kind of piece it is;
    - the controls as small white tiles, icon over a lowercase word;
@@ -949,17 +966,20 @@ html{scroll-behavior:smooth}
   text-transform:none;letter-spacing:-.025em;font-size:clamp(22px,2.3vw,32px);line-height:1.05}
 .hoarding__label p:not(.hoarding__cap-name){margin-top:7px;font-size:11px;line-height:1.5;letter-spacing:.1em;text-transform:lowercase;color:rgba(255,255,255,.74)}
 .hoarding__filter{position:absolute;top:calc(var(--ann) + var(--nav) + 16px);left:50%;z-index:3;transform:translateX(-50%);
-  display:flex;align-items:center;gap:2px;padding:3px;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.35)}
-.hoarding__filter button{border:0;background:none;padding:5px 10px 6px;cursor:pointer;
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:700;line-height:1;letter-spacing:-.01em;color:#5a5a5a;transition:background .2s,color .2s}
-.hoarding__filter button:hover{color:#111;opacity:1}
-.hoarding__filter button[aria-pressed="true"]{background:#ffe03a;color:#111}
-.hoarding__filter button:focus-visible{outline:2px solid #111;outline-offset:2px}
+  display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px;
+  background:rgba(14,14,14,.58);border:1px solid rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(12px) saturate(1.2);backdrop-filter:blur(12px) saturate(1.2);box-shadow:0 6px 24px rgba(0,0,0,.28)}
+.hoarding__filter button{border:0;background:none;padding:7px 14px 8px;border-radius:999px;cursor:pointer;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:500;line-height:1;letter-spacing:.01em;color:rgba(255,255,255,.72);transition:background .2s,color .2s}
+.hoarding__filter button:hover{color:#fff;opacity:1}
+.hoarding__filter button[aria-pressed="true"]{background:#fff;color:#111;font-weight:700}
+.hoarding__filter button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .hoarding__ctl{gap:8px;align-items:stretch}
-.hoarding__ctl button,.hoarding__ctl a{flex-direction:column;justify-content:center;gap:3px;height:auto;min-width:58px;padding:7px 9px 6px;
-  background:#fff;color:#111;border:0;box-shadow:0 2px 12px rgba(0,0,0,.3);
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:0;text-transform:lowercase}
-.hoarding__ctl button:hover,.hoarding__ctl a:hover{background:#ffe03a;color:#111;backdrop-filter:none}
+.hoarding__ctl button,.hoarding__ctl a{flex-direction:column;justify-content:center;gap:3px;height:auto;min-width:58px;padding:7px 9px 6px;border-radius:10px;
+  background:rgba(14,14,14,.58);color:#fff;border:1px solid rgba(255,255,255,.16);box-shadow:0 6px 24px rgba(0,0,0,.28);
+  -webkit-backdrop-filter:blur(12px) saturate(1.2);backdrop-filter:blur(12px) saturate(1.2);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;font-weight:500;letter-spacing:.01em;text-transform:lowercase}
+.hoarding__ctl button:hover,.hoarding__ctl a:hover{background:#fff;color:#111;border-color:#fff}
 .hoarding__ctl svg{width:15px;height:15px}
 .hoarding__map{opacity:1;transform:none;background:#111;border:3px solid #fff;border-radius:6px;box-shadow:0 4px 18px rgba(0,0,0,.45);width:clamp(110px,10.5vw,170px)}
 .hoarding__map i{opacity:1}

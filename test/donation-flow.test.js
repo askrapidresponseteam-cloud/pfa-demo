@@ -368,3 +368,24 @@ test('the gift is offered on the donate page, linked from every footer, and the 
   assert.ok(vercel.redirects.some((r) => r.source === '/make-a-gift.html' && r.destination === '/donate.html?gift=1' && r.permanent));
   assert.ok(firebase.hosting.redirects.some((r) => r.source === '/make-a-gift.html' && r.destination === '/donate.html?gift=1' && r.type === 301));
 });
+
+test('a gift reads plainly and asks one thing per step: amount, who it is for, your details', () => {
+  /* Owner, 8 Oct 2026: "let gift cert not say rabies shots in their name etc..
+     sounds crass. let it be plain and classy.. and the journey not be
+     confusing". The amounts are bare figures, and the person the gift is for
+     has a step of their own before the donor's details. */
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const page = fs.readFileSync(path.join(__dirname, '..', 'donate.html'), 'utf8');
+  const giftPresets = /gift:\s*(\[\[[^\n]*\]\])/.exec(page);
+  assert.ok(giftPresets, 'the gift presets are where they were');
+  assert.deepEqual(JSON.parse(giftPresets[1].replace(/'/g, '"')), [[1000, ''], [2500, ''], [5000, '']], 'bare figures, no captions');
+  assert.doesNotMatch(page, /in their name'/, 'nothing counted out "in their name"');
+  assert.match(page, /function panes\(\)\{ return gift \? \['#p1', '#pG', '#p2'\]/, 'a gift has its own step');
+  const step = page.slice(page.indexOf('<div class="pane" id="pG">'), page.indexOf('<div class="pane" id="p2">'));
+  assert.match(step, /id="giftSet"/, 'who it is for is on that step');
+  for (const name of ['gift', 'giftTo', 'giftAddress', 'giftPin', 'giftOccasion', 'giftEmail']) {
+    assert.match(step, new RegExp(`name="${name}"[^>]*form="giveForm"`), `${name} still posts with the payment form`);
+  }
+  assert.match(page, /\['01 Amount', '02 Who it is for', '03 Your details'\]/);
+});

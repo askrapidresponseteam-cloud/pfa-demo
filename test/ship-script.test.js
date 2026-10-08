@@ -115,3 +115,122 @@ test('the ship never copies or backs up built output, keeps one earlier backup, 
     assert.ok(ignore.split('\n').includes(built), `${built} is never committed`);
   }
 });
+
+/* ---- the push, run for real against a local "GitHub" ----------------------
+   8 Oct 2026: a ship from a copy with no .git started a fresh history and
+   force-pushed it over GitHub's. The next ship, from a copy with the older
+   history, was refused: "the remote contains work that you do not have".
+   The push step now places the release on top of whatever GitHub has and
+   never forces. These run the script's own push step, cut out of
+   scripts/ship.sh, against real git repositories in a temporary folder. */
+
+const os = require('node:os');
+
+function hasGit() { try { execFileSync('git', ['--version'], { stdio: 'ignore' }); return true; } catch (_) { return false; } }
+
+function pushStep() {
+  const from = ship.indexOf('step "Pushing"');
+  const to = ship.indexOf('[ "$PUSHED" = "1" ]');
+  assert.ok(from > 0 && to > from, 'the push step is where it was');
+  return ship.slice(from, ship.indexOf('\n', ship.indexOf('\n', to) + 1));
+}
+
+function sandbox() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pfa-ship-'));
+  const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', env: Object.assign({}, process.env, {
+    GIT_AUTHOR_NAME: 'T', GIT_AUTHOR_EMAIL: 't@pfa.test', GIT_COMMITTER_NAME: 'T', GIT_COMMITTER_EMAIL: 't@pfa.test', GIT_TERMINAL_PROMPT: '0'
+  }) }).trim();
+  const remote = path.join(dir, 'github.git');
+  git(dir, 'init', '-q', '--bare', '-b', 'main', remote);
+  /* GitHub's history: a fresh root and one more, as on 8 Oct */
+  const seed = path.join(dir, 'seed');
+  git(dir, 'clone', '-q', remote, seed);
+  fs.writeFileSync(path.join(seed, 'index.html'), 'v1.400 first');
+  git(seed, 'add', '-A'); git(seed, 'commit', '-q', '-m', 'v1.400 (fresh root)');
+  fs.writeFileSync(path.join(seed, 'index.html'), 'v1.400 second');
+  fs.writeFileSync(path.join(seed, 'only-on-github.txt'), 'x');
+  git(seed, 'add', '-A'); git(seed, 'commit', '-q', '-m', 'v1.400 again');
+  git(seed, 'push', '-q', 'origin', 'HEAD:main');
+  return { dir, git, remote };
+}
+
+function runPush(live, remote, { fresh = false } = {}) {
+  const script = [
+    'set -euo pipefail',
+    'step() { echo "== $1"; }',
+    'fail() { echo "STOPPED: $1" >&2; exit 1; }',
+    `REMOTE=${JSON.stringify(remote)}`,
+    'MESSAGE="v1.402: test release"',
+    `FRESH=${fresh ? 1 : 0}`,
+    'sleep() { :; }',
+    pushStep()
+  ].join('\n');
+  return execFileSync('bash', ['-c', script], { cwd: live, encoding: 'utf8', env: Object.assign({}, process.env, {
+    GIT_AUTHOR_NAME: 'T', GIT_AUTHOR_EMAIL: 't@pfa.test', GIT_COMMITTER_NAME: 'T', GIT_COMMITTER_EMAIL: 't@pfa.test', GIT_TERMINAL_PROMPT: '0'
+  }) });
+}
+
+test('the push never forces', () => {
+  assert.doesNotMatch(pushStep(), /--force|\s-f\b|\+main/, 'a force push replaced GitHub\'s history on 8 Oct 2026');
+});
+
+test('a copy whose history GitHub no longer shares still ships, on top of GitHub, with exactly the shipped files', { skip: !hasGit() }, () => {
+  const { dir, git, remote } = sandbox();
+  const live = path.join(dir, 'PFA_Website');
+  fs.mkdirSync(live);
+  git(live, 'init', '-q', '-b', 'main');
+  fs.writeFileSync(path.join(live, 'index.html'), 'v1.397');
+  git(live, 'add', '-A'); git(live, 'commit', '-q', '-m', 'v1.397 (the older history)');
+  git(live, 'remote', 'add', 'origin', remote);
+  fs.writeFileSync(path.join(live, 'index.html'), 'v1.402 shipped');
+  git(live, 'add', '-A'); git(live, 'commit', '-q', '-m', 'v1.402: test release');
+
+  const out = runPush(live, remote);
+  assert.match(out, /placing this release on top of them/);
+  const log = git(dir, '--git-dir', remote, 'log', '--format=%s', 'main');
+  assert.deepEqual(log.split('\n'), ['v1.402: test release', 'v1.400 again', 'v1.400 (fresh root)'], 'GitHub\'s history kept, the release on top');
+  assert.equal(git(dir, '--git-dir', remote, 'show', 'main:index.html'), 'v1.402 shipped', 'the files are the ones shipped');
+  assert.throws(() => git(dir, '--git-dir', remote, 'show', 'main:only-on-github.txt'), 'the tree is the shipped tree, not a mix of the two');
+});
+
+test('a commit that landed on GitHub after the last ship (the reading-copies bot) is built on, not refused', { skip: !hasGit() }, () => {
+  const { dir, git, remote } = sandbox();
+  const live = path.join(dir, 'PFA_Website');
+  git(dir, 'clone', '-q', remote, live);
+  /* the bot commits after this copy last pulled */
+  const bot = path.join(dir, 'bot');
+  git(dir, 'clone', '-q', remote, bot);
+  fs.writeFileSync(path.join(bot, 'read-copy.pdf'), 'pdf');
+  git(bot, 'add', '-A'); git(bot, 'commit', '-q', '-m', 'Reading copies (bot)');
+  git(bot, 'push', '-q', 'origin', 'HEAD:main');
+  fs.writeFileSync(path.join(live, 'index.html'), 'v1.402 shipped');
+  fs.writeFileSync(path.join(live, 'read-copy.pdf'), 'pdf');
+  git(live, 'add', '-A'); git(live, 'commit', '-q', '-m', 'v1.402: test release');
+
+  runPush(live, remote);
+  assert.equal(git(dir, '--git-dir', remote, 'log', '-1', '--format=%s', 'main'), 'v1.402: test release');
+  assert.match(git(dir, '--git-dir', remote, 'log', '--format=%s', 'main'), /Reading copies \(bot\)/, 'the bot\'s commit is still in the history');
+});
+
+test('a copy with no .git at all ships without a force push', { skip: !hasGit() }, () => {
+  const { dir, git, remote } = sandbox();
+  const live = path.join(dir, 'PFA_Website');
+  fs.mkdirSync(live);
+  git(live, 'init', '-q', '-b', 'main');
+  fs.writeFileSync(path.join(live, 'index.html'), 'v1.402 shipped');
+  git(live, 'add', '-A'); git(live, 'commit', '-q', '-m', 'v1.402: test release');
+  runPush(live, remote, { fresh: true });
+  assert.deepEqual(git(dir, '--git-dir', remote, 'log', '--format=%s', 'main').split('\n'),
+    ['v1.402: test release', 'v1.400 again', 'v1.400 (fresh root)']);
+});
+
+test('an ordinary ship, from a copy that is up to date, is an ordinary push', { skip: !hasGit() }, () => {
+  const { dir, git, remote } = sandbox();
+  const live = path.join(dir, 'PFA_Website');
+  git(dir, 'clone', '-q', remote, live);
+  fs.writeFileSync(path.join(live, 'index.html'), 'v1.402 shipped');
+  git(live, 'add', '-A'); git(live, 'commit', '-q', '-m', 'v1.402: test release');
+  const out = runPush(live, remote);
+  assert.doesNotMatch(out, /placing this release on top/);
+  assert.equal(git(dir, '--git-dir', remote, 'log', '-1', '--format=%s', 'main'), 'v1.402: test release');
+});

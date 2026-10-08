@@ -218,7 +218,7 @@ FRESH=0
 if ! git rev-parse --git-dir >/dev/null 2>&1; then
   git init -q
   FRESH=1
-  echo "  new repository (the previous .git did not come across)"
+  echo "  new repository (the previous .git did not come across); it is placed on top of GitHub's history below"
 fi
 git add -A
 if git diff --cached --quiet; then
@@ -234,16 +234,38 @@ if ! git remote get-url origin >/dev/null 2>&1; then
   echo "  added origin $REMOTE"
 fi
 git branch -M main
-if [ "$FRESH" = "1" ]; then
-  # A fresh repository shares no history with the remote, so an ordinary push
-  # is refused. This is the same force push the previous workflow used: it
-  # replaces the remote contents with this tree. The backup above is the way
-  # back if that turns out to be wrong.
-  echo "  this repository has no shared history with the remote, so the push replaces it"
-  git push -u origin main --force
-else
-  git push -u origin main
-fi
+# Never a force push. On 8 Oct 2026 a ship that found no .git started a fresh
+# history and force-pushed it, replacing GitHub's; every later ship from a
+# copy with the older history was then refused ("the remote contains work
+# that you do not have"). GitHub can also move on its own: the reading-copies
+# workflow commits back after a push, and another machine can ship.
+#
+# So the release is always placed on top of whatever GitHub has: fetch, and
+# if GitHub has anything this copy does not, move this copy's branch onto
+# GitHub's tip keeping the files exactly as shipped (reset --soft), and
+# commit them there. The site is the tree being shipped, as it always was;
+# GitHub's history is kept, not overwritten. Tried three times, in case
+# something lands on GitHub in between.
+on_top_of_github() {
+  git fetch -q origin main 2>/dev/null || return 0   # nothing on GitHub yet
+  if git merge-base --is-ancestor origin/main HEAD 2>/dev/null; then return 0; fi
+  echo "  GitHub has commits this copy does not; placing this release on top of them"
+  git reset -q --soft origin/main
+  if git diff --cached --quiet; then
+    echo "  the files are already exactly what GitHub has"
+  else
+    git commit -q -m "$MESSAGE"
+  fi
+}
+PUSHED=0
+for attempt in 1 2 3; do
+  on_top_of_github
+  if git push -u origin main; then PUSHED=1; break; fi
+  echo "  push refused (attempt $attempt of 3); fetching again"
+  sleep 3
+done
+[ "$PUSHED" = "1" ] || fail "GitHub refused the push three times. Nothing was overwritten there.
+  The tree at $LIVE is updated and committed; run this again, or ask for help with the message above."
 
 step "Deploying the database rules"
 # Name the project explicitly. The firebase CLI otherwise uses whichever

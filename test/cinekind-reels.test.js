@@ -33,7 +33,10 @@ test('six reels from the night sit under the film, before the honours, as founde
   }
   assert.deepEqual(reelsFromPage(page).map((x) => x.reel), REELS, 'the fetch script reads the same reels');
   assert.equal((fig.match(/class="ckreel__go"/g) || []).length, REELS.length, 'a Play button on each, as on the founder tiles');
-  assert.match(page, /\.ckreels__grid\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  /* One row of six on a wide screen, a strip to swipe on a narrow one (owner,
+     8 Oct 2026: "less crowded and less scroll"); it was three rows of two. */
+  assert.match(page, /\.ckreels__grid\{display:grid;grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+  assert.match(page, /grid-auto-flow:column;[^}]*scroll-snap-type:x mandatory/, 'a swipe strip where six do not fit across');
 });
 
 test('no reel can leave the site: no links, no Instagram embed', () => {
