@@ -37,20 +37,21 @@ test('every public form and paid application reaches the admin panel and sends i
   }
 });
 
-test('the health check says whether production can send email, never the key, and payments do not depend on it', () => {
+test('the health check says whether production can send email, never the key, and payments do not depend on it', async () => {
   const health = require('../lib/routes/payment/health.js');
-  const call = () => {
+  const call = async () => {
     const res = { headers: {}, setHeader(k, v) { this.headers[k] = v; }, end(b) { this.body = JSON.parse(b); } };
-    health({ method: 'GET' }, res);
+    await health({ method: 'GET' }, res);
     return res.body;
   };
   const before = process.env.PFA_MAIL_API_KEY;
   try {
     delete process.env.PFA_MAIL_API_KEY;
-    const off = call();
+    const off = await call();
     assert.equal(off.mail, false);
     process.env.PFA_MAIL_API_KEY = 'a-key-set-for-this-test';
-    const on = call();
+    const on = await call();
+    assert.ok(['storage', 'database'].includes(on.files), 'and says where photographs are kept');
     assert.equal(on.mail, true);
     assert.equal(on.ok, off.ok, 'whether payments are healthy does not change with the mail key');
     assert.ok(!JSON.stringify(on).includes('a-key-set-for-this-test'), 'the key itself is never echoed');

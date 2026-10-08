@@ -76,7 +76,7 @@ function responder() {
 async function run(handler, req) { const res = responder(); await handler(req, res); return res; }
 
 test('every form kind is confirmed in the letter, with its number called what it is', () => {
-  assert.ok(fs.existsSync(path.join(ROOT, 'img', 'mail', 'logo-ink.png')), 'the mark the letter points at is in the tree');
+  assert.ok(fs.existsSync(path.join(ROOT, 'img', 'mail', 'logo-mark.png')), 'the mark the letter points at is in the tree');
   for (const kind of FORM_KINDS) {
     const reference = S.formatReference(kind, 2026, 42);
     const K = CONFIRM.forKind(kind);
@@ -86,7 +86,11 @@ test('every form kind is confirmed in the letter, with its number called what it
     });
     assert.match(letter.subject, new RegExp(reference), `${kind}: the subject does not carry the number`);
     assert.ok(letter.html.includes('background:#ffffff') && letter.html.includes('With thanks,'), `${kind}: not the letter`);
-    assert.ok(letter.html.includes(`${SITE}/img/mail/logo-ink.png`), `${kind}: the letter has no mark`);
+    assert.ok(letter.html.includes(`${SITE}/img/mail/logo-mark.png`), `${kind}: the letter has no mark`);
+    /* Dark mode (owner, 8 Oct 2026): the lettering is text a mail app can
+       recolour, never part of a picture, and nothing paints a box behind it. */
+    assert.match(letter.html, /class="pfa-wordmark"[^>]*>PEOPLE FOR ANIMALS/, `${kind}: the wordmark is live text`);
+    assert.ok(!letter.html.includes('logo-ink.png'), `${kind}: no picture with the lettering baked in`);
     assert.ok(!/Where it goes|Being handled/.test(letter.html), `${kind}: the letter shows a timeline`);
     assert.ok(letter.html.includes('Filed by') && letter.html.includes('Asha Rao'), `${kind}: the letter does not say who filed it`);
     assert.ok(letter.html.includes(K.number), `${kind}: the number is unlabelled`);

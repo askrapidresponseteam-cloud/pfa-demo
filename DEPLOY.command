@@ -49,6 +49,27 @@ step "Deploying from $(pwd) as $EMAIL"
 step "Installing dependencies"
 npm install --silent
 
+step "Making sure the library's documents are here"
+# resources/ (the library PDFs) and test/fixtures/ (the PDFs the reader's
+# tests read) live on GitHub, not in the zip. A deploy without them fails its
+# tests, and if it ever got past them it would delete the PDFs from the site.
+# Taken from the live tree when it has them, otherwise from GitHub.
+# (8 Oct 2026: the live tree on the Desktop had lost resources/ and the
+# one-line command stopped at the copy.)
+if [ ! -d resources ] || [ ! -d test/fixtures ]; then
+  if [ -d "$HOME/Desktop/PFA_Website/resources" ] && [ -d "$HOME/Desktop/PFA_Website/test/fixtures" ]; then
+    cp -R "$HOME/Desktop/PFA_Website/resources" . && mkdir -p test && cp -R "$HOME/Desktop/PFA_Website/test/fixtures" test/
+  else
+    TMP_RES="$(mktemp -d)"
+    git clone -q --depth 1 --filter=blob:none --sparse https://github.com/askrapidresponseteam-cloud/pfa-demo.git "$TMP_RES/repo"
+    git -C "$TMP_RES/repo" sparse-checkout set resources test/fixtures
+    cp -R "$TMP_RES/repo/resources" . && mkdir -p test && cp -R "$TMP_RES/repo/test/fixtures" test/
+    rm -rf "$TMP_RES"
+  fi
+fi
+echo "  $(ls resources | wc -l | tr -d ' ') library documents, $(ls test/fixtures/library 2>/dev/null | wc -l | tr -d ' ') test PDFs"
+
+
 step "Fetching media (best effort; the test suite is the backstop)"
 node scripts/fetch-cinekind-media.js --rewrite || echo "  CineKind media fetch failed; continuing, the tests will judge the tree"
 npm run media:films -- --rewrite || echo "  founder-film fetch failed; continuing"
@@ -80,6 +101,11 @@ case "$HEALTH" in
   *'"mail":true'*)  printf 'EMAIL IS ON: acknowledgements, receipts and welcome letters can be sent.\n' ;;
   *'"mail":false'*) printf '\033[31mEMAIL IS OFF: PFA_MAIL_API_KEY is not set in Vercel.\033[0m\n  Every form still reaches the admin panel, but nobody is sent an acknowledgement or a welcome letter.\n  Add the key in Vercel (Project > Settings > Environment Variables), then deploy again.\n' ;;
   *) printf 'Could not read %s just now. Open it in a browser and look for "mail":true.\n' "$HEALTH_URL" ;;
+esac
+
+case "$HEALTH" in
+  *'"files":"storage"'*)  printf 'PHOTOS ARE KEPT IN: Firebase Storage (the low-cost store).\n' ;;
+  *'"files":"database"'*) printf '\033[33mPHOTOS ARE KEPT IN: the database.\033[0m Switch Storage on to store them for less:\n  Firebase console > pfa-new-website > Storage > Get started (production mode, Mumbai). No deploy needed after.\n' ;;
 esac
 
 printf '\nDone. You can close this window.\n'

@@ -369,3 +369,22 @@ test('the browser helper sends a key that is stable for the same data and change
   assert.notEqual(key('PFA-Q', { a: 1 }), key('PFA-C', { a: 1 }));
   assert.match(key('PFA-Q', { a: 1 }), /^nonce-/);
 });
+
+test('following a submission works whichever server wrote it (a different PFA_AUTH_PEPPER on each)', () => {
+  /* 8 Oct 2026: PFA-Q-2026-00002 was written on one server and looked up on
+     the other; its sender, typing their own email, was told it did not match. */
+  const saved = process.env.PFA_AUTH_PEPPER;
+  try {
+    process.env.PFA_AUTH_PEPPER = 'pepper-on-vercel';
+    const fields = { name: 'Karthik', email: 'karthik@example.in', mobile: '9876543210', giftEmail: 'friend@example.in', question: 'call 9123456789 please' };
+    const record = { fields, contactKeys: S.contactKeysFor({ email: fields.email, mobile: fields.mobile }) };
+    process.env.PFA_AUTH_PEPPER = 'pepper-on-firebase';
+    assert.equal(S.contactMatches(record, 'Karthik@Example.in').ok, true, 'the email on the record');
+    assert.equal(S.contactMatches(record, '+91 98765 43210').ok, true, 'the mobile on the record');
+    assert.equal(S.contactMatches(record, 'friend@example.in').ok, false, "a gift recipient's email is not the sender's");
+    assert.equal(S.contactMatches(record, '9123456789').ok, false, 'nor a number inside the text');
+    assert.equal(S.contactMatches(record, 'someone@else.in').ok, false, 'and a stranger still cannot');
+  } finally {
+    if (saved === undefined) delete process.env.PFA_AUTH_PEPPER; else process.env.PFA_AUTH_PEPPER = saved;
+  }
+});

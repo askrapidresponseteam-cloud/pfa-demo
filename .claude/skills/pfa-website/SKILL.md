@@ -61,6 +61,14 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
 - **PFA offers no services.** No page may take a request for an appointment, vaccination,
   sterilisation, transport or consultation. `test/no-services.test.js` enforces it.
 
+## Files (photographs, documents)
+- Bytes go through `lib/file-store.js` only: `put(path, bytes, type)` returns the fields to store
+  (`{storage:'gcs', bucket, path}`, or `{bytes}` when no bucket), `read(doc)` reads either, `drop(doc)`
+  empties without deleting. Paths: `submissions/<ref>/<n>`, `caregiver-staging/<token>/<n>`.
+  Never write `bytes:` into a Firestore document directly again (owner, 8 Oct 2026: minimal storage cost).
+- Email logo: the mark is `img/mail/logo-mark.png` and the lettering is live text (dark mode recolours
+  text, never pictures). Do not go back to a picture with the lettering in it.
+
 ## Stacking (z-index)
 - One scale, in assets/chrome.css: page bars 40, floating buttons 44, search overlay 45, phone
   menu 49, header 50, announcement 60, whole-page layers 70+. Nothing a page adds may sit
