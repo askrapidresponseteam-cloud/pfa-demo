@@ -60,12 +60,12 @@
 }
 </style>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.409">
+<meta name="pfa-build" content="v1.410">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Shop | People for Animals</title>
 <meta name="description" content="Fourteen limited-edition designer T-shirts made with People for Animals, by Sabyasachi, Gaurav Gupta, Masaba Gupta, Raw Mango and more, and the PFA logo tee. 100% cotton. Every purchase supports PFA’s work for animals.">
-<link rel="stylesheet" href="assets/chrome.css?v=ecebb00626">
+<link rel="stylesheet" href="assets/chrome.css?v=b3b247505e">
 <style>
 /* The PFA shop (3 Oct 2026). Laid out after the store the owner supplied as a
    reference (an announcement bar, a campaign opening, the collection as tall
@@ -170,17 +170,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .item__was{color:var(--muted);white-space:nowrap}
 .item__off{display:inline-block;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
 .item__buy{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:16px}
-.colours{flex:1 1 100%;margin:0 0 6px;padding:0;border:0;min-width:0}
-.colours[hidden]{display:none}
-.colours__name{padding:0;margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.colours__name b{color:var(--ink);font-weight:700}
-.colours__row{display:flex;flex-wrap:wrap;gap:10px;padding:3px}
-.colours label{position:relative;display:block;cursor:pointer}
-.colours input{position:absolute;opacity:0;width:0;height:0}
-.colours .sw{display:block;width:26px;height:26px;border-radius:50%;background:var(--sw);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2),0 0 0 2px #fff,0 0 0 3px transparent;transition:box-shadow .2s}
-.colours label:hover .sw{box-shadow:inset 0 0 0 1px rgba(0,0,0,.2),0 0 0 2px #fff,0 0 0 3px var(--line)}
-.colours input:checked + .sw{box-shadow:inset 0 0 0 1px rgba(0,0,0,.2),0 0 0 2px #fff,0 0 0 3px var(--ink)}
-.colours input:focus-visible + .sw{outline:2px solid var(--ink);outline-offset:5px}
 .sizes{display:flex;gap:6px;margin:0;padding:0;border:0;min-width:0}
 .sizes label{position:relative;display:block;cursor:pointer}
 .sizes input{position:absolute;opacity:0;width:0;height:0}
@@ -196,16 +185,18 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .feature{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);margin:var(--band) var(--gutter) 0;border:1px solid var(--line)}
 .feature__pics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
 .feature__pics button{position:relative;display:block;aspect-ratio:4/5;padding:0;border:0;background:var(--stone);overflow:hidden;cursor:pointer}
-.feature__pics button::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 3px var(--ink);opacity:0;transition:opacity .25s}
-.feature__pics button[aria-pressed="true"]::after{opacity:1}
 .feature__pics button:focus-visible{outline:2px solid var(--ink);outline-offset:-6px}
-.feature__cap{position:absolute;left:10px;bottom:10px;padding:5px 8px;background:#fff;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
 .feature__pics img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
 .feature__pics button:hover img{transform:scale(1.03)}
 .feature__bd{display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5vw,80px)}
 .feature__bd h2{font-size:clamp(34px,4.4vw,68px)}
 .feature__bd h2::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:22px}
 .feature__bd p{margin:20px 0 0;max-width:40ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.78)}
+/* The logo tee comes in four colours and PFA picks one when it packs the
+   order (owner, 8 Oct 2026): the four photographs show the palette and open
+   the closer look; nothing here is a choice. */
+.feature__bd .feature__note{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.65;color:var(--muted)}
+.feature__note b{display:block;margin-bottom:6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
 .feature__price{margin-top:26px!important;font-size:22px!important;color:var(--ink)!important}
 .feature__price s{margin-left:10px;font-size:16px;color:var(--muted)}
 .feature .item__buy{max-width:360px;margin-top:22px;padding-top:0}
@@ -276,6 +267,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .line__pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
 .line__name{margin:0;font-size:13px;font-weight:700;line-height:1.35}
 .line__meta{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.line__note{margin:3px 0 0;font-size:11.5px;font-style:italic;color:var(--muted)}
 .qty{display:inline-flex;align-items:center;margin-top:10px;border:1px solid var(--line)}
 .qty button{width:32px;height:32px;border:0;background:#fff;cursor:pointer;font-size:15px}
 .qty span{min-width:26px;text-align:center;font-size:13px}
@@ -605,7 +597,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=5f57c8f80c"></script>
+<script src="assets/chrome.js?v=2741962c1a"></script>
 
 <main>
   <section class="hero" id="opening" data-screen-label="Shop opening">
@@ -695,8 +687,8 @@ if (root.document && root.document.head) apply(read());
         </div>
       </article>
       <article class="item" id="pfa-logo-tee" data-id="21" data-kind="essentials" data-order="2"
-        data-name="PFA logo T-shirt" data-designer="People for Animals" data-price="350" data-was="450"
-        data-images="media/shop/v2/t-shirt-red-front.webp|media/shop/v2/t-shirt-red-back.webp|media/shop/v2/t-shirt-yellow-front.webp|media/shop/v2/t-shirt-yellow-back.webp|media/shop/v2/t-shirt-white-front.webp|media/shop/v2/t-shirt-white-back.webp|media/shop/v2/t-shirt-pink-front.webp|media/shop/v2/t-shirt-pink-back.webp">
+        data-name="PFA logo T-shirt" data-designer="People for Animals" data-price="350" data-was="450" data-colour-at-dispatch
+        data-images="media/shop/v2/t-shirt-red-front.webp|media/shop/v2/t-shirt-yellow-front.webp|media/shop/v2/t-shirt-white-front.webp|media/shop/v2/t-shirt-pink-front.webp|media/shop/v2/t-shirt-red-back.webp|media/shop/v2/t-shirt-yellow-back.webp|media/shop/v2/t-shirt-white-back.webp|media/shop/v2/t-shirt-pink-back.webp">
         <button class="item__media" type="button" data-open aria-label="Look closer at PFA logo T-shirt">
           <img class="item__img" src="media/shop/v2/t-shirt-red-front.webp" alt="PFA logo T-shirt" loading="eager" decoding="async">
           <img class="item__alt" src="media/shop/v2/t-shirt-red-back.webp" alt="" loading="lazy" decoding="async">
@@ -705,13 +697,9 @@ if (root.document && root.document.head) apply(read());
         </button>
         <div class="item__bd">
           <h3 class="item__name display"><a href="#pfa-logo-tee" data-open>PFA logo T-shirt</a></h3>
-          <p class="item__meta">People for Animals logo T-shirt</p>
+          <p class="item__meta">Logo T-shirt · colour chosen for you at dispatch</p>
           <p class="item__price"><b>₹350</b> <s class="item__was">₹450</s> <span class="item__off">22% off</span></p>
           <form class="item__buy" data-buy>
-            <fieldset class="colours">
-              <legend class="colours__name">Colour: <b>Red</b></legend>
-              <div class="colours__row"><label title="Red"><input type="radio" name="colour-pfa-logo-tee" value="Red" data-img="media/shop/v2/t-shirt-red-front.webp" data-img2="media/shop/v2/t-shirt-red-back.webp" checked><span class="sw" style="--sw:#d42a20"></span><span class="sr">Red</span></label><label title="Yellow"><input type="radio" name="colour-pfa-logo-tee" value="Yellow" data-img="media/shop/v2/t-shirt-yellow-front.webp" data-img2="media/shop/v2/t-shirt-yellow-back.webp"><span class="sw" style="--sw:#f3e81c"></span><span class="sr">Yellow</span></label><label title="White"><input type="radio" name="colour-pfa-logo-tee" value="White" data-img="media/shop/v2/t-shirt-white-front.webp" data-img2="media/shop/v2/t-shirt-white-back.webp"><span class="sw" style="--sw:#ffffff"></span><span class="sr">White</span></label><label title="Pink"><input type="radio" name="colour-pfa-logo-tee" value="Pink" data-img="media/shop/v2/t-shirt-pink-front.webp" data-img2="media/shop/v2/t-shirt-pink-back.webp"><span class="sw" style="--sw:#f29ac0"></span><span class="sr">Pink</span></label></div>
-            </fieldset>
             <fieldset class="sizes">
               <legend class="sr">Size</legend>
               <label><input type="radio" name="size-pfa-logo-tee" value="L" checked><span>L</span></label>
@@ -1000,22 +988,19 @@ if (root.document && root.document.head) apply(read());
 
   <section class="feature" id="everyday" data-screen-label="The everyday tee">
     <div class="feature__pics">
-      <button type="button" data-colour="Red" aria-label="Red logo T-shirt" aria-pressed="true"><img src="media/shop/v2/t-shirt-red-front.webp" alt="" loading="lazy" decoding="async"><span class="feature__cap">Red</span></button>
-      <button type="button" data-colour="Yellow" aria-label="Yellow logo T-shirt" aria-pressed="false"><img src="media/shop/v2/t-shirt-yellow-front.webp" alt="" loading="lazy" decoding="async"><span class="feature__cap">Yellow</span></button>
-      <button type="button" data-colour="White" aria-label="White logo T-shirt" aria-pressed="false"><img src="media/shop/v2/t-shirt-white-front.webp" alt="" loading="lazy" decoding="async"><span class="feature__cap">White</span></button>
-      <button type="button" data-colour="Pink" aria-label="Pink logo T-shirt" aria-pressed="false"><img src="media/shop/v2/t-shirt-pink-front.webp" alt="" loading="lazy" decoding="async"><span class="feature__cap">Pink</span></button>
+      <button type="button" data-open-id="21" data-start="media/shop/v2/t-shirt-red-front.webp" aria-label="Look closer at the PFA logo T-shirt, in red"><img src="media/shop/v2/t-shirt-red-front.webp" alt="" loading="lazy" decoding="async"></button>
+      <button type="button" data-open-id="21" data-start="media/shop/v2/t-shirt-yellow-front.webp" aria-label="Look closer at the PFA logo T-shirt, in yellow"><img src="media/shop/v2/t-shirt-yellow-front.webp" alt="" loading="lazy" decoding="async"></button>
+      <button type="button" data-open-id="21" data-start="media/shop/v2/t-shirt-white-front.webp" aria-label="Look closer at the PFA logo T-shirt, in white"><img src="media/shop/v2/t-shirt-white-front.webp" alt="" loading="lazy" decoding="async"></button>
+      <button type="button" data-open-id="21" data-start="media/shop/v2/t-shirt-pink-front.webp" aria-label="Look closer at the PFA logo T-shirt, in pink"><img src="media/shop/v2/t-shirt-pink-front.webp" alt="" loading="lazy" decoding="async"></button>
     </div>
     <div class="feature__bd">
       <p class="eyebrow">Everyday</p>
       <h2 class="display">The one with the logo.</h2>
       <p>The People for Animals logo T-shirt. The piece to wear on a drive, at a camp, or on the walk home past the dogs you feed.</p>
+      <p class="feature__note"><b>A limited palette</b>Made in red, yellow, white and pink. Each piece is hand-picked from the edition at dispatch, its colour chosen for you according to availability.</p>
       <p class="feature__price"><b>₹350</b> <s>₹450</s></p>
       <form class="item__buy" data-buy data-for="21" id="featureBuy">
-        <fieldset class="colours">
-              <legend class="colours__name">Colour: <b>Red</b></legend>
-              <div class="colours__row"><label title="Red"><input type="radio" name="colour-feature" value="Red" data-img="media/shop/v2/t-shirt-red-front.webp" data-img2="media/shop/v2/t-shirt-red-back.webp" checked><span class="sw" style="--sw:#d42a20"></span><span class="sr">Red</span></label><label title="Yellow"><input type="radio" name="colour-feature" value="Yellow" data-img="media/shop/v2/t-shirt-yellow-front.webp" data-img2="media/shop/v2/t-shirt-yellow-back.webp"><span class="sw" style="--sw:#f3e81c"></span><span class="sr">Yellow</span></label><label title="White"><input type="radio" name="colour-feature" value="White" data-img="media/shop/v2/t-shirt-white-front.webp" data-img2="media/shop/v2/t-shirt-white-back.webp"><span class="sw" style="--sw:#ffffff"></span><span class="sr">White</span></label><label title="Pink"><input type="radio" name="colour-feature" value="Pink" data-img="media/shop/v2/t-shirt-pink-front.webp" data-img2="media/shop/v2/t-shirt-pink-back.webp"><span class="sw" style="--sw:#f29ac0"></span><span class="sr">Pink</span></label></div>
-            </fieldset>
-            <fieldset class="sizes">
+        <fieldset class="sizes">
           <legend class="sr">Size</legend>
           <label><input type="radio" name="size-feature" value="L" checked><span>L</span></label>
           <label><input type="radio" name="size-feature" value="XL"><span>XL</span></label>
@@ -1052,10 +1037,6 @@ if (root.document && root.document.head) apply(read());
       <p class="look__copy" id="lookCopy"></p>
       <dl class="look__spec" id="lookSpec"></dl>
       <form class="item__buy" data-buy id="lookBuy">
-        <fieldset class="colours" id="lookColours" hidden>
-          <legend class="colours__name">Colour: <b></b></legend>
-          <div class="colours__row"></div>
-        </fieldset>
         <fieldset class="sizes">
           <legend class="sr">Size</legend>
           <label><input type="radio" name="size-look" value="L" checked><span>L</span></label>
@@ -1107,10 +1088,14 @@ if (root.document && root.document.head) apply(read());
 <div class="toast" id="toast" role="status" aria-live="polite"><span id="toastText"></span><button type="button" id="toastBag">View bag</button></div>
 
 <footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
-  <!-- Compact (owner, 8 Oct 2026: "make footer compact in the whole site").
-       One band: who and where on the left, the links on the right, the legal
-       line under both. It was over 1,000px tall on a laptop, with the name set
-       at 118px on a band of its own and Get Involved nine rows long.
+  <!-- Compact (owner, 8 Oct 2026: "make footer compact in the whole site"),
+       then set on one grid (owner, same day: "this can be better. alignment
+       and look wise"). The name and the social links share a bar at the top;
+       under it the registered office and the four link groups are columns of
+       one width, each opened by the same label on the same hairline, so every
+       group starts on one line and the gaps between them are equal. Get
+       Involved takes two columns, under one label whose hairline runs across
+       both. The legal line closes it.
 
        The link groups are the same four the header uses, in the same order,
        with the same labels, so a link is in one group at the top of a page and
@@ -1119,16 +1104,24 @@ if (root.document && root.document.head) apply(read());
        Every block is block-level in the markup: assets/ is cached for an hour
        and the HTML is not, so for up to an hour after a deploy this markup
        meets the previous chrome.css, and it still reads top to bottom. -->
-  <div class="pfa-footer__top">
-    <div class="pfa-footer__brand">
-      <p class="pfa-footer__mark">People for Animals</p>
-      <!-- The registered office and how to reach it, as published on
-           peopleforanimalsindia.org. tel: and mailto: so a phone dials and a
-           mail client opens; the numbers hold together with non-breaking
-           spaces, because a number split across two lines cannot be dialled. -->
+  <div class="pfa-footer__bar">
+    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+  </div>
+  <div class="pfa-footer__grid">
+    <div class="pfa-footer__office">
+      <p class="pfa-footer__label">Registered office</p>
+      <!-- As published on peopleforanimalsindia.org. tel: and mailto: so a
+           phone dials and a mail client opens; the numbers hold together with
+           non-breaking spaces, because a number split across two lines cannot
+           be dialled. -->
       <address class="pfa-footer__where" id="contact">
         <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
-        <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+        <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
         <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
       </address>
       <!-- Real count, from /api/visits. Hidden until a number actually
@@ -1139,56 +1132,54 @@ if (root.document && root.document.head) apply(read());
         <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
       </div>
     </div>
-    <div class="pfa-footer__links">
-      <nav class="pfa-footer__col" aria-label="Our Work">
-        <p class="pfa-footer__label">Our Work</p>
-        <ul>
-          <li><a href="units.html">Units near you</a></li>
-          <li><a href="report.html">Report cruelty</a></li>
-          <li><a href="newsroom.html">Newsroom and cases</a></li>
-          <li><a href="achievements.html">Policies and achievements</a></li>
-        </ul>
-      </nav>
-      <nav class="pfa-footer__col" aria-label="Learn">
-        <p class="pfa-footer__label">Learn</p>
-        <ul>
-          <li><a href="laws.html">What the law says</a></li>
-          <li><a href="library.html">Resources library</a></li>
-          <li><a href="academy.html">Academy</a></li>
-          <li><a href="quiz.html">Test yourself</a></li>
-        </ul>
-      </nav>
-      <nav class="pfa-footer__col pfa-footer__col--wide" aria-label="Get Involved">
-        <p class="pfa-footer__label">Get Involved</p>
-        <ul>
-          <li><a href="donate.html">Donate</a></li>
-          <li><a href="donate.html?gift=1">Make a gift</a></li>
-          <li><a href="get-involved.html#volunteer">Volunteer</a></li>
-          <li><a href="get-involved.html#membership">Become a member</a></li>
-          <li><a href="caregiver-card.html">Colony caregiver card</a></li>
-          <li><a href="wall.html">The Wall</a></li>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="cinekind.html">CineKind</a></li>
-          <li><a href="shop.html">Shop</a></li>
-        </ul>
-      </nav>
-      <nav class="pfa-footer__col" aria-label="About">
-        <p class="pfa-footer__label">About</p>
-        <ul>
-          <li><a href="founder.html">Founder</a></li>
-          <li><a href="careers.html">Careers</a></li>
-          <li><a href="ask.html">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <!-- Two lists under one label: giving, then joining in. Each sits on a
+         column of the grid, so the second lines up with the groups around it
+         instead of floating as a column with no name. -->
+    <nav class="pfa-footer__col pfa-footer__col--wide" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+      </ul>
+      <ul>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
   </div>
   <div class="pfa-footer__base">
     <p>People for Animals © 2026</p>
-    <nav class="pfa-footer__social" aria-label="Social media">
-      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
-      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
-    </nav>
     <p>Registered charity · All donations tax-deductible</p>
   </div>
 </footer>

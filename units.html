@@ -65,7 +65,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>Units | People for Animals</title>
 <meta name="description" content="People for Animals shelters, hospitals and rescue units across India.">
-<link rel="stylesheet" href="assets/chrome.css?v=ecebb00626">
+<link rel="stylesheet" href="assets/chrome.css?v=b3b247505e">
 <style>
 :root{
   --paper:#fff;
@@ -563,7 +563,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=5f57c8f80c"></script>
+<script src="assets/chrome.js?v=2741962c1a"></script>
 
 <main>
 
@@ -672,10 +672,14 @@ if (root.document && root.document.head) apply(read());
 </main>
 
 <footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
-  <!-- Compact (owner, 8 Oct 2026: "make footer compact in the whole site").
-       One band: who and where on the left, the links on the right, the legal
-       line under both. It was over 1,000px tall on a laptop, with the name set
-       at 118px on a band of its own and Get Involved nine rows long.
+  <!-- Compact (owner, 8 Oct 2026: "make footer compact in the whole site"),
+       then set on one grid (owner, same day: "this can be better. alignment
+       and look wise"). The name and the social links share a bar at the top;
+       under it the registered office and the four link groups are columns of
+       one width, each opened by the same label on the same hairline, so every
+       group starts on one line and the gaps between them are equal. Get
+       Involved takes two columns, under one label whose hairline runs across
+       both. The legal line closes it.
 
        The link groups are the same four the header uses, in the same order,
        with the same labels, so a link is in one group at the top of a page and
@@ -684,16 +688,24 @@ if (root.document && root.document.head) apply(read());
        Every block is block-level in the markup: assets/ is cached for an hour
        and the HTML is not, so for up to an hour after a deploy this markup
        meets the previous chrome.css, and it still reads top to bottom. -->
-  <div class="pfa-footer__top">
-    <div class="pfa-footer__brand">
-      <p class="pfa-footer__mark">People for Animals</p>
-      <!-- The registered office and how to reach it, as published on
-           peopleforanimalsindia.org. tel: and mailto: so a phone dials and a
-           mail client opens; the numbers hold together with non-breaking
-           spaces, because a number split across two lines cannot be dialled. -->
+  <div class="pfa-footer__bar">
+    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
+    <nav class="pfa-footer__social" aria-label="Social media">
+      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+    </nav>
+  </div>
+  <div class="pfa-footer__grid">
+    <div class="pfa-footer__office">
+      <p class="pfa-footer__label">Registered office</p>
+      <!-- As published on peopleforanimalsindia.org. tel: and mailto: so a
+           phone dials and a mail client opens; the numbers hold together with
+           non-breaking spaces, because a number split across two lines cannot
+           be dialled. -->
       <address class="pfa-footer__where" id="contact">
         <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
-        <div><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a> · <a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+        <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
         <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
       </address>
       <!-- Real count, from /api/visits. Hidden until a number actually
@@ -704,56 +716,54 @@ if (root.document && root.document.head) apply(read());
         <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
       </div>
     </div>
-    <div class="pfa-footer__links">
-      <nav class="pfa-footer__col" aria-label="Our Work">
-        <p class="pfa-footer__label">Our Work</p>
-        <ul>
-          <li><a href="units.html">Units near you</a></li>
-          <li><a href="report.html">Report cruelty</a></li>
-          <li><a href="newsroom.html">Newsroom and cases</a></li>
-          <li><a href="achievements.html">Policies and achievements</a></li>
-        </ul>
-      </nav>
-      <nav class="pfa-footer__col" aria-label="Learn">
-        <p class="pfa-footer__label">Learn</p>
-        <ul>
-          <li><a href="laws.html">What the law says</a></li>
-          <li><a href="library.html">Resources library</a></li>
-          <li><a href="academy.html">Academy</a></li>
-          <li><a href="quiz.html">Test yourself</a></li>
-        </ul>
-      </nav>
-      <nav class="pfa-footer__col pfa-footer__col--wide" aria-label="Get Involved">
-        <p class="pfa-footer__label">Get Involved</p>
-        <ul>
-          <li><a href="donate.html">Donate</a></li>
-          <li><a href="donate.html?gift=1">Make a gift</a></li>
-          <li><a href="get-involved.html#volunteer">Volunteer</a></li>
-          <li><a href="get-involved.html#membership">Become a member</a></li>
-          <li><a href="caregiver-card.html">Colony caregiver card</a></li>
-          <li><a href="wall.html">The Wall</a></li>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="cinekind.html">CineKind</a></li>
-          <li><a href="shop.html">Shop</a></li>
-        </ul>
-      </nav>
-      <nav class="pfa-footer__col" aria-label="About">
-        <p class="pfa-footer__label">About</p>
-        <ul>
-          <li><a href="founder.html">Founder</a></li>
-          <li><a href="careers.html">Careers</a></li>
-          <li><a href="ask.html">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <!-- Two lists under one label: giving, then joining in. Each sits on a
+         column of the grid, so the second lines up with the groups around it
+         instead of floating as a column with no name. -->
+    <nav class="pfa-footer__col pfa-footer__col--wide" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+      </ul>
+      <ul>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
   </div>
   <div class="pfa-footer__base">
     <p>People for Animals © 2026</p>
-    <nav class="pfa-footer__social" aria-label="Social media">
-      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
-      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
-    </nav>
     <p>Registered charity · All donations tax-deductible</p>
   </div>
 </footer>

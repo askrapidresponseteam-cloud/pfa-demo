@@ -8,8 +8,7 @@
 
    The checkout is a plain form POST to /api/shop/checkout, because the
    browser has to end up on CCAvenue's page. It carries only which pieces,
-   which sizes, which colour for the piece that comes in colours (the logo
-   tee), and how many; the server prices them from lib/shop.js, so the
+   which sizes and how many; the server prices them from lib/shop.js, so the
    totals shown here are for reading, never for charging. The bag lives in
    this browser (localStorage) and is emptied by the confirmation page once
    the order is paid; the page works the same when storage is refused. */
@@ -20,6 +19,7 @@
   if (!grid) return;
 
   var SHIPPING = 150;   /* shown only; lib/shop.js SHIPPING_FLAT is what is charged */
+  var MAX_QTY = 10;     /* lib/shop.js MAX_QTY: more of one piece in one size is not taken */
   var KEY = 'pfa-shop-bag';
   var items = [].slice.call(grid.querySelectorAll('.item'));
   var byId = {};
@@ -34,21 +34,17 @@
       price: Number(el.getAttribute('data-price')),
       was: Number(el.getAttribute('data-was')) || 0,
       images: (el.getAttribute('data-images') || '').split('|').filter(Boolean),
-      /* A piece sold in colours carries the choice in its tile: one radio per
-         colour, with that colour's front and back photographs. */
-      colours: [].map.call(el.querySelectorAll('.colours input'), function (i) {
-        return { name: i.value, img: i.getAttribute('data-img'), img2: i.getAttribute('data-img2') };
-      })
+      /* The logo tee is made in several colours, and PFA chooses which one
+         when it packs the order (owner, 8 Oct 2026): there is no colour to
+         pick, and the bag says so. */
+      atDispatch: el.hasAttribute('data-colour-at-dispatch')
     };
     byId[p.id] = p;
     return p;
   });
 
   function $(id) { return document.getElementById(id); }
-  function colourOf(p, name) {
-    for (var k = 0; k < p.colours.length; k += 1) if (p.colours[k].name === name) return p.colours[k];
-    return null;
-  }
+  var AT_DISPATCH = 'Colour chosen for you at dispatch';
   function rupees(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -107,13 +103,19 @@
   var bag = [];
   try { bag = JSON.parse(window.localStorage.getItem(KEY) || '[]') || []; } catch (err) { bag = []; }
   bag = bag.filter(function (l) { return l && byId[l.id] && (l.size === 'L' || l.size === 'XL') && l.qty > 0; });
-  /* A line saved before the piece had colours takes its first colour, which
-     the bag then shows, so nothing is ordered in a colour nobody saw. */
-  bag.forEach(function (l) {
-    var p = byId[l.id];
-    if (!p.colours.length) delete l.colour;
-    else if (!colourOf(p, l.colour)) l.colour = p.colours[0].name;
-  });
+  /* A bag kept from when the logo tee was bought by colour may hold it twice
+     in one size ("Red, L" and "Pink, L"): those become one line, as the
+     server would make them, and no line keeps a colour. */
+  (function () {
+    var one = {}, kept = [];
+    bag.forEach(function (l) {
+      var k = l.id + ':' + l.size;
+      if (one[k]) { one[k].qty = Math.min(one[k].qty + l.qty, MAX_QTY); return; }
+      one[k] = { id: l.id, size: l.size, qty: Math.min(l.qty, MAX_QTY) };
+      kept.push(one[k]);
+    });
+    bag = kept;
+  }());
   function save() {
     try { window.localStorage.setItem(KEY, JSON.stringify(bag)); } catch (err) { /* this visit only */ }
   }
@@ -149,12 +151,12 @@
       var p = byId[l.id];
       var row = el('div', 'line');
       var pic = el('span', 'line__pic');
-      var c = l.colour ? colourOf(p, l.colour) : null;
-      var src = c ? c.img : p.images[0];
+      var src = p.images[0];
       if (src) { var im = el('img'); im.src = src; im.alt = ''; pic.appendChild(im); }
       var mid = el('div');
       mid.appendChild(el('p', 'line__name', p.name));
-      mid.appendChild(el('p', 'line__meta', (l.colour ? l.colour + ' · ' : '') + 'Size ' + l.size + ' · ' + rupees(p.price) + ' each'));
+      mid.appendChild(el('p', 'line__meta', 'Size ' + l.size + ' · ' + rupees(p.price) + ' each'));
+      if (p.atDispatch) mid.appendChild(el('p', 'line__note', AT_DISPATCH));
       var q = el('div', 'qty');
       var minus = el('button', null, '-'); minus.type = 'button'; minus.setAttribute('aria-label', 'One fewer');
       var plus = el('button', null, '+'); plus.type = 'button'; plus.setAttribute('aria-label', 'One more');
@@ -184,19 +186,18 @@
   }
 
   var toast = $('toast'), toastText = $('toastText'), toastTimer = 0;
-  function add(id, size, colour) {
+  function add(id, size) {
     var p = byId[id];
     if (!p) return;
-    colour = p.colours.length ? (colourOf(p, colour) || p.colours[0]).name : '';
     var found = null;
-    bag.forEach(function (l) { if (l.id === id && l.size === size && (l.colour || '') === colour) found = l; });
+    bag.forEach(function (l) { if (l.id === id && l.size === size) found = l; });
     if (found) found.qty += 1;
-    else bag.push(colour ? { id: id, colour: colour, size: size, qty: 1 } : { id: id, size: size, qty: 1 });
+    else bag.push({ id: id, size: size, qty: 1 });
     save();
     renderBag();
     bagBtn.classList.add('is-bump');
     window.setTimeout(function () { bagBtn.classList.remove('is-bump'); }, 260);
-    toastText.textContent = 'Added: ' + p.name + ', ' + (colour ? colour + ', ' : '') + size;
+    toastText.textContent = 'Added: ' + p.name + ', ' + size;
     toast.classList.add('is-in');
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(function () { toast.classList.remove('is-in'); }, 3200);
@@ -208,8 +209,7 @@
     e.preventDefault();
     var id = form.getAttribute('data-for') || (form.closest('.item') && form.closest('.item').getAttribute('data-id'));
     var picked = form.querySelector('.sizes input:checked');
-    var colour = form.querySelector('.colours input:checked');
-    add(id, picked ? picked.value : 'L', colour ? colour.value : '');
+    add(id, picked ? picked.value : 'L');
     var btn = form.querySelector('.item__add');
     if (btn) {
       btn.classList.add('is-done');
@@ -276,7 +276,7 @@
       return;
     }
     $('coItems').value = JSON.stringify(bag.map(function (l) {
-      return l.colour ? { id: l.id, colour: l.colour, size: l.size, qty: l.qty } : { id: l.id, size: l.size, qty: l.qty };
+      return { id: l.id, size: l.size, qty: l.qty };
     }));
     var pay = $('coPay');
     pay.disabled = true;
@@ -339,7 +339,7 @@
   /* A closer look at one piece: every photograph, the details, and the
      same size and bag control as the tile. */
   var lookImg = $('lookImg'), lookThumbs = $('lookThumbs');
-  function lookAt(p) {
+  function lookAt(p, startAt) {
     $('lookKicker').textContent = p.kind === 'designer' ? 'Designer edit · limited edition' : 'Everyday';
     $('lookTitle').textContent = p.name;
     var price = $('lookPrice');
@@ -351,13 +351,13 @@
     }
     $('lookCopy').textContent = p.kind === 'designer'
       ? 'A limited-edition T-shirt by ' + p.designer + ', made with People for Animals. It carries the designer’s own artistry on a contemporary silhouette, in premium organic cotton, and every purchase supports PFA’s work to protect and care for vulnerable animals across the country.'
-      : 'The People for Animals logo T-shirt.';
+      : 'The People for Animals logo T-shirt, made in a limited palette of red, yellow, white and pink. Each piece is hand-picked from the edition at dispatch, its colour chosen for you according to availability.';
     var spec = $('lookSpec');
     spec.textContent = '';
     var rows = p.kind === 'designer'
       ? [['Designer', p.designer], ['Fit', 'Unisex drop shoulder'], ['Fabric', '100% cotton'], ['Sizes', 'L, XL']]
       : [['Sizes', 'L, XL']];
-    if (p.colours.length) rows.push(['Colours', p.colours.map(function (c) { return c.name; }).join(', ')]);
+    if (p.atDispatch) rows.push(['Colour', 'Chosen for you at dispatch']);
     if (/charcoal/i.test(p.name)) rows.splice(3, 0, ['Colour', 'Charcoal']);
     rows.forEach(function (r) {
       var d = el('div');
@@ -368,33 +368,11 @@
     $('lookBuy').setAttribute('data-for', p.id);
     var first = $('lookBuy').querySelector('.sizes input[value="L"]');
     if (first) first.checked = true;
-    /* The colour choice, for a piece that has one: it opens on the colour
-       picked on the tile, and the photographs follow it. */
-    var box = $('lookColours'), row = box.querySelector('.colours__row');
-    row.textContent = '';
-    box.hidden = !p.colours.length;
-    if (p.colours.length) {
-      var onTile = p.el.querySelector('.colours input:checked');
-      var start = colourOf(p, onTile ? onTile.value : '') || p.colours[0];
-      p.colours.forEach(function (c) {
-        var src = p.el.querySelector('.colours input[value="' + c.name + '"]');
-        var label = el('label'); label.title = c.name;
-        var input = el('input'); input.type = 'radio'; input.name = 'colour-look'; input.value = c.name;
-        input.setAttribute('data-img', c.img); input.setAttribute('data-img2', c.img2);
-        input.checked = c === start;
-        var sw = src && src.nextElementSibling ? src.nextElementSibling.cloneNode(true) : el('span', 'sw');
-        label.appendChild(input); label.appendChild(sw); label.appendChild(el('span', 'sr', c.name));
-        row.appendChild(label);
-      });
-      box.querySelector('.colours__name b').textContent = start.name;
-      gallery(p, [start.img, start.img2], start.name);
-    } else {
-      gallery(p, p.images, '');
-    }
+    gallery(p, p.images, Math.max(0, p.images.indexOf(startAt || '')));
     show(look);
   }
-  function gallery(p, images, colour) {
-    var name = p.name + (colour ? ', ' + colour : '');
+  function gallery(p, images, start) {
+    var name = p.name;
     lookThumbs.textContent = '';
     function pick(i) {
       lookImg.style.visibility = '';
@@ -414,52 +392,16 @@
       });
     }
     lookThumbs.hidden = images.length < 2;
-    pick(0);
+    pick(start || 0);
   }
 
-  /* ---- colour ----------------------------------------------------------
-     Choosing a colour names it above the swatches and shows it: on a tile
-     the photographs change, in the closer look the gallery does, and in the
-     logo tee panel the matching photograph is marked. A photograph in that
-     panel chooses its colour when pressed. */
-  document.addEventListener('change', function (e) {
-    var input = e.target;
-    var box = input.closest && input.closest('.colours');
-    if (!box || !input.checked) return;
-    var name = box.querySelector('.colours__name b');
-    if (name) name.textContent = input.value;
-    var tile = input.closest('.item');
-    if (tile) {
-      var img = tile.querySelector('.item__img'), alt = tile.querySelector('.item__alt');
-      if (img) { img.src = input.getAttribute('data-img'); img.alt = tile.getAttribute('data-name') + ', ' + input.value; tile.querySelector('.item__media').classList.remove('is-bare'); }
-      if (alt) alt.src = input.getAttribute('data-img2');
-    }
-    var form = input.closest('form');
-    if (form && form.id === 'lookBuy') {
-      var p = byId[form.getAttribute('data-for')];
-      if (p) gallery(p, [input.getAttribute('data-img'), input.getAttribute('data-img2')], input.value);
-    }
-    if (form && form.id === 'featureBuy') {
-      [].forEach.call(document.querySelectorAll('.feature__pics [data-colour]'), function (b) {
-        b.setAttribute('aria-pressed', String(b.getAttribute('data-colour') === input.value));
-      });
-    }
-  });
-  [].forEach.call(document.querySelectorAll('.feature__pics [data-colour]'), function (b) {
-    b.addEventListener('click', function () {
-      var input = document.querySelector('#featureBuy .colours input[value="' + b.getAttribute('data-colour') + '"]');
-      if (!input || input.checked) return;
-      input.checked = true;
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-  });
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('[data-open], [data-open-id]');
     if (!t) return;
     var id = t.getAttribute('data-open-id') || (t.closest('.item') && t.closest('.item').getAttribute('data-id'));
     if (!byId[id]) return;
     e.preventDefault();
-    lookAt(byId[id]);
+    lookAt(byId[id], t.getAttribute('data-start'));
   });
 
   bagBtn.hidden = false;

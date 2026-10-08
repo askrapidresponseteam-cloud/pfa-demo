@@ -116,7 +116,6 @@
      in the middle, a move to the top or bottom edge, or Escape
      --------------------------------------------------------------------- */
   var hideTimer = 0;
-  var overChrome = false;
   var scrubbing = false;
   function chromeOn() { return body.classList.contains('rd-chrome'); }
   function showChrome(stay) {
@@ -133,11 +132,6 @@
   }
   function toggleChrome() { showChrome(true); }
 
-  ['rdBar', 'rdDock'].forEach(function (id) {
-    var el = $(id);
-    el.addEventListener('mouseenter', function () { overChrome = true; clearTimeout(hideTimer); });
-    el.addEventListener('mouseleave', function () { overChrome = false; if (!panel) hideTimer = setTimeout(hideChrome, 1800); });
-  });
   document.addEventListener('mousemove', function (event) {
     if (panel || mode !== 'pages') return;
     var y = event.clientY;

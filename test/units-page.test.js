@@ -187,9 +187,10 @@ test('search reads the town, the state, the contact and the work', () => {
 
 test('no photograph of a person is used to carry the section', () => {
   /* The brief was explicit: the network is the subject, not its people. The
-     only image on the page is the wordmark in the header. */
+     only images on the page are PFA's own marks: the wordmark in the header
+     and the bird beside the name in the footer (8 Oct 2026). */
   const imgs = [...d.querySelectorAll('img')].map((i) => i.getAttribute('src'));
-  assert.deepEqual(imgs, ['img/logo.png']);
+  assert.deepEqual(imgs, ['img/logo.png', 'img/mail/logo-mark.png']);
 });
 
 test('the plot of dots is gone, and nothing draws a map', () => {

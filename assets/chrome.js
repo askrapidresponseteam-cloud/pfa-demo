@@ -807,8 +807,9 @@
     cells.forEach(function (cell, i) {
       var strip = cell.querySelector('.pfa-tally__strip');
       var d = Number(digits[i] || 0);
-      /* each cell is 1.16em tall, so digit n sits at -n * 1.16em */
-      var move = function () { strip.style.transform = 'translateY(' + (-d * 1.16) + 'em)'; };
+      /* each wheel is 1.9em tall (.pfa-tally__d in chrome.css), so digit n
+         sits at -n * 1.9em */
+      var move = function () { strip.style.transform = 'translateY(' + (-d * 1.9) + 'em)'; };
       if (!animate) { strip.style.transition = 'none'; move(); strip.offsetHeight; strip.style.transition = ''; return; }
       /* stagger from the right so the number settles like a real odometer */
       setTimeout(move, (cells.length - i - 1) * 55);

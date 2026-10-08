@@ -134,22 +134,34 @@ test('without the pfa-oldsite key, orders go to the site database donations use;
   }
 });
 
-test('the logo tee is bought in a colour: one is required, it is part of the line, and a designer piece ignores one', () => {
-  assert.deepEqual(SHOP.get('21').colours, ['Red', 'Yellow', 'White', 'Pink']);
-  assert.equal(SHOP.get('23').colours, null);
-  assert.throws(() => SHOP.quote('[{"id":"21","size":"L","qty":1}]'), /Choose a colour for PFA logo T-shirt: Red, Yellow, White or Pink\./);
-  assert.throws(() => SHOP.quote('[{"id":"21","colour":"Blue","size":"L","qty":1}]'), /Choose a colour/);
-  const q = SHOP.quote([{ id: '21', colour: 'white', size: 'L', qty: 1 }, { id: '21', colour: 'Yellow', size: 'L', qty: 1 }, { id: '21', colour: 'WHITE', size: 'L', qty: 2 }, { id: '23', colour: 'Red', size: 'L', qty: 1 }]);
-  assert.deepEqual(q.lines.map((l) => SHOP.describe(l)), ['3 x PFA logo T-shirt, White, size L', '1 x PFA logo T-shirt, Yellow, size L', '1 x Sabyasachi x PFA, size L']);
-  assert.equal('colour' in q.lines[2], false);
-  /* the page offers the same colours the catalogue accepts, each with its photographs */
+test('the logo tee is not sold by colour: PFA chooses it at dispatch, says so on every line, and a colour sent is ignored', () => {
+  assert.deepEqual(SHOP.get('21').palette, ['Red', 'Yellow', 'White', 'Pink']);
+  assert.equal(SHOP.get('23').palette, null);
+  assert.equal('colours' in SHOP.get('21'), false);
+  /* no colour needed, and one sent (an old page, an old bag) is not read: two colours in one size are one line */
+  const q = SHOP.quote([{ id: '21', size: 'L', qty: 1 }, { id: '21', colour: 'Yellow', size: 'L', qty: 1 }, { id: '21', colour: 'WHITE', size: 'XL', qty: 2 }, { id: '23', colour: 'Red', size: 'L', qty: 1 }]);
+  assert.deepEqual(q.lines.map((l) => SHOP.describe(l)), ['2 x PFA logo T-shirt, size L, colour chosen at dispatch', '2 x PFA logo T-shirt, size XL, colour chosen at dispatch', '1 x Sabyasachi x PFA, size L']);
+  for (const l of q.lines) assert.equal('colour' in l, false);
+  assert.equal(q.total, 4 * 350 + 2500 + SHOP.SHIPPING_FLAT);
+  /* an order placed while colours were chosen still reads as it was placed */
+  assert.equal(SHOP.describe({ id: '21', name: 'PFA logo T-shirt', colour: 'Pink', size: 'L', qty: 1 }), '1 x PFA logo T-shirt, Pink, size L');
+  assert.equal(SHOP.atDispatch({ id: '21', colour: 'Pink', size: 'L' }), false);
+  /* the page offers no colour anywhere, and says how the colour is chosen */
   const html = fs.readFileSync(path.join(ROOT, 'shop.html'), 'utf8');
-  const offered = [...html.matchAll(/name="colour-pfa-logo-tee" value="([^"]+)" data-img="([^"]+)" data-img2="([^"]+)"/g)];
-  assert.deepEqual(offered.map((m) => m[1]), SHOP.get('21').colours);
-  for (const m of offered) for (const src of [m[2], m[3]]) assert.ok(fs.existsSync(path.join(ROOT, src)), `${src} is missing`);
+  assert.doesNotMatch(html, /name="colour-|class="colours|id="lookColours"|data-colour="/, 'a colour picker is left on the page');
+  const tee = html.match(/<article class="item" id="pfa-logo-tee"[\s\S]*?<\/article>/)[0];
+  assert.match(tee, /data-colour-at-dispatch/);
+  assert.match(tee, /colour chosen for you at dispatch/);
+  assert.match(html, /class="feature__note"><b>A limited palette<\/b>[^<]*chosen for you according to availability\./);
+  for (const c of ['red', 'yellow', 'white', 'pink']) assert.match(html, new RegExp(`data-open-id="21" data-start="media/shop/v2/t-shirt-${c}-front\\.webp"`));
+  const js = fs.readFileSync(path.join(ROOT, 'assets/shop.js'), 'utf8');
+  assert.match(js, /its colour chosen for you according to availability\./);
+  assert.doesNotMatch(js, /\.colours\b|colour: l\.colour/);
   const mail = require('../lib/caregiver-mail');
   const r = mail.render('shop_order_confirmed', { orderId: 'PFA-SHP-TEST0001', name: 'Meera', items: q.lines, subtotal: q.subtotal, shipping: q.shipping, total: q.total, delivery: {} });
-  assert.match(r.text, /3 x PFA logo T-shirt, White, size L/);
+  assert.match(r.text, /2 x PFA logo T-shirt, size L, colour chosen at dispatch/);
+  const staff = mail.render('shop_order_staff', { orderId: 'PFA-SHP-TEST0001', name: 'Meera', items: q.lines, total: q.total, delivery: {} });
+  assert.match(staff.html, /size XL, colour chosen at dispatch/);
 });
 
 test('checkout records the order before payment, reserves stock, and asks CCAvenue for the catalogue total', async () => {
@@ -168,9 +180,11 @@ test('checkout records the order before payment, reserves stock, and asks CCAven
     assert.equal(order.total, 3350);
     assert.deepEqual(order.delivery, { name: 'Meera Shah', address: 'Flat 4, Shanti Niwas, FC Road', city: 'Pune', district: 'Pune', state: 'Maharashtra', zip: '411004', country: 'India', tel: '9876543210' });
     assert.equal(db.docs.get('stock/23__XL').data.remaining, 98);
-    assert.equal(db.docs.has('stock/21__pink__L'), false, 'the logo tee is not counted');
-    assert.deepEqual(order.items.map((i) => SHOP.describe(i)), ['1 x Sabyasachi x PFA, size XL', '2 x PFA logo T-shirt, Pink, size L']);
-    assert.match(order.itemSummary, /t-shirt-pink:Lx2/);
+    assert.equal(db.docs.has('stock/21__L'), false, 'the logo tee is not counted');
+    assert.equal([...db.docs.keys()].some((k) => /^stock\/21_/.test(k)), false);
+    assert.deepEqual(order.items.map((i) => SHOP.describe(i)), ['1 x Sabyasachi x PFA, size XL', '2 x PFA logo T-shirt, size L, colour chosen at dispatch']);
+    assert.equal(order.items.some((i) => 'colour' in i), false, 'a colour the browser sent is not kept');
+    assert.match(order.itemSummary, /(^|,)t-shirt:Lx2/);
   } finally { backend.use(null); }
 });
 

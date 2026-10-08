@@ -315,18 +315,24 @@ header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));paddin
    a hairline. Everything is written against the tokens on .pfa-footer, so
    the whole footer turns over on those lines.
 
-   Compact (owner, 8 Oct 2026: "make footer compact in the whole site"). It
-   was over 1,000px tall on a laptop and nearly 1,400px on a phone: 110px of
-   padding, the name at 118px on a band of its own, Get Involved nine rows
-   long, and 70px between every band. Now one band, who and where beside the
-   links, and the legal line under both. Every link, the office, the numbers,
-   the mailbox, the counter and the social links are all still here. */
+   Compact (owner, 8 Oct 2026: "make footer compact in the whole site"), then
+   set on one grid (owner, same day: "this can be better. alignment and look
+   wise"). The links had been packed to the right at their own widths, so the
+   gaps between the groups were all different, Get Involved's second column
+   stood there with no label over it, and nothing on the left lined up with
+   anything on the right. Now: the name and the social links in a bar; under
+   it six equal columns (the registered office, Our Work, Learn, Get Involved
+   across two, About), each opened by the same label on the same hairline;
+   the legal line under all of it. Six columns of 163px at 1240 wide is the
+   narrowest that holds "Policies and achievements" on one line; below that
+   it is three columns, then two on phones. */
 .pfa-footer{
   --ff-bg:#fff;--ff-fg:#111;--ff-muted:#6a6a6a;--ff-line:rgba(17,17,17,.12);
   --ff-body:'Helvetica Neue',Helvetica,Arial,sans-serif;
   --ff-display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
   --ff-gutter:max(clamp(20px,5vw,84px),(100% - 1440px) / 2);
-  width:100%;padding:clamp(36px,4vw,52px) var(--ff-gutter) 22px;
+  --ff-gap:clamp(20px,2.2vw,40px);
+  width:100%;padding:clamp(36px,3.6vw,52px) var(--ff-gutter) 22px;
   background:var(--ff-bg);color:var(--ff-fg);font-family:var(--ff-body);
   border-top:1px solid var(--ff-line);
   display:flex;flex-direction:column;box-sizing:border-box}
@@ -335,108 +341,111 @@ header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));paddin
 .pfa-footer a{color:inherit;text-decoration:none}
 .pfa-footer a:hover{opacity:.6}
 
-/* who and where | the links */
-.pfa-footer__top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(32px,5vw,80px);align-items:start}
-.pfa-footer__mark{font-family:var(--ff-display);font-weight:400;text-transform:uppercase;
-  font-size:clamp(22px,2vw,28px);line-height:1.05;letter-spacing:.02em}
-/* <address> is italic by default and the rest of the footer is not. */
-.pfa-footer__where{margin:12px 0 0;font-style:normal;font-size:13px;line-height:1.55;color:var(--ff-muted)}
-.pfa-footer__where div + div{margin-top:2px}
-.pfa-footer__where a{white-space:nowrap;display:inline-block;padding:2px 0}
+/* the bar: the name, and PFA on social media */
+.pfa-footer__bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:12px 32px;margin:0 0 clamp(26px,2.8vw,38px)}
+.pfa-footer__mark{display:flex;align-items:center;gap:14px;font-family:var(--ff-display);font-weight:400;
+  text-transform:uppercase;font-size:clamp(20px,1.75vw,25px);line-height:1;letter-spacing:.03em}
+.pfa-footer__bird{display:block;flex:none;width:auto;height:1.44em}
+.pfa-footer__social{display:flex;flex-wrap:wrap;align-items:center;gap:0 26px;
+  font-size:11px;text-transform:uppercase;letter-spacing:.16em}
+.pfa-footer__social a{display:inline-block;padding:8px 0;min-width:24px;text-align:center;color:var(--ff-muted);transition:color .2s}
+.pfa-footer__social a:hover{color:var(--ff-fg);opacity:1}
 
-.pfa-footer__links{display:grid;grid-template-columns:repeat(4,max-content);gap:clamp(24px,3.2vw,52px)}
-.pfa-footer__label{margin:0 0 8px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ff-muted)}
-.pfa-footer ul{margin:0;padding:0;list-style:none;font-size:13px;line-height:1.4}
-.pfa-footer ul a{display:inline-block;padding:3px 0}
-/* Get Involved is nine links long; in two short columns it stands as tall
-   as the other groups instead of twice as tall. */
-.pfa-footer__col--wide ul{columns:2;column-gap:clamp(20px,2.4vw,36px)}
-.pfa-footer__col--wide li{break-inside:avoid}
+/* the grid: one width for every column, one gap between them */
+.pfa-footer__grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:30px var(--ff-gap);align-items:start}
+.pfa-footer__label{margin:0 0 10px;padding:0 0 11px;border-bottom:1px solid var(--ff-line);
+  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ff-fg);white-space:nowrap}
+.pfa-footer ul{margin:0;padding:0;list-style:none;font-size:13px;line-height:1.45}
+.pfa-footer ul a{display:inline-block;padding:4px 0;color:#3a3a3a}
+.pfa-footer ul a:hover{color:var(--ff-fg);opacity:1;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+/* Get Involved: two columns of the grid under one label, its hairline
+   running across both, the second list on the same lines as the first. */
+.pfa-footer__col--wide{grid-column:span 2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--ff-gap)}
+.pfa-footer__col--wide .pfa-footer__label{grid-column:1 / -1}
+
+/* The registered office, set on the same lines as the links beside it.
+   <address> is italic by default and the rest of the footer is not. */
+.pfa-footer__where{margin:0;font-style:normal;font-size:13px;line-height:1.45;color:var(--ff-muted)}
+.pfa-footer__where div{padding:4px 0;text-wrap:balance}
+.pfa-footer__where div:first-child{margin-bottom:4px}
+.pfa-footer__where a{color:#3a3a3a;white-space:nowrap}
+.pfa-footer__where a:hover{color:var(--ff-fg);opacity:1;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+/* the two numbers, one to a line, where the column is narrow */
+.pfa-footer__tel a{display:block;width:fit-content}
+.pfa-footer__tel a + .pfa-footer__dot + a{margin-top:8px}
+.pfa-footer__dot{display:none}
 
 /* ---------- visit tally ----------
    An odometer: each digit is a 0-9 strip that slides to the right number, so a
    change rolls rather than blinks. Pure transform, no library, and it degrades
    to a plain readable number if transforms are unavailable. */
-.pfa-tally{margin:14px 0 0}
+.pfa-tally{margin:16px 0 0}
 /* The wheels wear the body face, not the display face, and it is not a
    style call: Marcellus carries only old-style figures (its GSUB has frac
    and liga, no lnum or tnum), so its zero is an x-height ring 0.806em wide
    - odd and clipped in a 0.62em tile - while 3 and 4 trail descenders below
    the baseline. The tabular-nums below was a silent no-op against it. An
    odometer is an instrument; Helvetica's lining, near-tabular digits are
-   what these tile proportions were tuned for all along. */
-.pfa-tally__odo{display:inline-flex;align-items:stretch;gap:4px;
+   what these tile proportions were tuned for all along.
+   One instrument, not a row of boxes (8 Oct 2026): the wheels sit in a
+   single hairline frame with a hairline between each, the way a mechanical
+   counter reads, instead of a grey tile per digit. */
+.pfa-tally__odo{display:inline-flex;align-items:stretch;gap:0;
+  border:1px solid rgba(17,17,17,.2);border-radius:3px;background:#fff;
   font-family:var(--ff-body);font-weight:400;line-height:1;
-  font-size:17px;font-variant-numeric:tabular-nums}
-.pfa-tally__d{position:relative;overflow:hidden;width:.62em;height:1.16em;
-  border:1px solid rgba(17,17,17,.16);background:rgba(17,17,17,.03);
-  border-radius:2px}
+  font-size:13px;font-variant-numeric:tabular-nums}
+.pfa-tally__d{position:relative;overflow:hidden;width:1.1em;height:1.9em}
+.pfa-tally__d + .pfa-tally__d{border-left:1px solid rgba(17,17,17,.13)}
 /* the light that runs across the digits as they settle */
 .pfa-tally__d::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,rgba(0,0,0,.10),transparent 42%,transparent 58%,rgba(0,0,0,.10))}
+  background:linear-gradient(180deg,rgba(0,0,0,.07),transparent 38%,transparent 62%,rgba(0,0,0,.07))}
 .pfa-tally__strip{display:flex;flex-direction:column;align-items:center;
   transition:transform 1.05s cubic-bezier(.2,.85,.2,1)}
 .pfa-tally__strip span{display:flex;align-items:center;justify-content:center;
-  height:1.16em;width:100%;color:var(--ff-fg)}
-.pfa-tally__sep{align-self:flex-end;padding:0 1px .18em;color:var(--ff-muted);
-  font-size:.72em;border:0;background:none}
-/* the digit that just changed gets a brief lift */
+  height:1.9em;width:100%;padding-top:.06em;color:var(--ff-fg)}
+.pfa-tally__sep{align-self:flex-end;padding:0 1px .42em;color:var(--ff-muted);
+  font-size:.8em;line-height:1;border-left:1px solid rgba(17,17,17,.13)}
+.pfa-tally__sep + .pfa-tally__d{border-left:0}
 /* The digit that just changed. On the black footer this was a white glow
    behind a white numeral, which read as the wheel catching the light. The
    same declaration inverted for paper is a dark blur behind a dark numeral,
-   which reads as a smudge, so the tile carries the state instead: it takes
-   the ink border and a heavier ground for the beat it is settling. */
-.pfa-tally__d.is-hot{border-color:var(--ff-fg);background:rgba(17,17,17,.07)}
+   which reads as a smudge, so the wheel carries the state instead: a
+   heavier ground for the beat it is settling. */
+.pfa-tally__d.is-hot{background:rgba(17,17,17,.06)}
 @media (prefers-reduced-motion: reduce){
   .pfa-tally__strip{transition:none}
 }
 
-/* The legal line. Three columns, not space-between, so the social links
-   sit in the true centre whatever the other two say. */
-.pfa-footer__base{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-  gap:8px 24px;margin-top:clamp(24px,3vw,36px);padding-top:14px;
+/* The legal line: who and when on the left, what PFA is on the right. */
+.pfa-footer__base{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;
+  gap:4px 24px;margin-top:clamp(30px,3.2vw,44px);padding-top:15px;
   border-top:1px solid var(--ff-line);font-size:12px;letter-spacing:.04em;color:var(--ff-muted)}
-.pfa-footer__base > :last-child{text-align:right}
-.pfa-footer__social{display:flex;flex-wrap:wrap;align-items:center;gap:4px 22px;text-transform:uppercase;letter-spacing:.14em}
-.pfa-footer__social a{display:inline-block;padding:6px 0;min-width:24px;text-align:center;color:var(--ff-muted);transition:color .2s}
-.pfa-footer__social a:hover{color:var(--ff-fg);opacity:1}
 
-/* Tablets: who and where across the top, the four groups in one row under it. */
-@media (max-width:1100px){
-  .pfa-footer__top{grid-template-columns:1fr;gap:26px}
-  .pfa-footer__brand{display:grid;grid-template-columns:auto 1fr;gap:4px 32px;align-items:baseline}
-  .pfa-footer__where{margin:0;grid-row:span 2;text-align:right}
-  .pfa-footer__links{grid-template-columns:repeat(4,minmax(0,max-content));justify-content:space-between}
+/* Below 1240 the six columns would be too narrow for their longest links,
+   so three: the office, Our Work and Learn, then Get Involved across two
+   and About beside it. */
+@media (max-width:1239px){
+  .pfa-footer__grid{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:34px}
 }
-/* Small tablets: who and where stacked, and Get Involved in one column so
-   the four groups still fit across in one row. */
-@media (max-width:900px){
-  .pfa-footer__brand{display:block}
-  .pfa-footer__where{margin-top:10px;text-align:left}
-  .pfa-footer__col--wide ul{columns:1}
-}
-/* Phones: two by two. Our Work beside Learn, then Get Involved across the
-   width in its two columns, then About as one line. */
-@media (max-width:720px){
-  .pfa-footer__links{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 20px}
-  .pfa-footer__col--wide{grid-column:1 / -1}
-  .pfa-footer__col--wide ul{columns:2;column-gap:20px}
+/* Phones: two columns. The office across the width (the numbers on one
+   line again), Our Work beside Learn, Get Involved's two lists under its
+   label, and About as one line. */
+@media (max-width:719px){
+  .pfa-footer__bar{flex-direction:column;align-items:flex-start;gap:10px}
+  .pfa-footer__social{gap:0 22px}
+  .pfa-footer__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 20px}
+  .pfa-footer__label{margin-bottom:6px;padding-bottom:9px}
+  .pfa-footer__office{grid-column:1 / -1}
+  .pfa-footer__tel a{display:inline-block}
+  .pfa-footer__tel a + .pfa-footer__dot + a{margin-top:0}
+  .pfa-footer__dot{display:inline}
+  .pfa-footer__col--wide{grid-column:1 / -1;column-gap:20px}
   .pfa-footer__col:last-child{grid-column:1 / -1}
-  .pfa-footer__col:last-child ul{display:flex;flex-wrap:wrap;gap:0 22px}
-  /* finger-sized targets: 13px text with 5px above and below, 28px a row */
-  .pfa-footer ul a{padding:5px 0}
-}
-/* The legal line, narrower: the social links first, then the two short
-   lines as one, left aligned, where three columns no longer fit unbroken. */
-@media (max-width:900px){
-  .pfa-footer__base{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 0;padding-top:10px}
-  .pfa-footer__social{order:-1;flex-basis:100%}
-  .pfa-footer__base > p:last-child{text-align:left}
-  .pfa-footer__base > p:last-child::before{content:"\00b7";margin:0 8px}
-}
-@media (max-width:480px){
-  .pfa-footer__base > p:last-child{flex-basis:100%}
-  .pfa-footer__base > p:last-child::before{content:none}
+  .pfa-footer__col:last-child ul{display:flex;flex-wrap:wrap;gap:0 24px}
+  /* finger-sized targets: 13px text with 5px above and below, 29px a row */
+  .pfa-footer ul a,.pfa-footer__where div{padding:5px 0}
+  .pfa-footer__base{flex-direction:column;gap:2px}
 }
 
 /* ======================================================================
