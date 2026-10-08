@@ -1,0 +1,25 @@
+rules_version = '2';
+
+// Cloud Storage for Firebase: nobody reaches the bucket from a browser.
+//
+// 8 Oct 2026 (review D11). The bucket holds the photographs and documents
+// people send PFA: reports of cruelty, caregivers' ID photos and address
+// proof, files that come with email replies (lib/file-store.js). Only the
+// server touches it, with the admin credentials, which these rules do not
+// govern; the admin panel gets a file through /api/admin/attachment, which
+// checks an administrator's token first. Object paths are predictable
+// (submissions/PFA-CG-2026-00001/1), so the only safe rule for a browser,
+// signed in or not, is no.
+//
+// Without this file, whether the bucket was private depended on which button
+// was pressed when Storage was switched on in the console ("test mode" opens
+// it to everyone for 30 days). Deployed with
+//   npx firebase-tools deploy --only storage --project pfa-new-website
+// once Storage has been switched on (Build > Storage > Get started).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

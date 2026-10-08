@@ -181,8 +181,28 @@ td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .mailbox .detail{display:block;color:var(--muted);font-size:11px;margin-top:4px;overflow-wrap:anywhere}
 .mailbox table{margin-top:4px}
 .flag[data-s="sent"]{color:var(--done)}
-.flag[data-s="retry"],.flag[data-s="queued"]{border-color:var(--working);color:var(--working)}
+.flag[data-s="retry"],.flag[data-s="queued"],.flag[data-s="sending"]{border-color:var(--working);color:var(--working)}
 .flag[data-s="failed"]{border-color:#a3251f;color:#a3251f}
+/* 8 Oct 2026: the emails that have not gone, the payments waiting for
+   CCAvenue and a register line that needs attention carry a second line of
+   plain words under their flag, the same quiet grey as the mailbox's. */
+.wrap .detail,.pend .detail,.facts .detail,.badges .detail{display:block;color:var(--muted);font-size:11px;margin-top:4px;overflow-wrap:anywhere}
+/* In a table a long word widens its column rather than breaking mid-address. */
+.wrap td .detail{overflow-wrap:break-word}
+.mailbox .wrap{margin-top:4px}
+/* A Message-ID or a mail server's answer is one long word; on a phone it
+   must break rather than push the page sideways. */
+.mailbox .state,.mailbox .note,.mailbox .say,.pend .say,.facts li,.msg .who{overflow-wrap:anywhere}
+/* On a phone these tables scroll inside their box, like the registers; a
+   floor on their width keeps the "What happened" column wide enough to
+   read instead of one word to a line. */
+.mailbox .wrap table{min-width:880px}
+.pend .wrap table{min-width:720px}
+.mailbox p.lab{margin:18px 0 8px}
+.pend h3{margin:0 0 4px}
+.pend p.lab{margin:18px 0 8px}
+.pend .note{font-size:13px;margin:0}
+.pend td .ghost{height:32px;white-space:nowrap}
 
 /* ---------- case drawer ---------- */
 .veil{position:fixed;inset:0;background:rgba(10,10,10,.42);z-index:80;opacity:0;pointer-events:none;transition:opacity .24s}
@@ -216,6 +236,20 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
 .msg[data-k="in"]{border-left-color:#0653EE}
 .msg[data-k="note"]{border-left-color:var(--stone)}
 .msg[data-k="email"]{border-left-color:var(--line)}
+/* An automatic reply (out of office) is filed but is nobody's answer, so it
+   is drawn as quietly as a copy; a report that an email was not delivered is
+   drawn in the panel's one warning red (8 Oct 2026). */
+.msg[data-k="auto"]{border-left-color:var(--line)}
+.msg[data-k="bounce"]{border-left-color:#a3251f}
+.msg .auto{color:var(--muted)}
+.thread .warn{margin:0 0 18px}
+/* Earlier closes and emails that did not arrive: short ruled lists under the
+   case's facts, so the history of a case is visible without reading it all. */
+.facts{list-style:none;margin:0 0 24px;padding:0;font-size:13px}
+.facts li{padding:8px 0;border-top:1px solid var(--line)}
+.facts li:first-child{border-top:none;padding-top:0}
+.badges{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 24px}
+.badges .detail{flex-basis:100%;margin-top:0;font-size:12px}
 .msg .who{font-size:11px;color:var(--muted);margin:0 0 4px}
 .msg .who b{color:var(--ink);font-weight:600}
 .msg p{margin:0;white-space:pre-wrap;font-size:13px}
@@ -241,7 +275,11 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
 .preview figcaption{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 0 0}
 .preview .note{grid-column:1 / -1;font-size:12px;color:var(--muted);margin:0}
 .row2{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0;align-items:center}
-.row2 select{padding:9px 11px;border:1px solid var(--line);background:var(--paper);font:inherit;font-size:12px}
+.row2 select{padding:9px 11px;border:1px solid var(--line);background:var(--paper);font:inherit;font-size:12px;max-width:100%}
+/* On a phone the two faces of the card preview share a row 340px wide, but
+   the renderer sets each canvas to 260px; they fit the column instead,
+   keeping their proportions (8 Oct 2026, found in the 390px check). */
+@media (max-width:620px){.preview canvas{width:100%!important;height:auto!important}}
 
 /* ---------- people and cards ---------- */
 .panel{border:1px solid var(--line);padding:22px;margin:0 0 22px}
@@ -262,6 +300,25 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
 .sheet canvas{width:100%;height:auto;display:block;background:var(--stone)}
 .sheet figcaption{font-size:11px;color:var(--muted);margin:8px 0 0;overflow-wrap:anywhere}
 .pick{position:fixed;left:-9999px;width:1px;height:1px;opacity:0}
+
+/* ---------- website: what the public site shows ---------- */
+/* A pair of the panel's own ghost buttons joined into one control: the state
+   it is in is filled in ink, the other waits to be pressed. */
+.vis{display:inline-flex;border:1px solid var(--line);white-space:nowrap}
+.vis button{background:var(--paper);border:none;padding:0 12px;height:32px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.vis button + button{border-left:1px solid var(--line)}
+.vis button:hover{color:var(--ink)}
+.vis button[aria-pressed="true"]{background:var(--ink);color:#fff;cursor:default}
+.vis button[disabled]{opacity:.4;cursor:default}
+.site-group{margin:0 0 30px}
+.site-group td:first-child{width:62%}
+.site-group .detail{display:block;color:var(--muted);font-size:11px;margin-top:4px;max-width:70ch}
+.site-group tr.site-page td{border-top:1px solid var(--line)}
+.site-group tr.site-page .ttl{font-size:15px}
+.site-group tr.site-part td:first-child{padding-left:34px}
+.site-group tr[data-off] td:first-child{color:var(--muted)}
+.bar .note[data-tone="good"]{color:#1f6b3a}
+.bar .note[data-tone="bad"]{color:#a3251f}
 
 .loading{padding:48px 20px;text-align:center;color:var(--muted);font-size:13px}
 .warn{border:1px solid var(--line);border-left:2px solid var(--ink);padding:13px 16px;margin:0 0 22px;font-size:13px;background:var(--stone)}
@@ -330,6 +387,7 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
       <button class="tab" type="button" data-tab="volunteers">Volunteers</button>
       <button class="tab" type="button" data-tab="payments">Payments &amp; donations</button>
       <button class="tab" type="button" data-tab="caregivers">Colony cards</button>
+      <button class="tab" type="button" data-tab="website">Website</button>
       <button class="tab" type="button" data-tab="people" data-super>People &amp; audit</button>
     </div>
 
@@ -405,6 +463,10 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
     <div class="pane" data-pane="cards" role="region" aria-label="Issue cards"><div class="loading">Reading the register&#8230;</div></div>
 
     <div class="pane" data-pane="payments">
+      <!-- Payments still waiting for CCAvenue's answer, and paid applications
+           whose photograph is not on the record yet (8 Oct 2026). Filled by
+           pendingPayments() from /api/admin/payments-pending. -->
+      <div id="payPending" aria-live="polite"></div>
       <div class="tools">
         <select id="payType" aria-label="Purpose">
           <option value="">Every purpose</option><option value="donate">Donation</option>
@@ -430,6 +492,8 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
       </tr></thead><tbody id="donRows"></tbody></table></div>
       <div class="more"><button class="ghost" type="button" id="donMore" hidden>Load more</button></div>
     </div>
+
+    <div class="pane" data-pane="website" role="region" aria-label="What the public site shows"><div class="loading">Reading the site&#8230;</div></div>
 
     <div class="pane" data-pane="people"><div class="loading">Reading the accounts&#8230;</div></div>
 
@@ -730,7 +794,16 @@ window.addEventListener('unhandledrejection', function (event) {
           denied.status = r.status;
           throw denied;
         }
-        if (!r.ok) throw new Error(data.message || 'That did not go through.');
+        if (!r.ok) {
+          /* 8 Oct 2026: the server's code and whole answer travel with the
+             error. A check can then tell "not set up on this server"
+             (NOT_CONFIGURED) from "failed just now", and a refused case
+             action, which still carries the case, can redraw from it. */
+          var failed = new Error(data.message || 'That did not go through.');
+          failed.code = data.code || '';
+          failed.data = data;
+          throw failed;
+        }
         return data;
       });
     });
@@ -750,6 +823,7 @@ window.addEventListener('unhandledrejection', function (event) {
     payments:    { title: 'Payments & donations', module: 'payments', needs: 'payments', panes: ['payments', 'donations'] },
     cards:       { title: 'Issue cards',   module: 'cards',       needs: 'caregivers' },
     verify:      { title: 'Verify a card', module: 'verify',      needs: 'verify' },
+    website:     { title: 'Website',       module: 'website',     needs: 'website' },
     people:      { title: 'People & audit', module: 'people',     needs: 'people', panes: ['people', 'audit'] },
     audit:       { title: 'Audit log',     module: 'people',      needs: 'people' }
   };
@@ -822,8 +896,9 @@ window.addEventListener('unhandledrejection', function (event) {
     if (tab === 'volunteers') return volunteers(true);
     if (tab === 'donations') return donations(true);
     if (tab === 'caregivers') return caregivers(true);
-    if (tab === 'payments') return payments(true);
+    if (tab === 'payments') { pendingPayments(); return payments(true); }
     if (tab === 'cards') return cardsPane();
+    if (tab === 'website') return website();
     if (tab === 'people') return people();
     if (tab === 'audit') return auditLog(true);
     return undefined;
@@ -904,14 +979,91 @@ window.addEventListener('unhandledrejection', function (event) {
      gandhim email id"). Whether the live mail account will actually send is
      the one thing no test can show, so it is shown here: is a key set, where
      copies go, a test email on demand, and what happened to the last ones. */
-  var MAIL_STATUS = { sent: 'Delivered to the provider', retry: 'Retrying', queued: 'Waiting to send', failed: 'Not sent' };
+  /* 'sending' joined on 8 Oct 2026: the list of emails that have not gone
+     shows a row another request is sending right now. */
+  var MAIL_STATUS = { sent: 'Delivered to the provider', retry: 'Retrying', queued: 'Waiting to send', failed: 'Not sent', sending: 'Sending now' };
 
-  function mailbox() {
+  /* One email that has not gone, from mail-check's `failing` (8 Oct 2026).
+     A row nobody is sending any more but which never finished reads
+     "Stopped while sending", not "Sending now", which would be untrue; one
+     the server never heard back about says it may have arrived; one that
+     came back from the receiving server reads "Not delivered", because it
+     was sent. Its own Send again is offered only where the server would
+     take it (canResend) and only to a super administrator, who alone may
+     send from here. */
+  function failRow(r, canSend) {
+    var word = r.bounced ? 'Not delivered'
+      : r.status === 'sending' && r.canResend ? 'Stopped while sending'
+      : (MAIL_STATUS[r.status] || r.status || '-');
+    var tone = r.bounced ? 'failed' : r.status;
+    var tries = Number(r.attempts) || 0;
+    return '<tr><td>' + esc(r.what || 'Email') + (r.reference ? '<span class="detail">' + esc(r.reference) + '</span>' : '') + '</td>'
+      + '<td>' + esc(r.to || '-') + '</td>'
+      + '<td><span class="flag" data-s="' + esc(tone) + '">' + esc(word) + '</span>'
+      + (r.uncertain ? ' <span class="flag">may have arrived</span>' : '')
+      + (r.problem ? '<span class="detail">' + esc(r.problem) + (r.detail ? ' (' + esc(r.detail) + ')' : '') + '</span>' : '')
+      + (tries ? '<span class="detail">' + tries + (tries === 1 ? ' attempt' : ' attempts')
+        + (r.status === 'retry' && r.retryAt ? ', next try due ' + esc(when(r.retryAt)) : '') + '</span>' : '')
+      + '</td>'
+      + '<td>' + esc(when(r.at)) + '</td>'
+      + (canSend ? '<td>' + (r.canResend
+        ? '<button class="ghost" type="button" data-mail-resend="' + esc(r.id) + '">Send again</button>'
+        : '<span class="note">' + (r.status === 'queued' ? 'The email worker sends it next' : 'Being sent now') + '</span>') + '</td>' : '')
+      + '</tr>';
+  }
+
+  /* What a resend did, in full (8 Oct 2026): how many went, how many were
+     left alone and why, whether the run stopped at a refused login (the
+     server stops rather than be refused forty times and get the mailbox
+     locked), and what did not go. */
+  function resendSaid(r) {
+    var sent = Number(r.sent) || 0;
+    var skipped = Number(r.skipped) || 0;
+    var problems = r.problems || [];
+    var parts = [sent === 0 ? 'No email went.' : sent === 1 ? 'One email went.' : sent + ' emails went.'];
+    if (r.stoppedFor === 'login') parts.push('The mailbox refused the login, so the rest were not tried. Put the password right, then send them again.');
+    if (skipped) {
+      parts.push((skipped === 1 ? 'One was' : skipped + ' were') + ' not sent from here: '
+        + (r.stoppedFor ? 'not tried after the refusal, ' : '') + 'already sent, or being sent right now.');
+    }
+    if (problems.length) {
+      var more = (Number(r.tried) || 0) - sent - problems.length;
+      parts.push('Did not go: ' + problems.map(function (p) {
+        return (p.what || 'Email') + (p.reference ? ' (' + p.reference + ')' : '') + (p.problem ? ': ' + String(p.problem).replace(/\.$/, '') : '');
+      }).join('; ') + (more > 0 ? '; and ' + more + ' more' : '') + '.');
+    }
+    return parts.join(' ');
+  }
+
+  /* `after` is a line to say once the section is drawn again, so the answer
+     to a press is not wiped by the redraw that follows it. */
+  function mailbox(after) {
     var box = $('#mailbox');
-    if (!box) return;
-    api('/api/admin/mail-check').then(function (m) {
+    if (!box) return Promise.resolve();
+    return api('/api/admin/mail-check').then(function (m) {
       var to = (m.inboxes || []).join(', ');
-      var out = ['<h2>Copies to PFA\u2019s inbox</h2>'];
+      var failing = m.failing || [];
+      var resendable = failing.filter(function (r) { return r.canResend; });
+      var boss = me && me.role === 'super' && m.configured && to;
+      /* Sending again is not about the inbox alone: the list holds every
+         kind of email (confirmations, receipts, relayed replies). */
+      var canSend = Boolean(me && me.role === 'super' && m.configured);
+      var out = ['<h2>Copies to PFA’s inbox</h2>'];
+      /* The headline first (8 Oct 2026), from the one word the server gives
+         for the state of the mail. A refused login blocks every email, so it
+         is said once, here, and not left to fifty separate rows below. */
+      var state = m.state || (m.configured ? '' : 'not-configured');
+      if (state === 'login-failing') {
+        var login = m.login || {};
+        var held = Number(login.waiting) || 0;
+        out.push('<p class="state" data-tone="bad"><b>The mailbox is refusing the site’s login.</b> Until that is put right, the emails the site sends are refused. '
+          + esc(login.problem || '')
+          + (held ? ' ' + (held === 1 ? 'One email has' : held + ' emails have') + ' been refused this way' + (login.since ? ' since ' + esc(when(login.since)) : '') + '.' : '')
+          + (canSend && resendable.length ? ' Once it is put right, press “Send the emails that did not go”.' : '') + '</p>');
+      } else if (state === 'some-failed') {
+        out.push('<p class="state" data-tone="bad"><b>' + (failing.length === 1 ? 'One email has' : failing.length + ' emails have') + ' not gone.</b> '
+          + (failing.length === 1 ? 'It is' : 'Each is') + ' listed below with the reason' + (canSend && resendable.length ? ', and can be sent again from here' : '') + '.</p>');
+      }
       if (!m.configured) {
         out.push('<p class="state" data-tone="bad"><b>No email can leave the site.</b> Neither the copies to ' + esc(to || 'the inbox') + ' nor the confirmations to the people who write in are sent; every submission is still on record here. ' + esc(m.settingsHelp || '') + '.</p>');
       } else if (!to) {
@@ -922,11 +1074,18 @@ window.addEventListener('unhandledrejection', function (event) {
         if (m.via === 'smtp' && sc.on) {
           out.push('<p class="note">Everything the site sends is also saved in the Sent folder of ' + esc((m.from.match(/<([^>]+)>/) || [])[1] || 'the mailbox') + '.'
             + (sc.waiting ? ' ' + esc(sc.waiting) + (sc.waiting === 1 ? ' copy is' : ' copies are') + ' on the way there; the mailbox is tried again every ten minutes' + (sc.lastError ? ' (last answer: ' + esc(sc.lastError) + ')' : '') + '.' : '') + '</p>');
+          /* A copy the mailbox refused five times (lib/sent-copy.js
+             MAX_REFUSALS) is no longer tried. The email itself went; only
+             its copy in Sent is missing, and the line says exactly that. */
+          var parkedCopies = Number(sc.parked) || 0;
+          if (parkedCopies) {
+            out.push('<p class="state" data-tone="bad">' + (parkedCopies === 1 ? 'One email was sent, but its copy is' : parkedCopies + ' emails were sent, but their copies are')
+              + ' not in the Sent folder: the mailbox refused ' + (parkedCopies === 1 ? 'it' : 'each') + ' five times, so ' + (parkedCopies === 1 ? 'it is' : 'they are') + ' no longer tried.'
+              + (sc.lastError ? ' Last answer: ' + esc(sc.lastError) + '.' : '') + '</p>');
+          }
         }
       }
       var rows = m.recent || [];
-      var stuck = rows.filter(function (r) { return r.status !== 'sent'; }).length;
-      var boss = me && me.role === 'super' && m.configured && to;
       /* Submissions that arrived while email was not set up never had a copy
          made, so nothing would ever send one. Listed, and sent on a press:
          some may be tests, and the owner decides. */
@@ -939,27 +1098,34 @@ window.addEventListener('unhandledrejection', function (event) {
       }
       out.push('<div class="act">'
         + (boss ? '<button class="ghost" type="button" id="mailTest">Send a test email</button>' : '')
-        + (boss && stuck ? '<button class="ghost" type="button" id="mailResend">Send the copies that did not go</button>' : '')
+        + (canSend && resendable.length ? '<button class="ghost" type="button" id="mailResend">Send the emails that did not go</button>' : '')
         + (boss && missed.length ? '<button class="ghost" type="button" id="mailMissed">Send ' + (missed.length === 1 ? 'that submission' : 'those ' + missed.length + ' submissions') + ' to the inbox</button>' : '')
         + '<p class="say" id="mailSay"></p></div>');
+      if (failing.length) {
+        out.push('<p class="lab">Emails that have not gone</p><div class="wrap"><table><thead><tr><th>Email</th><th>To</th><th>What happened</th><th>When</th>' + (canSend ? '<th></th>' : '') + '</tr></thead><tbody>'
+          + failing.map(function (r) { return failRow(r, canSend); }).join('') + '</tbody></table></div>');
+      } else if (m.failingError) {
+        out.push('<p class="state" data-tone="bad">' + esc(m.failingError) + '</p>');
+      }
       if (rows.length) {
-        out.push('<table><thead><tr><th>Submission</th><th>To</th><th>What happened</th><th>When</th></tr></thead><tbody>'
+        out.push('<p class="lab">The last copies to the inbox</p><div class="wrap"><table><thead><tr><th>Submission</th><th>To</th><th>What happened</th><th>When</th></tr></thead><tbody>'
           + rows.map(function (r) {
             return '<tr><td class="ref">' + esc(r.reference || '-') + '</td><td>' + esc(r.to) + '</td>'
               + '<td><span class="flag" data-s="' + esc(r.status) + '">' + esc(MAIL_STATUS[r.status] || r.status || '-') + '</span>'
               + (r.problem ? '<span class="detail">' + esc(r.problem) + (r.detail ? ' (' + esc(r.detail) + ')' : '') + '</span>' : '')
               + (r.attempts > 1 ? '<span class="detail">' + esc(r.attempts) + ' attempts</span>' : '') + '</td>'
               + '<td>' + esc(when(r.at)) + '</td></tr>';
-          }).join('') + '</tbody></table>');
+          }).join('') + '</tbody></table></div>');
       } else {
         out.push('<p class="note">' + esc(m.recentError || 'No copies sent yet. They appear here as submissions arrive.') + '</p>');
       }
       box.innerHTML = out.join('');
+      if (after) say($('#mailSay'), after.text, after.tone);
       on('#mailTest', 'click', function () {
         var button = $('#mailTest');
         var note = $('#mailSay');
         button.disabled = true;
-        say(note, 'Sending\u2026');
+        say(note, 'Sending…');
         api('/api/admin/mail-check', { method: 'POST', body: {} }).then(function (r) {
           var bad = (r.results || []).filter(function (x) { return !x.ok; });
           if (!bad.length) {
@@ -975,37 +1141,32 @@ window.addEventListener('unhandledrejection', function (event) {
         var button = $('#mailMissed');
         var note = $('#mailSay');
         button.disabled = true;
-        say(note, 'Sending\u2026');
+        say(note, 'Sending…');
         api('/api/admin/mail-check', { method: 'POST', body: { action: 'send-missed' } }).then(function (r) {
           if (r.ok) {
-            say(note, r.sent === 1 ? 'The copy went.' : 'All ' + r.sent + ' copies went.', 'good');
-            setTimeout(mailbox, 1500);
+            mailbox({ text: r.sent === 1 ? 'The copy went.' : 'All ' + r.sent + ' copies went.', tone: 'good' });
           } else {
             var first = (r.problems || [])[0] || {};
-            say(note, r.sent + ' of ' + r.tried + ' went. ' + (first.reference ? first.reference + ': ' : '') + (first.problem || ''), 'bad');
-            setTimeout(mailbox, 1500);
+            mailbox({ text: r.sent + ' of ' + r.tried + ' went. ' + (first.reference ? first.reference + ': ' : '') + (first.problem || ''), tone: 'bad' });
           }
         }).catch(function (e) { say(note, (e && e.message) || 'They could not be sent.', 'bad'); button.disabled = false; });
       });
-      on('#mailResend', 'click', function () {
-        var button = $('#mailResend');
-        var note = $('#mailSay');
-        button.disabled = true;
-        say(note, 'Sending them again\u2026');
-        api('/api/admin/mail-check', { method: 'POST', body: { action: 'resend' } }).then(function (r) {
-          if (r.ok) {
-            say(note, r.sent === 1 ? 'The copy went.' : 'All ' + r.sent + ' copies went.', 'good');
-            setTimeout(mailbox, 1500);
-          } else {
-            var first = (r.problems || [])[0] || {};
-            say(note, r.sent + ' of ' + r.tried + ' went. ' + (first.problem || '') + (first.detail ? ' (' + first.detail + ')' : ''), 'bad');
-            button.disabled = false;
-          }
-        }).catch(function (e) { say(note, (e && e.message) || 'They could not be sent.', 'bad'); button.disabled = false; });
-      });
+      on('#mailResend', 'click', function () { resendMail($('#mailResend'), ''); });
     }).catch(function (e) {
-      box.innerHTML = '<h2>Copies to PFA\u2019s inbox</h2><p class="state" data-tone="bad">' + esc((e && e.message) || 'That could not be read.') + '</p>';
+      box.innerHTML = '<h2>Copies to PFA’s inbox</h2><p class="state" data-tone="bad">' + esc((e && e.message) || 'That could not be read.') + '</p>';
     });
+  }
+
+  /* Sends again every email the server would send again (no id), or one row
+     (its id). The section is drawn again from the server straight away, and
+     the answer is said under the buttons of the new drawing. */
+  function resendMail(button, id) {
+    var note = $('#mailSay');
+    button.disabled = true;
+    say(note, id ? 'Sending it again…' : 'Sending them again…');
+    api('/api/admin/mail-check', { method: 'POST', body: id ? { action: 'resend', id: id } : { action: 'resend' } }).then(function (r) {
+      return mailbox({ text: resendSaid(r), tone: r.ok && !r.stoppedFor ? 'good' : 'bad' });
+    }).catch(function (e) { say(note, (e && e.message) || 'They could not be sent.', 'bad'); button.disabled = false; });
   }
 
   /* ---- replies, read from the site's mailbox ------------------------------ */
@@ -1014,7 +1175,9 @@ window.addEventListener('unhandledrejection', function (event) {
      the site's own mailbox; the site reads that mailbox and files each reply
      on its submission (lib/inbound-mail.js). On Firebase that runs every ten
      minutes; on Vercel once a day, so this button reads it now. */
-  function replies() {
+  /* `after`, as for mailbox(): the answer to a press, said once the
+     section is drawn again, so the redraw does not wipe it (8 Oct 2026). */
+  function replies(after) {
     var box = $('#replies');
     if (!box) return;
     api('/api/inbound-mail').then(function (r) {
@@ -1025,21 +1188,56 @@ window.addEventListener('unhandledrejection', function (event) {
         out.push('<p class="state" data-tone="bad"><b>Reply capture is switched off</b> (PFA_CAPTURE_REPLIES is off). Replies reach the person and are not kept here.</p>');
       } else {
         var last = r.lastResult || {};
+        /* Automatic replies and reports of an email not delivered are filed
+           too (8 Oct 2026); the count says how many of the filed were which. */
+        var kinds = [];
+        if (last.autoReplies) kinds.push(last.autoReplies === 1 ? 'one an automatic reply' : last.autoReplies + ' automatic replies');
+        if (last.bounces) kinds.push(last.bounces === 1 ? 'one a report of an email not delivered' : last.bounces + ' reports of emails not delivered');
         out.push('<p class="state">A Reply from the inbox goes to the person and a copy comes back to <b>' + esc(r.mailbox) + '</b>, where the site files it on the submission. '
-          + (r.lastRunAt ? 'Last read ' + esc(when(r.lastRunAt)) + (r.lastError ? ': <span class="flag" data-s="failed">' + esc(r.lastError) + '</span>' : ': ' + esc(last.fetched || 0) + ' new, ' + esc(last.filed || 0) + ' filed on a submission.') : 'Not read yet.') + '</p>');
+          + (r.lastRunAt ? 'Last read ' + esc(when(r.lastRunAt)) + (r.lastError ? ': <span class="flag" data-s="failed">' + esc(r.lastError) + '</span>' : ': ' + esc(last.fetched || 0) + ' new, ' + esc(last.filed || 0) + ' filed on a submission' + (kinds.length ? ' (' + esc(kinds.join(', ')) + ')' : '') + '.') : 'Not read yet.') + '</p>');
+      }
+      /* What the reading could not file (8 Oct 2026, lib/inbound-mail.js):
+         an email that fails is read again on every run, and after five
+         tries it is set aside so the rest are not held up. The server's own
+         problem line is the headline; the set-aside emails are listed so
+         each can be found in the mailbox and added to its case by hand. */
+      if (r.problem) out.push('<p class="state" data-tone="bad">' + esc(r.problem) + '</p>');
+      var retrying = Array.isArray(r.waiting) ? r.waiting : [];
+      if (retrying.length) {
+        out.push('<p class="note">' + (retrying.length === 1 ? 'One email' : retrying.length + ' emails') + ' could not be filed on the last reading and will be read again on the next'
+          + ' (' + retrying.map(function (w) { return esc(w.messageId || ('message ' + w.uid)) + ': ' + esc(w.error || 'failed') + ', ' + (Number(w.count) || 1) + (Number(w.count) === 1 ? ' try' : ' tries'); }).join('; ') + ').</p>');
+      }
+      var parked = Array.isArray(r.parked) ? r.parked : [];
+      if (parked.length) {
+        out.push('<p class="lab">Set aside, not filed</p><div class="wrap"><table><thead><tr><th>Email</th><th>What went wrong</th><th>Tries</th><th>Set aside</th></tr></thead><tbody>'
+          + parked.slice().reverse().map(function (p) {
+            return '<tr><td>' + esc(p.messageId || ('Message ' + p.uid + ' in the mailbox')) + '</td>'
+              + '<td>' + esc(p.error || '-') + '</td>'
+              + '<td class="num">' + esc(p.count || '-') + '</td>'
+              + '<td>' + esc(when(p.parkedAt)) + '</td></tr>';
+          }).join('') + '</tbody></table></div>');
       }
       out.push('<div class="act">' + (r.configured && !r.captureOff ? '<button class="ghost" type="button" id="mailRead">Read the mailbox now</button>' : '') + '<p class="say" id="readSay"></p></div>');
       box.innerHTML = out.join('');
+      if (after) say($('#readSay'), after.text, after.tone);
       on('#mailRead', 'click', function () {
         var button = $('#mailRead');
         var note = $('#readSay');
         button.disabled = true;
         say(note, 'Reading\u2026');
         api('/api/inbound-mail', { method: 'POST', body: {} }).then(function (s) {
-          if (s.error) { say(note, s.error, 'bad'); }
-          else { say(note, s.fetched + ' new ' + (s.fetched === 1 ? 'email' : 'emails') + ', ' + s.filed + ' filed on a submission' + (s.unmatched ? ', ' + s.unmatched + ' not about a submission' : '') + '.', 'good'); setTimeout(replies, 1200); }
-        }).catch(function (e) { say(note, (e && e.message) || 'The mailbox could not be read.', 'bad'); })
-          .then(function () { button.disabled = false; });
+          if (s.error) { say(note, s.error, 'bad'); button.disabled = false; return; }
+          replies({
+            text: s.fetched + ' new ' + (s.fetched === 1 ? 'email' : 'emails') + ', ' + s.filed + ' filed on a submission' + (s.unmatched ? ', ' + s.unmatched + ' not about a submission' : '')
+              + (s.waiting ? ', ' + s.waiting + ' to be read again' : '') + (s.parked ? ', ' + s.parked + ' set aside after repeated failures' : '') + '.',
+            tone: s.parked ? 'bad' : 'good'
+          });
+        }).catch(function (e) {
+          /* A mailbox that could not be read answers 502 with its reason in
+             `error`, which is the useful part. */
+          say(note, (e && e.data && e.data.error) || (e && e.message) || 'The mailbox could not be read.', 'bad');
+          button.disabled = false;
+        });
       });
     }).catch(function (e) {
       box.innerHTML = '<h2>Replies</h2><p class="state" data-tone="bad">' + esc((e && e.message) || 'That could not be read.') + '</p>';
@@ -1076,9 +1274,22 @@ window.addEventListener('unhandledrejection', function (event) {
     return { name: name, email: email, mobile: mobile };
   }
 
-  function flag(status) {
-    var label = { 'new': 'Waiting', 'in-progress': 'In progress', handled: 'Handled', spam: 'Spam' }[status] || status;
-    return '<span class="flag" data-s="' + esc(status) + '">' + esc(label) + '</span>';
+  /* The generic four, for a server or a record that names no label. */
+  var STATUS_WORDS = { 'new': 'Waiting', 'in-progress': 'In progress', handled: 'Handled', spam: 'Spam' };
+
+  /* A key nobody has a word for, made readable ("under-review" reads
+     "Under review") rather than guessed into another kind's wording. */
+  function readable(key) {
+    var text = String(key || '').replace(/[-_]+/g, ' ').trim();
+    return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
+  }
+
+  /* 8 Oct 2026: a register row carries statusLabel (lib/routes/admin/records.js,
+     from lib/case-flow.js labelOf), so an application reads "Card issued"
+     rather than "approved". The data-s stays the key, for the colours. */
+  function flag(status, label) {
+    var text = label || STATUS_WORDS[status] || status;
+    return '<span class="flag" data-s="' + esc(status) + '">' + esc(text) + '</span>';
   }
 
   function subRow(r) {
@@ -1087,7 +1298,7 @@ window.addEventListener('unhandledrejection', function (event) {
       + '<td class="ref"><button class="rowopen" type="button" data-open-case="' + esc(r.reference) + '">' + esc(r.reference) + '</button></td>'
       + '<td>' + esc(r.kindLabel || r.kind) + (r.attachments ? ' <span class="flag">' + (r.kind === 'PFA-CG' && r.attachments >= 2 ? 'photo + proof' : r.attachments + ' photo') + '</span>' : '') + '</td>'
       + '<td>' + esc(c.name || '-') + '<br><span class="note">' + esc(c.email || c.mobile || '') + '</span></td>'
-      + '<td>' + flag(r.status) + '</td>'
+      + '<td>' + flag(r.status, r.statusLabel) + '</td>'
       + '<td>' + esc(r.assignedTo || '-') + '</td>'
       + '<td>' + esc(when(r.createdAt)) + '</td>'
       + '</tr>';
@@ -1139,7 +1350,7 @@ window.addEventListener('unhandledrejection', function (event) {
         return '<tr><td class="ref"><button class="rowopen" type="button" data-open-case="' + esc(r.reference) + '">' + esc(r.reference) + '</button></td>'
           + '<td>' + esc(c.name || '-') + '</td>'
           + '<td>' + esc(c.email || c.mobile || '-') + '</td>'
-          + '<td>' + flag(r.status) + '</td>'
+          + '<td>' + flag(r.status, r.statusLabel) + '</td>'
           + '<td>' + esc(when(r.createdAt)) + '</td></tr>';
       }).join(''));
       volCursor = data.cursor || null;
@@ -1156,8 +1367,16 @@ window.addEventListener('unhandledrejection', function (event) {
     if (!short) cells += '<td>' + esc(r.type || '-') + '</td>';
     cells += '<td>' + esc(r.name || '-') + '</td>';
     if (short) cells += '<td>' + esc(r.email || r.mobile || '-') + '</td>';
+    /* A shop payment that settled an order already cancelled or failed is
+       flagged on its line (8 Oct 2026, lib/shop-backend.js ledger.settled):
+       needsAttention when the stock it had given back was sold meanwhile,
+       with the note that says what is short. Shown when the line has them. */
     cells += '<td class="num">' + esc(money(r.amount, r.currency)) + '</td>'
-      + '<td><span class="flag" data-s="' + (r.status === 'success' ? 'handled' : 'spam') + '">' + esc(r.status || '-') + '</span></td>';
+      + '<td><span class="flag" data-s="' + (r.status === 'success' ? 'handled' : 'spam') + '">' + esc(r.status || '-') + '</span>'
+      + (r.needsAttention ? ' <span class="flag" data-s="failed">Needs attention</span>' : '')
+      + (r.attentionNote ? '<span class="detail">' + esc(r.attentionNote) + '</span>'
+        : r.settledAfter ? '<span class="detail">Settled after the order was ' + esc(r.settledAfter) + '.</span>' : '')
+      + '</td>';
     if (!short) cells += '<td>' + esc(r.bankReference || '-') + '</td>';
     cells += '<td>' + esc(when(r.createdAt)) + '</td></tr>';
     return cells;
@@ -1211,6 +1430,179 @@ window.addEventListener('unhandledrejection', function (event) {
       }
     }).catch(function (e) {
       body.innerHTML = '<tr><td colspan="7"><div class="empty"><b>Nothing to show</b>' + esc(e.message) + '</div></td></tr>';
+    });
+  }
+
+  /* ---- payments still waiting for CCAvenue ------------------------------
+     8 Oct 2026 (review D3). A payment is settled by CCAvenue's callback; when
+     the callback never arrives (the tab closed on the bank's page) the
+     payment stays started here while CCAvenue knows how it ended.
+     /api/admin/payments-pending lists those started 30 minutes or more ago
+     in the last 14 days, and the paid caregiver applications whose
+     photograph is not on the record yet. "Check with CCAvenue" asks
+     CCAvenue's Order Status API and applies a final answer through the
+     callback's own path; an answer that is not final changes nothing and
+     is said as it is. Every press is in the audit log. */
+
+  /* Read at most once a minute unless asked afresh, and shared with the
+     case drawer, which asks the same list whether an application is still
+     waiting for its photograph (also on the case itself since 8 Oct 2026). */
+  var pendingRead = null;
+  function readPending(fresh) {
+    if (fresh || !pendingRead || Date.now() - pendingRead.at > 60000) {
+      var asked = { at: Date.now(), answer: api('/api/admin/payments-pending') };
+      pendingRead = asked;
+      asked.answer.catch(function () { if (pendingRead === asked) pendingRead = null; });
+    }
+    return pendingRead.answer;
+  }
+
+  /* The words for a payment's raw status, in this block. */
+  var PAY_WORDS = { initiated: 'Started', pending: 'Pending', awaited: 'Awaited', success: 'Paid', paid: 'Paid', failed: 'Failed',
+    aborted: 'Abandoned', cancelled: 'Abandoned', verification_failed: 'Unverified' };
+
+  /* A purpose in the words of the Purpose filter above the register, so the
+     panel keeps one vocabulary for it. */
+  function purposeWord(type) {
+    var option = $$('#payType option').filter(function (o) { return o.value && o.value === type; })[0];
+    return option ? option.textContent : (type || '-');
+  }
+
+  function waited(minutes) {
+    var n = Number(minutes);
+    if (!isFinite(n) || minutes === null) return '';
+    if (n < 90) return n + ' min';
+    if (n < 48 * 60) return Math.round(n / 60) + ' h';
+    return Math.round(n / (24 * 60)) + ' days';
+  }
+
+  /* Whether this server can ask CCAvenue about an order in this currency
+     (statusCheck from the GET). A shop order is always in rupees. */
+  function canCheck(checks, row) {
+    if (!checks) return true;
+    var currency = row.type === 'shop' ? 'inr' : String(row.currency || 'INR').toLowerCase();
+    return checks[currency] !== false;
+  }
+
+  var CHECKS_OFF = 'CCAvenue status checks are not set up on this server';
+
+  function pendingPayments() {
+    var box = $('#payPending');
+    if (!box) return Promise.resolve();
+    if (!box.innerHTML) box.innerHTML = '<div class="panel pend"><h3>Pending payments</h3><p class="note">Asking which payments are still waiting…</p></div>';
+    return readPending(true).then(function (data) {
+      var rows = data.pending || [];
+      var photos = data.photoPending || [];
+      var checks = data.statusCheck || null;
+      var off = rows.filter(function (r) { return !canCheck(checks, r); });
+      var out = ['<div class="panel pend"><h3>Pending payments</h3>'];
+      out.push('<p class="hint">Payments started ' + esc(data.olderThanMinutes || 30) + ' minutes or more ago, in the last ' + esc(data.days || 14)
+        + ' days, that CCAvenue has not reported back on. Check one to ask CCAvenue how it ended: a final answer is recorded exactly as CCAvenue’s own report would have been, and an answer that is not final changes nothing.</p>');
+      /* Said of exactly the payments it is true of: the keys are per
+         currency, so a server may check rupees and not dollars. */
+      if (off.length && off.length === rows.length) {
+        out.push('<p class="say" data-tone="bad">' + CHECKS_OFF + ', so ' + (rows.length === 1 ? 'this payment' : 'these payments') + ' can only be looked up in the CCAvenue dashboard.</p>');
+      } else if (off.length) {
+        var currencies = off.map(function (r) { return r.type === 'shop' ? 'INR' : String(r.currency || 'INR').toUpperCase(); })
+          .filter(function (c, i, all) { return all.indexOf(c) === i; });
+        out.push('<p class="say" data-tone="bad">CCAvenue status checks for ' + esc(currencies.join(' and ')) + ' payments are not set up on this server, so '
+          + (off.length === 1 ? 'that payment' : 'those ' + off.length + ' payments') + ' can only be looked up in the CCAvenue dashboard.</p>');
+      }
+      if (!rows.length) {
+        out.push('<p class="note">Nothing is waiting for an answer from CCAvenue.</p>');
+      } else {
+        out.push('<div class="wrap"><table><thead><tr><th>Order</th><th>Purpose</th><th>Name</th><th class="num">Amount</th><th>Status</th><th>Waiting</th><th>CCAvenue</th></tr></thead><tbody>'
+          + rows.map(function (r) {
+            var able = canCheck(checks, r);
+            return '<tr><td class="ref">' + esc(r.orderId) + '</td>'
+              + '<td>' + esc(purposeWord(r.type)) + '</td>'
+              + '<td>' + esc(r.name || '-') + (r.email ? '<span class="detail">' + esc(r.email) + '</span>' : '') + '</td>'
+              + '<td class="num">' + esc(money(r.amount, r.currency)) + '</td>'
+              + '<td><span class="flag" data-s="queued">' + esc(PAY_WORDS[r.status] || r.status || '-') + '</span></td>'
+              + '<td>' + esc(waited(r.minutesWaiting) || when(r.startedAt)) + (r.startedAt ? '<span class="detail">Started ' + esc(when(r.startedAt)) + '</span>' : '') + '</td>'
+              + '<td><button class="ghost" type="button" data-pay-check="' + esc(r.orderId) + '"' + (able ? '' : ' disabled title="' + CHECKS_OFF + '"') + '>Check with CCAvenue</button>'
+              + '<span class="detail" data-answer="' + esc(r.orderId) + '">' + (able ? '' : CHECKS_OFF + '.') + '</span></td></tr>';
+          }).join('') + '</tbody></table></div>');
+      }
+      if (photos.length) {
+        out.push('<p class="lab">Paid applications waiting for their photograph</p>'
+          + '<p class="hint">The fee was paid and the application is on record, but the photograph sent with it could not be copied onto it yet. Attaching it again tries once more, under the same reference.</p>'
+          + '<div class="wrap"><table><thead><tr><th>Application</th><th>Order</th><th>Paid</th><th></th></tr></thead><tbody>'
+          + photos.map(function (p) {
+            return '<tr><td class="ref">' + (can('submissions') ? '<button class="rowopen" type="button" data-open-case="' + esc(p.reference) + '">' + esc(p.reference) + '</button>' : esc(p.reference)) + '</td>'
+              + '<td>' + esc(p.orderId || '-') + '</td>'
+              + '<td>' + esc(when(p.createdAt)) + '</td>'
+              + '<td>' + (p.orderId ? '<button class="ghost" type="button" data-refile="' + esc(p.orderId) + '" data-ref="' + esc(p.reference) + '">Attach the photograph again</button>' : '<span class="note">No order on the record</span>') + '</td></tr>';
+          }).join('') + '</tbody></table></div>');
+      }
+      out.push('<p class="say" id="pendSay" role="status" aria-live="polite"></p></div>');
+      box.innerHTML = out.join('');
+    }).catch(function (e) {
+      box.innerHTML = '<div class="panel pend"><h3>Pending payments</h3><p class="say" data-tone="bad">'
+        + esc(e && e.denied ? 'Your account does not carry Payments.' : (e && e.message) || 'The payments could not be read just now.') + '</p></div>';
+    });
+  }
+
+  /* One order, asked of CCAvenue. The answer is said in the row: what
+     CCAvenue reported, and what was recorded here because of it. */
+  function checkPayment(button) {
+    var orderId = button.getAttribute('data-pay-check');
+    var answer = $('#payPending [data-answer="' + orderId + '"]');
+    button.disabled = true;
+    say(answer, 'Asking CCAvenue…');
+    api('/api/admin/payments-pending', { method: 'POST', body: { action: 'check', orderId: orderId } }).then(function (r) {
+      if (r.applied) {
+        say(answer, 'CCAvenue reports ' + (r.ccavenue || 'an answer') + '. Recorded here as ' + (PAY_WORDS[r.status] || r.status || 'settled')
+          + (r.reference ? ', ' + r.reference : '') + '.' + (r.needsAttention ? ' The order needs attention before it is dispatched: see its line in the register.' : ''), 'good');
+        payments(true);
+      } else {
+        say(answer, r.message || ('CCAvenue reports ' + (r.ccavenue || 'nothing') + ' for this order. Nothing was changed.'));
+        button.disabled = false;
+      }
+    }).catch(function (e) {
+      if (e && e.code === 'NOT_CONFIGURED') {
+        /* Every check on this server would get the same answer. */
+        $$('#payPending [data-pay-check]').forEach(function (b) { b.disabled = true; b.title = CHECKS_OFF; });
+        say(answer, CHECKS_OFF + '. Nothing was changed.', 'bad');
+        return;
+      }
+      say(answer, (e && e.message) || 'CCAvenue could not be asked just now. Nothing was changed.', 'bad');
+      button.disabled = false;
+    });
+  }
+
+  /* Attach the photograph again: runs the paid application's filing once
+     more without asking CCAvenue (POST refile). The answer does not say
+     whether the photograph came across, so the list is read again and the
+     line says what it now shows. From the drawer, the case is drawn again. */
+  function refilePhoto(button) {
+    var orderId = button.getAttribute('data-refile');
+    var reference = button.getAttribute('data-ref') || '';
+    var inDrawer = Boolean(button.closest('#caseDrawer'));
+    var note = inDrawer ? $('#caseSay') : $('#pendSay');
+    button.disabled = true;
+    say(note, 'Attaching the photograph again…');
+    api('/api/admin/payments-pending', { method: 'POST', body: { action: 'refile', orderId: orderId } }).then(function (r) {
+      reference = r.reference || reference;
+      return readPending(true).then(function (data) {
+        return (data.photoPending || []).some(function (p) { return p.orderId === orderId; });
+      }, function () { return null; });
+    }).then(function (still) {
+      var said = still === false ? 'The photograph is attached to ' + reference + ' now.'
+        : still === true ? 'Tried again, but the photograph is still not attached to ' + reference + '. Try again later, or ask the applicant to send it by replying.'
+        : 'Tried again. Refresh to see whether the photograph is attached.';
+      var tone = still === false ? 'good' : 'bad';
+      if (inDrawer) {
+        if (openCase && openCase.reference === reference) {
+          showCase(reference).then(function () { say($('#caseSay'), said, tone); });
+        } else { say(note, said, tone); }
+        if ($('#payPending') && $('#payPending').innerHTML) pendingPayments();
+      } else {
+        pendingPayments().then(function () { say($('#pendSay'), said, tone); });
+      }
+    }).catch(function (e) {
+      say(note, (e && e.message) || 'That could not be done just now.', 'bad');
+      button.disabled = false;
     });
   }
 
@@ -1292,6 +1684,149 @@ window.addEventListener('unhandledrejection', function (event) {
         }).join('') + '</tbody></table></div>');
       node.innerHTML = out.join('');
     }).catch(function (e) { fail(node, e); });
+  }
+
+  /* ---- website: what the public site shows --------------------------------
+     Owner, 8 Oct 2026: show or hide any page or section of the public site,
+     each with a simple Visible / Hidden toggle, with no code change. The list
+     is the site's own (assets/site-modules.json, built from the pages),
+     grouped the way the site's menus group it. A toggle saves at once through
+     /api/admin/site and the public site has it within about ten seconds;
+     every change is in the audit log. */
+
+  var site = null;
+  var SHOWN = { visible: 'Visible', hidden: 'Hidden' };
+
+  function website() {
+    var node = $('[data-pane="website"]');
+    node.innerHTML = '<div class="loading">Reading the site…</div>';
+    api('/api/admin/site').then(function (data) {
+      site = data;
+      paintSite();
+    }).catch(function (e) { fail(node, e); });
+  }
+
+  function siteMark(key) {
+    var m = ((site.state || {}).marks || {})[key];
+    if (!m || !m.at) return '<span class="note">Never changed</span>';
+    return esc(m.visible ? 'Shown' : 'Hidden') + ' by ' + esc(m.by || 'someone') + '<br><span class="note">' + esc(when(m.at)) + '</span>';
+  }
+
+  function siteToggle(kind, id, label, hidden, locked) {
+    if (locked) return '<span class="flag">Always shown</span>';
+    return '<span class="vis" role="group" aria-label="' + esc(label) + ' on the site">'
+      + '<button type="button" data-vis="' + kind + '" data-id="' + esc(id) + '" data-to="1" aria-pressed="' + String(!hidden) + '">Visible</button>'
+      + '<button type="button" data-vis="' + kind + '" data-id="' + esc(id) + '" data-to="0" aria-pressed="' + String(Boolean(hidden)) + '">Hidden</button>'
+      + '</span>';
+  }
+
+  function siteLast(st) {
+    var last = st.last || [];
+    if (!st.updatedAt || !last.length) return '<p class="note">Nothing has been hidden from here yet.</p>';
+    var who = st.updatedBy ? (st.updatedBy.name || st.updatedBy.email || 'someone') : 'someone';
+    var what = last.length === 1
+      ? last[0].label + ', ' + SHOWN[last[0].from] + ' to ' + SHOWN[last[0].to]
+      : last.length + ' changes at once, the first ' + last[0].label + ', ' + SHOWN[last[0].from] + ' to ' + SHOWN[last[0].to];
+    return '<p class="note">Last change: ' + esc(what) + ', by ' + esc(who) + ', ' + esc(when(st.updatedAt)) + '.</p>';
+  }
+
+  function paintSite(focus) {
+    var node = $('[data-pane="website"]');
+    var st = site.state || {};
+    var hiddenPages = (st.hidden || {}).pages || {};
+    var hiddenParts = (st.hidden || {}).modules || {};
+    var known = {};
+    (site.pages || []).forEach(function (p) {
+      known['page:' + p.id] = true;
+      (p.modules || []).forEach(function (m) { known['module:' + m.key] = true; });
+    });
+    /* Hidden, and no longer on any page: a section taken out of a page while
+       it was hidden. Harmless, but listed so it can be cleared. */
+    var orphans = Object.keys(hiddenPages).map(function (id) { return { kind: 'page', id: id }; })
+      .concat(Object.keys(hiddenParts).map(function (id) { return { kind: 'module', id: id }; }))
+      .filter(function (o) { return !known[o.kind + ':' + o.id]; });
+    var count = Object.keys(hiddenPages).length + Object.keys(hiddenParts).length;
+
+    var out = [];
+    out.push('<div class="panel"><h3>What the public site shows</h3>'
+      + '<p class="hint">Every page of the site and every section on it, grouped as the site\u2019s menus group them. '
+      + 'Hide a page and it leaves the site, its menus, its footer and its search; hide a section and it leaves its page. '
+      + 'Each change is saved as you press it and is live on the site within a few seconds. Show it again and it comes back exactly as it was. '
+      + 'Hidden means hidden from view: the content is still in the page\u2019s source, so this is not a way to remove anything that must not be read.</p>'
+      + siteLast(st)
+      + (orphans.length ? '<p class="note">Hidden, and no longer on any page: ' + orphans.map(function (o) {
+        return esc(o.id) + ' ' + siteToggle(o.kind, o.id, o.id, true, '');
+      }).join(' ') + '</p>' : '')
+      + (count ? '<div class="row2"><button class="ghost" type="button" id="siteAll">Show everything again</button></div>' : '')
+      + '</div>');
+
+    (site.groups || []).forEach(function (group) {
+      var pages = (site.pages || []).filter(function (p) { return p.group === group; });
+      if (!pages.length) return;
+      out.push('<p class="lab">' + esc(group) + '</p><div class="wrap site-group"><table><thead><tr>'
+        + '<th>Page or section</th><th>On the site</th><th>Last changed</th></tr></thead><tbody>');
+      pages.forEach(function (p) {
+        var off = hiddenPages[p.id] === true;
+        out.push('<tr class="site-page"' + (off ? ' data-off' : '') + '><td><span class="ttl">' + esc(p.title) + '</span> <span class="note">' + esc(p.file) + '</span>'
+          + (p.menu && p.menu !== p.title ? '<span class="detail">In the menu as \u201c' + esc(p.menu) + '\u201d</span>' : '')
+          + (p.locked ? '<span class="detail">' + esc(p.locked) + '</span>' : '') + '</td>'
+          + '<td>' + siteToggle('page', p.id, p.title, off, p.locked) + '</td>'
+          + '<td>' + siteMark('page:' + p.id) + '</td></tr>');
+        (p.modules || []).forEach(function (m) {
+          var partOff = hiddenParts[m.key] === true;
+          out.push('<tr class="site-part"' + (partOff || off ? ' data-off' : '') + '><td>' + esc(m.label) + ' <span class="note">#' + esc(m.id) + '</span>'
+            + (off && !partOff ? '<span class="detail">Hidden with its page.</span>' : '') + '</td>'
+            + '<td>' + siteToggle('module', m.key, m.label, partOff, p.partsLocked) + '</td>'
+            + '<td>' + siteMark('module:' + m.key) + '</td></tr>');
+        });
+      });
+      out.push('</tbody></table></div>');
+    });
+    node.innerHTML = out.join('');
+    on('#siteAll', 'click', showEverything);
+    say($('#paneNote'), count ? (count === 1 ? 'One thing hidden' : count + ' things hidden') : 'Everything is shown');
+    if (focus) {
+      var again = node.querySelector(focus);
+      if (again) again.focus();
+    }
+  }
+
+  /* One press, one change: both halves of the toggle wait for the answer, and
+     the table is drawn again from what the server says is now so. */
+  function setVisible(button) {
+    var kind = button.getAttribute('data-vis');
+    var id = button.getAttribute('data-id');
+    var visible = button.getAttribute('data-to') === '1';
+    var pair = $$('button', button.parentNode);
+    pair.forEach(function (b) { b.disabled = true; });
+    say($('#paneNote'), 'Saving…');
+    api('/api/admin/site', { method: 'POST', body: { kind: kind, id: id, visible: visible } }).then(function (data) {
+      site.state = data.state;
+      paintSite('[data-vis="' + kind + '"][data-id="' + id + '"][data-to="' + (visible ? '1' : '0') + '"]');
+      say($('#paneNote'), 'Saved. Live on the site within a few seconds.', 'good');
+    }).catch(function (e) {
+      pair.forEach(function (b) { b.disabled = false; });
+      say($('#paneNote'), (e && e.message) || 'That could not be saved.', 'bad');
+    });
+  }
+
+  function showEverything() {
+    var st = site.state || {};
+    var changes = Object.keys((st.hidden || {}).pages || {}).map(function (id) { return { kind: 'page', id: id, visible: true }; })
+      .concat(Object.keys((st.hidden || {}).modules || {}).map(function (id) { return { kind: 'module', id: id, visible: true }; }));
+    if (!changes.length) return;
+    if (!window.confirm('Show every hidden page and section again? ' + (changes.length === 1 ? 'One thing comes back.' : changes.length + ' things come back.'))) return;
+    var button = $('#siteAll');
+    if (button) button.disabled = true;
+    say($('#paneNote'), 'Saving…');
+    api('/api/admin/site', { method: 'POST', body: { changes: changes } }).then(function (data) {
+      site.state = data.state;
+      paintSite();
+      say($('#paneNote'), 'Saved. Live on the site within a few seconds.', 'good');
+    }).catch(function (e) {
+      if (button) button.disabled = false;
+      say($('#paneNote'), (e && e.message) || 'That could not be saved.', 'bad');
+    });
   }
 
   /* ---- audit log ----------------------------------------------------------
@@ -1448,10 +1983,93 @@ window.addEventListener('unhandledrejection', function (event) {
     }
   }
 
+  /* What a status key is called on this case (8 Oct 2026). The server names
+     the current state (statusLabel) and every legal next one (moves, from
+     lib/case-flow.js), so an application reads "Under review" and "Card
+     issued", not its keys; anything else falls back to the generic four,
+     then to the key made readable. */
+  function statusWord(c, status) {
+    if (!status) return '';
+    if (c && status === c.status && c.statusLabel) return c.statusLabel;
+    var move = ((c && c.moves) || []).filter(function (m) { return m && m.status === status; })[0];
+    return (move && move.label) || STATUS_WORDS[status] || readable(status);
+  }
+
+  /* A case is closed when the way out of it is a reopen. */
+  function caseClosed(c) {
+    return ((c && c.moves) || []).some(function (m) { return m && m.reopen; });
+  }
+
+  /* The Move to list (8 Oct 2026). The server sends case.moves, the legal
+     next states of this case for its kind (lib/case-flow.js movesFor): a
+     closed case offers only its reopens, an application its own stages,
+     and "Card issued" never, because only approving issues a card. So the
+     list never offers a move the server would refuse. A move back out of a
+     closed state reads "Reopen: ...". A server from before moves existed
+     gets today's four generic states, as it always did. */
+  var FIXED_MOVES = [{ status: 'new' }, { status: 'in-progress' }, { status: 'handled' }, { status: 'spam' }];
+  function paintMoves(c) {
+    var select = $('#caseStatus');
+    if (!select) return;
+    var given = Array.isArray(c && c.moves);
+    var moves = given ? c.moves : FIXED_MOVES;
+    select.innerHTML = '<option value="">' + (given && !moves.length ? 'No other state from here' : 'Move to…') + '</option>'
+      + moves.map(function (m) {
+        var label = m.label || STATUS_WORDS[m.status] || readable(m.status);
+        return '<option value="' + esc(m.status) + '">' + esc((m.reopen ? 'Reopen: ' : '') + label) + '</option>';
+      }).join('');
+    select.value = '';
+  }
+
+  /* Which email a bounce was about, from the part of the Message-ID the
+     site gave it (lib/mail-thread.js), in the words the mail check uses. */
+  function partWord(part) {
+    var p = String(part || '');
+    if (p === 'forward') return 'Copy to PFA’s inbox';
+    if (p === 'confirm') return 'Confirmation to the sender';
+    if (/^reply\./.test(p)) return 'Reply from staff';
+    if (/^relay\./.test(p)) return 'Their reply, relayed to PFA’s inbox';
+    return 'An email';
+  }
+
+  /* The photograph of a paid caregiver application (8 Oct 2026). The record
+     is filed before the photograph is copied onto it, so for a while, or
+     until someone presses Attach again, it may have none: photoPending. If
+     the photograph had gone before the fee cleared, photoMissing. The case
+     route carries both, and the payment's order id; the Payments list of
+     such applications is still asked as a second source, for a record
+     written before the case route sent them. */
+  function photoState(c) {
+    var box = $('#casePhoto');
+    if (!box) return;
+    var orderId = (c.payment && c.payment.orderId) || '';
+    paintPhoto(box, c, Boolean(c.photoPending), Boolean(c.photoMissing), orderId);
+    /* Only an application with nothing attached can be waiting for one. */
+    if (c.photoPending || c.attachments || !can('payments')) return;
+    readPending().then(function (data) {
+      var row = (data.photoPending || []).filter(function (p) { return p.reference === c.reference; })[0];
+      if (!row || !openCase || openCase.reference !== c.reference || !box.isConnected) return;
+      paintPhoto(box, c, true, Boolean(c.photoMissing), orderId || row.orderId);
+    }).catch(function () { /* the Payments section lists these as well */ });
+  }
+
+  function paintPhoto(box, c, pending, missing, orderId) {
+    var out = [];
+    if (pending) out.push('<span class="flag" data-s="retry">Photograph not attached yet</span>');
+    if (missing) out.push('<span class="flag" data-s="failed">Photograph missing</span>');
+    if (pending && orderId && can('payments')) {
+      out.push('<button class="ghost" type="button" data-refile="' + esc(orderId) + '" data-ref="' + esc(c.reference) + '">Attach the photograph again</button>');
+    }
+    if (pending) out.push('<span class="detail">The fee was paid and the application is on record, but the photograph sent with it has not been copied onto it yet.</span>');
+    else if (missing) out.push('<span class="detail">A photograph was sent before the fee, but it was no longer there to attach when the fee cleared. Ask the applicant to send it again by replying.</span>');
+    box.innerHTML = out.join(' ');
+    box.hidden = !out.length;
+  }
+
   function drawCase(c, mailConfigured) {
     openCase = c;
     $('#caseTitle').textContent = c.reference;
-    $('#caseKind').textContent = c.kindLabel + ' \u00b7 ' + c.statusLabel + (c.page ? ' \u00b7 sent from ' + c.page : '');
+    $('#caseKind').textContent = c.kindLabel + ' · ' + statusWord(c, c.status) + (c.page ? ' · sent from ' + c.page : '');
     paintWall(c);
 
     var out = [];
@@ -1460,14 +2078,35 @@ window.addEventListener('unhandledrejection', function (event) {
     if (c.contact.email) out.push('<dt>Email</dt><dd>' + esc(c.contact.email) + '</dd>');
     if (c.contact.mobile) out.push('<dt>Mobile</dt><dd>' + esc(c.contact.mobile) + '</dd>');
     out.push('<dt>Arrived</dt><dd>' + esc(when(c.createdAt)) + '</dd>');
+    out.push('<dt>Status</dt><dd>' + esc(statusWord(c, c.status)) + '</dd>');
     out.push('<dt>With</dt><dd>' + esc((c.assignedTo && c.assignedTo.email) || 'Nobody yet') + '</dd>');
     out.push('</dl>');
+
+    if (c.kind === 'PFA-CG') out.push('<div class="badges" id="casePhoto" hidden></div>');
+
+    /* Every earlier close, kept when the case was reopened (case.closes), and
+       every email about it that came back undelivered (case.mailProblems):
+       short lists, so a reopened case shows who closed it and why. */
+    var closes = c.closes || [];
+    if (closes.length) {
+      out.push('<p class="lab">Closed before</p><ul class="facts">' + closes.map(function (x) {
+        return '<li>' + esc(statusWord(c, x.status) || 'Closed') + (x.by ? ' by ' + esc(x.by) : '') + (x.at ? ', ' + esc(when(x.at)) : '')
+          + (x.note ? '<span class="detail">' + esc(x.note) + '</span>' : '') + '</li>';
+      }).join('') + '</ul>');
+    }
+    var problems = c.mailProblems || [];
+    if (problems.length) {
+      out.push('<p class="lab">Emails that did not arrive</p><ul class="facts">' + problems.map(function (p) {
+        return '<li><span class="flag" data-s="failed">Not delivered</span> ' + esc(partWord(p.part)) + (p.to ? ' to ' + esc(p.to) : '') + (p.at ? ', ' + esc(when(p.at)) : '')
+          + (p.reason ? '<span class="detail">' + esc(p.reason) + '</span>' : '') + '</li>';
+      }).join('') + '</ul>');
+    }
 
     if (c.kind === 'PFA-CG') {
       out.push('<p class="lab">' + (c.cardId ? 'The card, as issued: ' + esc(c.cardId) : 'The card, as it would be issued') + '</p>'
         + '<div class="preview" id="cardPreview"><figure><canvas data-side="front"></canvas><figcaption>Front</figcaption></figure>'
         + '<figure><canvas data-side="back"></canvas><figcaption>Back</figcaption></figure>'
-        + '<p class="note" id="previewNote">Drawn from the application by the same renderer the holder\u2019s card uses. ' + (c.cardId ? '' : 'The number and dates are set when you approve.') + '</p></div>');
+        + '<p class="note" id="previewNote">Drawn from the application by the same renderer the holder’s card uses. ' + (c.cardId ? '' : 'The number and dates are set when you approve.') + '</p></div>');
     }
     if (c.attachments) out.push('<p class="lab">' + (c.kind === 'PFA-CG' ? 'Photograph and address proof' : 'Photographs') + '</p><div class="shots" id="caseShots"></div>');
 
@@ -1487,20 +2126,26 @@ window.addEventListener('unhandledrejection', function (event) {
     out.push('</dl>');
 
     out.push('<div class="thread"><p class="lab">Conversation</p>');
+    /* The newest messages are the ones the server sends; when there are
+       more, it says how many are not shown (case.olderNote), and so do we. */
+    if (c.olderNote) out.push('<p class="warn">' + esc(c.olderNote) + '</p>');
     out.push(conversation(c));
     out.push('</div>');
 
     $('#caseBody').innerHTML = out.join('');
     shots(c.reference, c.attachments);
     replyFiles(c);
-    if (c.kind === 'PFA-CG') previewCard(c);
+    if (c.kind === 'PFA-CG') { previewCard(c); photoState(c); }
 
     $('#caseAct').hidden = false;
     var decide = $('#caseDecide');
-    decide.hidden = !(c.kind === 'PFA-CG' && !c.cardId && c.status !== 'spam');
+    /* Not on a closed application either (8 Oct 2026): the server refuses
+       to issue a card until it is reopened, so the button would only say no. */
+    decide.hidden = !(c.kind === 'PFA-CG' && !c.cardId && c.status !== 'spam' && !caseClosed(c));
     $('#caseFixBox').hidden = true;
     $$('#caseFixBox input').forEach(function (i) { i.checked = false; });
     $('#caseAssign').value = (c.assignedTo && c.assignedTo.email) || '';
+    paintMoves(c);
     $('#caseStatus').value = '';
     $('#caseText').value = '';
     say($('#caseSay'), mailConfigured === false && caseMode === 'reply' ? 'Email is not configured, so a reply cannot be sent yet.' : '');
@@ -1509,25 +2154,47 @@ window.addEventListener('unhandledrejection', function (event) {
   /* The whole exchange, oldest first: the submission, the copy sent to
      PFA's inbox, each reply either way, each note, each move. A message
      document says what it is in `type` (reply, note, email) and which way
-     it went in `direction` and `party`; the moves come from history. */
+     it went in `direction` and `party`; the moves come from history.
+
+     8 Oct 2026: a history row is read by its event. A reopen says so, and
+     why when the person's reply reopened it; a bounce reads "Email not
+     delivered"; an automatic reply is shown once, by its message, marked as
+     automatic; a reply row stands in only for a message older than the
+     ones shown; an event the panel does not know is named, never read as a
+     move. The order is the server's: when PFA recorded each (recordedAt,
+     else at), then seq (lib/message-order.js). */
   function conversation(c) {
     var items = [];
     var who = (c.contact && c.contact.name) || (c.contact && c.contact.email) || 'The sender';
     items.push({ at: c.createdAt, k: 'in', head: '<b>' + esc(who) + '</b> sent this ' + esc((c.kindLabel || 'submission').toLowerCase()) + (c.page ? ' from ' + esc(c.page) : ''), body: '' });
+    var shownReplies = {};
+    var shownBounces = {};
     (c.messages || []).forEach(function (m) {
       var t = m.type || m.kind || 'note';
       var head, k = t, body = m.text || m.summary || '';
-      if (t === 'reply' && m.direction === 'in') {
-        k = 'in';
+      var at = m.recordedAt || m.at;
+      if (t === 'reply') {
+        shownReplies[(m.direction === 'in' ? 'in' : 'out') + '|' + m.at] = true;
+        if (m.recordedAt) shownReplies[(m.direction === 'in' ? 'in' : 'out') + '|' + m.recordedAt] = true;
+      }
+      if (m.event === 'bounce') {
+        /* lib/inbound-mail.js files a delivery report as a note from the
+           mail system; it is not anybody's note. */
+        if (m.bounced) shownBounces[m.bounced] = true;
+        k = 'bounce';
+        head = '<b>Email not delivered</b>' + (m.to ? ' to ' + esc(m.to) : '');
+      } else if (t === 'reply' && m.direction === 'in') {
+        k = m.auto ? 'auto' : 'in';
         head = (m.party === 'staff' ? '<b>' + esc(m.fromName ? m.fromName + ' (' + m.from + ')' : m.from) + '</b> replied'
           : m.party === 'sender' ? '<b>' + esc(m.fromName || m.from) + '</b> wrote back'
           : '<b>' + esc(m.fromName ? m.fromName + ' (' + m.from + ')' : m.from) + '</b> wrote')
+          + (m.auto ? ' <span class="auto" title="' + esc(m.auto) + '">(automatic reply)</span>' : '')
           + (m.to && m.to.length ? ' to ' + esc([].concat(m.to).join(', ')) : '')
           + (m.matchedBy === 'subject' ? ' <span class="detail">(matched by the reference in the subject)</span>' : '');
       } else if (t === 'reply') {
         head = '<b>Replied</b> by ' + esc(m.by || 'staff') + (m.to ? ' to ' + esc(m.to) : '') + (m.delivered === false ? ' <span class="flag" data-s="failed">not delivered</span>' : '');
       } else if (t === 'note') {
-        head = '<b>Note</b> by ' + esc(m.by || 'staff') + (m.status ? ' (moved to ' + esc(m.status) + ')' : '');
+        head = '<b>Note</b> by ' + esc(m.by || 'staff') + (m.status ? ' (moved to ' + esc(statusWord(c, m.status)) + ')' : '');
       } else if (t === 'email') {
         head = '<b>' + esc(m.direction === 'out' ? 'Copy sent' : 'Email') + '</b> to ' + esc(m.to || '') + (m.state && m.state !== 'sent' ? ' <span class="flag" data-s="' + esc(m.state) + '">' + esc(MAIL_STATUS[m.state] || m.state) + '</span>' : '');
         body = '';
@@ -1536,28 +2203,68 @@ window.addEventListener('unhandledrejection', function (event) {
       }
       var files = '';
       if (m.direction === 'in' && (m.files || []).length) {
+        /* A file that was not kept says why (f.why: an automatic reply's
+           logo, more files than one email may carry, too large), rather than
+           the old blanket "too large to keep". */
         files = '<div class="files" data-files="' + esc(m.id) + '">' + (m.files || []).map(function (f) {
           return f.stored
             ? '<button type="button" class="filelink" data-file="' + esc(f.id) + '" data-name="' + esc(f.filename) + '" data-type="' + esc(f.contentType) + '">' + esc(f.filename) + '</button>'
-            : '<span class="detail">' + esc(f.filename) + ' (too large to keep)</span>';
+            : '<span class="detail">' + esc(f.filename) + ' (not kept' + (f.why ? ': ' + esc(f.why) : '') + ')</span>';
         }).join('') + '</div>';
       }
       var full = m.direction === 'in' && m.fullText && m.fullText !== m.text
         ? '<details><summary>Show the quoted text</summary><p>' + esc(m.fullText) + '</p></details>' : '';
-      items.push({ at: m.at, k: k, head: head, body: body, extra: files + full });
+      items.push({ at: at, seq: m.seq, k: k, head: head, body: body, extra: files + full });
     });
     (c.history || []).forEach(function (h) {
-      if (!h || h.event === 'reply') return;
-      var head = h.event === 'assign' ? '<b>Assigned</b> to ' + esc(h.to || 'nobody')
-        : h.event === 'wall-publish' ? '<b>Put on the wall</b>'
-        : h.event === 'wall-remove' ? '<b>Taken off the wall</b>'
-        : h.status === 'new' && !h.by ? '' : '<b>Moved to ' + esc(h.status) + '</b>';
-      if (!head) return;
-      items.push({ at: h.at, k: 'change', head: head + (h.by ? ' by ' + esc(h.by) : ''), body: h.note || '' });
+      if (!h) return;
+      var by = h.by ? ' by ' + esc(h.by) : '';
+      var head;
+      if (h.event === 'auto-reply') return;   // its message says so, once
+      if (h.event === 'reply') {
+        /* The message itself tells this, unless it is older than the
+           newest the server sent. */
+        if (!c.olderNotShown || shownReplies[(h.direction === 'in' ? 'in' : 'out') + '|' + h.at]) return;
+        head = h.direction === 'in'
+          ? (h.party === 'sender' ? '<b>The person wrote back</b>' : h.party === 'staff' ? '<b>Reply from PFA’s inbox</b>' : '<b>An email came in</b>') + (h.by ? ' from ' + esc(h.by) : '')
+          : '<b>Replied</b>' + by;
+      } else if (h.event === 'bounce') {
+        if (shownBounces[h.messageId]) return;
+        head = '<b>Email not delivered</b>' + (h.to ? ' to ' + esc(h.to) : '');
+      } else if (h.event === 'reopen') {
+        head = (h.reason === 'sender-replied' ? '<b>Reopened: the person wrote back</b>' : '<b>Reopened</b>' + by)
+          + (h.status ? ', now ' + esc(statusWord(c, h.status)) : '');
+      } else if (h.event === 'assign') {
+        head = '<b>Assigned</b> to ' + esc(h.to || 'nobody') + by;
+      } else if (h.event === 'wall-publish') {
+        head = (c.kind === 'PFA-W' ? '<b>Published in the newsroom</b>' : '<b>Put on the wall</b>') + by;
+      } else if (h.event === 'wall-remove') {
+        head = (c.kind === 'PFA-W' ? '<b>Taken out of the newsroom</b>' : '<b>Taken off the wall</b>') + by;
+      } else if (h.event) {
+        head = '<b>' + esc(readable(h.event)) + '</b>' + by;
+      } else if (h.status === 'new' && !h.by) {
+        return;   // the arrival, which is the first line already
+      } else {
+        head = '<b>Moved to ' + esc(statusWord(c, h.status)) + '</b>' + by;
+      }
+      items.push({ at: h.at, k: h.event === 'bounce' ? 'bounce' : 'change', head: head, body: h.note || '' });
     });
-    items.sort(function (a, b) { return String(a.at || '').localeCompare(String(b.at || '')); });
+    /* A time that cannot be read keeps its place next to the item before it,
+       as the server does, rather than jumping to the top. */
+    var carry = 0;
+    items.forEach(function (it, i) {
+      var ms = Date.parse(it.at || '');
+      if (!isNaN(ms)) carry = ms;
+      it.ms = carry;
+      it.i = i;
+    });
+    items.sort(function (a, b) {
+      if (a.ms !== b.ms) return a.ms - b.ms;
+      if (typeof a.seq === 'number' && typeof b.seq === 'number' && a.seq !== b.seq) return a.seq - b.seq;
+      return a.i - b.i;
+    });
     return items.map(function (i) {
-      return '<div class="msg" data-k="' + esc(i.k) + '"><p class="who">' + i.head + ' \u00b7 ' + esc(when(i.at)) + '</p>'
+      return '<div class="msg" data-k="' + esc(i.k) + '"><p class="who">' + i.head + ' · ' + esc(when(i.at)) + '</p>'
         + (i.body ? '<p>' + esc(i.body) + '</p>' : '') + (i.extra || '') + '</div>';
     }).join('');
   }
@@ -1590,21 +2297,56 @@ window.addEventListener('unhandledrejection', function (event) {
     $('#caseBody').innerHTML = '<div class="loading">Opening ' + esc(reference) + '\u2026</div>';
     $('#caseAct').hidden = true;
     loadStaff();
-    api('/api/admin/case?reference=' + encodeURIComponent(reference)).then(function (data) {
+    /* Returned, so a caller can say something once the case is drawn. */
+    return api('/api/admin/case?reference=' + encodeURIComponent(reference)).then(function (data) {
       drawCase(data.case, data.mailConfigured);
     }).catch(function (e) {
       $('#caseBody').innerHTML = '<div class="empty"><b>Not opened</b>' + esc(e.message) + '</div>';
     });
   }
 
-  function act(body, done) {
+  /* One press of Send is one reply (CONTRACT 3, 8 Oct 2026). The id is made
+     once per press and travels with the request; the server reserves it
+     before sending, so the same request arriving twice (a double click that
+     got through, a retry after a lost answer) sends one email. */
+  function requestId() {
+    var bytes = new Uint8Array(16);
+    if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+    else for (var i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+    return 'r-' + Array.prototype.map.call(bytes, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+  }
+
+  /* `control` is what asked (Send, the wall button, the Assign or Move list).
+     It is held until the answer comes, so it cannot ask twice. The answer
+     carries the case as it now stands, and the drawer is drawn from that
+     rather than guessed at. The box is emptied only for a reply or a note
+     that went; any other change keeps what is being typed. */
+  function act(body, done, control) {
+    if (control) control.disabled = true;
+    var went = body.action === 'reply' || body.action === 'note';
+    var typed = $('#caseText').value;
     say($('#caseSay'), 'Saving\u2026');
     api('/api/admin/case', { method: 'POST', body: body }).then(function (data) {
-      if (data.case) drawCase(data.case, data.mailConfigured);
-      say($('#caseSay'), done, 'good');
+      if (data.case) {
+        drawCase(data.case, data.mailConfigured);
+        if (!went) $('#caseText').value = typed;
+      } else if (went) {
+        $('#caseText').value = '';
+      }
+      say($('#caseSay'), data.duplicate ? 'That reply had already gone; it was not sent again.' : done, 'good');
       fill(current, true);
       if (can('overview')) overview();
-    }).catch(function (e) { say($('#caseSay'), e.message, 'bad'); });
+    }).catch(function (e) {
+      /* A refusal still carries the case as it now stands (8 Oct 2026): a
+         move someone else made meanwhile, a reply kept but not delivered.
+         Drawn from it, keeping what is being typed. */
+      if (e && e.data && e.data.case) {
+        drawCase(e.data.case, e.data.mailConfigured);
+        $('#caseText').value = typed;
+      }
+      say($('#caseSay'), e.message, 'bad');
+    })
+      .then(function () { if (control) control.disabled = false; });
   }
 
   function sendCase() {
@@ -1612,9 +2354,9 @@ window.addEventListener('unhandledrejection', function (event) {
     var text = $('#caseText').value.trim();
     if (!text) { say($('#caseSay'), caseMode === 'reply' ? 'Write the reply first.' : 'Write the note first.', 'bad'); return; }
     if (caseMode === 'reply') {
-      act({ reference: openCase.reference, action: 'reply', text: text }, 'Reply sent.');
+      act({ reference: openCase.reference, action: 'reply', text: text, requestId: requestId() }, 'Reply sent.', $('#caseSend'));
     } else {
-      act({ reference: openCase.reference, action: 'note', text: text }, 'Note recorded.');
+      act({ reference: openCase.reference, action: 'note', text: text }, 'Note recorded.', $('#caseSend'));
     }
   }
 
@@ -1631,6 +2373,21 @@ window.addEventListener('unhandledrejection', function (event) {
 
     var choice = event.target.closest('[data-state]');
     if (choice) {
+      return;
+    }
+
+    /* Row buttons drawn with their section (8 Oct 2026): send one email
+       again, ask CCAvenue about one payment, attach one photograph again. */
+    var again = event.target.closest('[data-mail-resend]');
+    if (again) { if (!again.disabled) resendMail(again, again.getAttribute('data-mail-resend')); return; }
+    var check = event.target.closest('[data-pay-check]');
+    if (check) { if (!check.disabled) checkPayment(check); return; }
+    var refile = event.target.closest('[data-refile]');
+    if (refile) { if (!refile.disabled) refilePhoto(refile); return; }
+
+    var vis = event.target.closest('[data-vis]');
+    if (vis) {
+      if (vis.getAttribute('aria-pressed') !== 'true' && !vis.disabled) setVisible(vis);
       return;
     }
 
@@ -1684,16 +2441,35 @@ window.addEventListener('unhandledrejection', function (event) {
   on('#caseSend', 'click', sendCase);
 
   /* ---- deciding an application ---- */
+  /* Held until the answer comes, like act(), so a second press cannot ask
+     twice, and drawn from the case in the answer (8 Oct 2026). The line
+     about the email is what happened: an application with an email whose
+     card email did not go at once no longer reads "No email on the
+     application". */
   on('#caseApprove', 'click', function () {
     if (!openCase) return;
+    var button = $('#caseApprove');
+    if (button.disabled) return;
+    var reference = openCase.reference;
     var f = openCase.fields || {};
     if (!window.confirm('Issue a Colony Caregiver Card to ' + (f.name || 'this applicant') + ' for ' + (f.address || 'the colony given') + '? The card is drawn exactly as previewed, and they are emailed.')) return;
+    button.disabled = true;
     say($('#caseSay'), 'Issuing the card\u2026');
-    api('/api/admin/case', { method: 'POST', body: { reference: openCase.reference, action: 'approve' } }).then(function (data) {
-      say($('#caseSay'), 'Card ' + data.cardId + ' issued' + (data.emailed ? ' and the holder emailed.' : '. No email on the application, so nothing was sent.'), 'good');
-      showCase(openCase.reference);
+    api('/api/admin/case', { method: 'POST', body: { reference: reference, action: 'approve' } }).then(function (data) {
+      var said = 'Card ' + data.cardId + ' issued' + (data.emailed ? ' and the holder emailed.'
+        : f.email ? '. The email to the holder did not go at once; Overview lists any email that has not gone.'
+        : '. No email on the application, so nothing was sent.');
+      if (data.case) {
+        drawCase(data.case, data.mailConfigured);
+        say($('#caseSay'), said, 'good');
+      } else {
+        showCase(reference).then(function () { say($('#caseSay'), said, 'good'); });
+      }
       fill(current, true);
-    }).catch(function (e) { say($('#caseSay'), e.message, 'bad'); });
+    }).catch(function (e) {
+      if (e && e.data && e.data.case) drawCase(e.data.case, e.data.mailConfigured);
+      say($('#caseSay'), e.message, 'bad');
+    }).then(function () { button.disabled = false; });
   });
   on('#caseFix', 'click', function () {
     var box = $('#caseFixBox');
@@ -1717,7 +2493,7 @@ window.addEventListener('unhandledrejection', function (event) {
 
   on('#caseAssign', 'change', function () {
     if (!openCase) return;
-    act({ reference: openCase.reference, action: 'assign', to: $('#caseAssign').value }, 'Assigned.');
+    act({ reference: openCase.reference, action: 'assign', to: $('#caseAssign').value }, 'Assigned.', $('#caseAssign'));
   });
   /* Put on the wall, and take back off it. The label says which way it will
      go, so the button states the consequence rather than the current state. */
@@ -1736,14 +2512,14 @@ window.addEventListener('unhandledrejection', function (event) {
     var on = $('#caseWall').getAttribute('data-on') === '1';
     var fieldNote = openCase.kind === 'PFA-W';
     act({ reference: openCase.reference, action: 'wall', published: !on },
-      fieldNote ? (on ? 'Taken out of the newsroom.' : 'Published in the newsroom.') : (on ? 'Taken off the wall.' : 'On the wall.'));
+      fieldNote ? (on ? 'Taken out of the newsroom.' : 'Published in the newsroom.') : (on ? 'Taken off the wall.' : 'On the wall.'), $('#caseWall'));
     openCase.onWall = !on;
     paintWall(openCase);
   });
 
   on('#caseStatus', 'change', function () {
     if (!openCase || !$('#caseStatus').value) return;
-    act({ reference: openCase.reference, action: 'status', status: $('#caseStatus').value }, 'Moved.');
+    act({ reference: openCase.reference, action: 'status', status: $('#caseStatus').value }, 'Moved.', $('#caseStatus'));
   });
 
   on('#refresh', 'click', function () { panesOf(current).filter(paneAllowed).forEach(function (pane) { fill(pane, true); }); });

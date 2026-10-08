@@ -157,7 +157,7 @@ test('one connection cannot spend the photograph budget in a loop', async () => 
       return { ok: true, status: 200, arrayBuffer: async () => Buffer.from([0x89, 0x50, 0x4E, 0x47]) };
     };
     try {
-      const request = () => ({ method: 'POST', body: { image: 'data:image/jpeg;base64,' + JPEG }, headers: { 'x-forwarded-for': '203.0.113.20' } });
+      const request = () => ({ method: 'POST', body: { image: 'data:image/jpeg;base64,' + JPEG }, headers: { 'x-forwarded-for': '203.0.113.20' }, socket: { remoteAddress: '203.0.113.20' } });
       let refused = 0;
       for (let i = 0; i < handler._private.LIMIT + 3; i += 1) {
         const res = reply();
@@ -169,7 +169,7 @@ test('one connection cannot spend the photograph budget in a loop', async () => 
 
       /* Another visitor is not punished for the first one's loop. */
       const other = reply();
-      await handler({ method: 'POST', body: { image: 'data:image/jpeg;base64,' + JPEG }, headers: { 'x-forwarded-for': '203.0.113.21' } }, other);
+      await handler({ method: 'POST', body: { image: 'data:image/jpeg;base64,' + JPEG }, headers: { 'x-forwarded-for': '203.0.113.21' }, socket: { remoteAddress: '203.0.113.21' } }, other);
       assert.notEqual(other.out.status, 429);
     } finally { global.fetch = nativeFetch; handler._private.resetForTests(); }
   });

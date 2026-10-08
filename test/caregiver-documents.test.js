@@ -82,8 +82,13 @@ test('the photograph is checked by its bytes and held under a token; the token i
     assert.equal(staged.consumed, true, 'the staging copy is marked used, not deleted');
     assert.equal(db.store.get(`caregiverDocuments/${ok.body.token}/attachments/1`).bytes, null, 'and its bytes are dropped');
 
-    /* a replayed callback attaches nothing a second time */
-    assert.equal(await documents.attachTo(db, ok.body.token, ref, new Date().toISOString()), 0);
+    /* A replayed callback copies nothing a second time, and says how many
+       pictures are already beside the record, so the record it updates keeps
+       the right count (8 Oct 2026: it used to answer 0, and a record written
+       from that answer would have claimed no pictures). */
+    const before = [...db.store.keys()].filter((k) => k.startsWith('submissions/')).length;
+    assert.equal(await documents.attachTo(db, ok.body.token, ref, new Date().toISOString()), 2);
+    assert.equal([...db.store.keys()].filter((k) => k.startsWith('submissions/')).length, before, 'nothing copied twice');
   }
 });
 

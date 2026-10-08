@@ -424,7 +424,11 @@ test('copies refused while the account was wrong go out from the panel once it i
   global.fetch = realDeliverFetch;
   const again = await check('POST', { action: 'resend' });
   assert.equal(again.json.ok, true, JSON.stringify(again.json));
-  assert.equal(again.json.sent, 1);
+  /* Since 8 Oct 2026 Resend sends every email that did not go, not only
+     the copies to the inbox: the person's confirmation, refused by the
+     same account, goes too (review C item 2). */
+  assert.equal(again.json.sent, 2);
+  assert.ok(sent.some((m) => m.to.includes('tester.pfa@example.com') && /PFA-CR/.test(m.subject)), 'the person\'s confirmation went too');
   const copy = toInbox().find((m) => m.subject.startsWith(res.json.reference));
   assert.ok(copy, 'the copy reached the inbox');
   assert.equal(copy.attachments.length, 1, 'with its photograph');

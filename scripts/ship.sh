@@ -347,6 +347,42 @@ else
 fi
 rm -f "$FB_LOG"
 
+step "Locking the file store (Storage rules)"
+# storage.rules refuses every browser read and write on the bucket that keeps
+# photographs and documents; only the server, with the admin key, touches it
+# (8 Oct 2026). Firebase can only take these rules once Storage is switched on
+# in the console (Build > Storage > Get started). Until then there is no
+# bucket to protect and the files stay in the database, so "not set up yet"
+# is a note, not a stop. This runs last, so it can never hold back the site
+# or the panel.
+ST_LOG="$(mktemp)"
+deploy_storage() {
+  npx --yes firebase-tools deploy --only storage --project "$PROJECT" 2>&1 | tee "$ST_LOG"
+  return "${PIPESTATUS[0]}"
+}
+storage_not_on() { grep -Eqi "has not been set up|Get Started|still being set up|not been initiali[sz]ed|Firebase Storage has not" "$ST_LOG"; }
+if deploy_storage; then
+  :
+elif storage_not_on; then
+  printf '\n\033[33m  Note:\033[0m Storage is not switched on for %s yet, so photographs stay in the database for now.\n' "$PROJECT"
+  printf '  When you switch it on (console.firebase.google.com > Build > Storage > Get started, production mode, Mumbai),\n'
+  printf '  run:  cd %s && npx firebase-tools deploy --only storage --project %s\n' "$LIVE" "$PROJECT"
+else
+  echo "  the Storage rules deploy did not finish; trying once more in 15 seconds"
+  sleep 15
+  if deploy_storage; then
+    :
+  elif storage_not_on; then
+    printf '\n\033[33m  Note:\033[0m Storage is not switched on for %s yet. Run this after switching it on:\n' "$PROJECT"
+    printf '    cd %s && npx firebase-tools deploy --only storage --project %s\n' "$LIVE" "$PROJECT"
+  else
+    rm -f "$ST_LOG"
+    fail "Deploying the Storage rules failed twice. The site and the panel are deployed; only the file store's lock is behind.
+  Run this in a few minutes:  cd $LIVE && npx firebase-tools deploy --only storage --project $PROJECT"
+  fi
+fi
+rm -f "$ST_LOG"
+
 printf '\n\033[32mDone.\033[0m Pushed %s to %s\n' "$MESSAGE" "$REMOTE"
 printf 'Backup of the previous tree: %s\n' "$BACKUP"
 printf '\nCheck the deployment picked it up:\n'

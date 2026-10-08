@@ -69,7 +69,7 @@ test('the build never copies repository internals into dist/', () => {
   const keep = new Function(`return ${src.match(/KEEP_FILES = (\/.*\/);/)[1]}`)();
   const skipRe = new Function(`return ${files}`)();
   const re = { test: (n) => skipRe.test(n) && !keep.test(n) };
-  for (const name of ['.firebaserc', '.gitignore', '.env.example', 'eslint.config.mjs', 'MEMBER-REGISTER-REVIEW.csv', 'HANDBOOK.md', 'package.json', 'vercel.json', 'firebase.json', 'firestore.rules', '.gitkeep']) {
+  for (const name of ['.firebaserc', '.gitignore', '.env.example', 'eslint.config.mjs', 'MEMBER-REGISTER-REVIEW.csv', 'HANDBOOK.md', 'package.json', 'vercel.json', 'firebase.json', 'firestore.rules', 'storage.rules', '.gitkeep']) {
     assert.ok(re.test(name), `${name} is never published`);
   }
   for (const name of ['index.html', 'site.js', 'chrome.css', 'search-index.json', 'logo.png', 'sitemap.xml', 'robots.txt']) {

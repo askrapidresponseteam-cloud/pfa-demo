@@ -9,8 +9,17 @@
    delete). Timestamps are firebase-admin's own, so range queries over them
    compare as they would on the server.
 
-   It is single-threaded and applies writes at once, so it proves what a
-   route writes and reads, not how it behaves under contention.
+   Transactions behave as Firestore's do under contention (8 Oct 2026; until
+   then two transactions could both read a counter and both write it, so the
+   suite could not catch a race): every document a transaction reads is
+   remembered with its update time, and at commit, if any of them has changed
+   since (or appeared, or gone), nothing is written and the transaction runs
+   again, up to five times, then fails with ABORTED. Reads after a write in
+   the same transaction are refused, as on the server. A commit applies all of
+   its writes in one step, so no other request sees half of them.
+
+   memoryFirestore({ latency: 3 }) makes every read and commit wait that many
+   milliseconds, so two requests fired together really do overlap.
 
      const db = memoryFirestore();
      require('../lib/firebase')._setDbForTests(db);
@@ -113,10 +122,12 @@ function matches(data, [field, op, value]) {
   }
 }
 
-function memoryFirestore() {
+function memoryFirestore(options) {
   const store = new Map();          // path -> { data, createTime, updateTime }
   let clock = 0;
   const tick = () => { clock += 1; return Timestamp.fromMillis(1790000000000 + clock); };
+  const latency = Math.max(0, Number(options && options.latency) || 0);
+  const pause = () => (latency ? new Promise((r) => setTimeout(r, latency)) : Promise.resolve());
 
   function snapshot(ref) {
     const hit = store.get(ref.path);
@@ -141,18 +152,20 @@ function memoryFirestore() {
       path,
       get parent() { return collectionRef(parts.slice(0, -1).join('/')); },
       collection: (name) => collectionRef(`${path}/${name}`),
-      async get() { return snapshot(ref); },
-      async set(data, opts) {
+      async get() { await pause(); return snapshot(ref); },
+      /* the writes themselves are synchronous (the _ forms), so a batch or a
+         transaction can apply several in one step */
+      _set(data, opts) {
         const hit = store.get(path);
         const now = tick();
         store.set(path, { data: write(hit ? hit.data : {}, data, Boolean(opts && opts.merge)), createTime: hit ? hit.createTime : now, updateTime: now });
         return { writeTime: now };
       },
-      async create(data) {
+      _create(data) {
         if (store.has(path)) throw fail(6, `ALREADY_EXISTS: ${path}`);
-        return ref.set(data);
+        return ref._set(data);
       },
-      async update(data, precondition) {
+      _update(data, precondition) {
         const hit = store.get(path);
         if (!hit) throw fail(5, `NOT_FOUND: ${path}`);
         if (precondition && precondition.lastUpdateTime && !precondition.lastUpdateTime.isEqual(hit.updateTime)) {
@@ -164,7 +177,11 @@ function memoryFirestore() {
         store.set(path, { data: next, createTime: hit.createTime, updateTime: now });
         return { writeTime: now };
       },
-      async delete() { store.delete(path); for (const k of [...store.keys()]) if (k.startsWith(`${path}/`)) store.delete(k); }
+      _delete() { store.delete(path); for (const k of [...store.keys()]) if (k.startsWith(`${path}/`)) store.delete(k); },
+      async set(data, opts) { await pause(); return ref._set(data, opts); },
+      async create(data) { await pause(); return ref._create(data); },
+      async update(data, precondition) { await pause(); return ref._update(data, precondition); },
+      async delete() { await pause(); return ref._delete(); }
     };
     return ref;
   }
@@ -178,6 +195,10 @@ function memoryFirestore() {
       select: () => q,
       count: () => ({ async get() { const r = await q.get(); return { data: () => ({ count: r.size }) }; } }),
       async get() {
+        await pause();
+        return q._run();
+      },
+      _run() {
         const depth = collection.split('/').length + 1;
         let docs = [...store.keys()]
           .filter((k) => k.startsWith(`${collection}/`) && k.split('/').length === depth)
@@ -228,34 +249,61 @@ function memoryFirestore() {
   function writer() {
     const ops = [];
     const api = {
-      set(ref, data, opts) { ops.push(() => ref.set(data, opts)); return api; },
-      create(ref, data) { ops.push(() => ref.create(data)); return api; },
-      update(ref, data, pre) { ops.push(() => ref.update(data, pre)); return api; },
-      delete(ref) { ops.push(() => ref.delete()); return api; },
-      async commit() {
-        /* all or nothing: check every create and update first */
+      set(ref, data, opts) { ops.push(() => ref._set(data, opts)); return api; },
+      create(ref, data) { ops.push(() => ref._create(data)); return api; },
+      update(ref, data, pre) { ops.push(() => ref._update(data, pre)); return api; },
+      delete(ref) { ops.push(() => ref._delete()); return api; },
+      _pending: () => ops.length,
+      /* all or nothing, in one synchronous step: nothing else runs between
+         the check (a transaction's reads) and the last write */
+      _apply(check) {
         const plan = ops.slice();
         ops.length = 0;
+        if (check && check() === false) return null;   // a transaction that lost a race writes nothing
         const before = new Map(store);
-        try { for (const op of plan) await op(); } catch (error) { store.clear(); for (const [k, v] of before) store.set(k, v); throw error; }
+        try { for (const op of plan) op(); } catch (error) { store.clear(); for (const [k, v] of before) store.set(k, v); throw error; }
         return [];
-      }
+      },
+      async commit() { await pause(); return api._apply(); }
     };
     return api;
   }
+
+  const stamp = (path) => { const hit = store.get(path); return hit ? hit.updateTime.toMillis() : null; };
 
   return {
     collection: collectionRef,
     doc: docRef,
     batch: writer,
     async runTransaction(fn) {
-      const tx = writer();
-      tx.get = (refOrQuery) => refOrQuery.get();
-      const result = await fn(tx);
-      await tx.commit();
-      return result;
+      for (let attempt = 1; ; attempt += 1) {
+        const tx = writer();
+        const seen = new Map();   // path -> update time when read (null: absent)
+        const note = (snap) => { if (!seen.has(snap.ref.path)) seen.set(snap.ref.path, snap.exists ? snap.updateTime.toMillis() : null); return snap; };
+        const guard = () => { if (tx._pending()) throw fail(3, 'INVALID_ARGUMENT: Firestore transactions require all reads to be executed before all writes.'); };
+        tx.get = async (refOrQuery) => {
+          guard();
+          await pause();
+          if (typeof refOrQuery._run === 'function') {
+            const r = refOrQuery._run();
+            r.docs.forEach(note);
+            return r;
+          }
+          return note(snapshot(refOrQuery));
+        };
+        tx.getAll = async (...refs) => { guard(); await pause(); return refs.map((r) => note(snapshot(r))); };
+        const result = await fn(tx);
+        await pause();
+        let conflict = false;
+        tx._apply(() => {
+          for (const [path, at] of seen) if (stamp(path) !== at) { conflict = true; break; }
+          return !conflict;
+        });
+        if (!conflict) return result;
+        if (attempt >= 5) throw fail(10, 'ABORTED: Too much contention on these documents. Please try again.');
+      }
     },
-    async getAll(...refs) { return Promise.all(refs.map((r) => r.get())); },
+    async getAll(...refs) { await pause(); return refs.map((r) => snapshot(r)); },
     dump() { const out = {}; for (const [k, v] of store) out[k] = clone(v.data); return out; },
     _store: store
   };

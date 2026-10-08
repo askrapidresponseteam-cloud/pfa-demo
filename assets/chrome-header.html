@@ -1,11 +1,14 @@
 <!-- PFA site chrome: the one header. Do not edit the copy in a page;
      edit this file and run `npm run sync:chrome`. Placeholders:
+       {{VISIBILITY}} assets/site-visibility.js, inlined: hides what the panel
+                     has hidden before any of the page is parsed (8 Oct 2026)
        {{ANNOUNCE}}  the announcement bar, or nothing on pages without one
        {{GROUP:x}}   a top-level nav item that owns a menu; sync-chrome gives
                      it .in-section when the page belongs to that group, and
                      never aria-current (the menu item below it carries that)
        {{CURRENT:x}} a destination; sync-chrome marks the page's own
        -->
+{{VISIBILITY}}
 {{ANNOUNCE}}
 <header class="site" id="header" data-cursor="dark">
   <nav aria-label="Main navigation">

@@ -175,6 +175,33 @@ test("a caregiver's photograph moves from staging to the application in the buck
   assert.ok(left.droppedAt);
 });
 
+test("a caregiver's photograph still moves when the fee clears on an instance whose probe failed", async () => {
+  /* Review D4, 8 Oct 2026: the photograph was staged in the bucket by one
+     instance; the payment callback landed on another whose probe had been
+     refused (or that runs with PFA_FILE_STORE=off). read() depended on the
+     probe, answered null, and the application was filed with bytes:null
+     while the staging copy was marked used: the photo was unlinked for good.
+     Reads now open the bucket the record names. */
+  const documents = require('../lib/routes/caregiver/documents');
+  const staged = await call(documents, { body: { photo: PHOTO } });
+  const token = staged.json.token;
+  assert.ok(box.files.get(`caregiver-staging/${token}/1`).bytes.length > 1000, 'staged in the bucket');
+
+  FILES._setBucket(() => null);   // this instance has no bucket to write to just now
+  const ref = db.collection('submissions').doc('PFA-CG-2026-00002');
+  await ref.set({ kind: 'PFA-CG' });
+  assert.equal(await documents.attachTo(db, token, ref, new Date().toISOString()), 1);
+  const moved = db.dump()['submissions/PFA-CG-2026-00002/attachments/1'];
+  const bytes = await FILES.readStrict(moved);
+  assert.ok(bytes && bytes.length > 1000, 'the application carries the photograph (in Firestore, as there was nowhere else to write it)');
+  assert.equal(bytes.length, moved.size);
+});
+
+test('the file store offers both readers the contract names', () => {
+  assert.equal(typeof FILES.read, 'function');
+  assert.equal(typeof FILES.readStrict, 'function');
+});
+
 test('nothing in the file store deletes anything', () => {
   const src = fs.readFileSync(path.join(ROOT, 'lib/file-store.js'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   assert.doesNotMatch(src, /\.delete\(|deleteFiles|\.remove\(/);

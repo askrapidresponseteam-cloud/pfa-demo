@@ -676,6 +676,76 @@
   window.PFA_CHROME = { measure: measure, closeAnnouncement: closeBar, recolourCursor: recolourCursor, restCursor: cursorApi.rest || function () {} };
 })();
 
+/* ---------- what the site shows ----------------------------------------
+   Owner, 8 Oct 2026: every page and section can be shown or hidden from the
+   panel, with no code change. The inline script at the top of the header
+   (assets/site-visibility.js, put there by scripts/sync-chrome.js) has
+   already hidden what this browser last knew to be hidden, before anything
+   painted. This asks for the current answer, keeps it for the next page and
+   applies it to this one, so a change in the panel reaches a page that is
+   already open as well as the next one.
+
+   /api/site-visibility is cached for ten seconds at the edge, so a change is
+   live within about that. When no answer comes (offline, a page opened from
+   the disk, a server that cannot read the setting) the last one stands: a
+   blip never brings hidden sections back for a moment and then takes them
+   away again. */
+(function () {
+  'use strict';
+  var V = window.PFA_VISIBILITY;
+  if (!V) return;
+
+  /* A section's own button in the header (Our Work, Learn...) opens its menu
+     and also leads to its first page. While that page is hidden the button
+     leads to the first item in its menu still shown, so the rest of the menu
+     stays one click away; it goes back to its own page when that returns. */
+  function retarget(state) {
+    [].forEach.call(document.querySelectorAll('header.site .navitem'), function (item) {
+      var top = item.querySelector(':scope > a');
+      if (!top) return;
+      if (!top.hasAttribute('data-home')) top.setAttribute('data-home', top.getAttribute('href') || '');
+      var home = top.getAttribute('data-home');
+      var next = home;
+      if (V.blocked(home, state)) {
+        [].some.call(item.querySelectorAll('.menu > a'), function (a) {
+          var href = a.getAttribute('href') || '';
+          if (!href || href.charAt(0) === '#' || V.blocked(href, state)) return false;
+          next = href;
+          return true;
+        });
+      }
+      if (top.getAttribute('href') !== next) top.setAttribute('href', next);
+    });
+  }
+
+  function take(data) {
+    if (!data || data.unavailable || !Array.isArray(data.pages) || !Array.isArray(data.modules)) return;
+    V.save(data);
+    V.apply(data);
+    retarget(V.state());
+    measureAgain();
+    try { window.dispatchEvent(new CustomEvent('pfa:visibility', { detail: V.state() })); } catch (e) {}
+  }
+
+  /* A menu or a page that changed under the header can change its height. */
+  function measureAgain() {
+    if (window.PFA_CHROME && window.PFA_CHROME.measure) window.PFA_CHROME.measure();
+  }
+
+  function ask() {
+    if (!window.fetch) return;
+    fetch('/api/site-visibility', { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(take)
+      .catch(function () { /* the last answer stands */ });
+  }
+
+  retarget(V.state());
+  ask();
+  /* Back to a page the browser kept in memory: the answer may have moved. */
+  window.addEventListener('pageshow', function (event) { if (event.persisted) ask(); });
+})();
+
 /* ---------- visit tally ------------------------------------------------
    A real number from /api/visits. One visit per browser session, not per page
    view, so reading six pages counts once: that is what "visits" means and it is

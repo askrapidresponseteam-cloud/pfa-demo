@@ -215,7 +215,8 @@ test('approving a paid application issues the card from what was sent, closes th
   assert.equal(issued[0].idempotencyKey, 'application:PFA-CG-2026-00001', 'a double click cannot issue twice');
   const app = db.store.get('submissions/PFA-CG-2026-00001');
   assert.equal(app.cardId, 'PFA-CCT-4K2M8QRT');
-  assert.equal(app.status, 'handled');
+  /* approve moves an application to its own stage, "Card issued" (lib/case-flow.js, 8 Oct 2026) */
+  assert.equal(app.status, 'approved');
   const card = db.store.get('caretakerCards/PFA-CCT-4K2M8QRT');
   assert.equal(card.applicationRef, 'PFA-CG-2026-00001', 'the card points back at the application, for its photograph');
   assert.equal(queued.length, 1); assert.equal(queued[0].template, 'card_issued'); assert.equal(queued[0].to, 'asha@example.com');
@@ -225,7 +226,8 @@ test('approving a paid application issues the card from what was sent, closes th
   assert.equal(res.body.emailed, true);
   assert.equal(delivered.length, 1); assert.equal(delivered[0].template, 'card_issued');
   assert.match(delivered[0].payload.cardUrl, /\/caregiver-card\.html\?id=PFA-CCT-4K2M8QRT$/);
-  assert.deepEqual(results, [{ emailId: 'e1', ok: true, providerId: 'resend_1' }]);
+  /* recorded under the claim the row was written with (8 Oct 2026); this stub store hands out none */
+  assert.deepEqual(results.map(({ claimToken, ...r }) => r), [{ emailId: 'e1', ok: true, providerId: 'resend_1' }]);
 
   const again = await run(handler, request({ body: { reference: 'PFA-CG-2026-00001', action: 'approve' } }));
   assert.equal(again.statusCode, 409, 'an issued application cannot be approved twice');

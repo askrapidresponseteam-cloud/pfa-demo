@@ -483,6 +483,161 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 </head>
 <body>
 
+<script id="pfa-vis">
+(function (root) {
+'use strict';
+var KEY = 'pfa:visibility';
+var LOCKED = { index: 1, track: 2, search: 2 };
+var NOTICE = 'This page is not available right now.';
+var HOME = 'Go to the home page';
+var CSS_ID = 'pfa-vis-css';
+var ROBOTS_ID = 'pfa-vis-robots';
+var GONE_ID = 'pfa-gone';
+var PAGE = /^[a-z0-9][a-z0-9-]*$/;
+var PART = /^[A-Za-z][A-Za-z0-9_-]*$/;
+var applied = { version: 0, pages: [], modules: [] };
+var title = null;
+function pagesOf(state) {
+return (state && Array.isArray(state.pages) ? state.pages : []).filter(function (p) {
+return typeof p === 'string' && PAGE.test(p) && !LOCKED[p];
+});
+}
+function modulesOf(state) {
+return (state && Array.isArray(state.modules) ? state.modules : []).filter(function (m) {
+var at = typeof m === 'string' ? m.indexOf('#') : -1;
+return at > 0 && PAGE.test(m.slice(0, at)) && PART.test(m.slice(at + 1)) && LOCKED[m.slice(0, at)] !== 2;
+});
+}
+function clean(state) {
+return { version: Number(state && state.version) || 0, pages: pagesOf(state), modules: modulesOf(state) };
+}
+function pageOf(url) {
+var p = String(url == null ? '' : url).split('#')[0].split('?')[0];
+p = p.slice(p.lastIndexOf('/') + 1).replace(/\.html$/, '');
+try { p = decodeURIComponent(p); } catch (e) {}
+return p || 'index';
+}
+function linksTo(page) {
+var f = page + '.html';
+return ['a[href="' + f + '"]', 'a[href^="' + f + '#"]', 'a[href^="' + f + '?"]',
+'a[href$="/' + f + '"]', 'a[href*="/' + f + '#"]', 'a[href*="/' + f + '?"]'];
+}
+function plan(state, page) {
+var s = clean(state);
+var here = String(page || 'index');
+var gone = s.pages.indexOf(here) > -1;
+var links = [];
+var own = [];
+var css = '';
+s.pages.forEach(function (p) { links = links.concat(linksTo(p)); });
+s.modules.forEach(function (m) {
+var at = m.indexOf('#');
+var p = m.slice(0, at);
+var id = m.slice(at + 1);
+links.push('a[href$="' + p + '.html#' + id + '"]');
+if (p === here) {
+own.push('[id="' + id + '"]', '[data-module="' + id + '"]');
+links.push('a[href="#' + id + '"]:not([aria-current])');
+}
+});
+if (gone) links.push('a[aria-current="page"]');
+if (own.length) css += own.join(',') + '{display:none!important}';
+if (links.length) {
+var list = links.join(',');
+css += list + '{display:none!important}';
+css += links.map(function (l) { return '.navitem>' + l; }).join(',') + '{display:revert!important;pointer-events:none;cursor:default}';
+css += 'li:has(>:is(' + list + '):only-child){display:none!important}';
+css += '.navitem:not(:has(.menu>a:not(' + list + '))){display:none!important}';
+css += '.mnav__group:not(:has(>a:not(' + list + '))){display:none!important}';
+css += '.pfa-footer__col:not(:has(li>a:not(' + list + '))){display:none!important}';
+css += '.menu-label:has(+a:is(' + list + ')),.menu-label:has(+a:is(' + list + '))~.menu-sep,.mnav__sub:has(+a:is(' + list + ')){display:none!important}';
+}
+if (gone) {
+css += 'body>:not(.announce):not(header):not(.pfa-footer):not(.mnav):not(.cursor-layer):not(.pfa-search):not(#pfa-gone){display:none!important}'
++ '#pfa-gone{display:block!important;box-sizing:border-box;min-height:62vh;padding:calc(var(--ann,34px) + var(--nav,81px) + 72px) var(--gutter,20px) 96px;text-align:center;color:var(--ink,#111);background:#fff}'
++ '#pfa-gone h1{font-family:var(--display,Georgia,serif);font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.15;margin:0 0 20px}'
++ '#pfa-gone p{margin:0;font-size:16px}'
++ '#pfa-gone a{color:inherit;text-decoration:underline;text-underline-offset:4px}';
+}
+return { css: css, gone: gone };
+}
+function blocked(url, state, anchors) {
+var s = clean(state || applied);
+var u = String(url == null ? '' : url);
+var page = pageOf(u);
+if (s.pages.indexOf(page) > -1) return true;
+var at = u.indexOf('#');
+if (at < 0 || !s.modules.length) return false;
+var hash = u.slice(at + 1);
+var part = (anchors && anchors[page] && anchors[page][hash]) || hash;
+return s.modules.indexOf(page + '#' + part) > -1;
+}
+function read() {
+try {
+var raw = root.localStorage.getItem(KEY);
+return raw ? clean(JSON.parse(raw)) : null;
+} catch (e) { return null; }
+}
+function save(state) {
+try { root.localStorage.setItem(KEY, JSON.stringify(clean(state))); } catch (e) {}
+}
+function drop(node) { if (node && node.parentNode) node.parentNode.removeChild(node); }
+function apply(state) {
+var d = root.document;
+if (!d || !d.head) return null;
+applied = clean(state);
+var p = plan(applied, pageOf(root.location && root.location.pathname));
+var tag = d.getElementById(CSS_ID);
+if (!tag && p.css) {
+tag = d.createElement('style');
+tag.setAttribute('id', CSS_ID);
+d.head.appendChild(tag);
+}
+if (tag) tag.textContent = p.css;
+var robots = d.getElementById(ROBOTS_ID);
+var box = d.getElementById(GONE_ID);
+if (p.gone) {
+if (!robots) {
+robots = d.createElement('meta');
+robots.setAttribute('id', ROBOTS_ID);
+robots.setAttribute('name', 'robots');
+robots.setAttribute('content', 'noindex');
+d.head.appendChild(robots);
+}
+if (!box && d.body) {
+box = d.createElement('div');
+box.setAttribute('id', GONE_ID);
+var h = d.createElement('h1');
+h.textContent = NOTICE;
+var line = d.createElement('p');
+var home = d.createElement('a');
+home.setAttribute('href', '/');
+home.textContent = HOME;
+line.appendChild(home);
+box.appendChild(h);
+box.appendChild(line);
+d.body.insertBefore(box, d.body.firstChild);
+}
+if (title === null) title = d.title;
+d.title = 'Not available right now · People for Animals';
+} else {
+drop(robots);
+drop(box);
+if (title !== null) { d.title = title; title = null; }
+}
+return p;
+}
+root.PFA_VISIBILITY = {
+KEY: KEY, LOCKED: LOCKED, NOTICE: NOTICE,
+clean: clean, pageOf: pageOf, plan: plan, blocked: blocked,
+read: read, save: save, apply: apply,
+state: function () { return applied; }
+};
+try {
+if (root.document && root.document.head) apply(read());
+} catch (e) {}
+}(this));
+</script>
 <div class="announce" id="announce" data-cursor="light">
   <p>Every drive, camp and open day is free to attend</p>
   <button type="button" aria-label="Close" id="annClose">✕</button>
@@ -537,7 +692,7 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=d52abe0718"></script>
+<script src="assets/chrome.js?v=5f57c8f80c"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
 
@@ -549,19 +704,19 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
     </div>
 
     <div class="gi__paths">
-      <div class="gi__path">
+      <div class="gi__path" data-module="volunteer">
         <h2>Volunteer</h2>
         <p>Read what each area actually involves, pick the ones that fit, and apply. Nobody is put in front
           of an animal without knowing what the work is.</p>
         <a class="btn" href="#volunteer" data-gi-open="volunteer">Volunteer with PFA</a>
       </div>
-      <div class="gi__path">
+      <div class="gi__path" data-module="membership">
         <h2>Member</h2>
         <p>Five memberships, from &#8377;500 for a student to a lifetime one. Every member is an active
           working member of PFA: someone it can call on, and someone who can call on it.</p>
         <a class="btn" href="#membership" data-gi-open="membership">Join PFA</a>
       </div>
-      <div class="gi__path">
+      <div class="gi__path" data-module="caregiver">
         <h2>Colony caregiver</h2>
         <p>If you already feed and look after the animals in your colony, the card is a document that says
           so, useful when a resident association or a guard asks what you are doing.</p>

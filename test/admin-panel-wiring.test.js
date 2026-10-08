@@ -123,9 +123,10 @@ test('every section in the rail is one the module list knows', () => {
      folded into Payments & donations, Issue and Verify into Colony cards,
      the Audit log into People & audit. Every folded section still has its
      pane, its registry entry and its module gate - a tab now opens a stack.
-     Store orders left with the shop, so the rail is six. */
-  assert.deepEqual(tabs, ['overview', 'submissions', 'volunteers', 'payments', 'caregivers', 'people'],
-    'the rail is the six sections, in order');
+     Store orders left with the shop, so the rail is six. Website (what the
+     public site shows) joined on 8 Oct 2026, so it is seven again. */
+  assert.deepEqual(tabs, ['overview', 'submissions', 'volunteers', 'payments', 'caregivers', 'website', 'people'],
+    'the rail is the seven sections, in order');
   const stacks = /caregivers:[^}]*panes: \['caregivers', 'verify', 'cards'\]/.test(script)
     && /payments:[^}]*panes: \['payments', 'donations'\]/.test(script)
     && /people:[^}]*panes: \['people', 'audit'\]/.test(script);

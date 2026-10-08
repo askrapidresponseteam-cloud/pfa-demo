@@ -212,7 +212,9 @@ test('Madam presses Reply: Person A is in To; her reply is filed on the same rec
 
   assert.deepEqual(records(), before, 'no new submission, person or case');
   const record = db.dump()['submissions/' + ref];
-  assert.equal(record.status, 'in-progress', 'a case answered is a case taken up');
+  /* A caregiver application has its own stages (lib/submissions.js STAGES);
+     answered, it is under review, not the generic "in progress" (8 Oct 2026). */
+  assert.equal(record.status, 'under-review', 'a case answered is a case taken up, into its own kind\'s stage');
   assert.equal(record.replyCount, 1);
   const thread = messagesOf(ref);
   assert.equal(thread.length, 2);

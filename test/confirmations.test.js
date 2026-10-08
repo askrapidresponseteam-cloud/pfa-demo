@@ -227,7 +227,10 @@ test('the submissions API answers with what happened to the email, and a replay 
   assert.ok(res.body.confirmation.steps.some((s) => /Spam or Junk/.test(s)));
   assert.equal(rows[0].template, 'submission_received');
   assert.equal(rows[0].payload.kind, 'PFA-V');
-  assert.equal(rows[0].dedupeKey, `submission_received:${res.body.reference}`);
+  /* CONTRACT section 4: the key carries the record's thread once
+     lib/routes/pfa-submissions.js builds it so; either form is the one
+     the route gave, and the queue uses it as given */
+  assert.ok([`submission_received:${res.body.reference}`, `submission_received:${res.body.reference}:${rows[0].payload.threadId}`].includes(rows[0].dedupeKey), rows[0].dedupeKey);
 
   const replay = await run(handler, request({ body }));
   assert.equal(replay.body.reference, res.body.reference);

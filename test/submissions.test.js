@@ -115,9 +115,11 @@ test('following needs the number and the contact that was given with it, and ret
   assert.equal(missing.statusCode, 403);
   assert.equal(missing.body.code, 'CONTACT_NEEDED');
 
+  /* A number that is not yours is answered exactly as a number that does not
+     exist (8 Oct 2026), so the lookup cannot be used to find which exist. */
   const wrong = await run(handler, request({ method: 'GET', query: { reference: 'PFA-C-2026-00001', contact: 'someone@else.com' } }));
-  assert.equal(wrong.statusCode, 403);
-  assert.equal(wrong.body.code, 'CONTACT_MISMATCH');
+  assert.equal(wrong.statusCode, 404);
+  assert.equal(wrong.body.code, 'NO_MATCH');
 
   const right = await run(handler, request({ method: 'GET', query: { reference: ' pfa-c-2026-00001 ', contact: 'ASHA@example.com' } }));
   assert.equal(right.statusCode, 200);
@@ -129,6 +131,7 @@ test('following needs the number and the contact that was given with it, and ret
 
   const unknown = await run(handler, request({ method: 'GET', query: { reference: 'PFA-C-2026-00099', contact: 'a@b.com' } }));
   assert.equal(unknown.statusCode, 404);
+  assert.deepEqual(unknown.body, wrong.body, 'one answer for both');
   const junk = await run(handler, request({ method: 'GET', query: { reference: 'abc' } }));
   assert.equal(junk.statusCode, 400);
 });
@@ -139,10 +142,13 @@ test('a mobile given with spaces or a country code still matches', () => {
   assert.equal(S.contactKey('9876543210'), keys[0]);
   assert.equal(S.contactKey('098765-43210'), keys[0]);
   assert.notEqual(S.contactKey('9876543211'), keys[0]);
-  /* A field called something else that holds an email still counts. */
-  assert.equal(S.contactKeysFor({ 'where to reach you': 'x@y.in' }).length, 1);
-  /* Old records have no keys stored; they are derived from the fields. */
+  /* Only fields the form names as the sender's contact make a key (8 Oct
+     2026): an address under any other name may be someone else's. */
+  assert.equal(S.contactKeysFor({ 'where to reach you': 'x@y.in' }).length, 0);
+  /* Old records have no keys stored; they are derived from the fields, by the
+     old rule, so a number issued then still opens for its sender. */
   assert.equal(S.contactMatches({ fields: { email: 'x@y.in' } }, 'X@Y.IN').ok, true);
+  assert.equal(S.contactMatches({ fields: { 'where to reach you': 'x@y.in' } }, 'X@Y.IN').ok, true);
   assert.deepEqual(S.contactMatches({ fields: { summary: 'no contact given' } }, ''), { required: false, ok: true });
 });
 

@@ -97,12 +97,31 @@ function rootify(html) {
     .replace(/\b(href|src)="(?!\/|#|https?:|mailto:|tel:|data:)([^"]+)"/g, '$1="/$2"');
 }
 
+/* What the site shows (8 Oct 2026). assets/site-visibility.js, inlined at
+   the very top of the include, so on every page it runs before any section
+   is parsed and hides what the panel has hidden with no flash. Inlined, not
+   linked: a <script src> here would hold up the first paint of every page
+   for a round trip. The file keeps its comments for whoever reads it; the
+   pages get it without them and without indentation, and nothing else is
+   changed, so what runs is line for line what the tests require in Node.
+   The file is written so that no string or pattern in it contains a comment
+   marker (test/site-visibility-page.test.js holds it to that). */
+const VISIBILITY = path.join(ROOT, 'assets', 'site-visibility.js');
+function visibilityScript() {
+  const code = fs.readFileSync(VISIBILITY, 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .split('\n').map((line) => line.trim()).filter(Boolean).join('\n');
+  return `<script id="pfa-vis">\n${code}\n</script>\n`;
+}
+const VIS_TAG = /[ \t]*<script id="pfa-vis">[\s\S]*?<\/script>\n?/g;
+
 /* Render the template for one page. Pure: string in, string out. */
 function renderChrome(page) {
   const spec = PAGES[page];
   if (!spec) throw new Error(`sync-chrome: ${page} is not in PAGES; add it`);
   let out = fs.readFileSync(TEMPLATE, 'utf8')
     .replace(/<!--[\s\S]*?-->\n?/, '')             // the explanatory comment at the top
+    .replace('{{VISIBILITY}}\n', '')               // put back below, after rootify, which would rewrite its selectors
     .replace('{{ANNOUNCE}}\n', announceMarkup(spec.announce))
     /* The four top-level items. They are signposts to a section, not the
        page itself, so they take .in-section and never aria-current: a page
@@ -130,7 +149,7 @@ function renderChrome(page) {
       }
       return classes.length ? `<a href="${dest}" data-nav="${href}" class="${classes.join(' ')}">${label}</a>` : `<a href="${dest}" data-nav="${href}">${label}</a>`;
     });
-  return spec.root ? rootify(out) : out;
+  return visibilityScript() + (spec.root ? rootify(out) : out);
 }
 
 /* The stylesheet and script are linked with a fingerprint of their own
@@ -158,8 +177,11 @@ function applyChrome(html, page) {
   if (!spec) throw new Error(`sync-chrome: ${page} is not in PAGES; add it`);
 
   /* 1. The block: from the announcement bar (if any) to </header> and the
-        chrome script right after it. Anything in between is chrome. */
+        chrome script right after it. Anything in between is chrome. The
+        visibility script in front of the bar is chrome too: taken out here
+        wherever it is, and put back at the top of the block. */
   html = html.replace(/[ \t]*<script src="\/?assets\/chrome\.js(?:\?v=[a-f0-9]+)?"( defer)?><\/script>\n?/g, '');
+  html = html.replace(VIS_TAG, '');
   const headerOpen = html.indexOf('<header');
   const headerClose = html.indexOf('</header>', headerOpen);
   if (headerOpen < 0 || headerClose < 0) throw new Error(`sync-chrome: ${page} has no <header>`);
@@ -213,7 +235,7 @@ function run({ check } = {}) {
   return stale;
 }
 
-module.exports = { applyChrome, renderChrome, PAGES, run };
+module.exports = { applyChrome, renderChrome, visibilityScript, PAGES, run };
 
 if (require.main === module) {
   const check = process.argv.includes('--check');

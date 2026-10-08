@@ -1,6 +1,6 @@
 {
   "_comment": [
-    "Firestore, Hosting and one Cloud Function.",
+    "Firestore, Storage rules, Hosting and one Cloud Function.",
     "",
     "The earlier note here said Hosting could not work because everything under",
     "/api is a Node serverless function. That is still true of Hosting alone; it",
@@ -10,7 +10,14 @@
     "",
     "Deploy is two steps, in this order:",
     "  node scripts/build-firebase.js",
-    "  firebase deploy --project pfa-new-website",
+    "  firebase deploy --only functions,hosting,firestore --project pfa-new-website",
+    "",
+    "storage.rules (8 Oct 2026) refuses every browser read and write on the",
+    "Storage bucket; only the server, with admin credentials, uses it. It is",
+    "deployed on its own, because Firebase refuses it until Storage has been",
+    "switched on in the console (Build > Storage > Get started):",
+    "  firebase deploy --only storage --project pfa-new-website",
+    "A bare `firebase deploy` includes it, and so fails until then.",
     "",
     "public/ is assembled by that script from an allowlist, so no server file",
     "can be published by accident. Never point hosting.public at '.'.",
@@ -21,6 +28,9 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   },
   "functions": [
     {

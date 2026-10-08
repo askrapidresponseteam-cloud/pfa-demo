@@ -96,35 +96,161 @@ test('the newsroom carries no form, and the paths behind it still stand', () => 
     'PFA-W has a spec again but no page sends it; restore the form or retire the spec');
 });
 
-test('a photograph is served only for a published note, and never for anything else', async () => {
-  const fbPath = require.resolve('../lib/firebase.js');
-  const routePath = require.resolve('../lib/routes/field-note-photo.js');
-  const store = {
-    'PFA-W-2026-00007': { kind: 'PFA-W', wall: { published: true }, attachments: 1 },
-    'PFA-W-2026-00008': { kind: 'PFA-W', wall: { published: false }, attachments: 1 },
-    'PFA-CR-2026-00009': { kind: 'PFA-CR', wall: { published: true }, attachments: 1 }
-  };
-  const png = Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex');
-  const fake = { db: () => ({ collection: () => ({ doc: (ref) => ({
-    get: async () => ({ exists: !!store[ref], data: () => store[ref] }),
-    collection: () => ({ doc: () => ({ get: async () => ({ exists: true, data: () => ({ bytes: png, contentType: 'image/png' }) }) }) })
-  }) }) }) };
-  const saved = require.cache[fbPath];
-  require.cache[fbPath] = { id: fbPath, filename: fbPath, loaded: true, exports: fake };
-  delete require.cache[routePath];
-  const photo = require(routePath);          /* loaded with the stand-in in place */
-  const run = (ref) => new Promise((res) => { let status = 0; const headers = {};
-    photo({ method: 'GET', query: { ref, n: '1' } }, { setHeader(k, v) { headers[k] = v; }, set statusCode(v) { status = v; }, get statusCode() { return status; }, end(b) { res({ status, headers, body: b }); } }); });
-  try {
-    const ok = await run('PFA-W-2026-00007');
-    assert.equal(ok.status, 200); assert.equal(ok.headers['Content-Type'], 'image/png');
-    assert.equal((await run('PFA-W-2026-00008')).status, 404, 'unpublished: as if it did not exist');
-    assert.equal((await run('PFA-CR-2026-00009')).status, 400, 'a cruelty report\'s photographs are never reachable here');
-    assert.equal((await run('PFA-W-2026-99999')).status, 404, 'a note that is not there');
-  } finally {
-    if (saved) require.cache[fbPath] = saved; else delete require.cache[fbPath];
-    delete require.cache[routePath];
+/* ---- the three public read paths, through the REAL lib/firebase.js -------
+
+   8 Oct 2026 (review D6): field-note-photo.js, field-notes.js and wall.js
+   called firebase.db(), which lib/firebase.js has never exported. Every
+   photograph was a 404 and both lists were always empty. The test above this
+   one used to swap in a stand-in firebase module that did have db(), so it
+   passed. These drive the real module on the in-memory Firestore
+   (_setDbForTests), so a wrong name fails here. */
+
+const { memoryFirestore } = require('./_memory-firestore');
+const firebase = require('../lib/firebase');
+const FILES = require('../lib/file-store');
+const photoRoute = require('../lib/routes/field-note-photo.js');
+
+const PNG = Buffer.from('89504e470d0a1a0a0000000d494844520000000100000001', 'hex');
+
+function drive(handler, query = {}) {
+  return new Promise((resolve, reject) => {
+    const out = { status: 0, headers: {}, body: undefined };
+    const response = {
+      get statusCode() { return out.status; }, set statusCode(v) { out.status = v; },
+      setHeader(k, v) { out.headers[String(k).toLowerCase()] = v; },
+      getHeader(k) { return out.headers[String(k).toLowerCase()]; },
+      end(b) { out.body = b; try { out.json = JSON.parse(String(b)); } catch (_) { out.json = null; } resolve(out); }
+    };
+    Promise.resolve(handler({ method: 'GET', url: '/api', query, headers: {} }, response)).catch(reject);
+  });
+}
+
+/* A shared cache may keep an answer no longer than this, so a note or film
+   the desk takes down leaves the page within minutes, not a day. */
+function shared(header) {
+  const h = String(header || '');
+  const num = (k) => { const m = new RegExp(`(?:^|,)\\s*${k}=(\\d+)`).exec(h); return m ? Number(m[1]) : null; };
+  return { sMaxAge: num('s-maxage'), maxAge: num('max-age'), swr: num('stale-while-revalidate') || 0, noStore: /no-store/.test(h) };
+}
+
+async function newsroom(db) {
+  const notes = db.collection('submissions');
+  await notes.doc('PFA-W-2026-00007').set({ kind: 'PFA-W', wall: { published: true }, attachments: 2, createdAt: '2026-09-16T05:00:00.000Z',
+    fields: { title: 'Eleven dogs back on their street', story: 'Carried out of the flooded lane on Sunday night.', city: 'Udupi', name: 'Asha Rao', mobile: '9876543210' } });
+  await notes.doc('PFA-W-2026-00007').collection('attachments').doc('1').set({ bytes: PNG, contentType: 'image/png', size: PNG.length });
+  await notes.doc('PFA-W-2026-00008').set({ kind: 'PFA-W', wall: { published: false }, attachments: 1,
+    fields: { title: 'Not yet', story: 'Waiting for the desk.', name: 'X' } });
+  await notes.doc('PFA-W-2026-00008').collection('attachments').doc('1').set({ bytes: PNG, contentType: 'image/png', size: PNG.length });
+  await notes.doc('PFA-CR-2026-00009').set({ kind: 'PFA-CR', wall: { published: true }, attachments: 1 });
+  await notes.doc('PFA-S-2026-00010').set({ kind: 'PFA-S', wall: { published: true }, fields: { url: 'https://www.youtube.com/watch?v=abc123', title: 'A film', name: 'Asha Rao' } });
+  await notes.doc('PFA-S-2026-00011').set({ kind: 'PFA-S', wall: { published: false }, fields: { url: 'https://www.youtube.com/watch?v=zzz999', title: 'Taken down', name: 'B' } });
+}
+
+test('a photograph is served only for a published note, and never for anything else', async (t) => {
+  const db = memoryFirestore();
+  firebase._setDbForTests(db);
+  t.after(() => firebase._setDbForTests(null));
+  await newsroom(db);
+
+  const ok = await drive(photoRoute, { ref: 'PFA-W-2026-00007', n: '1' });
+  assert.equal(ok.status, 200, 'a published note’s photograph is served');
+  assert.equal(ok.headers['content-type'], 'image/png');
+  assert.ok(Buffer.from(ok.body).equals(PNG));
+  assert.equal((await drive(photoRoute, { ref: 'PFA-W-2026-00008', n: '1' })).status, 404, 'unpublished: as if it did not exist');
+  assert.equal((await drive(photoRoute, { ref: 'PFA-CR-2026-00009', n: '1' })).status, 400, 'a cruelty report’s photographs are never reachable here');
+  assert.equal((await drive(photoRoute, { ref: 'PFA-W-2026-99999', n: '1' })).status, 404, 'a note that is not there');
+  assert.equal((await drive(photoRoute, { ref: 'PFA-W-2026-00007', n: '2' })).status, 404, 'a photograph that is not there');
+});
+
+test('a published note’s photograph kept in the Storage bucket is served from there', async (t) => {
+  const db = memoryFirestore();
+  firebase._setDbForTests(db);
+  const files = new Map([['submissions/PFA-W-2026-00007/1', PNG]]);
+  let refuse = null;
+  FILES._setBucket(() => ({ name: 'pfa-new-website.firebasestorage.app', bucket: { file: (p) => ({
+    async save(b) { files.set(p, Buffer.from(b)); },
+    async download() { if (refuse) { const e = refuse; refuse = null; throw e; } if (!files.has(p)) throw Object.assign(new Error('No such object'), { code: 404 }); return [files.get(p)]; }
+  }) } }));
+  const realError = console.error; console.error = () => {};
+  t.after(() => { FILES._reset(); firebase._setDbForTests(null); console.error = realError; });
+  await db.collection('submissions').doc('PFA-W-2026-00007').set({ kind: 'PFA-W', wall: { published: true }, attachments: 1 });
+  await db.collection('submissions').doc('PFA-W-2026-00007').collection('attachments').doc('1')
+    .set({ storage: 'gcs', bucket: 'pfa-new-website.firebasestorage.app', path: 'submissions/PFA-W-2026-00007/1', contentType: 'image/png', size: PNG.length });
+
+  const ok = await drive(photoRoute, { ref: 'PFA-W-2026-00007', n: '1' });
+  assert.equal(ok.status, 200);
+  assert.ok(Buffer.from(ok.body).equals(PNG));
+
+  /* Storage says "not now": a 503 nobody caches, never a 404 a CDN would keep */
+  refuse = Object.assign(new Error('Backend Error'), { code: 503 });
+  const busy = await drive(photoRoute, { ref: 'PFA-W-2026-00007', n: '1' });
+  assert.equal(busy.status, 503);
+  assert.ok(shared(busy.headers['cache-control']).noStore, `cached as ${busy.headers['cache-control']}`);
+});
+
+test('the newsroom list and the wall list what is published, through the real database module', async (t) => {
+  const db = memoryFirestore();
+  firebase._setDbForTests(db);
+  t.after(() => firebase._setDbForTests(null));
+  await newsroom(db);
+
+  const notes = await drive(route);
+  assert.equal(notes.status, 200);
+  assert.equal(notes.json.degraded, undefined, 'the list was read, not given up on');
+  assert.deepEqual(notes.json.notes.map((n) => n.ref), ['PFA-W-2026-00007'], 'the published note, and only it');
+  assert.equal(notes.json.notes[0].photos, 2);
+  assert.ok(!JSON.stringify(notes.json).includes('9876543210'), 'no contact detail leaves');
+
+  const films = await drive(wall);
+  assert.equal(films.status, 200);
+  assert.equal(films.json.degraded, undefined);
+  assert.deepEqual(films.json.films.map((f) => f.ref), ['PFA-S-2026-00010'], 'the published film, and only it');
+});
+
+test('a shared cache keeps a photograph or a list for a minute, not a day', async (t) => {
+  const db = memoryFirestore();
+  firebase._setDbForTests(db);
+  t.after(() => firebase._setDbForTests(null));
+  await newsroom(db);
+
+  for (const [name, res] of [
+    ['photo', await drive(photoRoute, { ref: 'PFA-W-2026-00007', n: '1' })],
+    ['field notes', await drive(route)],
+    ['wall', await drive(wall)]
+  ]) {
+    assert.equal(res.status, 200, name);
+    const c = shared(res.headers['cache-control']);
+    assert.ok(c.sMaxAge !== null && c.sMaxAge <= 60, `${name}: s-maxage ${c.sMaxAge}`);
+    assert.ok(c.maxAge !== null && c.maxAge <= 60, `${name}: max-age ${c.maxAge}`);
+    assert.ok(c.swr <= 300, `${name}: stale-while-revalidate ${c.swr} keeps a withdrawn item up too long`);
   }
+
+  /* an unpublished photo's 404 is kept briefly at most, so publishing shows it soon */
+  const gone = await drive(photoRoute, { ref: 'PFA-W-2026-00008', n: '1' });
+  assert.equal(gone.status, 404);
+  const g = shared(gone.headers['cache-control']);
+  assert.ok(g.noStore || (g.sMaxAge !== null && g.sMaxAge <= 60 && g.swr === 0), `404 cached as ${gone.headers['cache-control']}`);
+});
+
+test('when the database fails, the empty answer is logged and never cached', async (t) => {
+  const broken = { collection() { throw new Error('14 UNAVAILABLE: deadline exceeded'); } };
+  firebase._setDbForTests(broken);
+  const logged = [];
+  const realError = console.error;
+  console.error = (...a) => logged.push(a.map((x) => (typeof x === 'string' ? x : JSON.stringify(x))).join(' '));
+  t.after(() => { firebase._setDbForTests(null); console.error = realError; });
+
+  const notes = await drive(route);
+  assert.equal(notes.status, 200, 'the page still gets its waiting state');
+  assert.equal(notes.json.degraded, true);
+  assert.ok(shared(notes.headers['cache-control']).noStore, `cached as ${notes.headers['cache-control']}`);
+  const films = await drive(wall);
+  assert.equal(films.json.degraded, true);
+  assert.ok(shared(films.headers['cache-control']).noStore, `cached as ${films.headers['cache-control']}`);
+  const photo = await drive(photoRoute, { ref: 'PFA-W-2026-00007', n: '1' });
+  assert.equal(photo.status, 503, 'not a 404 a CDN would keep');
+  assert.ok(shared(photo.headers['cache-control']).noStore);
+  assert.ok(logged.filter((l) => /UNAVAILABLE/.test(l)).length >= 3, 'each failure is in the log, not swallowed');
 });
 
 test('the route is registered where /api/* is resolved', () => {

@@ -45,7 +45,7 @@ const FN_DIRS = ['api', 'lib'];
    "Cannot find module '../assets/field-rules.js'" and the panel reported that
    it could not reach /api/admin. checkRequires() below now stops the build if
    anything lib/ or api/ loads is missing from the bundle. */
-const FN_FILES = ['product.html', 'assets/field-rules.js', 'assets/india-districts.js'];
+const FN_FILES = ['product.html', 'assets/field-rules.js', 'assets/india-districts.js', 'assets/site-modules.json'];
 
 function rmrf(dir) { fs.rmSync(dir, { recursive: true, force: true }); }
 
@@ -135,7 +135,7 @@ function build() {
       const r = rel ? `${rel}/${e.name}` : e.name;
       if (e.isDirectory()) walk(path.join(dir, e.name), r);
       else if (/^(lib|api|test|scripts|functions|_inline-extracts|tools)\//.test(r)
-               || /firestore\.(rules|indexes)/.test(r)
+               || /(firestore|storage)\.(rules|indexes)/.test(r)
                || r === 'package.json' || r === 'package-lock.json' || r === 'vercel.json'
                || r === 'firebase.json' || r.endsWith('.md')) leaked.push(r);
     }

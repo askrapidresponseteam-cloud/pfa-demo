@@ -91,6 +91,17 @@ service cloud.firestore {
        browser may do with it, which is read it as a super admin and never
        write to it. Append-only is enforced in lib/admin-audit.js. */
     match /adminAudit/{id}            { allow read: if isAdmin(); allow write: if false; }
+    /* What the public site hides (siteSettings/visibility, 8 Oct 2026). No
+       browser reads or writes it, signed in or not. The public site learns
+       the state from /api/site-visibility, which the edge caches for ten
+       seconds, so one Firestore read serves every visitor in that time; a
+       public read here would let each page view, or anyone with the public
+       web key, read the database directly, past the cache, the five-second
+       memory and the fail-open answer. The panel changes it only through
+       /api/admin/site, which checks the Website module, writes in a
+       transaction and logs every change; a write from here would skip all
+       three. The API reads and writes it with the Admin SDK. */
+    match /siteSettings/{id}          { allow read, write: if false; }
 
 
     /* ---- The Circle (members area) -------------------------------------

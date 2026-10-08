@@ -174,13 +174,22 @@
   }
 
   /* +91 98765 43210, 0091-98765-43210, 098765 43210 and 9876543210 are the
-     same number written five ways. Store one of them. */
+     same number written five ways. Store one of them.
+
+     The country code comes off first, then the trunk 0, so a number written
+     with both, +91-098765-43210 or 0091 098765 43210, is the same ten digits
+     too (8 Oct 2026: it was left at thirteen and told its own sender that
+     their mobile did not match). Only a number longer than ten digits is
+     touched, so a ten-digit mobile that happens to start 91 is kept whole.
+     Plain ES5, because the browser loads this file as it is. */
   function normaliseMobile(value) {
     var digits = String(value == null ? '' : value).replace(/[^\d]/g, '');
-    if (digits.length === 12 && digits.indexOf('91') === 0) digits = digits.slice(2);
-    else if (digits.length === 13 && digits.indexOf('091') === 0) digits = digits.slice(3);
-    else if (digits.length === 14 && digits.indexOf('0091') === 0) digits = digits.slice(4);
-    else if (digits.length === 11 && digits.charAt(0) === '0') digits = digits.slice(1);
+    if (digits.length > 10) {
+      if (digits.length >= 14 && digits.indexOf('0091') === 0) digits = digits.slice(4);
+      else if (digits.length >= 13 && digits.indexOf('091') === 0) digits = digits.slice(3);
+      else if (digits.length >= 12 && digits.indexOf('91') === 0) digits = digits.slice(2);
+      if (digits.length === 11 && digits.charAt(0) === '0') digits = digits.slice(1);
+    }
     return digits;
   }
 

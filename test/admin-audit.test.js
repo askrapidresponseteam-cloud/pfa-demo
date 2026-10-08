@@ -41,9 +41,16 @@ function fakeDb() {
 
 test('an entry names the actor from the token, never from the request', async () => {
   const db = fakeDb();
-  await audit.record(WHO, { module: 'submissions', action: 'status', subject: 'PFA-C-2026-00042', detail: 'new to handled' },
-    { headers: { 'x-forwarded-for': '203.0.113.9, 10.0.0.1' }, body: { actor: 'someone-else@evil.test' } },
-    { getDb: () => db, now: () => 1750000000000 });
+  /* On Firebase the caller is read from the right of X-Forwarded-For, past
+     the platform's own hops (lib/client-ip.js, 8 Oct 2026): a forged first
+     entry cannot put someone else's address in the log. */
+  const hadService = process.env.K_SERVICE;
+  process.env.K_SERVICE = 'api';
+  try {
+    await audit.record(WHO, { module: 'submissions', action: 'status', subject: 'PFA-C-2026-00042', detail: 'new to handled' },
+      { headers: { 'x-forwarded-for': '198.51.100.66, 203.0.113.9, 10.0.0.1' }, body: { actor: 'someone-else@evil.test' } },
+      { getDb: () => db, now: () => 1750000000000 });
+  } finally { if (hadService === undefined) delete process.env.K_SERVICE; else process.env.K_SERVICE = hadService; }
 
   assert.equal(db.written.length, 1);
   const entry = db.written[0].entry;
@@ -51,7 +58,7 @@ test('an entry names the actor from the token, never from the request', async ()
   assert.equal(entry.actor.uid, 'u-1');
   assert.equal(entry.subject, 'PFA-C-2026-00042');
   assert.equal(entry.outcome, 'done');
-  assert.equal(entry.ip, '203.0.113.9', 'the first hop is the caller');
+  assert.equal(entry.ip, '203.0.113.9', 'the caller, not the forged first entry nor the private hop');
   assert.ok(!JSON.stringify(entry).includes('evil.test'), 'nothing from the body reaches the log');
 });
 

@@ -108,4 +108,41 @@ case "$HEALTH" in
   *'"files":"database"'*) printf '\033[33mPHOTOS ARE KEPT IN: the database.\033[0m Switch Storage on to store them for less:\n  Firebase console > pfa-new-website > Storage > Get started (production mode, Mumbai). No deploy needed after.\n' ;;
 esac
 
+step "Checking the two servers agree"
+# The public site (Vercel) and the admin panel (Firebase) run the same code
+# against one database, each with its own settings. Read both and compare
+# what must match, without either showing a secret (8 Oct 2026).
+PANEL_HEALTH="$(curl -s https://pfa-new-website.web.app/api/payment/health || true)"
+field() { printf '%s' "$1" | grep -o "\"$2\":[^,}]*" | head -1 | sed 's/^[^:]*://; s/"//g'; }
+if [ -z "$PANEL_HEALTH" ] || [ -z "$HEALTH" ]; then
+  printf 'Could not read both servers just now; nothing to compare.\n'
+else
+  P1="$(field "$HEALTH" pepper)"; P2="$(field "$PANEL_HEALTH" pepper)"
+  M2="$(field "$PANEL_HEALTH" mail)"
+  if [ "$P1" = "$P2" ]; then
+    printf 'BOTH SERVERS AGREE: the same tracking key (PFA_AUTH_PEPPER) on the site and the panel.\n'
+  else
+    printf '\033[33mThe site and the panel use different PFA_AUTH_PEPPER values.\033[0m Tracking still works on both\n'
+    printf '  (each server also checks the email and mobile on the record itself), so nothing is broken.\n'
+    printf '  To make them the same, copy the value from Vercel (Project > Settings > Environment Variables)\n'
+    printf '  and run:  npx firebase-tools functions:secrets:set PFA_AUTH_PEPPER --project pfa-new-website\n'
+    printf '  It takes effect with the next deploy.\n'
+  fi
+  # Both asked over IPv4 from this computer: the same network should come back.
+  S1="$(field "$(curl -4 -s "$HEALTH_URL" || true)" seenAs)"
+  S2="$(field "$(curl -4 -s https://pfa-new-website.web.app/api/payment/health || true)" seenAs)"
+  if [ -n "$S1" ] && [ -n "$S2" ]; then
+    if [ "$S1" = "$S2" ]; then
+      printf 'BOTH SERVERS SEE VISITORS CORRECTLY: each saw this computer as %s, so their rate limits count real visitors.\n' "$S1"
+    else
+      printf '\033[33mThe panel server saw this computer as %s, the site as %s.\033[0m The panel server may be counting\n' "$S2" "$S1"
+      printf '  a proxy instead of visitors. Send this line to whoever maintains the site (lib/client-ip.js, PFA_TRUSTED_PROXIES).\n'
+    fi
+  fi
+  case "$M2" in
+    true)  printf 'PANEL EMAIL IS ON: replies from the admin panel can be sent.\n' ;;
+    false) printf '\033[31mPANEL EMAIL IS OFF on Firebase.\033[0m Run: npx firebase-tools functions:secrets:set PFA_SMTP_PASS --project pfa-new-website, then deploy again.\n' ;;
+  esac
+fi
+
 printf '\nDone. You can close this window.\n'

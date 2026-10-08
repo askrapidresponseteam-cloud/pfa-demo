@@ -42,11 +42,13 @@ test('every admin response carries the headers an admin panel needs', async () =
 
 test('guessing is slowed down, and only for the caller doing it', async () => {
   A._clearFailures();
-  const attacker = { headers: { 'x-forwarded-for': '203.0.113.9' } };
+  /* the caller is the address the platform vouches for (lib/client-ip.js);
+     here, a local server, that is the socket's */
+  const attacker = { headers: { 'x-forwarded-for': '203.0.113.9' }, socket: { remoteAddress: '203.0.113.9' } };
   let last = 0;
   for (let i = 0; i < 25; i += 1) last = (await call(attacker)).status;
   assert.equal(last, 429, 'unlimited guesses at a shared secret is not acceptable');
-  const bystander = await call({ headers: { 'x-forwarded-for': '198.51.100.4' } });
+  const bystander = await call({ headers: { 'x-forwarded-for': '198.51.100.4' }, socket: { remoteAddress: '198.51.100.4' } });
   assert.equal(bystander.status, 401, 'one attacker must not lock everyone out');
 });
 

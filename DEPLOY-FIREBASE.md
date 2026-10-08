@@ -38,7 +38,16 @@ FIREBASE_SERVICE_ACCOUNT_JSON can be left out entirely.
 
     npm run deploy:firebase
 
-which is `node scripts/build-firebase.js && node scripts/firebase-secrets.js && firebase deploy --project pfa-new-website`.
+which is `node scripts/build-firebase.js && node scripts/firebase-secrets.js && firebase deploy --only functions,hosting,firestore --project pfa-new-website`.
+
+Storage rules (storage.rules: no browser may read or write the bucket that keeps
+photographs) go separately, because Firebase only takes them once Storage is
+switched on in the console (Build > Storage > Get started):
+
+    npm run deploy:storage-rules
+
+scripts/ship.sh does this as its last step and treats "Storage is not set up
+yet" as a note, not a failure.
 
 The build also copies `assets/field-rules.js` and `assets/india-districts.js`
 into `functions/`, which lib/ loads, and refuses to finish if any file the

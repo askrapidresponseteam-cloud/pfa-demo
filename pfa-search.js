@@ -427,8 +427,8 @@
   function closest(query, limit) {
     var full = tokens(query).join(' ');
     if (!full) return [];
-    var qt = tokens(query);
-    return INDEX.map(function (row) {
+    var qt = tokens(query), hidden = hiddenNow();
+    return INDEX.filter(function (row) { return !hidden || shown(row, hidden); }).map(function (row) {
       var title = row.t.toLowerCase();
       var sc = similarity(full, title) * 3;
       qt.forEach(function (w) {
@@ -549,7 +549,8 @@
     if (own) return null;
     var rest = raw.filter(function (w, i) { return place.at.indexOf(i) < 0 && !STOP.test(w); });
     if (!rest.every(function (w) { return PLACE_INTENT.test(w) || PLACE_INTENT.test(stem(w)); })) return null;
-    var units = INDEX.filter(function (r) { return r.g; }).map(function (r) { return { row: r, d: km(place.g, r.g) }; })
+    var hidden = hiddenNow();
+    var units = INDEX.filter(function (r) { return r.g && (!hidden || shown(r, hidden)); }).map(function (r) { return { row: r, d: km(place.g, r.g) }; })
       .sort(function (a, b) { return a.d - b.d; }).slice(0, 3)
       .filter(function (x, i) { return i === 0 || x.d < 250; });
     if (!units.length) return null;
@@ -585,9 +586,40 @@
     return best;
   }
 
+  /* ========================================================== VISIBILITY
+     Pages and sections hidden in the panel's Website section are never
+     offered here either (owner, 8 Oct 2026). assets/site-visibility.js, at
+     the top of every page, knows what is hidden: a row is left out when its
+     address is a hidden page, a hidden section, or anything inside one. Which
+     ids sit inside which section is the `anchors` of assets/site-modules.json
+     (laws.html#a5 is inside #part-a), fetched only once a section is actually
+     hidden; until it arrives, a row naming the section itself is still left
+     out. */
+  var ANCHORS = null, anchorsAsked = false, pageReady = false;
+  function hiddenNow() {
+    var V = window.PFA_VISIBILITY;
+    var s = V && V.state ? V.state() : null;
+    return s && (s.pages.length || s.modules.length) ? s : null;
+  }
+  function shown(row, hidden) {
+    var s = hidden === undefined ? hiddenNow() : hidden;
+    return !s || !window.PFA_VISIBILITY.blocked(row.u, s, ANCHORS);
+  }
+  function loadAnchors(after) {
+    var s = hiddenNow();
+    if (anchorsAsked || !s || !s.modules.length || typeof fetch !== 'function') { if (after) after(); return; }
+    anchorsAsked = true;
+    fetch('assets/site-modules.json', { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (reg) { if (reg && reg.anchors) ANCHORS = reg.anchors; })
+      .catch(function () { /* the sections themselves are still left out */ })
+      .then(function () { if (after) after(); });
+  }
+
   /* Returns {rows, corrected} - corrected is the query with typos fixed, or null. */
   function search(query, opts) {
     opts = opts || {};
+    var hidden = hiddenNow();
     var raw = tokens(query), q = raw.filter(function (w) { return !STOP.test(w); });
     if (!q.length) q = raw;
     if (!q.length) return { rows: [], corrected: null };
@@ -603,6 +635,7 @@
     var scored = [];
     INDEX.forEach(function (row) {
       if (opts.section && row.s !== opts.section) return;
+      if (hidden && !shown(row, hidden)) return;
       var score = 0, matched = 0;
       termForms.forEach(function (fs, ti) {
         var best = 0, p = pre[ti];
@@ -667,7 +700,8 @@
   /* Query completions: titles and popular phrases that continue what was typed. */
   function complete(query, limit) {
     var qn = String(query).toLowerCase().trim(); if (!qn) return [];
-    var phrases = INDEX.map(function (r) { return r.t; }).concat(
+    var hidden = hiddenNow();
+    var phrases = INDEX.filter(function (r) { return !hidden || shown(r, hidden); }).map(function (r) { return r.t; }).concat(
       ['report cruelty', 'report a dog being beaten', 'unit near me', 'injured dog', 'dog bite', 'colony caregiver card',
        'street dog rights', 'feeding street dogs', 'how to file an FIR', 'make a gift', 'gift certificate', 'donate monthly',
        '80G receipt', 'adoption drives', 'volunteer near me', 'first aid']);
@@ -756,7 +790,7 @@
       liveHits.forEach(function (hit) {
         if (rows.length >= want) return;
         var row = byUrl(hit.u);
-        if (!row || seen[row.t]) return;
+        if (!row || seen[row.t] || !shown(row)) return;
         seen[row.t] = 1;
         rows.push(row);
       });
@@ -766,7 +800,7 @@
     CURATED_FALLBACK.forEach(function (t) {
       if (rows.length >= want) return;
       var row = byTitle(t);
-      if (!row || seen[row.t]) return;
+      if (!row || seen[row.t] || !shown(row)) return;
       seen[row.t] = 1;
       rows.push(row);
     });
@@ -844,7 +878,7 @@
         '<p class="pfa-search__hint" aria-hidden="true">Enter opens the top result · ↑ ↓ to move · Tab completes · Esc closes</p>' +
       '</form>' +
       '<nav class="pfa-search__quick" aria-label="Quick actions"><p class="pfa-search__label">Or go straight to</p><ul>' +
-        QUICK.map(function (t) { var r = byTitle(t); return r ? '<li><a href="' + esc(r.u) + '" data-id="' + r.id + '">' + esc(r.t) + '</a></li>' : ''; }).join('') +
+        QUICK.map(function (t) { var r = byTitle(t); return r && shown(r) ? '<li><a href="' + esc(r.u) + '" data-id="' + r.id + '">' + esc(r.t) + '</a></li>' : ''; }).join('') +
       '</ul></nav>' +
       '<div class="pfa-search__body">' +
         '<p class="pfa-search__label" id="pfa-results-label"></p>' +
@@ -1031,7 +1065,7 @@
         '<div class="pfa-sr-empty">' +
           '<p>No page on this site matches “' + esc(q) + '”. Check the spelling, try a shorter word, or start from one of these.</p>' +
           '<ul class="pfa-sr-chips">' + popularRows(POPULAR_SHOWN).map(function (r) { return '<li><a href="' + esc(r.u) + '">' + esc(r.t) + '</a></li>'; }).join('') + '</ul>' +
-          '<p class="pfa-sr-fallback">If it is urgent, <a href="laws.html#a33">see who to report to</a>.</p>' +
+          (shown({ u: 'laws.html#a33' }) ? '<p class="pfa-sr-fallback">If it is urgent, <a href="laws.html#a33">see who to report to</a>.</p>' : '') +
         '</div>';
       return;
     }
@@ -1161,13 +1195,29 @@
   }
   function ready() {
     handoff();
-    mergeCrawl(function () {
+    var waiting = 2;
+    function go() {
+      waiting -= 1;
+      if (waiting) return;
       var root = document.querySelector('[data-search-page]');
       if (root) initPage(root);
+      pageReady = true;
       if (overlay && !overlay.hidden) render(input.value);
-    });
+    }
+    mergeCrawl(go);
+    loadAnchors(go);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
+
+  /* The panel changed what is hidden while this page was open
+     (assets/chrome.js says so): answer again with the new state. */
+  window.addEventListener('pfa:visibility', function () {
+    loadAnchors(function () {
+      var root = document.querySelector('[data-search-page]');
+      if (root && pageReady) renderPage(root);
+      if (overlay && !overlay.hidden) render(input.value);
+    });
+  });
 
   window.PFASearch = { search: search, complete: complete, open: open, close: close, index: function () { return INDEX; } };
 })();

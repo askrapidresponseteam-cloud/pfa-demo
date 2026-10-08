@@ -66,6 +66,10 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
   (`{storage:'gcs', bucket, path}`, or `{bytes}` when no bucket), `read(doc)` reads either, `drop(doc)`
   empties without deleting. Paths: `submissions/<ref>/<n>`, `caregiver-staging/<token>/<n>`.
   Never write `bytes:` into a Firestore document directly again (owner, 8 Oct 2026: minimal storage cost).
+- Read with `FILES.readStrict(doc)` wherever losing the file matters (attaching, the panel's view, the
+  inbox copy): it throws when the bytes should exist but cannot be read now, and null means "no file on
+  purpose". Both readers open the bucket named in the doc, never depending on this server's probe.
+  storage.rules denies every browser read and write; ship.sh deploys it last and tolerates Storage off.
 - Email logo: the mark is `img/mail/logo-mark.png` and the lettering is live text (dark mode recolours
   text, never pictures). Do not go back to a picture with the lettering in it.
 
@@ -76,6 +80,32 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
   test/stacking.test.js enforces it (owner, 8 Oct 2026: the Wall's tab bar at 51 covered the
   About menu). To check in a browser: open every header menu while scrolled past each page's
   sticky bar, at desktop and phone widths.
+
+## Website visibility (owner, 8 Oct 2026)
+- Admins show or hide pages and sections in the panel's Website tab; state in Firestore
+  `siteSettings/visibility`, served by `/api/site-visibility`, applied by the `#pfa-vis` script that
+  scripts/sync-chrome.js puts at the top of every page (source: assets/site-visibility.js).
+- The list comes from the pages: after adding a page or a top-level `<section id>` (or a
+  `data-module`), run `npm run build:site-modules`; the tests fail while assets/site-modules.json is
+  stale. A section with no id cannot be hidden. Home, Track and Search are locked visible.
+- Hidden is hidden from view only: the content is still in the HTML. Never use it for anything that
+  must not be read.
+
+## Logic rules for cases, numbers, mail and money (review of 8 Oct 2026)
+- Case statuses move only through `lib/case-flow.js` (`changeStatus`, `movesFor`); never write
+  `status` on a submission anywhere else. Every read-modify-write of a case, a counter, a payment or a
+  queue row is a transaction, with all reads before writes and no email or network call inside it.
+- Reference numbers: `S.withFreeReference` / `S.allocateReference` (lib/reference-slots.js) step past
+  numbers already on file. Never `create()` a record on a number you did not just take.
+- Outbound email goes through the queue with a claim: `queueEmail({..., claim})`, then
+  `recordEmailResult({ emailId, claimToken, ok, error })`, passing the error object (its kind decides
+  retry, park or wait). Dedupe keys of anything about a submission include its threadId.
+- The caller's address is `require('./client-ip').clientIp(request)`, never the first
+  X-Forwarded-For entry.
+- Await `audit.record(...)` before answering.
+- Races are tested with `memoryFirestore({ latency: 3 })` and `Promise.all`; the in-memory database
+  isolates transactions as Firestore does. test/review-recheck-*.test.js keeps the review's 47
+  defects from coming back.
 
 ## Emergency help, and site search
 - There is no help.html any more (retired; its script is in `_retired-assets/help.js`), and no

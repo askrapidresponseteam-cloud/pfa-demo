@@ -267,7 +267,7 @@ const SKIP_DIRS = new Set(['dist', 'public', 'node_modules', 'test', 'scripts', 
    looks to report a site collecting money in our name, and a reporting
    address that 404s is the same as not having one. */
 const KEEP_FILES = /^(robots|security)\.txt$/;
-const SKIP_FILES = /\.(md|txt|command|sh|csv|py|example|yml|yaml|mjs|gitkeep)$|^\.(gitignore|firebaserc|eslintrc.*|env.*)$|^eslint\.config\.|^package(-lock)?\.json$|^localise-cinekind\.sh$|^vercel\.json$|^firebase\.json$|^firestore\.(rules|indexes\.json)$|^build-index\.js$/;
+const SKIP_FILES = /\.(md|txt|command|sh|csv|py|example|yml|yaml|mjs|gitkeep)$|^\.(gitignore|firebaserc|eslintrc.*|env.*)$|^eslint\.config\.|^package(-lock)?\.json$|^localise-cinekind\.sh$|^vercel\.json$|^firebase\.json$|^(firestore|storage)\.rules$|^firestore\.indexes\.json$|^build-index\.js$/;
 const BROWSER_JS_DIRS = new Set(['', 'assets']);
 
 let saved = 0, before = 0;
