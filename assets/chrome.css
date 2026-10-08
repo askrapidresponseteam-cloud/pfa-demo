@@ -40,6 +40,28 @@
    header takes part in flow, so it would sit on top of that reservation and
    leave an 80px hole under itself on every page. Pinned and measured, the
    header looks the same and the pages still line up under it. */
+/* Arriving at an anchor (an in-page link, or a site-search result such as
+   shop.html#sabyasachi or newsroom.html#desk-work) lands below the fixed
+   announcement and header, with a little air, on every page (8 Oct 2026: on
+   seven pages a section's top landed up to 179px under the header). :where()
+   keeps this at zero specificity, so a page that knows about a sticky bar of
+   its own (laws, academy, the Wall, CineKind) still sets a deeper margin. */
+:where([id]){scroll-margin-top:calc(var(--ann,34px) + var(--nav,81px) + 16px)}
+
+/* Stacking, for the whole site (8 Oct 2026, after the Wall's tab bar at 51
+   painted over About's menu). One scale; test/stacking.test.js holds every
+   page to it:
+     40        sticky and fixed page bars: filters, tab bars, bottom bars
+     44        floating page buttons (the shop's bag)
+     45        the search overlay
+     49        the phone menu
+     50        this header, and everything it opens
+     60        the announcement bar
+     70 and up toasts, drawers, lightboxes, players: things that cover the
+               whole page on purpose, header included
+   A page layer between 41 and 69 hides the header's menus or the phone
+   menu. A section that needs its own z-indexes (cards, arrows, decks) sets
+   isolation:isolate, so they stay inside it. */
 header.site{position:fixed;left:0;right:0;top:var(--ann,34px);z-index:50;padding:0 var(--gutter);background:rgba(255,255,255,.96);backdrop-filter:blur(12px);color:var(--ink,#111);border-bottom:1px solid rgba(17,17,17,.1)}
 header.site nav{position:relative;display:flex;align-items:center;justify-content:space-between;gap:32px;height:80px;padding:0}
 .navlinks{display:flex;align-items:center;gap:8px;height:100%}

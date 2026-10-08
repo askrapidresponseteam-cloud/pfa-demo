@@ -280,16 +280,72 @@ echo "  project: $PROJECT"
 # trips over its own release with "409, Requested entity already exists".
 # That is success wearing a red coat: the rules on the project are already
 # these rules. Anything else is a real failure and still stops the script.
+#
+# 8 Oct 2026: a ship stopped here with "Unable to parse JSON: Unexpected
+# token '<', <!DOCTYPE ..." after the rules had compiled: one of Google's
+# rules API calls answered with an error page instead of JSON. That is a
+# hiccup on Google's side or the network's, not a problem with the rules, so
+# the deploy is tried a second time after a pause. And by this step the
+# release is already on GitHub and Vercel is building it, so if the rules
+# file did not change in this release, a failure here cannot leave the
+# project behind: it is reported as a warning, not as STOPPED.
 RULES_LOG="$(mktemp)"
-if npx --yes firebase-tools deploy --only firestore:rules --project "$PROJECT" 2>&1 | tee "$RULES_LOG"; then
+deploy_rules() {
+  npx --yes firebase-tools deploy --only firestore:rules --project "$PROJECT" 2>&1 | tee "$RULES_LOG"
+  local status="${PIPESTATUS[0]}"
+  [ "$status" = "0" ] && return 0
+  grep -q "already up to date" "$RULES_LOG" && grep -q "409" "$RULES_LOG" && { echo "  rules unchanged - already deployed on $PROJECT, nothing to do"; return 0; }
+  return 1
+}
+if deploy_rules; then
   :
-elif grep -q "already up to date" "$RULES_LOG" && grep -q "409" "$RULES_LOG"; then
-  echo "  rules unchanged - already deployed on $PROJECT, nothing to do"
 else
-  rm -f "$RULES_LOG"
-  fail "Deploying the database rules failed. See the output above."
+  echo "  the rules deploy did not finish; trying once more in 15 seconds"
+  sleep 15
+  if deploy_rules; then
+    :
+  elif git -C "$LIVE" rev-parse -q --verify HEAD~1 >/dev/null 2>&1 && git -C "$LIVE" diff --quiet HEAD~1 HEAD -- firestore.rules; then
+    printf '\n\033[33m  Warning:\033[0m the database rules could not be deployed just now, but firestore.rules\n'
+    printf '  did not change in this release, so the rules on %s are already these.\n' "$PROJECT"
+    printf '  Nothing to do. To deploy them anyway later:\n'
+    printf '    cd %s && npx firebase-tools deploy --only firestore:rules --project %s\n' "$LIVE" "$PROJECT"
+  else
+    rm -f "$RULES_LOG"
+    fail "Deploying the database rules failed twice, and they changed in this release. The site itself is pushed.
+  Run this again in a few minutes:  cd $LIVE && npx firebase-tools deploy --only firestore:rules --project $PROJECT"
+  fi
 fi
 rm -f "$RULES_LOG"
+
+step "Deploying the admin panel and the API to Firebase"
+# The admin panel is used at pfa-new-website.web.app, which is Firebase
+# Hosting and the Cloud Function in functions/, not Vercel. Until 8 Oct 2026
+# this script updated GitHub (and so Vercel) and the database rules only, and
+# the panel kept running whatever was last deployed to Firebase by hand: that
+# morning it was still showing "Mailbox could not be read: Command failed"
+# from code the site had already replaced. Now one ship updates both.
+# The site is already pushed by this point; if Firebase refuses twice, that is
+# said plainly with the one command to finish, and nothing else is undone.
+FB_LOG="$(mktemp)"
+deploy_firebase() {
+  node scripts/build-firebase.js \
+    && node scripts/firebase-secrets.js \
+    && npm --prefix functions install --no-audit --no-fund --silent \
+    && npx --yes firebase-tools deploy --only functions,hosting --project "$PROJECT" 2>&1 | tee "$FB_LOG"
+  return "${PIPESTATUS[0]}"
+}
+if deploy_firebase; then
+  :
+else
+  echo "  the Firebase deploy did not finish; trying once more in 15 seconds"
+  sleep 15
+  if ! deploy_firebase; then
+    rm -f "$FB_LOG"
+    fail "Deploying the admin panel to Firebase failed twice. The website itself is pushed; only the panel at pfa-new-website.web.app is behind.
+  Run this in a few minutes:  cd $LIVE && node scripts/build-firebase.js && node scripts/firebase-secrets.js && npm --prefix functions install --no-audit --no-fund && npx firebase-tools deploy --only functions,hosting --project $PROJECT"
+  fi
+fi
+rm -f "$FB_LOG"
 
 printf '\n\033[32mDone.\033[0m Pushed %s to %s\n' "$MESSAGE" "$REMOTE"
 printf 'Backup of the previous tree: %s\n' "$BACKUP"

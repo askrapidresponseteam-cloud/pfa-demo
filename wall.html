@@ -72,7 +72,7 @@
 <title>The Wall | People for Animals</title>
 <meta name="description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
 <link rel="stylesheet" href="assets/theatre.css">
-<link rel="stylesheet" href="assets/chrome.css?v=4d683dfb06">
+<link rel="stylesheet" href="assets/chrome.css?v=ecebb00626">
 <style>
 :root{
   --paper:#fff;
@@ -217,14 +217,19 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    links fenced between them: a doubled divider where the page only needs to
    say once where the chrome stops and the content starts.
 
-   The subnav docks a pixel higher and sits a layer above the header, so its
-   own opaque white covers the header's border while the two are touching
-   and the single remaining line is the one at the foot of the whole bar.
-   Undocked, the subnav is hundreds of pixels down the page and the header
-   keeps its edge over the hero as on every other page. 51 sits between the
-   header at 50 and the announcement at 60; the theatre is 90 and still
-   covers everything. */
-.subnav{position:sticky;top:calc(var(--ann) + var(--nav) - 1px);z-index:51;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 var(--gutter)}
+   The subnav docks a pixel higher, tucked under the header's foot, and
+   while it is docked the header drops its own border (html.wall-docked, set
+   by the script at the end of the page), so the single remaining line is
+   the one at the foot of the whole bar. Undocked, the subnav is hundreds of
+   pixels down the page and the header keeps its edge over the hero as on
+   every other page.
+
+   It sits UNDER the header (40, the level of every sticky bar on the site).
+   It used to sit at 51, one above the header, to hide that border with its
+   own white; that also put it over the header's menus, the phone menu and
+   the search box (owner, 8 Oct 2026, screenshot of About's menu cut in half
+   by this bar). The header and everything it opens stay on top. */
+.subnav{position:sticky;top:calc(var(--ann) + var(--nav) - 1px);z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 var(--gutter)}
 .subnav div{display:flex;align-items:center;gap:28px;height:50px;overflow-x:auto;scrollbar-width:none}
 .subnav div::-webkit-scrollbar{display:none}
 /* An anchor arrival on this page must clear three bars, not two: the
@@ -248,6 +253,7 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 44px)}
 .subnav a{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;padding:4px 0;border-bottom:1px solid transparent}
 .subnav a:hover{border-bottom-color:var(--ink)}
 .subnav a.end{margin-left:auto}
+html.wall-docked header.site{border-bottom-color:transparent;transition:none}
 .wall{padding:var(--band) var(--gutter)}
 .wall--stone{background:var(--stone)}
 .wall__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px;margin-bottom:40px}
@@ -827,6 +833,23 @@ section[id]{scroll-margin-top:calc(var(--ann) + var(--nav) + 44px)}
       });
     }
       })();
+})();
+</script>
+<script>
+/* The subnav is docked when it sits at its sticky top: then the header's
+   border is the second line, and it goes (see .subnav above). */
+(function () {
+  var bar = document.querySelector('.subnav'); if (!bar) return;
+  var root = document.documentElement, queued = false;
+  function check() {
+    queued = false;
+    var top = parseFloat(getComputedStyle(bar).top) || 0;
+    root.classList.toggle('wall-docked', bar.getBoundingClientRect().top <= top + 1);
+  }
+  function soon() { if (!queued) { queued = true; requestAnimationFrame(check); } }
+  addEventListener('scroll', soon, { passive: true });
+  addEventListener('resize', soon);
+  check();
 })();
 </script>
 </body>

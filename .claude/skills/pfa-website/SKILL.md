@@ -61,6 +61,14 @@ Read `HANDBOOK.md` (operations) and `ARCHITECTURE.md` (design + security) at the
 - **PFA offers no services.** No page may take a request for an appointment, vaccination,
   sterilisation, transport or consultation. `test/no-services.test.js` enforces it.
 
+## Stacking (z-index)
+- One scale, in assets/chrome.css: page bars 40, floating buttons 44, search overlay 45, phone
+  menu 49, header 50, announcement 60, whole-page layers 70+. Nothing a page adds may sit
+  between 45 and 69, and a section that needs its own z-indexes sets isolation:isolate.
+  test/stacking.test.js enforces it (owner, 8 Oct 2026: the Wall's tab bar at 51 covered the
+  About menu). To check in a browser: open every header menu while scrolled past each page's
+  sticky bar, at desktop and phone widths.
+
 ## Emergency help, and site search
 - There is no help.html any more (retired; its script is in `_retired-assets/help.js`), and no
   `assets/data.js` or `build:help`. The units are data inside `units.html` (`var UNITS`), with
@@ -134,4 +142,5 @@ The owner's words: "need the submissions to work perfectly. it should go to gand
 - Replies come back through the same mailbox (v1.399): the copy to gandhim names info@ as a second Reply-To after the sender, `lib/inbound-mail.js` reads info@ over IMAP (Cloud Scheduler every 10 minutes on Firebase, the daily cron or the panel's "Read the mailbox now" on Vercel) and files each reply on the submission it answers, found from In-Reply-To/References plus the record's `threadId` (`lib/mail-thread.js`). Never match a conversation on a name, address or subject alone. Every email about a submission carries a deterministic Message-ID from `threadHeaders()`; keep that when adding a template.
 - Everything sent through the mailbox is also saved in info@'s Sent folder (owner, 8 Oct 2026: "have copies in info@'s Sent folder. fool proof way"), by `lib/sent-copy.js`: kept in Firestore `sentCopies` the moment SMTP accepts it, put into Sent over IMAP at once (Vercel `waitUntil` keeps the function alive), and retried by every reading of replies until it is in; never twice (searched by Message-ID first). It never holds up or fails a send. Do not move the `SENT.keep()` call inside anything that could make a failed copy look like a failed send: that would send the email twice. `PFA_SENT_COPY=off` turns it off; tests run with it off except test/sent-copy.test.js.
 - Reading and the Sent copies open the mailbox through `lib/imap-open.js` only: GoDaddy's imap.secureserver.net first, imap.titan.email second, the next tried after a refused login, every server's answer kept for the panel (8 Oct 2026: Titan-first gave "Mailbox could not be read: Command failed"). `npm run check:mailbox` checks reading and sending from a Mac with the real password, at a hidden prompt. Vercel's cron calls with GET (vercel-cron/1.0); `lib/routes/inbound-mail.js` reads on a scheduled GET from it and only reports status on the panel's GET (test/inbound-mail-cron.test.js). Hobby allows one cron run a day; Firebase reads every ten minutes.
+- `scripts/ship.sh` (DEPLOY.command) deploys everything: GitHub/Vercel, the Firestore rules, and Firebase Hosting + the Cloud Function (the admin panel lives at pfa-new-website.web.app). Do not drop the Firebase step: without it the panel silently runs old code (8 Oct 2026).
 - On Firebase, `functions/index.js` carries the two settings that are not secrets (PFA_SMTP_USER, PUBLIC_SITE_URL); the password is the PFA_SMTP_PASS secret. Do not move them back into functions/.env only: a fresh unzip has no such file, and on 8 Oct 2026 that switched email off.

@@ -6,14 +6,16 @@
    apart with the links fenced between them: two rules where the page only
    needs to say once where the chrome stops and the content starts.
 
-   The subnav docks one pixel higher than the header's bottom edge and sits a
-   layer above it, so its own background covers the header's border while
-   they touch. That only works if the two backgrounds match; a pure white
-   subnav under a 96% white header put a visible tonal step over the black
-   panels instead of a line, which is not an improvement. Measured over a
-   black panel after the change: the covered border reads 252 against
-   neighbours at 252 and 253, and the only rule on the strip is the subnav's
-   own at the foot of the bar. */
+   The subnav docks one pixel higher than the header's bottom edge, and while
+   it is docked the header drops its own border (html.wall-docked), so the
+   only rule on the strip is the subnav's own at the foot of the bar.
+
+   Until 8 Oct 2026 the subnav did this by sitting a layer ABOVE the header
+   (51 against 50) and covering the border with its own white. That also put
+   it over the header's menus: the owner's screenshot showed About's menu cut
+   in half by it. The header and everything it opens now stay on top
+   (test/stacking.test.js); the backgrounds still match, so the pixel the bar
+   tucks under the header never shows as a tonal step. */
 
 const fs = require('fs');
 const path = require('path');
@@ -31,12 +33,13 @@ test('the subnav docks a pixel above the header bottom, so it lands on the borde
     'one pixel of overlap is the whole mechanism; without it the header border shows');
 });
 
-test('and a layer above it, without climbing over the announcement or the theatre', () => {
+test('and under the header, which hides its own border while the bar is docked', () => {
   const z = Number(/z-index:(\d+)/.exec(rule[1])[1]);
   const header = Number(/header\.site\{[^}]*z-index:(\d+)/.exec(chrome)[1]);
-  assert.ok(z > header, `the subnav (${z}) must paint over the header (${header}) to cover its border`);
-  assert.ok(z < 60, `the announcement bar is 60; the subnav (${z}) must stay under it`);
-  assert.ok(z < 90, `the theatre is 90 and covers the page; the subnav (${z}) must stay under it`);
+  assert.ok(z < header, `the subnav (${z}) must stay under the header (${header}), or it covers the header's menus`);
+  assert.ok(z <= 44, `and under the search box (45) and the phone menu (49): ${z}`);
+  assert.match(html, /html\.wall-docked header\.site\{border-bottom-color:transparent/, 'the header drops its border while docked');
+  assert.match(html, /classList\.toggle\('wall-docked', bar\.getBoundingClientRect\(\)\.top <= top \+ 1\)/, 'docked means sitting at its sticky top');
 });
 
 test('the two backgrounds match, or the covered border becomes a tonal step', () => {
