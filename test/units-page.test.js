@@ -105,14 +105,16 @@ test('the contact details match the unit they are filed under', () => {
   /* The table is keyed by PFA's unit id, so an off-by-one would put a shelter
      in the wrong town and nothing would look wrong. Spot-checked against the
      saved pages on units in four different states. */
-  const tel = (city) => [...d.querySelectorAll('.u-unit')]
+  /* read from what each button dials: the shown number groups a mobile five
+     and five (9 Oct 2026), the link keeps every digit PFA publishes */
+  const tel = (city) => [...[...d.querySelectorAll('.u-unit')]
     .find((u) => u.querySelector('.u-unit__city').textContent === city)
-    .querySelector('.u-unit__tel').textContent;
+    .querySelectorAll('.u-unit__tel a')].map((a) => a.getAttribute('href')).join(' ');
   assert.match(tel('Jalandhar'), /9814258726/);
   assert.match(tel('Charkhi Dadri'), /9350122231/);
   assert.match(tel('Ahmednagar'), /08390527060/);
-  assert.match(tel('Bangalore'), /080-28611986/);
-  assert.match(tel('Dehradun'), /011-47083776/);
+  assert.match(tel('Bangalore'), /08028611986/);
+  assert.match(tel('Dehradun'), /01147083776/);
 });
 
 test('the headline is one colour', () => {
@@ -235,4 +237,33 @@ test('the district count is hedged, because it moves', () => {
       assert.ok(near, `${page} gives a district count without hedging it`);
     }
   }
+});
+
+test('the states are tiles, and a tile opens its contacts as cards under its row', () => {
+  /* Owner, 9 Oct 2026, of twenty full-width headings with a boxed plus:
+     "these sections look sad, boring and to some extent pathetic". */
+  assert.match(HTML, /\.u-list\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\);grid-auto-flow:row dense;/);
+  assert.match(HTML, /\.u-state\{display:contents\}/, 'each state is a tile and a panel in one grid');
+  assert.match(HTML, /\.u-state__units\{grid-column:1 \/ -1;/, 'the panel takes the row under its tile');
+  const haryana = d.querySelector('.u-state[data-state="Haryana"]');
+  assert.equal(haryana.querySelector('.u-state__towns').textContent, 'Charkhi Dadri, Faridabad, Gurgaon / Sadhana', 'the towns, readable without opening');
+  assert.equal(haryana.querySelectorAll('.u-state__units > .u-unit').length, 3);
+  assert.ok(haryana.classList.contains('is-shut'), 'closed until asked');
+  assert.match(HTML, /one state at a time: its contacts open under its own row/);
+  assert.match(HTML, /\.u-list\.is-filtering\{display:block\}/, 'searching shows a plain grouped list, nothing folded');
+});
+
+test('a mobile reads five and five, and a note beside a number is not dialled', () => {
+  const card = (city) => [...d.querySelectorAll('.u-unit')].find((u) => u.querySelector('.u-unit__city').textContent === city);
+  const dadri = [...card('Charkhi Dadri').querySelectorAll('.u-unit__tel a')].map((a) => a.textContent);
+  assert.deepEqual(dadri, ['93501 22231', '86890 97010']);
+  const agra = card('Agra').querySelector('.u-unit__tel a');
+  assert.equal(agra.getAttribute('href'), 'tel:9536639207', 'it dialled 9536639207105 when the hours ran into the digits');
+  assert.match(agra.textContent, /^95366 39207 \(from 10AM till 5PM\)$/);
+});
+
+test('an address is an address: the old site\'s slogan is not part of one', () => {
+  assert.doesNotMatch(HTML, /Animal welfare is not just about animals/);
+  const gurgaon = [...d.querySelectorAll('.u-unit')].find((u) => u.querySelector('.u-unit__city').textContent === 'Gurgaon / Sadhana');
+  assert.equal(gurgaon.querySelector('.u-unit__addr').textContent, 'Village Sadhana, nearby Budhera chowk, Bhawani Mandir.');
 });

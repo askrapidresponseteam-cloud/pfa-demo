@@ -198,11 +198,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   *{transition:none!important;animation:none!important}
 }
 /* ---------- standing note: this is information, not advice ---------- */
-.note{display:flex;gap:14px;align-items:flex-start;max-width:var(--max);
-  margin:0 auto;padding:18px 0;border-bottom:1px solid var(--line)}
-.note b{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  border:1px solid var(--ink);padding:5px 9px;margin-top:1px}
+/* No boxed notes anywhere (owner, 9 Oct 2026, of a tinted box with a red
+   bar and a small-caps CAREFUL: "this is so claude like look. never have
+   such a giveaway in any place on the website"). A warning, an instruction
+   or a standing note is a sentence that starts with a bold word, as a
+   printed guide sets it: no tint, no bar, no capitals, no badge. */
+.note{max-width:var(--max);margin:0 auto;padding:18px 0;border-bottom:1px solid var(--line)}
 .note p{margin:0;font-size:13px;line-height:1.6;color:var(--muted);max-width:88ch}
+.note p b{font-weight:700;color:var(--ink)}
 .notewrap{padding:0 var(--gutter)}
 
 /* ---------- question and answer ---------- */
@@ -233,15 +236,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .qa__a p:last-child{margin-bottom:0}
 /* the answer in one line, before the reasoning: the thing a person came for */
 .qa__lead{font-size:16.5px;line-height:1.58;color:var(--ink)}
-/* the two blocks that must not read as more prose: what to do, and what will
-   catch you out. Set in from the text so the eye can find them on a scroll. */
-.qa__do,.qa__care{position:relative;margin-top:16px;padding:12px 0 12px 16px;border-left:2px solid var(--line)}
-.qa__do span,.qa__care span{display:block;margin-bottom:5px;font-size:10px;font-weight:700;
-  letter-spacing:.16em;text-transform:uppercase}
-.qa__do{border-left-color:var(--ink)}
+/* what to do, and what will catch you out: each a sentence that starts with
+   its bold word ("Careful. Section 325 is mischief ..."), found on a scroll
+   by the word, not by a box */
+.qa__do,.qa__care{margin-top:16px;color:var(--ink)}
+.qa__do span,.qa__care span{font-weight:700;margin-right:.3em}
+.qa__do span::after,.qa__care span::after{content:"."}
 .qa__do span{color:var(--ink)}
 .qa__care span{color:#b3261e}
-.qa__care{border-left-color:#b3261e}
 .qa__a em{font-style:italic}
 .qa__tag{display:inline-block;margin-left:10px;font-size:9px;font-weight:700;letter-spacing:.12em;
   text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:3px 7px;vertical-align:2px}
@@ -286,7 +288,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   .qa__a{margin-left:54px}
 }
 @media (max-width:480px){
-  .note{flex-direction:column;gap:10px}
   .qa summary{grid-template-columns:minmax(0,1fr) 20px;gap:10px}
   .qa__n{grid-column:1;font-size:12px}
   .qa__q{grid-column:1;grid-row:2}
@@ -574,8 +575,7 @@ if (root.document && root.document.head) apply(read());
 
   <div class="notewrap">
     <div class="note">
-      <b>Before you cite any of this</b>
-      <p>Every answer names the provision it rests on, so you can check it rather than take it on trust. Read the section on <a href="https://www.indiacode.nic.in" target="_blank" rel="noopener noreferrer">indiacode.nic.in</a> before you quote it, and check your State: prevention of cruelty is a concurrent subject, so State rules and municipal by-laws sit on top of everything here. A section cited wrongly in an FIR is harder to correct than one left out. Last read against the statutes in August 2026.</p>
+      <p><b>Before you cite any of this.</b> Every answer names the provision it rests on, so you can check it rather than take it on trust. Read the section on <a href="https://www.indiacode.nic.in" target="_blank" rel="noopener noreferrer">indiacode.nic.in</a> before you quote it, and check your State: prevention of cruelty is a concurrent subject, so State rules and municipal by-laws sit on top of everything here. A section cited wrongly in an FIR is harder to correct than one left out. Last read against the statutes in August 2026.</p>
     </div>
   </div>
 

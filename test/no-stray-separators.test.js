@@ -70,7 +70,8 @@ test('every run that wrapped is now a dotted run', () => {
   assert.ok(has('shop.html', 'p.item__meta.dots > span + span'), 'the shop\'s tiles');
   assert.ok(has('cinekind.html', 'p.shot__note.dots > span + span'));
   assert.ok(has('newsroom.html', '#case-001 figcaption.dots > span + span'));
-  assert.match(read('units.html'), /'<span class="u-unit__tel dots">' \+ k\.t\.map\([\s\S]*?\}\)\.join\(''\)/, 'a unit\'s numbers');
+  /* a unit's numbers are buttons side by side (9 Oct 2026), joined by nothing */
+  assert.match(read('units.html'), /'<span class="u-unit__tel">' \+ k\.t\.map\([\s\S]*?\}\)\.join\(''\)/, 'a unit\'s numbers');
   assert.match(read('scripts/build-library.js'), /<p class="book__facts dots">/);
   assert.match(read('assets/shop.js'), /el\('p', 'line__meta dots'\)/);
   for (const [file, el] of [['ask.html', 'fSay'], ['careers.html', 'fSay'], ['report.html', 'fSay'], ['track.html', "$('#tNext')"]]) {

@@ -154,46 +154,85 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .u-body{padding:clamp(36px,4.5vw,72px) var(--gutter) var(--band)}
 
 
-/* ============================================================ the list */
-.u-list{border-top:1px solid var(--ink)}
-.u-state{border-bottom:1px solid var(--line)}
+/* ============================================================ the list
+   Owner, 9 Oct 2026, of twenty states each a full-width heading with a
+   boxed plus and nothing else: "these sections look sad, boring and to
+   some extent pathetic". Now the states are tiles, four across: the region
+   and the count, the state, and the towns, so the list can be read without
+   opening anything. A tile opens its contacts as cards in a panel under its
+   own row (one state at a time), each card the town, the person, what they
+   are known for, and buttons that dial. Searching or choosing a region
+   turns the grid back into a list grouped by state, every fold lifted, so
+   a match is never inside a closed tile. No black ground anywhere: paper
+   tiles, a stone panel, ink only for the open tile's outline. */
+.u-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-flow:row dense;gap:12px}
+.u-state{display:contents}
 .u-state.is-out{display:none}
-.u-state__head{display:flex;align-items:baseline;gap:14px;padding:26px 0 10px}
-/* The states fold shut (owner, 14 Sep 2026): a section opens only on its
-   plus, and any live search or region choice overrides the folds so a
-   match is never hidden inside a closed state. Square corners, as the
-   house draws everything. */
-.u-state__head{cursor:pointer}
-.u-fold{margin-left:18px;flex:none;width:30px;height:30px;border:1px solid var(--ink,#111);border-radius:0;background:transparent;color:var(--ink,#111);font-size:18px;line-height:0;cursor:pointer;display:grid;place-items:center;align-self:center}
-.u-fold:hover,.u-state__head:hover .u-fold{background:var(--ink,#111);color:#fff}
-.u-state.is-shut .u-unit{display:none}
-.u-state__name{font-family:var(--display);text-transform:uppercase;font-size:clamp(19px,2.2vw,30px);line-height:1;letter-spacing:.02em}
-.u-state__region{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
-.u-state__n{margin-left:auto;flex:none;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.u-state__head{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:"region n" "name name" "towns fold";align-content:start;gap:4px 12px;
+  min-height:156px;padding:18px 18px 16px;background:#fff;border:1px solid var(--line);cursor:pointer;
+  transition:border-color .2s,box-shadow .2s,transform .2s}
+.u-state__head:hover{border-color:#c9c6c1;box-shadow:0 8px 22px rgba(17,17,17,.06);transform:translateY(-1px)}
+.u-state__region{grid-area:region;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.u-state__n{grid-area:n;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.u-state__name{grid-area:name;margin:10px 0 0;font-family:var(--display);font-weight:400;text-transform:none;
+  font-size:clamp(21px,1.9vw,28px);line-height:1.08;letter-spacing:.005em;color:var(--ink)}
+.u-state__towns{grid-area:towns;align-self:end;min-height:3em;margin:10px 0 0;font-size:12.5px;line-height:1.5;color:var(--muted);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.u-fold{grid-area:fold;align-self:end;flex:none;width:32px;height:32px;border:1px solid var(--line);border-radius:50%;
+  background:#fff;color:var(--ink);font-size:19px;font-weight:300;line-height:1;cursor:pointer;display:grid;place-items:center;
+  transition:transform .25s,border-color .2s}
+.u-state__head:hover .u-fold{border-color:var(--ink)}
+.u-fold:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.u-state.is-open .u-state__head{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);transform:none}
+.u-state.is-open .u-state__head::before{content:"";position:absolute;left:18px;top:-1px;width:22px;height:3px;background:var(--pop)}
+.u-state.is-open .u-fold{transform:rotate(45deg);border-color:var(--ink)}
 
-.u-unit{display:grid;grid-template-columns:34px minmax(0,1.1fr) minmax(0,.9fr) minmax(0,1.5fr);gap:16px;align-items:baseline;
-  padding:13px 0;border-top:1px solid var(--line);cursor:default}
+/* the open state's contacts, under its row */
+.u-state__units{grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+  padding:12px;background:#f5f4f1;border:1px solid var(--line);animation:uOpen .3s cubic-bezier(.2,.7,.2,1)}
+@keyframes uOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.u-state.is-shut .u-state__units{display:none}
+.u-unit{position:relative;display:flex;flex-direction:column;gap:5px;min-width:0;padding:18px 18px 16px;background:#fff;
+  border:1px solid var(--line);transition:border-color .2s,box-shadow .2s}
+.u-unit:hover{border-color:#c9c6c1;box-shadow:0 8px 22px rgba(17,17,17,.06)}
 .u-unit.is-out{display:none}
-.u-unit:first-of-type{border-top:0}
-.u-unit__idx{font-size:11px;color:#b9b6b2;font-variant-numeric:tabular-nums;letter-spacing:.04em}
-.u-unit__city{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.35}
-.u-unit__lead{font-size:13px;color:var(--muted);line-height:1.45}
-.u-unit__reach{display:flex;flex-direction:column;gap:3px;min-width:0}
-.u-unit__tel{font-size:14px;letter-spacing:.01em;font-variant-numeric:tabular-nums}
-.u-unit__tel a{border-bottom:1px solid var(--line);padding-bottom:1px;transition:color .15s,border-color .15s}
-.u-unit__tel a:hover{color:var(--accent);border-color:var(--accent);opacity:1}
-.u-unit__mail{font-size:12px;color:var(--muted);word-break:break-all;transition:color .15s}
-.u-unit__mail:hover{color:var(--accent);opacity:1}
-.u-unit__addr{font-size:12px;line-height:1.5;color:var(--muted)}
+.u-unit.is-hit{border-color:var(--ink)}
+.u-unit__idx{position:absolute;top:18px;right:18px;font-size:11px;color:#b9b6b2;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.u-unit__city{padding-right:30px;font-family:var(--display);font-size:22px;line-height:1.1;color:var(--ink)}
+.u-unit__lead{font-size:13.5px;line-height:1.45;color:#55524e}
+.u-unit__work{margin:6px 0 0;font-size:13px;line-height:1.5;color:var(--ink)}
+.u-unit__addr{margin-top:4px;font-size:12.5px;line-height:1.5;color:var(--muted);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.u-unit__reach{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding-top:14px;min-width:0}
+/* Every number is a button that dials. Mobiles read in the Indian way,
+   five and five; landlines as PFA publishes them. */
+.u-unit__tel{display:flex;flex-wrap:wrap;gap:8px}
+.u-unit__tel a{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line);
+  background:#fff;color:var(--ink);font-size:14px;font-weight:600;letter-spacing:.01em;font-variant-numeric:tabular-nums;
+  white-space:nowrap;transition:border-color .2s,background .2s}
+.u-unit__tel a::before{content:"";flex:none;width:14px;height:14px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z'/%3E%3C/svg%3E") center / contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z'/%3E%3C/svg%3E") center / contain no-repeat}
+.u-unit__tel a:hover{border-color:var(--ink);opacity:1}
+.u-unit__tel a small{font-size:11.5px;font-weight:400;color:var(--muted)}
+.u-unit__mail{position:relative;display:block;padding-left:22px;font-size:13px;line-height:20px;color:#55524e;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .2s}
+.u-unit__mail::before{content:"";position:absolute;left:0;top:3px;width:14px;height:14px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Crect x='3' y='5' width='18' height='14' rx='1.5'/%3E%3Cpath d='M3.5 6l8.5 7 8.5-7'/%3E%3C/svg%3E") center / contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Crect x='3' y='5' width='18' height='14' rx='1.5'/%3E%3Cpath d='M3.5 6l8.5 7 8.5-7'/%3E%3C/svg%3E") center / contain no-repeat}
+.u-unit__mail:hover{color:var(--ink);opacity:1}
 /* Shown only where the numbers have not been pulled across yet. */
 .u-unit__call{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
-  border-bottom:1px solid var(--line);padding-bottom:2px;align-self:start;transition:color .15s,border-color .15s}
-.u-unit__call:hover{color:var(--accent);border-color:var(--accent)}
-.u-unit__work{grid-column:2 / -1;margin:7px 0 0;font-size:13px;line-height:1.55;color:var(--ink);
-  border-left:2px solid var(--accent);padding-left:12px}
-.u-unit:hover{background:var(--stone)}
-.u-unit:hover .u-unit__idx{color:var(--accent)}
-.u-unit.is-hit{background:var(--stone)}
+  border-bottom:1px solid var(--line);padding-bottom:2px;align-self:start}
+
+/* searching, or one region: a list grouped by state, nothing folded */
+.u-list.is-filtering{display:block}
+.u-list.is-filtering .u-state{display:block;margin-bottom:28px}
+.u-list.is-filtering .u-state.is-out{display:none}
+.u-list.is-filtering .u-state__head{display:flex;align-items:baseline;gap:14px;min-height:0;padding:0 0 12px;border:0;
+  background:none;box-shadow:none;transform:none;cursor:default}
+.u-list.is-filtering .u-state__head::before,.u-list.is-filtering .u-state__towns,.u-list.is-filtering .u-fold{display:none}
+.u-list.is-filtering .u-state__name{order:-1;margin:0}
+.u-list.is-filtering .u-state__n{margin-left:auto}
 
 .u-empty{padding:44px 0;font-size:14px;color:var(--muted)}
 .u-empty.is-out{display:none}
@@ -241,15 +280,25 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 
 /* ============================================================ responsive */
 @media (max-width:1080px){
+  .u-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .u-state__units{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:820px){
+  .u-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+}
+@media (max-width:620px){
+  .u-state__units{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:720px){
-  .u-unit{grid-template-columns:26px minmax(0,1fr);gap:10px 12px}
-  .u-unit__lead{grid-column:2}
-  .u-unit__reach{grid-column:2}
-  .u-state__head{flex-wrap:wrap;gap:8px 12px}
-  .u-state__n{margin-left:0;width:100%}
-  .u-state__head{position:relative;padding-right:44px}
-  .u-fold{position:absolute;right:0;top:50%;transform:translateY(-50%);margin-left:0}
+  /* a phone: the plus goes up beside the count, and the towns have the width */
+  .u-state__head{grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"region n fold" "name name name" "towns towns towns";
+    min-height:0;padding:14px 12px 14px 14px;gap:4px 8px;align-items:center}
+  .u-state__name{margin-top:8px}
+  .u-fold{align-self:center;width:28px;height:28px;font-size:17px}
+  .u-state.is-open .u-state__head::before{left:14px}
+  .u-state__units{padding:10px}
+  .u-unit{padding:16px 16px 14px}
+  .u-unit__tel a{padding:0 12px;font-size:13.5px}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
@@ -597,7 +646,7 @@ if (root.document && root.document.head) apply(read());
     <div class="u-bar__row">
       <label class="u-search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-        <input id="uq" type="search" placeholder="Search a town, a state, a person" aria-label="Search units">
+        <input id="uq" type="search" placeholder="Town, state or name" aria-label="Search units">
       </label>
       <span class="u-sep" aria-hidden="true"></span>
       <div id="uchips"></div>
@@ -939,12 +988,12 @@ if (root.document && root.document.head) apply(read());
     1:   { t:['09429100202'], e:'mahendrashrimali@hotmail.com', a:'139, Swagat Bungalows - III, Opp Sshar School, New C G Road, Chandkheda, Ahmedabad, Gujarat - 382424. Ph: 079 - 23291415' },   /* Ahmedabad */
     125: { t:['9350122231','86890 97010'], e:'thefamilybas@gmail.com', a:'Near Mittal Petrol Pump, Charkhi Dadri, Bhiwani 127306' },   /* Charkhi Dadri */
     91:  { t:['7689044463','9461618045'], e:'vrinda.pfafaridabad@gmail.com' },   /* Faridabad */
-    30:  { t:['09810560230'], e:'mantasidhu@gmail.com', a:'Village Sadhana, nearby Budhera chowk, Bhawani Mandir. Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Gurgaon / Sadhana */
+    30:  { t:['09810560230'], e:'mantasidhu@gmail.com', a:'Village Sadhana, nearby Budhera chowk, Bhawani Mandir.' },   /* Gurgaon / Sadhana */
     75:  { t:['8580424409'], e:'SHABNAMAHLUWALIA092@GMAIL.COM' },   /* Shimla */
     73:  { t:['9849027601'], e:'info@pfahyd.org', a:'PFA ANIMAL CENTRE, FATTULLAGUDA, Nagole, Hyderabad' },   /* Secunderabad */
-    11:  { t:['080-28611986'], e:'info@peopleforanimalsbangalore.org', a:'Wildlife Rescue & Conservation Centre, No. 67, Uttarahalli Main Road, Next to BGS Global Hospital, Kengeri, Bengaluru, Karnataka -560 060. Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Bangalore */
+    11:  { t:['080-28611986'], e:'info@peopleforanimalsbangalore.org', a:'Wildlife Rescue & Conservation Centre, No. 67, Uttarahalli Main Road, Next to BGS Global Hospital, Kengeri, Bengaluru, Karnataka -560 060.' },   /* Bangalore */
     35:  { t:['92422 39565'], e:'pfahubballidharwad@gmail.com', a:'At-pale, old karuna gaushala, behind shell petrol pump. N h -4 Pale. Correspondence address- Tej sales corporation, no. 11 ssk complex dajibanpet Hubli-580028' },   /* Hubli */
-    59:  { t:['9845654429'], e:'mysorepfa2016@gmail.com', a:'Survey no. 280, Roopa Nagar, Bogadhi Village, Mysore, Karnataka 570026 Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Mysore */
+    59:  { t:['9845654429'], e:'mysorepfa2016@gmail.com', a:'Survey no. 280, Roopa Nagar, Bogadhi Village, Mysore, Karnataka 570026' },   /* Mysore */
     19:  { t:['9605770498','8848479269','7907121171','8593831821'], e:'madhup101@gmail.com' },   /* Calicut, re-read 12 Sep 2026: the head, then members Shymap, Jinsha K and Jishnu (joint secretary); 7034659391 is no longer published there */
     45:  { t:['9847606411'], e:'pfakollam@yahoo.com', a:'PFA, animal hospital, near tharavadu junction, Thazhudhala, Kollam-691001, Kerala' },   /* Kollam */
     99:  { t:['9947612978'] },   /* Thrissur */
@@ -964,7 +1013,7 @@ if (root.document && root.document.head) apply(read());
     61:  { t:['9422292436'], e:'sharanya3176@gmail.com', a:'PFA Nashik, next to Nehru botanical garden Old octroi godwons, Vilholi, Mumbai Agra Road, Nashik- 422005. Hospital Ashok Stham Govt Veterinary Hospital : 02532573541' },   /* Nashik */
     63:  { t:['9422603733','8408823360'], e:'chingoog@yahoo.com', a:'Goldmohur Villa, Final Plot No. 1, TPS - 2, Panchgani, Maharashtra 412805' },   /* Panchgani */
     126: { t:['8149740777'], e:'peopleforanimalspbn@gmail.com', a:'Sainath Medical Wisawa, Fata Jintur Road, Parbhani, Maharashtra' },   /* Parbhani */
-    116: { t:['9422141262','8608303853'], e:'ashish_pfa@yahoo.com', a:'Karunashram, People For Animals, Wardha Unit, Arvi Road, Pipri Meghe, Wardha, Maharashtra 442001 Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Wardha */
+    116: { t:['9422141262','8608303853'], e:'ashish_pfa@yahoo.com', a:'Karunashram, People For Animals, Wardha Unit, Arvi Road, Pipri Meghe, Wardha, Maharashtra 442001' },   /* Wardha */
     88:  { t:['08731094121'], e:'larisaekka@gmail.com' },   /* Shillong */
     128: { t:['+91 94370 20717'], e:'pfa.orissa@gmail.com' },   /* Bhubaneshwar */
     41:  { t:['8280242703'], e:'sudhansuknp.pfa@gmail.com', a:'Candiapalli, Dist. Kendrapara-754207, Odisha' },   /* Kendrapara */
@@ -991,10 +1040,10 @@ if (root.document && root.document.head) apply(read());
     124: { t:['94458 02624‬'], e:'peopleforanimalstambaram@gmail.com' },   /* Tambaram */
     127: { t:['86677 21186'], e:'nalinipfa17@gmail.com' },   /* Tirupur */
     129: { t:['63856 71922'], e:'pfatrichy@hotmail.com' },   /* Trichy */
-    2:   { t:['9536639207 (from 10AM till 5PM)'], e:'suratprasad@pfa-agra.org', a:'Gata no. 81, Moja, Jaganpur Road behind Pushpanjali Seasons, Amar Vihar, Dayal Bagh, Agra Uttar Pradesh-282005. Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Agra */
+    2:   { t:['9536639207 (from 10AM till 5PM)'], e:'suratprasad@pfa-agra.org', a:'Gata no. 81, Moja, Jaganpur Road behind Pushpanjali Seasons, Amar Vihar, Dayal Bagh, Agra Uttar Pradesh-282005.' },   /* Agra */
     18:  { t:['9756041113'], e:'Vikendra1985@gmail.com' },   /* Badaun */
     25:  { t:['9250004141','9899733223'], e:'vashisthanaresh@yahoo.com' },   /* Firozabad */
-    26:  { t:['8447955480','9999198194'], e:'surbhirawat595@gmail.com', a:'Raj Nagar Ext Rd, Nava Jeevan Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Ghaziabad */
+    26:  { t:['8447955480','9999198194'], e:'surbhirawat595@gmail.com', a:'Raj Nagar Ext Rd, Nava Jeevan' },   /* Ghaziabad */
     40:  { t:['9839504351','5122304513'], e:'archana4810@gmail.com', a:'SPCA Kanpur next to Raipurva Thana 208003' },   /* Kanpur */
     51:  { t:['9208440010'], e:'sheelakalapfa2012@gmail.com', a:'Hans Kheda Para, Opp. Kanshi Ram Shahri Vikas Yojana, Lucknow, U.P. (hospital/shelter, private ambulance services)' },   /* Lucknow */
     89:  { t:['8009521111'], e:'amitsehgal0277@gmail.com' },   /* Lucknow II */
@@ -1002,7 +1051,7 @@ if (root.document && root.document.head) apply(read());
     13:  { t:['9897066373'], e:'onlypfa@gmail.com', a:'Badayul Road, Gram Chowari block 11, Bareilly, Uttar Pradesh' },   /* Rohilkhand / Bareilly */
     97:  { t:['7081977397'], e:'dixitshrishspn@gmail.com' },   /* Shahjahanpur I */
     74:  { t:['09450416006'], e:'pfa.shahjahanpur@gmail.com' },   /* Shahjahanpur II */
-    93:  { t:['011-47083776'], e:'gaurimaulekhi@gmail.com', a:'Happy Home Sanctuary People for Animals Uttarakhand, Khata No. 1100 Khasra No. 1971 & khata No. 1132 khasra No 2012, Village Charba, Vikas Nagar, Dehradun, Uttarakhand Animal welfare is not just about animals. It is about us. Our living conditions, our children, our earth. Cruelty to animals has a significant and irreversible impact on peaceful societies, human health, the economy, and the environment' },   /* Dehradun */
+    93:  { t:['011-47083776'], e:'gaurimaulekhi@gmail.com', a:'Happy Home Sanctuary People for Animals Uttarakhand, Khata No. 1100 Khasra No. 1971 & khata No. 1132 khasra No 2012, Village Charba, Vikas Nagar, Dehradun, Uttarakhand' },   /* Dehradun */
     33:  { t:['7417415009','9359355252'], e:'adityasharma.7722@gmail.com', a:'Sarai road, jwalapur Haridwar 249047' },   /* Haridwar */
     47:  { t:['9410112960'], e:'Rajntl99@gmail.com' },   /* Kotabagh */
     68:  { t:['9897165567'], e:'pfaroorkee@gmail.com' },   /* Roorkee */
@@ -1014,6 +1063,14 @@ if (root.document && root.document.head) apply(read());
     114: { t:['9434232567','7908181395'], e:'udpplforanimals@gmail.com' }   /* Uttar Dinajpur */
   };
   var tel = function(n){ return String(n).replace(/[^0-9+]/g, ''); };
+  /* A mobile reads in the Indian way, five and five, with any leading 0 or
+     91 left to the link; a landline is shown as PFA publishes it. */
+  var said = function(n){
+    var raw = String(n).trim(), d = raw.replace(/\D/g, '');
+    var m = /^(?:0|91)?([6-9]\d{9})$/.exec(d);
+    return m ? m[1].slice(0, 5) + ' ' + m[1].slice(5) : raw;
+  };
+  var two = function(n){ return n < 10 ? '0' + n : String(n); };
 
   var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
     return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); };
@@ -1046,41 +1103,49 @@ if (root.document && root.document.head) apply(read());
   var html = '';
   states.forEach(function(st){
     var list = byState[st].slice().sort(function(a, b){ return a.c.localeCompare(b.c); });
-    html += '<section class="u-state" data-state="' + esc(st) + '" data-region="' + esc(REGION[st]) + '">'
+    var towns = list.map(function(u){ return u.c; }).join(', ');
+    html += '<section class="u-state is-shut" data-state="' + esc(st) + '" data-region="' + esc(REGION[st]) + '">'
       + '<div class="u-state__head">'
-      + '<h2 class="u-state__name">' + esc(st) + '</h2>'
       + '<span class="u-state__region">' + esc(REGION[st]) + '</span>'
       + '<span class="u-state__n num">' + list.length + (list.length === 1 ? ' unit' : ' units') + '</span>'
+      + '<h2 class="u-state__name">' + esc(st) + '</h2>'
+      + '<p class="u-state__towns">' + esc(towns) + '</p>'
       + '<button type="button" class="u-fold" aria-expanded="false" aria-label="Show ' + esc(st) + ' units">+</button>'
-      + '</div>';
+      + '</div>'
+      + '<div class="u-state__units">';
     list.forEach(function(u){
       seen += 1;
       var k = CONTACT[u.d];
       var reach;
       if (k){
-        /* Every number is dialable. Where a unit publishes two, the second is
-           a link as well: a shelter that gives an alternate number expects it
-           to be rung. */
-        reach = '<span class="u-unit__tel dots">' + k.t.map(function(n){
-          return '<a href="tel:' + esc(tel(n)) + '">' + esc(n) + '</a>';
+        /* Every number is a button that dials. Where a unit publishes two,
+           the second is one as well: a number given as an alternate is
+           there to be rung. */
+        reach = '<span class="u-unit__tel">' + k.t.map(function(n){
+          /* a number may carry a note, "(from 10AM till 5PM)": the link dials
+             the number alone (its digits once ran on into the note's 10 and 5) */
+          var num = String(n).split('(')[0].trim();
+          var note = (String(n).match(/\(([^)]*)\)/) || [])[1];
+          return '<a href="tel:' + esc(tel(num)) + '">' + esc(said(num))
+            + (note ? '<small> (' + esc(note) + ')</small>' : '') + '</a>';
         }).join('') + '</span>';
-        if (k.e) reach += '<a class="u-unit__mail" href="mailto:' + esc(k.e) + '">' + esc(k.e) + '</a>';
-        /* Forty-three of the eighty publish no shelter address. The row simply
-           does not carry one rather than carrying an empty label. */
-        if (k.a) reach += '<span class="u-unit__addr">' + esc(k.a) + '</span>';
+        if (k.e) reach += '<a class="u-unit__mail" href="mailto:' + esc(k.e) + '" title="' + esc(k.e) + '">' + esc(k.e) + '</a>';
       } else {
         reach = '<a class="u-unit__call" href="https://peopleforanimalsindia.org/units/details/' + u.d + '"'
           + ' target="_blank" rel="noopener noreferrer">Phone and address</a>';
       }
+      /* Forty-three of the eighty publish no address; the card simply goes
+         without one rather than carrying an empty label. */
       html += '<article class="u-unit" data-i="' + u.i + '" id="unit' + u.i + '">'
-        + '<span class="u-unit__idx num">' + seen + '</span>'
+        + '<span class="u-unit__idx num">' + two(seen) + '</span>'
         + '<span class="u-unit__city">' + esc(u.c) + '</span>'
         + '<span class="u-unit__lead">' + esc(u.p) + '</span>'
-        + '<span class="u-unit__reach">' + reach + '</span>'
         + (u.w ? '<p class="u-unit__work">' + esc(u.w) + '</p>' : '')
+        + (k && k.a ? '<span class="u-unit__addr" title="' + esc(k.a) + '">' + esc(k.a) + '</span>' : '')
+        + '<span class="u-unit__reach">' + reach + '</span>'
         + '</article>';
     });
-    html += '</section>';
+    html += '</div></section>';
   });
   $('#ulist').innerHTML = html;
 
@@ -1359,18 +1424,33 @@ if (root.document && root.document.head) apply(read());
   /* The folds. A head or its plus opens the state; a live search or a
      region other than All lifts every fold so no match hides. */
   var listEl = document.getElementById('ulist');
+  function setOpen(sec, on){
+    sec.classList.toggle('is-open', on);
+    var btn = sec.querySelector('.u-fold');
+    if (btn) {
+      btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+      btn.setAttribute('aria-label', (on ? 'Hide ' : 'Show ') + sec.getAttribute('data-state') + ' units');
+    }
+  }
   listEl.addEventListener('click', function(e){
     var head = e.target.closest ? e.target.closest('.u-state__head') : null;
-    if (!head) return;
+    if (!head || listEl.classList.contains('is-filtering')) return;
     var sec = head.parentElement;
-    var open = sec.classList.toggle('is-open');
-    var btn = head.querySelector('.u-fold');
-    if (btn) {
-      btn.textContent = open ? '\u2212' : '+';
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', (open ? 'Hide ' : 'Show ') + sec.getAttribute('data-state') + ' units');
-    }
+    var open = !sec.classList.contains('is-open');
+    /* one state at a time: its contacts open under its own row */
+    [].slice.call(listEl.querySelectorAll('.u-state.is-open')).forEach(function(s){ if (s !== sec) setOpen(s, false); });
+    setOpen(sec, open);
     foldCheck();
+    if (!open) return;
+    var panel = sec.querySelector('.u-state__units');
+    var bar = document.querySelector('.u-bar');
+    var top = (bar ? bar.getBoundingClientRect().bottom : 120) + 12;
+    var box = head.getBoundingClientRect();
+    var end = panel ? panel.getBoundingClientRect().bottom : box.bottom;
+    /* the tile and as much of its panel as fits, without jumping if it is all in view */
+    if (box.top < top || end > window.innerHeight) {
+      window.scrollBy({ top: box.top - top, behavior: 'smooth' });
+    }
   });
   /* One dumb class per section, kept by script: is-shut hides the rows.
      No selector cleverness for a browser to disagree about. */

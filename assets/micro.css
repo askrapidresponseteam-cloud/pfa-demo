@@ -214,7 +214,7 @@ dialog.m-lb::backdrop{background:rgba(17,17,17,.82)}
 .m-split--rev > :first-child{order:2}
 .m-split h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:15ch}
 .m-split p{margin:20px 0 0;max-width:54ch;font-size:15px;line-height:1.7;color:rgba(17,17,17,.75)}
-.m-quote{margin:26px 0 0;padding:4px 0 4px 22px;border-left:3px solid var(--pop,#ff3b18);font-family:var(--display);font-size:clamp(19px,1.7vw,25px);line-height:1.3;max-width:34ch}
+
 
 /* ---------- a numbered path ---------- */
 .m-path{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0;margin:0;padding:0;list-style:none;counter-reset:mpath}

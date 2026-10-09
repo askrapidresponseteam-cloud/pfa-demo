@@ -138,9 +138,14 @@ input,button,select{font-family:inherit;font-size:inherit;color:inherit}
    The hinge of the page: the dark opening above it acts, the light half
    below it teaches, and this is the sentence that separates the two. */
 .notewrap{padding:clamp(30px,3.6vw,54px) var(--gutter)}
-.note{display:flex;gap:14px;align-items:flex-start;max-width:var(--max);margin:0 auto}
-.note b{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);padding:5px 9px;margin-top:1px}
+/* No boxed notes anywhere (owner, 9 Oct 2026, of a tinted box with a red
+   bar and a small-caps CAREFUL: "this is so claude like look. never have
+   such a giveaway in any place on the website"). A warning, an instruction
+   or a standing note is a sentence that starts with a bold word, as a
+   printed guide sets it: no tint, no bar, no capitals, no badge. */
+.note{max-width:var(--max);margin:0 auto}
 .note p{margin:0;font-size:13px;line-height:1.6;color:var(--muted);max-width:88ch}
+.note p b{font-weight:700;color:var(--ink)}
 
 /* ---------- one thing worth knowing ----------
    Filled by the page script from the lessons themselves, so it can never
@@ -238,10 +243,10 @@ input,button,select{font-family:inherit;font-size:inherit;color:inherit}
    twice. The kicker carries the course's name instead. */
 .part__kicker{display:block;font-family:var(--body);font-size:10px;font-weight:700;
   letter-spacing:.26em;text-transform:uppercase;color:rgba(17,17,17,.45);margin-bottom:14px}
-/* Set against a rule, so the module's standfirst reads as an opening rather
-   than as the first paragraph of the first lesson. */
-.part__sub{margin:0 0 clamp(20px,2.4vw,30px);padding-left:clamp(14px,1.6vw,20px);
-  border-left:2px solid var(--ink);font-size:15px;line-height:1.6;color:var(--ink);max-width:66ch}
+/* A size up from the lessons, so the module's standfirst reads as an opening
+   rather than as the first paragraph of the first lesson (it was set against
+   a bar; no bars, 9 Oct 2026). */
+.part__sub{margin:0 0 clamp(20px,2.4vw,30px);font-size:16.5px;line-height:1.6;color:var(--ink);max-width:62ch}
 .aims{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:1px;margin:20px 0 26px;box-shadow:0 0 0 1px var(--line)}
 .aims li{background:var(--stone);box-shadow:0 0 0 1px var(--line);padding:14px 16px;font-size:12.5px;line-height:1.55;color:var(--ink)}
 .aims::before{content:"After this module you will be able to";grid-column:1 / -1;background:#fff;box-shadow:0 0 0 1px var(--line);padding:10px 16px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
@@ -267,10 +272,12 @@ input,button,select{font-family:inherit;font-size:inherit;color:inherit}
    inside <summary> so that the whole head is one tap target and so that the
    suite still finds .qa__lead inside the lesson; every browser renders it. */
 .qa__lead{grid-column:2 / span 2;grid-row:2;margin:6px 0 0;font-size:16px;line-height:1.48;color:var(--ink);max-width:62ch;font-weight:400}
-.qa__badges{grid-column:2 / span 2;grid-row:3;display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
-.bdg{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:4px 8px;white-space:nowrap}
-.bdg--care{color:var(--care);border-color:#e8c6c3}
-.bdg--go{color:var(--go);border-color:#c3ddcd}
+.qa__badges{grid-column:2 / span 2;grid-row:3;display:flex;flex-wrap:wrap;column-gap:1.1em;row-gap:2px;margin-top:10px;clip-path:inset(-.5em -.5em -.5em 0)}
+/* what the lesson holds, as a quiet line of words, not boxed tags */
+.bdg{position:relative;font-size:12.5px;font-weight:500;letter-spacing:.005em;color:var(--muted);white-space:nowrap}
+.bdg + .bdg::before{content:"\00b7";content:"\00b7" / "";position:absolute;right:100%;width:1.1em;text-align:center;color:var(--muted)}
+.bdg--care{color:var(--care)}
+.bdg--go{color:var(--go)}
 .qa__tag{display:inline-block;margin-left:9px;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:3px 7px;vertical-align:2px}
 .qa.hidden,.part.hidden{display:none}
 
@@ -282,12 +289,12 @@ input,button,select{font-family:inherit;font-size:inherit;color:inherit}
 .qa__a b{color:var(--ink);font-weight:700}
 
 /* Do and Never, lifted to the top of the card from the bottom of the prose */
-.acts{display:grid;gap:10px;margin:20px 0 0}
-.qa__do,.qa__care{padding:15px 17px;font-size:14.5px;line-height:1.6;color:var(--ink);border-left:3px solid var(--line)}
-.qa__do span,.qa__care span{display:block;margin-bottom:6px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
-.qa__do{border-left-color:var(--go);background:var(--go-wash)}
-.qa__do span{color:var(--go)}
-.qa__care{border-left-color:var(--care);background:var(--care-wash)}
+/* a run-in word, set in the sentence: "Careful. Never give ..." */
+.acts{display:grid;gap:12px;margin:20px 0 0}
+.qa__do,.qa__care{font-size:14.5px;line-height:1.65;color:var(--ink)}
+.qa__do span,.qa__care span{font-weight:700;margin-right:.3em}
+.qa__do span::after,.qa__care span::after{content:"."}
+.qa__do span{color:var(--ink)}
 .qa__care span{color:var(--care)}
 
 /* quick facts, one card per point the lesson already made */
@@ -307,8 +314,8 @@ input,button,select{font-family:inherit;font-size:inherit;color:inherit}
 .step__b b{color:var(--ink)}
 
 /* the worked example / case file */
-.qa__case{margin:20px 0 0;padding:16px 18px;background:var(--stone);border-left:3px solid var(--accent)}
-.qa__case span{display:block;margin-bottom:7px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.qa__case{margin:22px 0 0;padding:16px 0 0;border-top:1px solid var(--line)}
+.qa__case span{display:block;margin-bottom:6px;font-size:13.5px;font-weight:700;color:var(--ink)}
 .qa__case p{margin:0 0 9px;font-size:13.5px;line-height:1.68;color:var(--muted)}
 .qa__case p:last-child{margin-bottom:0}
 
@@ -369,7 +376,7 @@ a.modnav__a:hover{background:var(--stone);opacity:1}
 .qz__opt.is-right{border-color:var(--go);background:var(--go-wash);color:var(--ink);font-weight:700}
 .qz__opt.is-wrong{border-color:var(--care);background:var(--care-wash);color:var(--care)}
 .qz__opt[disabled]{cursor:default}
-.qz__exp{margin:10px 0 0;padding:10px 0 0 14px;border-left:2px solid var(--ink);font-size:13px;line-height:1.65;color:var(--muted)}
+.qz__exp{margin:12px 0 0;padding:10px 0 0;border-top:1px solid var(--line);font-size:13px;line-height:1.65;color:var(--muted)}
 .qz__exp[hidden]{display:none}
 .quiz__score{margin:18px 0 0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .showmore{margin-top:16px;background:none;border:1px solid var(--ink);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px;cursor:pointer;transition:background .15s,color .15s}
@@ -454,7 +461,6 @@ a.modnav__a:hover{background:var(--stone);opacity:1}
   .qa__lead{font-size:15.5px}
 }
 @media (max-width:480px){
-  .note{flex-direction:column;gap:10px}
   .band{padding-top:56px;padding-bottom:56px}
   .up h3{margin-bottom:8px}
   .hero h1{font-size:clamp(34px,4.4vw,62px)}
@@ -649,7 +655,6 @@ a.modnav__a:hover{background:var(--stone);opacity:1}
 /* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
 @media (max-width:700px),(pointer:coarse){
   .aims::before,
-  .bdg,
   .qa__tag,
   .pill,
   .cites__label{font-size:10px}
@@ -953,8 +958,7 @@ if (root.document && root.document.head) apply(read());
 
   <div class="notewrap">
     <div class="note">
-      <b>Read this first</b>
-      <p>This is information, not treatment. Every dose on this page is a published label range, shown so that you can read a prescription and catch an arithmetic error, not so that you can write one. In India a medicine marked Rx (Schedule H or H1) is sold only against a registered practitioner's prescription, and veterinary medicine may be practised only by a registered veterinary practitioner. Where a lesson says "vet now", it means the nearest veterinary hospital, college clinic or registered vet, today, not tomorrow.</p>
+      <p><b>Read this first.</b> This is information, not treatment. Every dose on this page is a published label range, shown so that you can read a prescription and catch an arithmetic error, not so that you can write one. In India a medicine marked Rx (Schedule H or H1) is sold only against a registered practitioner's prescription, and veterinary medicine may be practised only by a registered veterinary practitioner. Where a lesson says "vet now", it means the nearest veterinary hospital, college clinic or registered vet, today, not tomorrow.</p>
     </div>
   </div>
 

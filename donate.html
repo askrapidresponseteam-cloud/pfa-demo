@@ -347,12 +347,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    argument below 860px and put the dollar cards back to three. The extra
    class wins it on specificity, so source order cannot take it away again. */
 .amts.amts--usd{grid-template-columns:repeat(2,1fr)}
-.callout{display:grid;gap:6px;border-left:2px solid var(--ink);background:var(--stone);padding:14px 16px;margin-top:22px}
-.callout b{font-size:12px;font-weight:700;letter-spacing:.04em}
-.callout p{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
-
-
-
 /* The dark panel carries the live summary, so it stays in view while the form scrolls. */
 @media (min-width:861px){
   .give__side{position:sticky;top:calc(var(--ann) + var(--nav));align-self:start;height:calc(100svh - var(--ann) - var(--nav));overflow-y:auto}
