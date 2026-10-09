@@ -112,6 +112,8 @@ a:hover .m-ph img,.m-ph--zoom:hover img{transform:scale(1.03)}
 .m-pick input[type="checkbox"] + label::after{border-radius:0}
 .m-pick input:checked + label::after{border-color:#fff;background:#fff;box-shadow:inset 0 0 0 3px var(--ink)}
 .m-pick label b{padding-right:22px}
+/* a card inside a field keeps its own type, not the field label's capitals */
+.field .m-pick label{font-size:inherit;font-weight:400;letter-spacing:normal;text-transform:none;line-height:normal}
 /* one line to a card, for a short list of plain answers */
 .m-picks--compact label{justify-content:center;min-height:52px;padding:12px 16px}
 .m-picks--compact label::after{top:50%;transform:translateY(-50%)}
@@ -231,6 +233,39 @@ dialog.m-lb::backdrop{background:rgba(17,17,17,.82)}
 /* ---------- small print on a page ---------- */
 .m-fine{font-size:12.5px;line-height:1.65;color:var(--muted);max-width:80ch}
 
+/* ---------- concise pages ----------------------------------------------
+   Owner, 9 Oct 2026: "never make anything complicated and show more than
+   what is needed ... show things one after another in stages like you have
+   for application ... show more only when one shows interest. have things
+   under plus". A page is three things: a short hero (a headline, one line,
+   one button), the stage (one question at a time), and "Good to know", the
+   rest under plus signs, closed until someone opens one. */
+.m-hero--short h1{max-width:12ch}
+.m-hero--short .lede{max-width:40ch}
+.m-hero--short .m-hero__media .m-ph{aspect-ratio:4/3}
+.m-stage{max-width:820px}
+.m-stage .m-step h3{font-size:clamp(24px,2.4vw,34px)}
+.m-step .m-also{margin:0;font-size:13px;line-height:1.6;color:var(--muted)}
+.m-step .m-also a{color:var(--ink);border-bottom:1px solid currentColor}
+.m-more .m-acc{max-width:820px}
+.m-acc details > ul,.m-acc details > ol{margin:0 0 18px;padding:0 0 0 18px;list-style:disc}
+.m-acc details > ol{list-style:decimal}
+.m-acc details > ul li,.m-acc details > ol li{margin:0 0 6px;padding:0;border:0}
+.m-acc details > ul li::before,.m-acc details > ol li::before{display:none}
+.m-acc details b{color:var(--ink)}
+.m-acc details a{border-bottom:1px solid currentColor}
+.m-more .m-gallery{margin:0 0 18px}
+.m-pick[hidden]{display:none}
+/* A section in two columns: its heading on the left, held in view, and what
+   it holds on the right, so a short step does not leave half the page empty
+   (owner, 9 Oct 2026: "too much blank space. some people might think it is
+   incomplete or under work"). One rule across the top, as every section. */
+.band.m-twin{--band:clamp(56px,6vw,96px);display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.45fr);column-gap:clamp(32px,5vw,88px);align-items:start}
+.band.m-twin::before{content:"";grid-column:1 / -1;height:1px;background:var(--ink);margin-bottom:22px}
+.band.m-twin > .band__head{border-top:0;padding-top:0;margin:0;position:sticky;top:calc(var(--ann) + var(--nav) + 24px)}
+.band.m-twin > .band__head h2{font-size:clamp(28px,3vw,46px)}
+.band.m-twin > :not(.band__head){min-width:0;max-width:none}
+
 /* ---------- widths ---------- */
 @media (max-width:1100px){
   .m-grid--4,.m-picks--4{--cols:2}
@@ -239,6 +274,8 @@ dialog.m-lb::backdrop{background:rgba(17,17,17,.82)}
   .m-facts li:nth-child(n+3){border-top:1px solid var(--line)}
 }
 @media (max-width:900px){
+  .band.m-twin{grid-template-columns:minmax(0,1fr)}
+  .band.m-twin > .band__head{position:static;margin-bottom:28px}
   .m-hero__in,.m-builder,.m-split,.m-head{grid-template-columns:minmax(0,1fr)}
   .m-split--rev > :first-child{order:0}
   .m-hero__media{max-width:560px}

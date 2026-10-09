@@ -128,18 +128,13 @@ input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit
 }
 
 /* ---------- this page ---------- */
-.visit{display:grid;gap:0;border-top:1px solid var(--ink)}
+.visit{display:grid;gap:0;max-width:820px;margin:0}
 .visit div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:16px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.6}
 .visit dt{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-top:4px}
 .visit dd{margin:0}
 .visit a{border-bottom:1px solid currentColor}
-.side{display:grid;gap:10px}
-.side .m-card{border:1px solid var(--line)}
-.side .m-card h3{font-size:18px}
 .offer-extra{display:grid;gap:18px}
 @media (max-width:600px){.visit div{grid-template-columns:minmax(0,1fr);gap:4px}}
-
-#help .band__head p a{border-bottom:1px solid currentColor}
 /* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
 @media (max-width:700px),(pointer:coarse){
   
@@ -395,54 +390,119 @@ if (root.document && root.document.head) apply(read());
 <script src="assets/field-validate.js"></script>
 
 <main>
-  <section class="hero m-hero" id="top">
+  <section class="hero m-hero m-hero--short" id="top">
     <div class="m-hero__in">
       <div>
         <p class="eyebrow">Raja Garden, New Delhi &middot; since 1980</p>
         <h1 class="display">Sanjay Gandhi Animal Care Centre.</h1>
-        <p class="lede">PFA's flagship animal care centre in Delhi. It began in 1980 with a legacy left to Shri Sanjay Gandhi by Mrs Ruth Cowell of New South Wales, Australia, and it has cared for the city's animals, day and night, ever since.</p>
+        <p class="lede">PFA's flagship in Delhi, caring for over three thousand animals, day and night.</p>
         <div class="m-hero__acts">
-          <a class="btn" href="#help">Offer your help</a>
-          <a class="btn btn--light" href="https://www.amazon.in/registry/wishlist/2WYBQB9O0HFRG" target="_blank" rel="noopener noreferrer">The centre's wishlist</a>
+          <a class="btn" href="#help">Help the centre</a>
+          <a class="btn btn--light" href="#visit">Visit</a>
         </div>
-        <ul class="m-hero__facts">
-          <li><b>1980</b><span>the year a legacy founded it</span></li>
-          <li><b>3,000+</b><span>animals in its care at any time, as the centre states</span></li>
-          <li><b>24 hours</b><span>its wards and out-patient department</span></li>
-        </ul>
       </div>
       <div class="m-hero__media">
-        <div class="m-duo">
-          <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-01.jpg" alt="At the Sanjay Gandhi Animal Care Centre" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>The centre, Raja Garden</figcaption></figure>
-          <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-02.jpg" alt="An animal in the centre's care" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>In its care</figcaption></figure>
+        <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-01.jpg" alt="At the Sanjay Gandhi Animal Care Centre" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>The centre, Raja Garden</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="band m-twin" id="help">
+    <div class="band__head">
+      <p class="eyebrow">Help the centre</p>
+      <h2 class="display">Three quick steps.</h2>
+    </div>
+    <div class="m-stage">
+      <ol class="m-tabs" aria-hidden="true"><li><span>01</span>How</li><li><span>02</span>What</li><li><span>03</span>You</li></ol>
+      <div class="m-bar" aria-hidden="true"><span></span></div>
+      <form class="m-form" id="sgForm" novalidate>
+        <div class="m-step" data-step="How">
+          <h3>How would you like to help?</h3>
+          <ul class="m-picks m-picks--2" data-need="offer" data-say="Choose how you would like to help.">
+            <li class="m-pick"><input type="radio" name="offer" id="o-supplies" value="Supplies for the animals"><label for="o-supplies"><b>Supplies for the animals</b><small>Food, medicines, bedding</small></label></li>
+            <li class="m-pick"><input type="radio" name="offer" id="o-visit" value="A visit with a group"><label for="o-visit"><b>A visit with a group</b><small>A school, college or workplace</small></label></li>
+          </ul>
+          <p class="err" data-err-for="offer" hidden></p>
+          <p class="m-also">Or <a href="get-involved.html?area=sgacc#volunteer">volunteer here</a>, <a href="https://www.amazon.in/registry/wishlist/2WYBQB9O0HFRG" target="_blank" rel="noopener noreferrer">order from its wishlist</a>, or <a href="donate.html">donate</a>.</p>
+        </div>
+
+        <div class="m-step" data-step="What">
+          <div class="offer-extra" data-for="Supplies for the animals">
+            <h3>What could you bring?</h3>
+            <ul class="m-picks" data-need="items" data-say="Choose at least one.">
+              <li class="m-pick"><input type="checkbox" name="items" id="i-food" value="Food"><label for="i-food"><b>Food</b><small>Dry food, rice, pulses</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="items" id="i-med" value="Medicines and dressings"><label for="i-med"><b>Medicines and dressings</b><small>Ask first what is short</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="items" id="i-bed" value="Bedding and blankets"><label for="i-bed"><b>Bedding and blankets</b><small>Old ones are welcome</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="items" id="i-clean" value="Cleaning supplies"><label for="i-clean"><b>Cleaning supplies</b><small>Disinfectant, phenyl, brooms</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="items" id="i-kit" value="Bowls and equipment"><label for="i-kit"><b>Bowls and equipment</b><small>Bowls, leashes, crates</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="items" id="i-other" value="Something else"><label for="i-other"><b>Something else</b><small>Say what below</small></label></li>
+            </ul>
+            <p class="err" data-err-for="items" hidden></p>
+          </div>
+          <div class="offer-extra" data-for="A visit with a group">
+            <h3>Your group.</h3>
+            <div class="row">
+              <div class="field"><label for="group">School, college or workplace</label><input id="group" name="group" data-say="Name the group." placeholder="St. Mark's School, Class 9"><p class="err" hidden></p></div>
+              <div class="field"><label for="groupSize">How many people</label><input id="groupSize" name="groupSize" inputmode="numeric" placeholder="25"><p class="err" hidden></p></div>
+            </div>
+          </div>
+          <div class="field"><label for="when">When would suit you <small>(optional)</small></label><input id="when" name="when" placeholder="Saturday mornings, from next month"><p class="err" hidden></p></div>
+        </div>
+
+        <div class="m-step" data-step="You">
+          <h3>How do we reach you?</h3>
+          <div class="row">
+            <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
+            <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+          </div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add an email, so the centre can reply." autocomplete="email"><p class="err" hidden></p></div>
+          <div class="field"><label for="message">Anything else <small>(optional)</small></label><textarea id="message" name="message" maxlength="900" placeholder="Twenty kilos of rice and some old blankets from our building."></textarea></div>
+          <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>I will wait for the centre to reply before I come.</span></label>
+          <p class="err" data-err-for="consent" hidden></p>
+          <p class="status" data-form-status hidden></p>
+        </div>
+
+        <div class="m-nav">
+          <button class="back" type="button" data-back hidden>Back</button>
+          <button class="btn" type="button" data-next>Continue</button>
+          <button class="btn" type="submit" data-send hidden>Send my offer</button>
+          <span class="clock" data-clock></span>
+        </div>
+      </form>
+
+      <div class="m-done" id="done" hidden>
+        <p class="eyebrow">Received</p>
+        <p class="ref" id="doneRef"></p>
+        <p>The centre will reply to agree a day. Please wait for it before you come.</p>
+        <div class="acts">
+          <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+          <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="band" id="inside">
+  <section class="band m-twin" id="visit">
     <div class="band__head">
-      <p class="eyebrow">Inside the centre</p>
-      <h2 class="display">What happens here, round the clock.</h2>
-      <p>A shelter and a place of treatment in one, for every kind of animal the city brings to its gate.</p>
+      <p class="eyebrow">Visit</p>
+      <h2 class="display">Raja Garden, West Delhi.</h2>
     </div>
-    <ul class="m-grid m-grid--4">
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6v13M3 15h18v4M21 15v-2.5A3.5 3.5 0 0 0 17.5 9H11v6"/><circle cx="7" cy="11.5" r="2"/></svg></span><h3>In-patient wards</h3><p>Open 24 hours, housing over 3,000 animals at any one time.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span><h3>Out-patients</h3><p>A 24-hour out-patient department, with an animal ambulance that works through the night.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h4l2.2-5 4.2 10 2.2-5H21"/></svg></span><h3>Intensive care</h3><p>Separate intensive care for large animals and for small ones, within the wards.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16"/><path d="M12 8v8M8 12h8"/></svg></span><h3>Operation theatre</h3><p>The hub of the centre's animal birth control programme.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3h6M10 3v6L5.2 18.6A1 1 0 0 0 6.1 20h11.8a1 1 0 0 0 .9-1.4L14 9V3"/><path d="M7.6 14h8.8"/></svg></span><h3>Laboratory</h3><p>X-ray and blood tests on site, so a diagnosis does not wait.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6.2" r="1.8"/><circle cx="14" cy="6.2" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M12 11.5c-2.8 0-4.6 3-4.6 5 0 1.4 1.1 2.4 2.4 2.4.9 0 1.4-.5 2.2-.5s1.3.5 2.2.5c1.3 0 2.4-1 2.4-2.4 0-2-1.8-5-4.6-5z"/></svg></span><h3>Animal birth control</h3><p>Sterilisation and vaccination for the city's community dogs, one of the centre's key programmes.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6M3 21h18"/></svg></span><h3>Gaushala</h3><p>A home within the centre for the cattle in its care.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 20.5V10a5 5 0 0 1 10 0v10.5"/><path d="M4 20.5h16M12 11v5M10 13h4"/></svg></span><h3>Animal cemetery</h3><p>One of the very few burial grounds for animals in Delhi.</p></li>
-    </ul>
+    <dl class="visit">
+      <div><dt>Address</dt><dd>Raja Garden, New Delhi 110027, near Shivaji College</dd></div>
+      <div><dt>Metro</dt><dd>Rajouri Garden</dd></div>
+      <div><dt>Call</dt><dd class="dots"><a href="tel:+919560802425">+91&nbsp;95608&nbsp;02425</a><a href="tel:+918882325407">+91&nbsp;88823&nbsp;25407</a></dd></div>
+      <div><dt>Map</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Sanjay+Gandhi+Animal+Care+Centre+Raja+Garden+New+Delhi" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></dd></div>
+    </dl>
   </section>
 
-  <section class="band" id="gallery">
+  <section class="band m-more m-twin" id="more">
     <div class="band__head">
-      <p class="eyebrow">Photographs</p>
-      <h2 class="display">A glimpse of the centre.</h2>
+      <p class="eyebrow">Good to know</p>
+      <h2 class="display">Open what you need.</h2>
     </div>
+    <div class="m-acc">
+      <details><summary>What happens inside?</summary><ul><li><b>Wards</b>, open 24 hours.</li><li><b>Out-patients</b>, 24 hours, with an animal ambulance at night.</li><li><b>Intensive care</b>, for large animals and small.</li><li><b>Operation theatre</b>, the hub of animal birth control.</li><li><b>Laboratory</b>, with X-ray and blood tests.</li><li><b>Sterilisation and vaccination</b> for the city's dogs.</li><li><b>Gaushala</b>, for the cattle in its care.</li><li><b>Animal cemetery</b>, one of very few in Delhi.</li></ul></details>
+      <details id="photos"><summary>Photographs</summary>
     <ul class="m-gallery" id="galleryList">
       <li><button type="button" data-full="media/site/sgacc/centre-03.jpg" data-alt="The Sanjay Gandhi Animal Care Centre"><figure class="m-ph" data-ph><img src="media/site/sgacc/centre-03.jpg" alt="The Sanjay Gandhi Animal Care Centre" loading="lazy" decoding="async" onerror="this.closest('li').classList.add('is-gone')"></figure></button></li>
       <li><button type="button" data-full="media/site/sgacc/centre-04.jpg" data-alt="At the centre"><figure class="m-ph" data-ph><img src="media/site/sgacc/centre-04.jpg" alt="At the centre" loading="lazy" decoding="async" onerror="this.closest('li').classList.add('is-gone')"></figure></button></li>
@@ -454,126 +514,16 @@ if (root.document && root.document.head) apply(read());
       <li><button type="button" data-full="media/site/sgacc/centre-10.jpg" data-alt="At the centre"><figure class="m-ph" data-ph><img src="media/site/sgacc/centre-10.jpg" alt="At the centre" loading="lazy" decoding="async" onerror="this.closest('li').classList.add('is-gone')"></figure></button></li>
     </ul>
     <p class="m-fine" id="galleryNone" hidden>The photographs of the centre are on their way to this page.</p>
+      </details>
+      <details><summary>How it began</summary><p>In 1980, Mrs Ruth Cowell of New South Wales, Australia, left a legacy to Shri Sanjay Gandhi for the care of animals. It built this centre. <a href="legacy.html">Leave a legacy</a></p></details>
+      <details><summary>Work here</summary><p>The centre is hiring vets, and welcomes visiting vets and students. <a href="careers.html#veterinary-team">See the opening</a></p></details>
+      <details><summary>Email and website</summary><p><a href="mailto:sgacc1980@gmail.com">sgacc1980@gmail.com</a> and <a href="https://www.sanjaygandhianimalcarecentre.org/" target="_blank" rel="noopener noreferrer">sanjaygandhianimalcarecentre.org</a></p></details>
+    </div>
     <dialog class="m-lb" id="lightbox" aria-label="Photograph">
       <div class="m-lb__bar"><span data-lb-cap></span><button type="button" class="pfa-close" data-lb-close>Close</button></div>
       <img src="data:," alt="">
       <div class="m-lb__nav"><button type="button" data-lb-prev>Previous</button><button type="button" data-lb-next>Next</button></div>
     </dialog>
-  </section>
-
-  <section class="band" id="help">
-    <div class="band__head">
-      <p class="eyebrow">Help the centre</p>
-      <h2 class="display">Bring supplies, or bring a group.</h2>
-      <p>Tell the centre what you have in mind and someone will reply to agree a day. To give your own time, volunteer through <a href="get-involved.html?area=sgacc#volunteer">PFA's one volunteer application</a>, with the centre already chosen.</p>
-    </div>
-    <div class="m-builder">
-      <div>
-        <ol class="m-tabs" aria-hidden="true"><li><span>01</span>How</li><li><span>02</span>What</li><li><span>03</span>You</li></ol>
-        <div class="m-bar" aria-hidden="true"><span></span></div>
-        <form class="m-form" id="sgForm" novalidate>
-          <div class="m-step" data-step="How">
-            <h3>How would you like to help?</h3>
-            <ul class="m-picks m-picks--2" data-need="offer" data-say="Choose how you would like to help.">
-              <li class="m-pick"><input type="radio" name="offer" id="o-supplies" value="Supplies for the animals"><label for="o-supplies"><b>Supplies for the animals</b><small>Food, medicines, bedding and the rest a shelter of thousands goes through</small></label></li>
-              <li class="m-pick"><input type="radio" name="offer" id="o-visit" value="A visit with a group"><label for="o-visit"><b>A visit with a group</b><small>A school, a college or a workplace, coming to see the work and learn</small></label></li>
-            </ul>
-            <p class="err" data-err-for="offer" hidden></p>
-          </div>
-
-          <div class="m-step" data-step="What">
-            <div class="offer-extra" data-for="Supplies for the animals">
-              <h3>What you could bring.</h3>
-              <ul class="m-picks" data-need="items" data-say="Choose at least one.">
-                <li class="m-pick"><input type="checkbox" name="items" id="i-food" value="Food"><label for="i-food"><b>Food</b><small>Dry food, rice, pulses</small></label></li>
-                <li class="m-pick"><input type="checkbox" name="items" id="i-med" value="Medicines and dressings"><label for="i-med"><b>Medicines and dressings</b><small>Ask first what is short</small></label></li>
-                <li class="m-pick"><input type="checkbox" name="items" id="i-bed" value="Bedding and blankets"><label for="i-bed"><b>Bedding and blankets</b><small>Old ones are welcome</small></label></li>
-                <li class="m-pick"><input type="checkbox" name="items" id="i-clean" value="Cleaning supplies"><label for="i-clean"><b>Cleaning supplies</b><small>Disinfectant, phenyl, brooms</small></label></li>
-                <li class="m-pick"><input type="checkbox" name="items" id="i-kit" value="Bowls and equipment"><label for="i-kit"><b>Bowls and equipment</b><small>Bowls, leashes, crates</small></label></li>
-                <li class="m-pick"><input type="checkbox" name="items" id="i-other" value="Something else"><label for="i-other"><b>Something else</b><small>Say what below</small></label></li>
-              </ul>
-              <p class="err" data-err-for="items" hidden></p>
-            </div>
-            <div class="offer-extra" data-for="A visit with a group">
-              <h3>Your group.</h3>
-              <div class="row">
-                <div class="field"><label for="group">School, college or workplace</label><input id="group" name="group" data-say="Name the group." placeholder="St. Mark's School, Class 9"><p class="err" hidden></p></div>
-                <div class="field"><label for="groupSize">How many people</label><input id="groupSize" name="groupSize" inputmode="numeric" placeholder="25"><p class="err" hidden></p></div>
-              </div>
-            </div>
-            <div class="field"><label for="when">When would suit you</label><input id="when" name="when" placeholder="Saturday mornings, from next month"><p class="err" hidden></p></div>
-          </div>
-
-          <div class="m-step" data-step="You">
-            <h3>Who you are.</h3>
-            <div class="row">
-              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
-              <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
-            </div>
-            <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add an email, so the centre can reply." autocomplete="email"><p class="err" hidden></p></div>
-            <div class="field"><label for="message">Anything else</label><textarea id="message" name="message" maxlength="900" placeholder="Twenty kilos of rice and some old blankets from our building."></textarea></div>
-            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>PFA and the centre may contact me about this. I will wait for their reply before I travel.</span></label>
-            <p class="err" data-err-for="consent" hidden></p>
-            <p class="status" data-form-status hidden></p>
-          </div>
-
-          <div class="m-nav">
-            <button class="back" type="button" data-back hidden>Back</button>
-            <button class="btn" type="button" data-next>Continue</button>
-            <button class="btn" type="submit" data-send hidden>Send my offer</button>
-            <span class="clock" data-clock></span>
-          </div>
-        </form>
-
-        <div class="m-done" id="done" hidden>
-          <p class="eyebrow">Received</p>
-          <p class="ref" id="doneRef"></p>
-          <p>Keep this number. Someone will reply on the contact you gave to agree a day and what to bring. Please wait for that reply before you travel.</p>
-          <div class="acts">
-            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
-            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
-          </div>
-        </div>
-      </div>
-
-      <aside class="m-aside side" aria-label="Other ways to help">
-        <div class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5V4a1.5 1.5 0 0 1 3 0v6m0-4.5a1.5 1.5 0 0 1 3 0V12m0-3a1.5 1.5 0 0 1 3 0v5.5a6.5 6.5 0 0 1-6.5 6.5h-.8a6 6 0 0 1-4.6-2.2L4.4 14.5a1.6 1.6 0 0 1 2.4-2.1L7 12.6"/></svg></span><h3>Volunteer here</h3><p>Feeding, grooming and cleaning, adoption and donation drives, social media and visitors. Apply once, through PFA's volunteer application, with the centre already chosen.</p><p class="m-card__foot"><a href="get-involved.html?area=sgacc#volunteer">Volunteer at the centre</a></p></div>
-        <div class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2.5l2.4 11h10.6L21 8H7"/></svg></span><h3>Order it online</h3><p>The centre keeps a wishlist of what it needs on Amazon. Order there and it is delivered to the centre.</p><p class="m-card__foot"><a href="https://www.amazon.in/registry/wishlist/2WYBQB9O0HFRG" target="_blank" rel="noopener noreferrer">Open the wishlist</a></p></div>
-        <div class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/></svg></span><h3>Work here</h3><p>The centre is hiring senior and junior veterinary doctors, and welcomes visiting vets and veterinary students.</p><p class="m-card__foot"><a href="careers.html#veterinary-team">See the opening</a></p></div>
-        <div class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="8" width="17" height="4"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8c-1.5-3-5-4-5-1.5S11 8 12 8zM12 8c1.5-3 5-4 5-1.5S13 8 12 8z"/></svg></span><h3>Give money</h3><p>Every donation to People for Animals is eligible for tax deduction under Section 80G.</p><p class="m-card__foot"><a href="donate.html">Donate</a></p></div>
-      </aside>
-    </div>
-  </section>
-
-  <section class="band" id="visit">
-    <div class="band__head">
-      <p class="eyebrow">Finding it</p>
-      <h2 class="display">Raja Garden, West Delhi.</h2>
-    </div>
-    <div class="m-split">
-      <dl class="visit">
-        <div><dt>Address</dt><dd>Sanjay Gandhi Animal Care Centre, Raja Garden, New Delhi 110027, near Shivaji College and the Delhi Home Guards head office</dd></div>
-        <div><dt>Metro</dt><dd>Rajouri Garden</dd></div>
-        <div><dt>Call the centre</dt><dd class="dots"><a href="tel:+919560802425">+91&nbsp;95608&nbsp;02425</a><a href="tel:+918882325407">+91&nbsp;88823&nbsp;25407</a></dd></div>
-        <div><dt>Email</dt><dd><a href="mailto:sgacc1980@gmail.com">sgacc1980@gmail.com</a></dd></div>
-        <div><dt>Its own site</dt><dd><a href="https://www.sanjaygandhianimalcarecentre.org/" target="_blank" rel="noopener noreferrer">sanjaygandhianimalcarecentre.org</a></dd></div>
-        <div><dt>Map</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Sanjay+Gandhi+Animal+Care+Centre+Raja+Garden+New+Delhi" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></dd></div>
-      </dl>
-      <figure class="m-ph" data-ph style="aspect-ratio:4/3"><img src="media/site/sgacc/centre-03.jpg" alt="The Sanjay Gandhi Animal Care Centre" loading="lazy" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Sanjay Gandhi Animal Care Centre</figcaption></figure>
-    </div>
-  </section>
-
-  <section class="band" id="legacy">
-    <div class="m-cta">
-      <div>
-        <h2 class="display">One legacy built this centre.</h2>
-        <p>Mrs Ruth Cowell never saw the thousands of animals her gift would care for. A gift in a will can still do that for the animals of tomorrow.</p>
-      </div>
-      <div class="acts">
-        <a class="btn" href="legacy.html">Leave a legacy</a>
-        <a class="btn btn--light" href="campaign.html">Plan a campaign for it</a>
-      </div>
-    </div>
   </section>
 </main>
 

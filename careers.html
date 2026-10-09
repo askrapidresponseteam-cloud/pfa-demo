@@ -89,7 +89,8 @@
   --max:1440px;
   --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
   --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
-  --band:clamp(76px,8.5vw,136px);
+  /* tighter than the long pages: a jobs board should read as one piece (owner, 9 Oct 2026: "too much blank space") */
+  --band:clamp(56px,6vw,96px);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
@@ -321,6 +322,8 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 ::selection{background:var(--pop,#ff3b18);color:#fff}
 /* ---------- the openings board (9 Oct 2026) ---------- */
 #openings .band__head,#roles .band__head{margin-bottom:clamp(28px,3vw,44px)}
+/* one gap between the board and the roles, not two (owner, 9 Oct 2026: "too much blank space") */
+#openings + #roles{padding-top:0}
 /* the form's .btn below is redefined after .btn--light, so the light one needs the pair */
 .btn.btn--light{background:#fff;color:var(--ink)}
 .btn.btn--light:hover{background:var(--ink);color:#fff}
@@ -616,21 +619,16 @@ if (root.document && root.document.head) apply(read());
 <script src="assets/field-validate.js"></script>
 
 <main>
-  <section class="hero m-hero" id="top">
+  <section class="hero m-hero m-hero--short" id="top">
     <div class="m-hero__in">
       <div class="hero__in">
         <p class="eyebrow">Careers · five openings</p>
         <h1 class="display">Work for the animals.</h1>
-        <p class="lede">In the field across nine Zones, at the Sanjay Gandhi Animal Care Centre, and at PFA's head office in New Delhi. One application, five short screens, a reference the moment it is sent, and an answer either way.</p>
+        <p class="lede">Five openings, one short application, and an answer either way.</p>
         <div class="m-hero__acts">
           <a class="btn" href="#openings">See the openings</a>
           <a class="btn btn--light" href="#apply">Apply</a>
         </div>
-        <ul class="m-hero__facts">
-          <li><b>5</b><span>openings now</span></li>
-          <li><b>9</b><span>Zones for a Zonal Head</span></li>
-          <li><b>3 weeks</b><span>to hear back, if shortlisted</span></li>
-        </ul>
       </div>
       <div class="m-hero__media">
         <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-03.jpg" alt="At the Sanjay Gandhi Animal Care Centre" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>At the Sanjay Gandhi Animal Care Centre</figcaption></figure>
@@ -641,8 +639,7 @@ if (root.document && root.document.head) apply(read());
   <section class="band" id="openings">
     <div class="band__head">
       <p class="eyebrow">Openings</p>
-      <h2 class="display">Five ways to make it your work.</h2>
-      <p>Choose where you would do it. Every role is read by a named person at PFA, and everyone who applies hears back.</p>
+      <h2 class="display">Five openings.</h2>
     </div>
     <div class="m-chips" id="jobChips" role="group" aria-label="Show openings">
       <button class="m-chip" type="button" data-filter="" aria-pressed="true">All</button>
@@ -655,42 +652,37 @@ if (root.document && root.document.head) apply(read());
       <li class="m-card job" data-kind="field">
         <span class="m-tag">In the field · nine Zones</span>
         <h3>Zonal Head</h3>
-        <p>PFA's coordinator for every Unit in a Zone: growing the network, mentoring local leadership, and making sure a cruelty complaint becomes a case that survives prosecution.</p>
-        <dl class="job__meta"><div><dt>Term</dt><dd>Two years, renewable</dd></div><div><dt>Pay</dt><dd>₹35,000 a month, plus travel</dd></div></dl>
-        <p class="m-card__foot job__acts"><a href="#zonal-head" data-show-role="zonal-head">Read the role</a><a href="#apply" data-apply="zonal-head">Apply</a></p>
+        <p>Lead PFA's Units across a Zone. ₹35,000 a month, plus travel.</p>
+        <p class="m-card__foot job__acts"><a href="#zonal-head" data-show-role="zonal-head">Read more</a><a href="#apply" data-apply="zonal-head">Apply</a></p>
       </li>
       <li class="m-card job" data-kind="vet">
         <span class="m-tag">Veterinary · New Delhi</span>
         <h3>Veterinary doctors</h3>
-        <p>Senior and junior vets, and para vets, at the Sanjay Gandhi Animal Care Centre. Treat many species, and help train the Indian vets and para vets beside you.</p>
-        <dl class="job__meta"><div><dt>Where</dt><dd>Raja Garden, New Delhi</dd></div><div><dt>Also</dt><dd>Visiting vets and students welcome</dd></div></dl>
-        <p class="m-card__foot job__acts"><a href="#veterinary-team" data-show-role="veterinary-team">Read the role</a><a href="#apply" data-apply="veterinary-team">Apply</a></p>
+        <p>Vets and para vets at the Sanjay Gandhi Animal Care Centre, Delhi.</p>
+        <p class="m-card__foot job__acts"><a href="#veterinary-team" data-show-role="veterinary-team">Read more</a><a href="#apply" data-apply="veterinary-team">Apply</a></p>
       </li>
       <li class="m-card job" data-kind="office">
         <span class="m-tag">Head office · New Delhi</span>
         <h3>Cruelty Response Coordinator</h3>
-        <p>Handle the cruelty complaints that reach PFA every day, coordinate rescues anywhere in India, and arrange treatment for animals that cannot be moved.</p>
-        <dl class="job__meta"><div><dt>Hours</dt><dd>Monday to Friday, 10 am to 5 pm</dd></div><div><dt>Needs</dt><dd>A graduate, Hindi and English</dd></div></dl>
-        <p class="m-card__foot job__acts"><a href="#cruelty-response-coordinator" data-show-role="cruelty-response-coordinator">Read the role</a><a href="#apply" data-apply="cruelty-response-coordinator">Apply</a></p>
+        <p>Handle the cruelty complaints that reach PFA every day.</p>
+        <p class="m-card__foot job__acts"><a href="#cruelty-response-coordinator" data-show-role="cruelty-response-coordinator">Read more</a><a href="#apply" data-apply="cruelty-response-coordinator">Apply</a></p>
       </li>
       <li class="m-card job" data-kind="office">
         <span class="m-tag">Head office · New Delhi</span>
         <h3>Social Media and Fundraising</h3>
-        <p>Tell more people what PFA does, and raise what the work needs: social media, CSR proposals, grants, newsletters, exhibitions and fundraisers.</p>
-        <dl class="job__meta"><div><dt>Hours</dt><dd>Monday to Friday, 10 am to 5 pm</dd></div><div><dt>Suits</dt><dd>A writer who can ask for money</dd></div></dl>
-        <p class="m-card__foot job__acts"><a href="#social-media-fundraising" data-show-role="social-media-fundraising">Read the role</a><a href="#apply" data-apply="social-media-fundraising">Apply</a></p>
+        <p>Tell PFA's story, and raise what the work needs.</p>
+        <p class="m-card__foot job__acts"><a href="#social-media-fundraising" data-show-role="social-media-fundraising">Read more</a><a href="#apply" data-apply="social-media-fundraising">Apply</a></p>
       </li>
       <li class="m-card job" data-kind="intern">
         <span class="m-tag">Internship · New Delhi</span>
         <h3>Internship</h3>
-        <p>Research, writing and campaigns beside the people who run PFA. Interns are one of the pillars of the organisation.</p>
-        <dl class="job__meta"><div><dt>Hours</dt><dd>10 am to 5 pm, five days a week</dd></div><div><dt>Certificate</dt><dd>After 25 working days</dd></div></dl>
-        <p class="m-card__foot job__acts"><a href="#internship" data-show-role="internship">Read the role</a><a href="#apply" data-apply="internship">Apply</a></p>
+        <p>Research, writing and campaigns. A certificate after 25 days.</p>
+        <p class="m-card__foot job__acts"><a href="#internship" data-show-role="internship">Read more</a><a href="#apply" data-apply="internship">Apply</a></p>
       </li>
       <li class="m-card job job--more" data-kind="">
         <span class="m-tag">Not a job, still the work</span>
         <h3>Volunteer instead</h3>
-        <p>Give a few hours a week to the animals, at the Sanjay Gandhi Animal Care Centre or in another area of PFA's work. One short application, for all of them.</p>
+        <p>Give a few hours a week, at the centre or elsewhere.</p>
         <p class="m-card__foot job__acts"><a href="get-involved.html#volunteer">Volunteer with PFA</a></p>
       </li>
     </ul>
@@ -699,7 +691,7 @@ if (root.document && root.document.head) apply(read());
   <section class="band" id="roles">
     <div class="band__head">
       <p class="eyebrow">The roles</p>
-      <h2 class="display">Read the role.</h2>
+      <h2 class="display">One role at a time.</h2>
     </div>
     <div class="m-chips roletabs" id="roleTabs" role="group" aria-label="Choose a role to read" hidden>
       <button class="m-chip" type="button" data-role="zonal-head" aria-pressed="true">Zonal Head</button>
@@ -714,7 +706,6 @@ if (root.document && root.document.head) apply(read());
       <p class="eyebrow">In the field · nine Zones</p>
       <h2>Zonal Head</h2>
       <ul class="facts">
-        <li><span>Title</span><span>Zonal Head</span></li>
         <li><span>Where</span><span>Based in the assigned PFA Zone; extensive travel across its States and districts</span></li>
         <li><span>Term</span><span>Two years, renewable</span></li>
         <li><span>Pay</span><span>₹35,000 per month, plus travel</span></li>
@@ -724,11 +715,9 @@ if (root.document && root.document.head) apply(read());
       <a class="go" href="#apply" data-apply="zonal-head">Apply for this role <small>Five short screens.</small></a>
     </div>
     <div class="jd">
-      <p class="lead">People For Animals is India's largest animal welfare organisation, working through a nationwide network of independently registered Units: rescue, shelter and adoption, animal birth control and anti-rabies programmes, cruelty complaints and prosecution, enforcement of animal protection laws, and engagement with government on policy.</p>
-      <p>The Zonal Head is PFA's designated coordinator for all recognised and proposed Units within the assigned Zone. It is a field-based, enforcement- and movement-building role: growing PFA's presence across the Zone, building and mentoring local leadership and volunteers, ensuring an effective animal welfare and enforcement response on the ground, and coordinating with police, veterinary and civic authorities. Each Unit remains independently registered and self-governing; the Zonal Head coordinates and supports them and carries directions from the Principal Organisation.</p>
-
-      <h3>The nine Zones</h3>
-      <ul>
+      <details><summary>About the role</summary><p class="lead">People For Animals is India's largest animal welfare organisation, working through a nationwide network of independently registered Units: rescue, shelter and adoption, animal birth control and anti-rabies programmes, cruelty complaints and prosecution, enforcement of animal protection laws, and engagement with government on policy.</p>
+      <p>The Zonal Head is PFA's designated coordinator for all recognised and proposed Units within the assigned Zone. It is a field-based, enforcement- and movement-building role: growing PFA's presence across the Zone, building and mentoring local leadership and volunteers, ensuring an effective animal welfare and enforcement response on the ground, and coordinating with police, veterinary and civic authorities. Each Unit remains independently registered and self-governing; the Zonal Head coordinates and supports them and carries directions from the Principal Organisation.</p></details>
+      <details><summary>The nine Zones</summary><ul>
         <li><b>North North</b>: Ladakh, Jammu &amp; Kashmir</li>
         <li><b>North</b>: Himachal Pradesh, Punjab, Haryana, Chandigarh</li>
         <li><b>Central 1</b>: Uttar Pradesh</li>
@@ -738,10 +727,9 @@ if (root.document && root.document.head) apply(read());
         <li><b>West</b>: Gujarat, Rajasthan, Maharashtra, Goa, Daman and Diu</li>
         <li><b>South</b>: Andhra Pradesh, Telangana</li>
         <li><b>South South</b>: Kerala, Tamil Nadu, Karnataka</li>
-      </ul>
-
-      <h3>What the work is</h3>
-      <details open><summary>Network and leadership</summary><p>Map the Zone State-wise and district-wise, identify gaps in PFA presence, support new and existing Units, and identify, recommend and mentor local leadership for District and State Units. Build a pipeline of active workers so that no district is left without a first responder. Make PFA Units in each district.</p></details>
+      </ul></details>
+      
+      <details><summary>Network and leadership</summary><p>Map the Zone State-wise and district-wise, identify gaps in PFA presence, support new and existing Units, and identify, recommend and mentor local leadership for District and State Units. Build a pipeline of active workers so that no district is left without a first responder. Make PFA Units in each district.</p></details>
       <details><summary>Coordination</summary><p>Coordinate with State Coordinators and District Heads, convene review meetings, resolve inter-Unit disputes, and ensure directions from the Principal Organisation are carried out.</p></details>
       <details><summary>Animal welfare and enforcement response</summary><p>Prompt, documented action on cruelty, abandonment, injury and neglect complaints:</p><ul>
         <li>Guide Units in registering complaints and FIRs and in invoking the strongest available provisions.</li>
@@ -796,24 +784,21 @@ if (root.document && root.document.head) apply(read());
         <a class="go" href="#apply" data-apply="veterinary-team">Apply for this role <small>Five short screens.</small></a>
       </div>
       <div class="jd">
-        <p class="lead">The Sanjay Gandhi Animal Care Centre is PFA's flagship in Delhi: an animal hospital and shelter in one, caring for more than three thousand animals at any one time, round the clock.</p>
-        <p>It treats every kind of animal the city brings to its gate, from community dogs and cats to cattle, horses, donkeys and birds. A vet here sees in a month what many see in a year, and helps train the Indian vets and para vets who work alongside.</p>
-        <h3>What the work is</h3>
-        <ul>
+        <details><summary>About the role</summary><p class="lead">The Sanjay Gandhi Animal Care Centre is PFA's flagship in Delhi: an animal hospital and shelter in one, caring for more than three thousand animals at any one time, round the clock.</p>
+        <p>It treats every kind of animal the city brings to its gate, from community dogs and cats to cattle, horses, donkeys and birds. A vet here sees in a month what many see in a year, and helps train the Indian vets and para vets who work alongside.</p></details>
+        <details><summary>What the work is</summary><ul>
           <li>Treat in-patients in the wards and out-patients at the gate, across many species.</li>
           <li>Surgery in the centre's operation theatre, including the animal birth control programme for the city's community dogs.</li>
           <li>Intensive care for large animals and small ones, with X-ray and blood tests on site.</li>
           <li>Teach: share what you know with the centre's vets, para vets and students.</li>
-        </ul>
-        <h3>Who it suits</h3>
-        <ul>
+        </ul></details>
+        <details><summary>Who it suits</summary><ul>
           <li>A qualified veterinarian, for the senior and junior posts; a trained para vet for the para vet post.</li>
           <li>Students and visiting vets who want hands-on experience across species, as volunteers.</li>
           <li>Anyone who can stay calm with a frightened animal, and kind with a frightened owner.</li>
         </ul>
-        <p>See the centre: <a href="sgacc.html">Sanjay Gandhi Animal Care Centre</a>.</p>
-      </div>
-    </article>
+        <p>See the centre: <a href="sgacc.html">Sanjay Gandhi Animal Care Centre</a>.</p></details>
+      </div></article>
 
     <article class="opening role" id="cruelty-response-coordinator" data-role="cruelty-response-coordinator">
       <div>
@@ -828,22 +813,19 @@ if (root.document && root.document.head) apply(read());
         <a class="go" href="#apply" data-apply="cruelty-response-coordinator">Apply for this role <small>Five short screens.</small></a>
       </div>
       <div class="jd">
-        <p class="lead">PFA receives cruelty complaints every day, from every part of India. This is the person who makes sure each one is answered, and that something happens for the animal.</p>
-        <h3>What the work is</h3>
-        <ul>
+        <details><summary>About the role</summary><p class="lead">PFA receives cruelty complaints every day, from every part of India. This is the person who makes sure each one is answered, and that something happens for the animal.</p></details>
+        <details><summary>What the work is</summary><ul>
           <li>Handle complaints about resident welfare associations harassing feeders and pet owners: what the law says, who to write to, and how to keep the peace.</li>
           <li>Coordinate rescues across India, with the nearest PFA Unit, volunteers, police and local authorities.</li>
           <li>Arrange treatment on the spot for animals that cannot be moved.</li>
           <li>Keep a record of every complaint and follow it until it is resolved.</li>
-        </ul>
-        <h3>Who it suits</h3>
-        <ul>
+        </ul></details>
+        <details><summary>Who it suits</summary><ul>
           <li>Someone who stays steady on the phone with a person in distress, and firm with an official who would rather not act.</li>
           <li>Organised enough that no complaint is forgotten.</li>
         </ul>
-        <p>Learn what the law says first: <a href="laws.html">the animal welfare law, explained</a>.</p>
-      </div>
-    </article>
+        <p>Learn what the law says first: <a href="laws.html">the animal welfare law, explained</a>.</p></details>
+      </div></article>
 
     <article class="opening role" id="social-media-fundraising" data-role="social-media-fundraising">
       <div>
@@ -857,9 +839,8 @@ if (root.document && root.document.head) apply(read());
         <a class="go" href="#apply" data-apply="social-media-fundraising">Apply for this role <small>Five short screens.</small></a>
       </div>
       <div class="jd">
-        <p class="lead">PFA needs someone who can tell more and more people about animal welfare, and raise what the work needs to grow.</p>
-        <h3>What the work is</h3>
-        <ul>
+        <details><summary>About the role</summary><p class="lead">PFA needs someone who can tell more and more people about animal welfare, and raise what the work needs to grow.</p></details>
+        <details><summary>What the work is</summary><ul>
           <li>Run PFA's social media: posts, films and campaigns that move people to act.</li>
           <li>Meet companies about their CSR, and write the proposals.</li>
           <li>Write to embassies, and send proposals to philanthropic institutions abroad.</li>
@@ -867,9 +848,8 @@ if (root.document && root.document.head) apply(read());
           <li>Send PFA's newsletters to its supporters.</li>
           <li>Organise exhibitions and fundraisers.</li>
         </ul>
-        <p>See how companies can work with PFA: <a href="csr.html">CSR partnerships</a>.</p>
-      </div>
-    </article>
+        <p>See how companies can work with PFA: <a href="csr.html">CSR partnerships</a>.</p></details>
+      </div></article>
 
     <article class="opening role" id="internship" data-role="internship">
       <div>
@@ -883,32 +863,29 @@ if (root.document && root.document.head) apply(read());
         <a class="go" href="#apply" data-apply="internship">Apply for this role <small>Five short screens.</small></a>
       </div>
       <div class="jd">
-        <p class="lead">Interns are one of the pillars of PFA. The work is real, and it goes out under PFA's name.</p>
-        <h3>What the work is</h3>
-        <ul>
+        <details><summary>About the role</summary><p class="lead">Interns are one of the pillars of PFA. The work is real, and it goes out under PFA's name.</p></details>
+        <details><summary>What the work is</summary><ul>
           <li>Research for columns and articles.</li>
           <li>Writing scripts for films.</li>
           <li>Keeping PFA's social media up to date.</li>
           <li>Research for pamphlets, and work on books.</li>
           <li>Calling supporters to raise donations.</li>
         </ul>
-        <p>Students who would rather start something on their own campus: <a href="campus.html">PFA Campus</a>.</p>
-      </div>
-    </article>
+        <p>Students who would rather start something on their own campus: <a href="campus.html">PFA Campus</a>.</p></details>
+      </div></article>
   </section>
 
   <section class="apply" id="apply">
     <div class="apply__in">
       <div class="aside">
         <h2>Apply in five short screens.</h2>
-        <p>No cover letter, no account. The role, who you are, you and PFA, and two questions the job asks every week. Your answers are what a named person at PFA reads first.</p>
+        <p>No cover letter, no account.</p>
         <div class="m-live" id="applyCard">
           <p class="m-live__top"><span>Applying for</span><img src="img/mail/logo-mark.png" alt="" width="34" height="30"></p>
           <h4 id="applyRole">Choose a role</h4>
           <p id="applyWhere" class="is-empty">The role, the place and the questions follow your choice.</p>
         </div>
-        <p>You get a reference the moment it is sent. Shortlisted candidates are called within three weeks; everyone hears back either way.</p>
-        <p>PFA hires on ability and does not discriminate on caste, religion, gender, disability or anything else that is not the work.</p>
+        <p>Everyone hears back. PFA hires on ability alone.</p>
       </div>
 
       <form class="form" id="jobForm" novalidate>

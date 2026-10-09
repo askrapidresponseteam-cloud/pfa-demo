@@ -63,10 +63,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>CSR partnerships | People for Animals</title>
-<meta name="description" content="Fund animal welfare through your company's CSR: twelve programmes PFA can build with you, how a partnership works, and a quick way to start one.">
+<meta name="description" content="Fund animal welfare through your company's CSR: pick where it should go, and PFA replies with a plan.">
 <link rel="stylesheet" href="assets/chrome.css?v=cafe4128cd">
 <style>
-/* CSR partnerships (owner, 9 Oct 2026: a microsite for CSR). The twelve programmes are the old site's own list of what an animal-friendly CSR could include; Schedule VII (iv) of the Companies Act, 2013 names animal welfare among the activities CSR may fund. */
+/* CSR partnerships. Owner, 9 Oct 2026: "keep things super concise- like for csr. show things one after another in stages ... show more only when one shows interest. have things under plus". A short hero, the brief one question at a time (where, what, budget, you), and the rest under plus signs. The twelve programmes are the old site's own list; Schedule VII (iv) of the Companies Act, 2013 names animal welfare. */
 :root{
   --paper:#fff;
   --ink:#111;
@@ -128,13 +128,7 @@ input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit
 }
 
 /* ---------- this page ---------- */
-.prog .m-card{padding-bottom:24px}
-.prog__add{align-self:flex-start;margin-top:auto;min-height:40px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
-.prog__add[aria-pressed="true"]{background:var(--ink);color:#fff}
-.prog__add[aria-pressed="true"]::before{content:"\2713\00a0"}
-.prog .m-tag{margin-top:2px}
-.brief__company{font-family:var(--display);font-size:clamp(22px,2vw,30px);text-transform:uppercase;line-height:1.05;margin:0;overflow-wrap:anywhere}
-.m-picks--compact label{padding:12px 14px}
+/* nothing of its own: the kit carries the page */
 .m-picks--compact b{font-size:13px}
 /* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
 @media (max-width:700px),(pointer:coarse){
@@ -154,7 +148,7 @@ input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit
   <meta property="og:locale" content="en_IN">
   <meta property="og:type" content="article">
   <meta property="og:title" content="CSR partnerships">
-  <meta property="og:description" content="Fund animal welfare through your company's CSR: twelve programmes PFA can build with you, how a partnership works, and a quick way to start one.">
+  <meta property="og:description" content="Fund animal welfare through your company's CSR: pick where it should go, and PFA replies with a plan.">
   <meta property="og:url" content="https://peopleforanimalsindia.org/csr">
   <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <meta property="og:image:width" content="1200">
@@ -163,7 +157,7 @@ input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@pfaindia">
   <meta name="twitter:title" content="CSR partnerships">
-  <meta name="twitter:description" content="Fund animal welfare through your company's CSR: twelve programmes PFA can build with you, how a partnership works, and a quick way to start one.">
+  <meta name="twitter:description" content="Fund animal welfare through your company's CSR: pick where it should go, and PFA replies with a plan.">
   <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"CSR partnerships","item":"https://peopleforanimalsindia.org/csr"}]}</script>
   <!-- seo:end -->
@@ -391,21 +385,15 @@ if (root.document && root.document.head) apply(read());
 <script src="assets/field-validate.js"></script>
 
 <main>
-  <section class="hero m-hero" id="top">
+  <section class="hero m-hero m-hero--short" id="top">
     <div class="m-hero__in">
       <div>
-        <p class="eyebrow">Corporate partnerships</p>
-        <h1 class="display">CSR that reaches the animals.</h1>
-        <p class="lede">Animal welfare is named in Schedule VII of the Companies Act, 2013, among the activities a company's CSR can fund. Here are twelve programmes PFA can build with a company, each one meant to leave something standing: a town where dogs are sterilised, a rescue centre, a vet trained for a village.</p>
+        <p class="eyebrow">CSR partnerships</p>
+        <h1 class="display">Fund work that lasts.</h1>
+        <p class="lede">Tell us where your CSR should go. PFA replies with a plan.</p>
         <div class="m-hero__acts">
-          <a class="btn" href="#shape">Shape a partnership</a>
-          <a class="btn btn--light" href="#programmes">See the programmes</a>
+          <a class="btn" href="#start">Start</a>
         </div>
-        <ul class="m-hero__facts">
-          <li><b>Item (iv)</b><span>of Schedule VII names animal welfare</span></li>
-          <li><b>12</b><span>programmes to choose from</span></li>
-          <li><b>4 steps</b><span>from a first note to an agreed plan</span></li>
-        </ul>
       </div>
       <div class="m-hero__media">
         <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-04.jpg" alt="An animal in care at the Sanjay Gandhi Animal Care Centre" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Sanjay Gandhi Animal Care Centre, Delhi</figcaption></figure>
@@ -413,191 +401,117 @@ if (root.document && root.document.head) apply(read());
     </div>
   </section>
 
-  <section class="band" id="programmes">
+  <section class="band m-twin" id="start">
     <div class="band__head">
-      <p class="eyebrow">Programmes</p>
-      <h2 class="display">Twelve programmes, each built to last.</h2>
-      <p>Filter by where the work happens. Add the ones your company would consider; they go straight into the brief below.</p>
+      <p class="eyebrow">Your brief</p>
+      <h2 class="display">Four quick steps.</h2>
     </div>
-    <div class="m-chips" id="progChips" role="group" aria-label="Show programmes">
-      <button class="m-chip" type="button" data-filter="">All</button>
-      <button class="m-chip" type="button" data-filter="rural">Villages and farms</button>
-      <button class="m-chip" type="button" data-filter="towns">Towns and cities</button>
-      <button class="m-chip" type="button" data-filter="wild">Wildlife</button>
-      <button class="m-chip" type="button" data-filter="disaster">Disasters</button>
-      <button class="m-chip" type="button" data-filter="learning">Training and teaching</button>
-    </div>
-    <ul class="m-grid m-grid--4 prog">
-      <li class="m-card" data-kind="rural"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/></svg></span><span class="m-tag">Villages and farms</span><h3>Rural animal hospitals</h3><p>Build or run a hospital for farm animals in a district where none is within reach.</p><button class="prog__add" type="button" data-prog="Rural animal hospitals" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="rural learning"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></svg></span><span class="m-tag">Villages and farms</span><h3>Village veterinary compounders</h3><p>Train young people as veterinary compounders who go back to work in their own villages.</p><button class="prog__add" type="button" data-prog="Village veterinary compounders" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="rural learning"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15z"/><path d="M5 19l8-8"/></svg></span><span class="m-tag">Villages and farms</span><h3>Organic farming workshops</h3><p>Teach farmers organic methods that keep their animals, their soil and their water healthy.</p><button class="prog__add" type="button" data-prog="Organic farming workshops" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="rural towns"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.6"/><path d="M12 4v6.4M12 13.6V20M4 12h6.4M13.6 12H20"/></svg></span><span class="m-tag">Working animals</span><h3>Better carts</h3><p>Redesign animal carts so the oxen that pull them stop suffering neck injuries.</p><button class="prog__add" type="button" data-prog="Better carts for working animals" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="towns"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6.2" r="1.8"/><circle cx="14" cy="6.2" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M12 11.5c-2.8 0-4.6 3-4.6 5 0 1.4 1.1 2.4 2.4 2.4.9 0 1.4-.5 2.2-.5s1.3.5 2.2.5c1.3 0 2.4-1 2.4-2.4 0-2-1.8-5-4.6-5z"/></svg></span><span class="m-tag">Towns and cities</span><h3>Sterilisation for a town</h3><p>Fund dog sterilisation and vaccination in smaller towns, bringing down rabies and bites humanely.</p><button class="prog__add" type="button" data-prog="Sterilisation for a town" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="towns"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21V9h6v12M9 21V4h8v17M17 21v-9h4v9M2 21h20"/><path d="M12 8h2M12 12h2M12 16h2"/></svg></span><span class="m-tag">Towns and cities</span><h3>A shelter for a city</h3><p>One shelter and treatment centre for a city that has none, to care for its animals.</p><button class="prog__add" type="button" data-prog="A shelter for a city" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21v-6"/><path d="M12 15c-4 0-7-2.4-7-5.6C5 6 8 3 12 3s7 3 7 6.4C19 12.6 16 15 12 15z"/><circle cx="9.5" cy="9" r=".6"/><circle cx="14" cy="10.5" r=".6"/><circle cx="12" cy="7" r=".6"/></svg></span><span class="m-tag">Wildlife</span><h3>Fruit trees by the forest</h3><p>Plant fruit trees along forest edges, so monkeys find food there instead of coming into towns.</p><button class="prog__add" type="button" data-prog="Fruit trees by the forest" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 4C11 4 6 9 6 18l-2 2"/><path d="M6 18c9 0 14-5 14-14M9 15h6M11 12h6"/></svg></span><span class="m-tag">Wildlife</span><h3>Wildlife rescue centres</h3><p>Rescue and care centres for elephants, injured birds and leopards, and campaigns for species in trouble, like the sparrow.</p><button class="prog__add" type="button" data-prog="Wildlife rescue centres" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M2 19c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M9 9.5a3 3 0 0 1 6 0"/><path d="M8 9.5h8"/></svg></span><span class="m-tag">Wildlife</span><h3>Turtle nesting sites</h3><p>Protect the beaches where turtles nest, and with them the rivers and the coast.</p><button class="prog__add" type="button" data-prog="Turtle nesting sites" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="m-tag">Wildlife</span><h3>Stopping poachers</h3><p>Fund the units that catch wildlife poachers and the people who trade in what they take.</p><button class="prog__add" type="button" data-prog="Units against poaching" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="disaster"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 16a4.5 4.5 0 1 1 .9-8.9A6 6 0 0 1 19 9a3.5 3.5 0 0 1 0 7z"/><path d="M8 19l-1 2M12 19l-1 2M16 19l-1 2"/></svg></span><span class="m-tag">Disasters</span><h3>Floods and cyclones</h3><p>Fund the rescue and care of animals when floods and cyclones strike, when they are the last to be thought of.</p><button class="prog__add" type="button" data-prog="Rescue in floods and cyclones" aria-pressed="false">Add to the brief</button></li>
-      <li class="m-card" data-kind="learning"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></svg></span><span class="m-tag">Training and teaching</span><h3>Veterinary teaching</h3><p>Veterinary teaching that covers wildlife, zoo animals, birds and small animals, not only livestock.</p><button class="prog__add" type="button" data-prog="Veterinary teaching for every animal" aria-pressed="false">Add to the brief</button></li>
-    </ul>
-  </section>
+    <div class="m-stage">
+      <ol class="m-tabs" aria-hidden="true"><li><span>01</span>Where</li><li><span>02</span>What</li><li><span>03</span>Budget</li><li><span>04</span>You</li></ol>
+      <div class="m-bar" aria-hidden="true"><span></span></div>
+      <form class="m-form" id="csrForm" novalidate>
+        <div class="m-step" data-step="Where">
+          <h3>Where should it go?</h3>
+          <p class="ask">Pick one or more.</p>
+          <ul class="m-picks m-picks--compact" data-need="area" data-say="Pick at least one.">
+            <li class="m-pick"><input type="checkbox" name="area" id="a-rural" value="rural"><label for="a-rural"><b>Villages and farms</b></label></li>
+            <li class="m-pick"><input type="checkbox" name="area" id="a-towns" value="towns"><label for="a-towns"><b>Towns and cities</b></label></li>
+            <li class="m-pick"><input type="checkbox" name="area" id="a-wild" value="wild"><label for="a-wild"><b>Wildlife</b></label></li>
+            <li class="m-pick"><input type="checkbox" name="area" id="a-disaster" value="disaster"><label for="a-disaster"><b>Disasters</b></label></li>
+            <li class="m-pick"><input type="checkbox" name="area" id="a-learning" value="learning"><label for="a-learning"><b>Training and teaching</b></label></li>
+            <li class="m-pick"><input type="checkbox" name="area" id="a-open" value="open"><label for="a-open"><b>Not sure yet</b></label></li>
+          </ul>
+          <p class="err" data-err-for="area" hidden></p>
+        </div>
 
-  <section class="band" id="why">
-    <div class="band__head">
-      <p class="eyebrow">Why animal welfare</p>
-      <h2 class="display">A cause that reaches every community.</h2>
-    </div>
-    <ul class="m-grid">
-      <li class="m-card"><span class="m-card__no">01</span><h3>It is in the law</h3><p>Schedule VII of the Companies Act, 2013 lists animal welfare among the activities CSR may fund, beside environmental sustainability and the protection of flora and fauna.</p></li>
-      <li class="m-card"><span class="m-card__no">02</span><h3>It touches every life</h3><p>Rabies, road safety, livelihoods that depend on working and farm animals, and the health of rivers and forests all run through how animals are treated.</p></li>
-      <li class="m-card"><span class="m-card__no">03</span><h3>You can see it</h3><p>A sterilised town, a rescue centre, a trained vet: work your people can visit, and outcomes your board can read.</p></li>
-    </ul>
-  </section>
+        <div class="m-step" data-step="What">
+          <h3>Which programmes?</h3>
+          <p class="ask">From the areas you picked.</p>
+          <ul class="m-picks m-picks--2" data-need="focus" data-say="Pick at least one.">
+            <li class="m-pick" data-area="rural"><input type="checkbox" name="focus" id="p1" value="Rural animal hospitals"><label for="p1"><b>Rural animal hospitals</b><small>Care for farm animals where there is none</small></label></li>
+            <li class="m-pick" data-area="rural learning"><input type="checkbox" name="focus" id="p2" value="Village veterinary compounders"><label for="p2"><b>Village vet compounders</b><small>Train young people for their own villages</small></label></li>
+            <li class="m-pick" data-area="rural learning"><input type="checkbox" name="focus" id="p3" value="Organic farming workshops"><label for="p3"><b>Organic farming</b><small>Healthier animals, soil and water</small></label></li>
+            <li class="m-pick" data-area="rural towns"><input type="checkbox" name="focus" id="p4" value="Better carts for working animals"><label for="p4"><b>Better carts</b><small>No more neck injuries for oxen</small></label></li>
+            <li class="m-pick" data-area="towns"><input type="checkbox" name="focus" id="p5" value="Sterilisation for a town"><label for="p5"><b>Sterilisation for a town</b><small>Fewer bites, less rabies, humanely</small></label></li>
+            <li class="m-pick" data-area="towns"><input type="checkbox" name="focus" id="p6" value="A shelter for a city"><label for="p6"><b>A shelter for a city</b><small>For a city that has none</small></label></li>
+            <li class="m-pick" data-area="wild"><input type="checkbox" name="focus" id="p7" value="Fruit trees by the forest"><label for="p7"><b>Fruit trees by the forest</b><small>Food for monkeys, away from towns</small></label></li>
+            <li class="m-pick" data-area="wild"><input type="checkbox" name="focus" id="p8" value="Wildlife rescue centres"><label for="p8"><b>Wildlife rescue centres</b><small>Elephants, birds, leopards</small></label></li>
+            <li class="m-pick" data-area="wild"><input type="checkbox" name="focus" id="p9" value="Turtle nesting sites"><label for="p9"><b>Turtle nesting sites</b><small>Safe beaches and coasts</small></label></li>
+            <li class="m-pick" data-area="wild"><input type="checkbox" name="focus" id="p10" value="Units against poaching"><label for="p10"><b>Stopping poachers</b><small>Catch poachers and traders</small></label></li>
+            <li class="m-pick" data-area="disaster"><input type="checkbox" name="focus" id="p11" value="Rescue in floods and cyclones"><label for="p11"><b>Floods and cyclones</b><small>Rescue and care when disaster strikes</small></label></li>
+            <li class="m-pick" data-area="learning"><input type="checkbox" name="focus" id="p12" value="Veterinary teaching for every animal"><label for="p12"><b>Veterinary teaching</b><small>Wildlife, birds and small animals too</small></label></li>
+            <li class="m-pick" data-area="all"><input type="checkbox" name="focus" id="p13" value="Open to PFA's suggestion"><label for="p13"><b>Suggest one for us</b><small>PFA proposes what fits</small></label></li>
+          </ul>
+          <p class="err" data-err-for="focus" hidden></p>
+        </div>
 
-  <section class="band" id="how">
-    <div class="band__head">
-      <p class="eyebrow">How it works</p>
-      <h2 class="display">From a first note to an agreed plan.</h2>
-    </div>
-    <ol class="m-path">
-      <li><b>Send a brief</b><span>The areas you would fund, the shape and the budget, in the form below. Two minutes.</span></li>
-      <li><b>Talk it through</b><span>A named person at PFA writes back to understand what your company wants the money to change.</span></li>
-      <li><b>Agree a plan</b><span>A plan with its costs, its place and what it will achieve, for your CSR committee to approve.</span></li>
-      <li><b>See it happen</b><span>The work, reported against what you agreed to track, and open to your people to visit.</span></li>
-    </ol>
-  </section>
-
-  <section class="band" id="shape">
-    <div class="band__head">
-      <p class="eyebrow">Shape a partnership</p>
-      <h2 class="display">Your brief, in three screens.</h2>
-      <p>The card beside the form is the brief PFA will read. Nothing here commits your company to anything.</p>
-    </div>
-    <div class="m-builder">
-      <div>
-        <ol class="m-tabs" aria-hidden="true"><li><span>01</span>Areas</li><li><span>02</span>Shape</li><li><span>03</span>Company</li></ol>
-        <div class="m-bar" aria-hidden="true"><span></span></div>
-        <form class="m-form" id="csrForm" novalidate>
-          <div class="m-step" data-step="Areas">
-            <h3>What would you fund?</h3>
-            <p class="ask">As many as you like.</p>
-            <ul class="m-picks m-picks--compact" data-need="focus" data-say="Choose at least one area your company would fund.">
-              <li class="m-pick"><input type="checkbox" name="focus" id="p1" value="Rural animal hospitals"><label for="p1"><b>Rural animal hospitals</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p2" value="Village veterinary compounders"><label for="p2"><b>Village vet compounders</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p3" value="Organic farming workshops"><label for="p3"><b>Organic farming</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p4" value="Better carts for working animals"><label for="p4"><b>Better carts</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p5" value="Sterilisation for a town"><label for="p5"><b>Sterilisation for a town</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p6" value="A shelter for a city"><label for="p6"><b>A shelter for a city</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p7" value="Fruit trees by the forest"><label for="p7"><b>Fruit trees by the forest</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p8" value="Wildlife rescue centres"><label for="p8"><b>Wildlife rescue centres</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p9" value="Turtle nesting sites"><label for="p9"><b>Turtle nesting sites</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p10" value="Units against poaching"><label for="p10"><b>Stopping poachers</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p11" value="Rescue in floods and cyclones"><label for="p11"><b>Floods and cyclones</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p12" value="Veterinary teaching for every animal"><label for="p12"><b>Veterinary teaching</b></label></li>
-              <li class="m-pick"><input type="checkbox" name="focus" id="p13" value="Open to PFA's suggestion"><label for="p13"><b>Open to suggestion</b></label></li>
+        <div class="m-step" data-step="Budget">
+          <h3>Roughly how much?</h3>
+          <ul class="m-picks m-picks--compact">
+            <li class="m-pick"><input type="radio" name="budget" id="b1" value="Under ₹10 lakh"><label for="b1"><b>Under ₹10 lakh</b></label></li>
+            <li class="m-pick"><input type="radio" name="budget" id="b2" value="₹10 lakh to ₹50 lakh"><label for="b2"><b>₹10 to 50 lakh</b></label></li>
+            <li class="m-pick"><input type="radio" name="budget" id="b3" value="₹50 lakh to ₹1 crore"><label for="b3"><b>₹50 lakh to 1 crore</b></label></li>
+            <li class="m-pick"><input type="radio" name="budget" id="b4" value="Above ₹1 crore"><label for="b4"><b>Above ₹1 crore</b></label></li>
+            <li class="m-pick"><input type="radio" name="budget" id="b5" value="Not decided yet" checked><label for="b5"><b>Not decided</b></label></li>
+          </ul>
+          <div class="field">
+            <label>For how long?</label>
+            <ul class="m-picks m-picks--4 m-picks--compact">
+              <li class="m-pick"><input type="radio" name="span" id="s1" value="A single project"><label for="s1"><b>One project</b></label></li>
+              <li class="m-pick"><input type="radio" name="span" id="s2" value="One year"><label for="s2"><b>One year</b></label></li>
+              <li class="m-pick"><input type="radio" name="span" id="s3" value="Two to three years"><label for="s3"><b>2 to 3 years</b></label></li>
+              <li class="m-pick"><input type="radio" name="span" id="s4" value="Not decided yet" checked><label for="s4"><b>Not decided</b></label></li>
             </ul>
-            <p class="err" data-err-for="focus" hidden></p>
           </div>
+        </div>
 
-          <div class="m-step" data-step="Shape">
-            <h3>The shape of it.</h3>
-            <div class="field">
-              <label>Ways to work together</label>
-              <ul class="m-picks m-picks--2 m-picks--compact">
-                <li class="m-pick"><input type="checkbox" name="ways" id="w1" value="Fund a programme"><label for="w1"><b>Fund a programme</b></label></li>
-                <li class="m-pick"><input type="checkbox" name="ways" id="w2" value="Employee volunteering"><label for="w2"><b>Employee volunteering</b></label></li>
-                <li class="m-pick"><input type="checkbox" name="ways" id="w3" value="Supplies in kind"><label for="w3"><b>Supplies in kind</b></label></li>
-                <li class="m-pick"><input type="checkbox" name="ways" id="w4" value="A cause campaign with customers"><label for="w4"><b>A campaign with customers</b></label></li>
-              </ul>
-            </div>
-            <div class="field">
-              <label>Budget for the year</label>
-              <ul class="m-picks m-picks--compact">
-                <li class="m-pick"><input type="radio" name="budget" id="b1" value="Under ₹10 lakh"><label for="b1"><b>Under ₹10 lakh</b></label></li>
-                <li class="m-pick"><input type="radio" name="budget" id="b2" value="₹10 lakh to ₹50 lakh"><label for="b2"><b>₹10 to 50 lakh</b></label></li>
-                <li class="m-pick"><input type="radio" name="budget" id="b3" value="₹50 lakh to ₹1 crore"><label for="b3"><b>₹50 lakh to 1 crore</b></label></li>
-                <li class="m-pick"><input type="radio" name="budget" id="b4" value="Above ₹1 crore"><label for="b4"><b>Above ₹1 crore</b></label></li>
-                <li class="m-pick"><input type="radio" name="budget" id="b5" value="Not decided yet" checked><label for="b5"><b>Not decided yet</b></label></li>
-              </ul>
-            </div>
-            <div class="field">
-              <label>Over</label>
-              <ul class="m-picks m-picks--4 m-picks--compact">
-                <li class="m-pick"><input type="radio" name="span" id="s1" value="A single project"><label for="s1"><b>One project</b></label></li>
-                <li class="m-pick"><input type="radio" name="span" id="s2" value="One year"><label for="s2"><b>One year</b></label></li>
-                <li class="m-pick"><input type="radio" name="span" id="s3" value="Two to three years"><label for="s3"><b>Two to three years</b></label></li>
-                <li class="m-pick"><input type="radio" name="span" id="s4" value="Not decided yet" checked><label for="s4"><b>Not decided</b></label></li>
-              </ul>
-            </div>
+        <div class="m-step" data-step="You">
+          <h3>Who should we write to?</h3>
+          <div class="row">
+            <div class="field"><label for="company">Company</label><input id="company" name="company" required data-say="Add the company's name." autocomplete="organization"><p class="err" hidden></p></div>
+            <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
           </div>
+          <div class="row">
+            <div class="field"><label for="email">Work email</label><input id="email" name="email" type="email" required data-say="Add a work email." autocomplete="email"><p class="err" hidden></p></div>
+            <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+          </div>
+          <div class="field"><label for="message">Anything else <small>(optional)</small></label><textarea id="message" name="message" maxlength="1500"></textarea></div>
+          <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>PFA may contact me about this.</span></label>
+          <p class="err" data-err-for="consent" hidden></p>
+          <p class="status" data-form-status hidden></p>
+        </div>
 
-          <div class="m-step" data-step="Company">
-            <h3>Your company.</h3>
-            <div class="row">
-              <div class="field"><label for="company">Company</label><input id="company" name="company" required data-say="Add the company's name." autocomplete="organization"><p class="err" hidden></p></div>
-              <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" placeholder="Mumbai"><p class="err" hidden></p></div>
-            </div>
-            <div class="row">
-              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
-              <div class="field"><label for="role">Designation</label><input id="role" name="role" autocomplete="organization-title" placeholder="Head of CSR"><p class="err" hidden></p></div>
-            </div>
-            <div class="row">
-              <div class="field"><label for="email">Work email</label><input id="email" name="email" type="email" required data-say="Add a work email, so PFA can send a proposal." autocomplete="email"><p class="err" hidden></p></div>
-              <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
-            </div>
-            <div class="field"><label for="message">Anything PFA should know</label><textarea id="message" name="message" maxlength="1500" placeholder="Our plant is in Pune district; our employees already feed the dogs around it."></textarea></div>
-            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>PFA may contact me about this enquiry.</span></label>
-            <p class="err" data-err-for="consent" hidden></p>
-            <p class="status" data-form-status hidden></p>
-          </div>
+        <div class="m-nav">
+          <button class="back" type="button" data-back hidden>Back</button>
+          <button class="btn" type="button" data-next>Continue</button>
+          <button class="btn" type="submit" data-send hidden>Send the brief</button>
+          <span class="clock" data-clock></span>
+        </div>
+      </form>
 
-          <div class="m-nav">
-            <button class="back" type="button" data-back hidden>Back</button>
-            <button class="btn" type="button" data-next>Continue</button>
-            <button class="btn" type="submit" data-send hidden>Send the brief</button>
-            <span class="clock" data-clock></span>
-          </div>
-        </form>
-
-        <div class="m-done" id="done" hidden>
-          <p class="eyebrow">Received</p>
-          <p class="ref" id="doneRef"></p>
-          <p>Keep this number. A named person at PFA will write to you about what a partnership in those areas could look like. Nothing is committed on either side until you both agree it.</p>
-          <div class="acts">
-            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
-            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
-          </div>
+      <div class="m-done" id="done" hidden>
+        <p class="eyebrow">Received</p>
+        <p class="ref" id="doneRef"></p>
+        <p>A named person at PFA will write to you. Nothing is committed until you both agree.</p>
+        <div class="acts">
+          <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+          <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
         </div>
       </div>
-
-      <aside class="m-aside" aria-label="Your brief, as PFA will read it">
-        <div class="m-live">
-          <div class="m-live__top"><span>Partnership brief</span><span>People for Animals</span></div>
-          <p class="brief__company is-empty" id="brCompany">Your company</p>
-          <div class="m-chipset" id="brFocus"></div>
-          <dl>
-            <dt>Ways</dt><dd id="brWays" class="is-empty">Not said yet</dd>
-            <dt>Budget</dt><dd id="brBudget">Not decided yet</dd>
-            <dt>Over</dt><dd id="brSpan">Not decided yet</dd>
-            <dt>Contact</dt><dd id="brContact" class="is-empty">Not said yet</dd>
-          </dl>
-        </div>
-        <p class="m-note">A brief, not a commitment. PFA replies to every one, and tells your team what it can share for due diligence.</p>
-      </aside>
     </div>
   </section>
 
-  <section class="band" id="questions">
+  <section class="band m-more m-twin" id="more">
     <div class="band__head">
-      <p class="eyebrow">Questions</p>
-      <h2 class="display">What CSR teams ask.</h2>
+      <p class="eyebrow">Good to know</p>
+      <h2 class="display">Open what you need.</h2>
     </div>
     <div class="m-acc">
-      <details><summary>Is animal welfare an eligible CSR activity?</summary><p>Yes. Item (iv) of Schedule VII of the Companies Act, 2013 includes animal welfare, alongside environmental sustainability, ecological balance and the protection of flora and fauna. Your CSR committee decides how it applies to your policy.</p></details>
-      <details><summary>Can we fund something that is not on the list?</summary><p>Yes. The twelve are where PFA would start; say what you have in mind in the brief, or choose "Open to suggestion".</p></details>
-      <details><summary>Can our people volunteer?</summary><p>Employee volunteering can be part of any partnership. Tell PFA in the brief, and say where your offices are.</p></details>
-      <details><summary>What documents will you share?</summary><p>Ask in your brief for what your CSR team needs for due diligence, and PFA will tell you what it can provide.</p></details>
+      <details><summary>Is animal welfare a CSR activity?</summary><p>Yes. Item (iv) of Schedule VII of the Companies Act, 2013 names it, with environmental sustainability and the protection of flora and fauna.</p></details>
+      <details><summary>What happens after we send this?</summary><ol><li>A named person at PFA writes back.</li><li>You agree a plan, with its cost and place.</li><li>Your CSR committee approves it.</li><li>PFA reports the work against the plan.</li></ol></details>
+      <details><summary>Can our people volunteer?</summary><p>Yes, as part of a partnership. Say so in your note.</p></details>
+      <details><summary>Can we fund something else?</summary><p>Yes. Pick "Suggest one for us", or say what you have in mind.</p></details>
+      <details><summary>What will you share for due diligence?</summary><p>Ask in your note, and PFA will tell you what it can provide.</p></details>
     </div>
   </section>
 </main>
@@ -718,40 +632,26 @@ if (root.document && root.document.head) apply(read());
   'use strict';
   var M = window.PFAMicro;
   var $ = function (s, r) { return (r || document).querySelector(s); };
-  if (!M) return;
-  M.filter($('#progChips'), '.prog > li');
-
   var form = $('#csrForm');
-  if (!form) return;
-  function text(el, value, empty) { el.textContent = value || empty; el.classList.toggle('is-empty', !value); }
-  function paint() {
-    text($('#brCompany'), $('#company').value.trim(), 'Your company');
-    var focus = M.picked(form, 'focus');
-    $('#brFocus').innerHTML = '';
-    focus.forEach(function (f) { var s = document.createElement('span'); s.textContent = f; $('#brFocus').appendChild(s); });
-    text($('#brWays'), M.picked(form, 'ways').join(', '), 'Not said yet');
-    text($('#brBudget'), M.picked(form, 'budget'), 'Not decided yet');
-    text($('#brSpan'), M.picked(form, 'span'), 'Not decided yet');
-    var who = [$('#name').value.trim(), $('#role').value.trim()].filter(Boolean).join(', ');
-    text($('#brContact'), who, 'Not said yet');
-    document.querySelectorAll('[data-prog]').forEach(function (b) {
-      var on = focus.indexOf(b.getAttribute('data-prog')) > -1;
-      b.setAttribute('aria-pressed', String(on));
-      b.textContent = on ? 'In the brief' : 'Add to the brief';
+  if (!M || !form) return;
+
+  /* the programmes follow the areas picked: only theirs are shown */
+  function fit() {
+    var areas = M.picked(form, 'area');
+    var open = areas.indexOf('open') > -1;
+    form.querySelectorAll('[data-step="What"] .m-pick').forEach(function (li) {
+      var tags = (li.getAttribute('data-area') || '').split(' ');
+      var on = tags.indexOf('all') > -1 || tags.some(function (t) { return areas.indexOf(t) > -1; });
+      li.hidden = !on;
+      var input = li.querySelector('input');
+      input.disabled = !on;
+      if (!on) input.checked = false;
     });
+    if (open && areas.length === 1) $('#p13').checked = true;
   }
-  form.addEventListener('input', paint);
-  form.addEventListener('change', paint);
-  document.querySelectorAll('[data-prog]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var box = form.querySelector('input[name="focus"][value="' + b.getAttribute('data-prog') + '"]');
-      if (!box) return;
-      box.checked = !box.checked;
-      box.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-  });
+  form.addEventListener('change', function (e) { if (e.target.name === 'area') fit(); });
+  fit();
   var flow = M.steps(form);
-  paint();
 
   M.send({
     form: form,
@@ -762,18 +662,17 @@ if (root.document && root.document.head) apply(read());
     status: form.querySelector('[data-form-status]'),
     done: $('#done'),
     doneRef: $('#doneRef'),
-    hideOnDone: [$('#shape .m-tabs'), $('#shape .m-bar')],
-    preview: { title: 'Check your brief before it is sent', send: 'Send the brief', labels: { focus: 'Areas to fund', ways: 'Ways to work together', budget: 'Budget for the year', span: 'Over', role: 'Designation' } },
+    hideOnDone: [$('#start .m-tabs'), $('#start .m-bar')],
+    preview: { title: 'Check your brief before it is sent', send: 'Send the brief', labels: { area: 'Areas', focus: 'Programmes', budget: 'Budget', span: 'For how long' } },
     data: function () {
+      var names = { rural: 'Villages and farms', towns: 'Towns and cities', wild: 'Wildlife', disaster: 'Disasters', learning: 'Training and teaching', open: 'Not sure yet' };
       return {
+        areas: M.picked(form, 'area').map(function (a) { return names[a] || a; }).join(', '),
         focus: M.picked(form, 'focus').join(', '),
-        ways: M.picked(form, 'ways').join(', '),
         budget: M.picked(form, 'budget'),
         span: M.picked(form, 'span'),
         company: $('#company').value.trim(),
-        city: $('#city').value.trim(),
         name: $('#name').value.trim(),
-        role: $('#role').value.trim(),
         email: $('#email').value.trim(),
         mobile: M.digits($('#mobile').value),
         message: $('#message').value.trim()

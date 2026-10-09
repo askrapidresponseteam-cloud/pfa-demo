@@ -203,8 +203,13 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
    layout never breaks and it stays obvious which picture belongs where. */
 .frame{position:relative;background:var(--stone);overflow:hidden}
 .frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
-.frame.is-empty::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 11px,rgba(17,17,17,.045) 11px,rgba(17,17,17,.045) 22px)}
-.frame.is-empty::after{content:attr(data-label);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.7}
+/* A frame whose photograph has not arrived is a quiet plate with the PFA
+   mark and its caption, as on the microsites: never a striped box asking for a photo,
+   which read as a page still being built (owner, 9 Oct 2026:
+   "some people might think it is incomplete or under work"). */
+.frame.is-empty{background:linear-gradient(135deg,#f6f4f0 0%,#ece8e1 100%)}
+.frame.is-empty::before{content:"";position:absolute;left:50%;top:50%;width:64px;height:58px;transform:translate(-50%,-60%);background:url("img/mail/logo-mark.png") center/contain no-repeat;opacity:.16;filter:grayscale(1)}
+.frame.is-empty::after{content:attr(data-label);position:absolute;left:0;right:0;bottom:0;padding:0 16px 12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.5}
 
 /* The founder photograph is a 3:2 landscape, so the hero is a dark text band with
    the picture full-bleed beneath it rather than a tall side-by-side crop. */
@@ -774,13 +779,13 @@ if (root.document && root.document.head) apply(read());
   </section>
 
   <figure class="plate">
-    <div class="frame" data-label="Portrait of Smt. Maneka Sanjay Gandhi: add photo">
+    <div class="frame" data-label="Smt. Maneka Sanjay Gandhi">
       <img src="img/founder-portrait-1536.jpg"
            srcset="img/founder-portrait-960.jpg 960w, img/founder-portrait-1536.jpg 1536w"
            sizes="100vw"
            width="1536" height="1024"
            alt="Smt. Maneka Sanjay Gandhi at her desk, a dog beside her chair"
-           onerror="this.closest('.frame').classList.add('is-empty');this.remove()">
+           onerror="if(this.dataset.altSrc&&this.src!==this.dataset.altSrc){this.src=this.dataset.altSrc}else{this.closest('.frame').classList.add('is-empty');this.remove()}">
     </div>
     <figcaption>Smt. Maneka Sanjay Gandhi <small>Founder and chairperson, People for Animals</small></figcaption>
   </figure>
@@ -863,13 +868,25 @@ if (root.document && root.document.head) apply(read());
 
   <section class="gal" id="gallery" aria-label="The work">
     <div class="gal__grid">
-      <div class="frame" data-label="Flagship hospital and shelter: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center1.jpg" alt="Inside the flagship People for Animals hospital and shelter" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
-      <div class="frame" data-label="Shelter: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center2.jpg" alt="Rescued animals at a People for Animals shelter" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
-      <div class="frame" data-label="Care: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center5.jpeg" alt="A rescued animal receiving care" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
-      <div class="frame" data-label="Treatment: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/center6.jpeg" alt="Treatment under way at a People for Animals centre" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
-      <div class="frame" data-label="Rescue: add photo"><img loading="lazy" decoding="async" src="https://www.peopleforanimalsindia.org/front/img/gallery10.jpg" alt="A rescue in progress" onerror="this.closest('.frame').classList.add('is-empty');this.remove()"></div>
+      <div class="frame" data-label="Flagship hospital and shelter"><img loading="lazy" decoding="async" src="media/site/sgacc/centre-01.jpg" data-alt-src="https://www.peopleforanimalsindia.org/front/img/center1.jpg" alt="Inside the flagship People for Animals hospital and shelter" onerror="if(this.dataset.altSrc&&this.src!==this.dataset.altSrc){this.src=this.dataset.altSrc}else{this.closest('.frame').classList.add('is-empty');this.remove()}"></div>
+      <div class="frame" data-label="Shelter"><img loading="lazy" decoding="async" src="media/site/sgacc/centre-02.jpg" data-alt-src="https://www.peopleforanimalsindia.org/front/img/center2.jpg" alt="Rescued animals at a People for Animals shelter" onerror="if(this.dataset.altSrc&&this.src!==this.dataset.altSrc){this.src=this.dataset.altSrc}else{this.closest('.frame').classList.add('is-empty');this.remove()}"></div>
+      <div class="frame" data-label="Care"><img loading="lazy" decoding="async" src="media/site/sgacc/centre-04.jpg" data-alt-src="https://www.peopleforanimalsindia.org/front/img/center5.jpeg" alt="A rescued animal receiving care" onerror="if(this.dataset.altSrc&&this.src!==this.dataset.altSrc){this.src=this.dataset.altSrc}else{this.closest('.frame').classList.add('is-empty');this.remove()}"></div>
+      <div class="frame" data-label="Treatment"><img loading="lazy" decoding="async" src="media/site/sgacc/centre-05.jpg" data-alt-src="https://www.peopleforanimalsindia.org/front/img/center6.jpeg" alt="Treatment under way at a People for Animals centre" onerror="if(this.dataset.altSrc&&this.src!==this.dataset.altSrc){this.src=this.dataset.altSrc}else{this.closest('.frame').classList.add('is-empty');this.remove()}"></div>
+      <div class="frame" data-label="Rescue"><img loading="lazy" decoding="async" src="media/site/sgacc/centre-07.jpg" data-alt-src="https://www.peopleforanimalsindia.org/front/img/gallery10.jpg" alt="A rescue in progress" onerror="if(this.dataset.altSrc&&this.src!==this.dataset.altSrc){this.src=this.dataset.altSrc}else{this.closest('.frame').classList.add('is-empty');this.remove()}"></div>
     </div>
   </section>
+  <script>
+  /* If not one photograph of the work arrived, the gallery steps aside
+     rather than show a wall of empty plates (owner, 9 Oct 2026: "some
+     people might think it is incomplete or under work"). */
+  window.addEventListener('load', function () {
+    var g = document.getElementById('gallery');
+    if (!g) return;
+    var frames = g.querySelectorAll('.frame');
+    var empty = g.querySelectorAll('.frame.is-empty');
+    if (frames.length && empty.length === frames.length) g.hidden = true;
+  });
+  </script>
 
 
   <!-- ---------- Rapid Response ----------

@@ -311,31 +311,15 @@
    "modules": [
     {
      "id": "top",
-     "label": "Start an animal care society on your campus."
+     "label": "Start an animal society on your campus."
     },
     {
-     "id": "what",
-     "label": "Care for the animals you walk past every day."
+     "id": "start",
+     "label": "Four quick steps."
     },
     {
-     "id": "desks",
-     "label": "Six desks. Pick the ones you can staff."
-    },
-    {
-     "id": "steps",
-     "label": "From an idea to a recognised society."
-    },
-    {
-     "id": "register",
-     "label": "Put your society on the map."
-    },
-    {
-     "id": "questions",
-     "label": "Before you start."
-    },
-    {
-     "id": "next",
-     "label": "Bring PFA to your campus."
+     "id": "more",
+     "label": "Open what you need."
     }
    ]
   },
@@ -348,27 +332,15 @@
    "modules": [
     {
      "id": "top",
-     "label": "Start something for the animals."
-    },
-    {
-     "id": "causes",
-     "label": "Six causes to raise for."
-    },
-    {
-     "id": "formats",
-     "label": "Pick the one that suits you."
+     "label": "Raise something for the animals."
     },
     {
      "id": "plan",
-     "label": "Your campaign, in four screens."
+     "label": "Four quick steps."
     },
     {
-     "id": "tips",
-     "label": "Four things good campaigns share."
-    },
-    {
-     "id": "questions",
-     "label": "Before you begin."
+     "id": "more",
+     "label": "Open what you need."
     }
    ]
   },
@@ -384,24 +356,12 @@
      "label": "Remember the animals in your will."
     },
     {
-     "id": "story",
-     "label": "One will. Forty-six years of care."
+     "id": "start",
+     "label": "Three quick steps."
     },
     {
-     "id": "ways",
-     "label": "Five ways a will can remember them."
-    },
-    {
-     "id": "how",
-     "label": "Four steps, with a lawyer beside you."
-    },
-    {
-     "id": "wording",
-     "label": "Draft the line for your will."
-    },
-    {
-     "id": "talk",
-     "label": "In confidence, at your pace."
+     "id": "more",
+     "label": "Open what you need."
     }
    ]
   },
@@ -414,27 +374,15 @@
    "modules": [
     {
      "id": "top",
-     "label": "CSR that reaches the animals."
+     "label": "Fund work that lasts."
     },
     {
-     "id": "programmes",
-     "label": "Twelve programmes, each built to last."
+     "id": "start",
+     "label": "Four quick steps."
     },
     {
-     "id": "why",
-     "label": "A cause that reaches every community."
-    },
-    {
-     "id": "how",
-     "label": "From a first note to an agreed plan."
-    },
-    {
-     "id": "shape",
-     "label": "Your brief, in three screens."
-    },
-    {
-     "id": "questions",
-     "label": "What CSR teams ask."
+     "id": "more",
+     "label": "Open what you need."
     }
    ]
   },
@@ -628,24 +576,16 @@
      "label": "Sanjay Gandhi Animal Care Centre."
     },
     {
-     "id": "inside",
-     "label": "What happens here, round the clock."
-    },
-    {
-     "id": "gallery",
-     "label": "A glimpse of the centre."
-    },
-    {
      "id": "help",
-     "label": "Bring supplies, or bring a group."
+     "label": "Three quick steps."
     },
     {
      "id": "visit",
      "label": "Raja Garden, West Delhi."
     },
     {
-     "id": "legacy",
-     "label": "One legacy built this centre."
+     "id": "more",
+     "label": "Open what you need."
     }
    ]
   },
@@ -662,11 +602,11 @@
     },
     {
      "id": "openings",
-     "label": "Five ways to make it your work."
+     "label": "Five openings."
     },
     {
      "id": "roles",
-     "label": "Read the role."
+     "label": "One role at a time."
     },
     {
      "id": "apply",
@@ -762,16 +702,12 @@
      "label": "Privacy, in plain words."
     },
     {
-     "id": "glance",
-     "label": "Four things to know."
-    },
-    {
      "id": "policy",
-     "label": "The full policy."
+     "label": "Open what you need."
     },
     {
      "id": "request",
-     "label": "Ask for your data."
+     "label": "Two quick steps."
     }
    ]
   },
@@ -1246,34 +1182,25 @@
    "qz": "the-quiz"
   },
   "campus": {
-   "facultyField": "register",
-   "done": "register",
-   "doneRef": "register",
-   "soc": "register",
-   "socName": "register",
-   "socWhere": "register",
-   "socDesks": "register"
+   "facultyField": "start",
+   "done": "start",
+   "doneRef": "start"
   },
   "campaign": {
    "done": "plan",
-   "doneRef": "plan",
-   "campPh": "plan",
-   "campTitle": "plan",
-   "campBy": "plan",
-   "campWhen": "plan"
+   "doneRef": "plan"
   },
   "legacy": {
-   "clause": "wording",
-   "mobileField": "talk",
-   "done": "talk",
-   "doneRef": "talk"
+   "clauseBox": "start",
+   "clause": "start",
+   "clauseNone": "start",
+   "mobileField": "start",
+   "done": "start",
+   "doneRef": "start"
   },
   "csr": {
-   "progChips": "programmes",
-   "done": "shape",
-   "doneRef": "shape",
-   "brCompany": "shape",
-   "brFocus": "shape"
+   "done": "start",
+   "doneRef": "start"
   },
   "wall": {
    "wallStatus": "submit",
@@ -1338,10 +1265,11 @@
    "rrt-title": "rapid-response"
   },
   "sgacc": {
-   "galleryList": "gallery",
-   "galleryNone": "gallery",
    "done": "help",
-   "doneRef": "help"
+   "doneRef": "help",
+   "photos": "more",
+   "galleryList": "more",
+   "galleryNone": "more"
   },
   "careers": {
    "jobChips": "openings",

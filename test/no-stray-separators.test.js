@@ -10,7 +10,7 @@
    the start of the next. A browser scan of every page at 24 widths from 1920
    to 320 (units unfolded, every question opened) found it in the footer, the
    centre's numbers, the library's facts, the shop's tiles, a unit's numbers,
-   two captions and the campaign card, and finds none now. These hold the
+   two captions and the campaign card (since gone, 9 Oct 2026), and finds none now. These hold the
    cure: such runs are items in .dots, which draws the dot between them and
    never at a line's start or end, and pages that write one in script use
    PFADots. */
@@ -70,7 +70,6 @@ test('every run that wrapped is now a dotted run', () => {
   assert.ok(has('shop.html', 'p.item__meta.dots > span + span'), 'the shop\'s tiles');
   assert.ok(has('cinekind.html', 'p.shot__note.dots > span + span'));
   assert.ok(has('newsroom.html', '#case-001 figcaption.dots > span + span'));
-  assert.ok(has('campaign.html', '#campBy.dots > span + span'));
   assert.match(read('units.html'), /'<span class="u-unit__tel dots">' \+ k\.t\.map\([\s\S]*?\}\)\.join\(''\)/, 'a unit\'s numbers');
   assert.match(read('scripts/build-library.js'), /<p class="book__facts dots">/);
   assert.match(read('assets/shop.js'), /el\('p', 'line__meta dots'\)/);

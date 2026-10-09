@@ -63,10 +63,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Plan a campaign | People for Animals</title>
-<meta name="description" content="Raise money, supplies or voices for animals: pick a cause and a format, set a goal, watch your campaign take shape, and send the plan to PFA.">
+<meta name="description" content="Plan a birthday, a run or a drive at work for the animals: pick a cause and a goal in four quick steps, and PFA helps you run it.">
 <link rel="stylesheet" href="assets/chrome.css?v=cafe4128cd">
 <style>
-/* Plan a campaign (owner, 9 Oct 2026: a microsite for it). The old Campaigns page listed two fundraisers; this keeps the cow care cause they raised for and lets anyone plan one of their own, with PFA's reply before anything is collected in its name. */
+/* Plan a campaign, kept concise (owner, 9 Oct 2026: "show things one after another in stages ... have things under plus"): cause, way, goal, you; tips and questions under plus signs. */
 :root{
   --paper:#fff;
   --ink:#111;
@@ -128,26 +128,7 @@ input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit
 }
 
 /* ---------- this page ---------- */
-.cause .m-card{cursor:default}
-.cause__pick{align-self:flex-start;margin-top:auto;min-height:40px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-.cause__pick:hover{background:var(--ink);color:#fff}
-.cause > li:last-child{grid-column:1 / -1}
-.cause > li:last-child p{max-width:56ch}
-.cause .feat{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:0}
-.cause .feat .m-ph{aspect-ratio:auto;height:100%;min-height:280px}
-.cause .feat .m-card__body{display:flex;flex-direction:column;gap:12px;padding:clamp(24px,2.4vw,36px)}
-.camp{border:1px solid var(--ink);background:var(--paper)}
-.camp .m-ph{aspect-ratio:16/9}
-.camp .m-ph.is-gone::after{content:attr(data-cause);position:absolute;left:18px;bottom:16px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
-.camp__body{display:grid;gap:12px;padding:clamp(20px,2.2vw,30px)}
-.camp__by{margin:0;font-size:12px;color:var(--muted)}
-.camp__goal{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13px;color:var(--muted)}
-.camp__goal b{font-family:var(--display);font-weight:400;font-size:clamp(22px,2vw,30px);color:var(--ink)}
-.camp__track{height:6px;background:var(--line);position:relative;overflow:hidden}
-.camp__track span{position:absolute;inset:0 auto 0 0;width:3%;background:var(--pop)}
 .goal-money[hidden],.goal-text[hidden]{display:none}
-@media (max-width:900px){.cause .feat{grid-column:span 2}}
-@media (max-width:600px){.cause .feat{grid-column:span 1;grid-template-columns:minmax(0,1fr)}.cause .feat .m-ph{min-height:220px}}
 /* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
 @media (max-width:700px),(pointer:coarse){
   
@@ -166,7 +147,7 @@ input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit
   <meta property="og:locale" content="en_IN">
   <meta property="og:type" content="article">
   <meta property="og:title" content="Plan a campaign">
-  <meta property="og:description" content="Raise money, supplies or voices for animals: pick a cause and a format, set a goal, watch your campaign take shape, and send the plan to PFA.">
+  <meta property="og:description" content="Plan a birthday, a run or a drive at work for the animals: pick a cause and a goal in four quick steps, and PFA helps you run it.">
   <meta property="og:url" content="https://peopleforanimalsindia.org/campaign">
   <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <meta property="og:image:width" content="1200">
@@ -175,7 +156,7 @@ input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@pfaindia">
   <meta name="twitter:title" content="Plan a campaign">
-  <meta name="twitter:description" content="Raise money, supplies or voices for animals: pick a cause and a format, set a goal, watch your campaign take shape, and send the plan to PFA.">
+  <meta name="twitter:description" content="Plan a birthday, a run or a drive at work for the animals: pick a cause and a goal in four quick steps, and PFA helps you run it.">
   <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Plan a campaign","item":"https://peopleforanimalsindia.org/campaign"}]}</script>
   <!-- seo:end -->
@@ -403,206 +384,125 @@ if (root.document && root.document.head) apply(read());
 <script src="assets/field-validate.js"></script>
 
 <main>
-  <section class="hero m-hero" id="top">
+  <section class="hero m-hero m-hero--short" id="top">
     <div class="m-hero__in">
       <div>
         <p class="eyebrow">Plan a campaign</p>
-        <h1 class="display">Start something for the animals.</h1>
-        <p class="lede">A birthday, a workplace drive, a run, a school collection. Pick a cause and a way to raise for it, set a goal and watch the campaign take shape. Then send the plan to PFA, who will reply on how to run it well.</p>
+        <h1 class="display">Raise something for the animals.</h1>
+        <p class="lede">A birthday, a run, a drive at work. Pick a cause and a goal; PFA helps you run it.</p>
         <div class="m-hero__acts">
-          <a class="btn" href="#plan">Plan yours</a>
-          <a class="btn btn--light" href="#causes">See the causes</a>
+          <a class="btn" href="#plan">Start</a>
         </div>
-        <ul class="m-hero__facts">
-          <li><b>6 causes</b><span>to raise for</span></li>
-          <li><b>6 ways</b><span>to run a campaign</span></li>
-          <li><b>4 screens</b><span>from an idea to a plan</span></li>
-        </ul>
       </div>
       <div class="m-hero__media">
-        <div class="m-duo">
-          <figure class="m-ph" data-ph><img src="media/site/campaign/gau-seva-01.jpg" alt="A cow in PFA's care" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Gau Seva</figcaption></figure>
-          <figure class="m-ph" data-ph><img src="media/site/campaign/gau-seva-02.jpg" alt="A cow in PFA's care" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>In care</figcaption></figure>
+        <figure class="m-ph" data-ph><img src="media/site/campaign/gau-seva-01.jpg" alt="Cows in PFA's care, from the Gau Seva campaign" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Gau Seva</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="band m-twin" id="plan">
+    <div class="band__head">
+      <p class="eyebrow">Your campaign</p>
+      <h2 class="display">Four quick steps.</h2>
+    </div>
+    <div class="m-stage">
+      <ol class="m-tabs" aria-hidden="true"><li><span>01</span>Cause</li><li><span>02</span>Way</li><li><span>03</span>Goal</li><li><span>04</span>You</li></ol>
+      <div class="m-bar" aria-hidden="true"><span></span></div>
+      <form class="m-form" id="campForm" novalidate>
+        <div class="m-step" data-step="Cause">
+          <h3>Who is it for?</h3>
+          <ul class="m-picks m-picks--compact" data-need="cause" data-say="Choose one.">
+            <li class="m-pick"><input type="radio" name="cause" id="c1" value="Cows in need"><label for="c1"><b>Cows in need</b></label></li>
+            <li class="m-pick"><input type="radio" name="cause" id="c2" value="Community dogs"><label for="c2"><b>Community dogs</b></label></li>
+            <li class="m-pick"><input type="radio" name="cause" id="c3" value="Injured and sick animals"><label for="c3"><b>Injured and sick animals</b></label></li>
+            <li class="m-pick"><input type="radio" name="cause" id="c4" value="Feeding drives"><label for="c4"><b>Feeding drives</b></label></li>
+            <li class="m-pick"><input type="radio" name="cause" id="c5" value="The Sanjay Gandhi Animal Care Centre"><label for="c5"><b>The animal care centre</b></label></li>
+            <li class="m-pick"><input type="radio" name="cause" id="c6" value="Where it is needed most"><label for="c6"><b>Where it is needed most</b></label></li>
+          </ul>
+          <p class="err" data-err-for="cause" hidden></p>
+        </div>
+
+        <div class="m-step" data-step="Way">
+          <h3>How will you run it?</h3>
+          <ul class="m-picks m-picks--compact" data-need="format" data-say="Choose one.">
+            <li class="m-pick"><input type="radio" name="format" id="f1" value="A birthday or celebration"><label for="f1"><b>A birthday or celebration</b></label></li>
+            <li class="m-pick"><input type="radio" name="format" id="f2" value="A workplace drive"><label for="f2"><b>A workplace drive</b></label></li>
+            <li class="m-pick"><input type="radio" name="format" id="f3" value="A school or college drive"><label for="f3"><b>A school or college drive</b></label></li>
+            <li class="m-pick"><input type="radio" name="format" id="f4" value="A run, walk or sports challenge"><label for="f4"><b>A run, walk or challenge</b></label></li>
+            <li class="m-pick"><input type="radio" name="format" id="f5" value="A collection of supplies"><label for="f5"><b>A collection of supplies</b></label></li>
+            <li class="m-pick"><input type="radio" name="format" id="f6" value="An awareness event"><label for="f6"><b>An awareness event</b></label></li>
+          </ul>
+          <p class="err" data-err-for="format" hidden></p>
+        </div>
+
+        <div class="m-step" data-step="Goal">
+          <h3>What is the goal?</h3>
+          <div class="field">
+            <label>Raising</label>
+            <ul class="m-picks m-picks--compact">
+              <li class="m-pick"><input type="radio" name="goalType" id="gt1" value="Money" checked><label for="gt1"><b>Money</b></label></li>
+              <li class="m-pick"><input type="radio" name="goalType" id="gt2" value="Supplies"><label for="gt2"><b>Supplies</b></label></li>
+              <li class="m-pick"><input type="radio" name="goalType" id="gt3" value="Awareness"><label for="gt3"><b>Awareness</b></label></li>
+            </ul>
+          </div>
+          <div class="m-range goal-money">
+            <label class="eyebrow" for="goalMoney">How much</label>
+            <output id="goalOut" for="goalMoney">₹25,000</output>
+            <input type="range" id="goalMoney" min="5000" max="500000" step="5000" value="25000">
+          </div>
+          <div class="field goal-text" hidden><label for="goalText" id="goalTextLab">What you will collect</label><input id="goalText" placeholder="100 blankets before winter"><p class="err" hidden></p></div>
+          <div class="field"><label for="title">Campaign name</label><input id="title" name="title" required data-say="Give your campaign a name." maxlength="80" placeholder="Asha's birthday for the dogs of Indiranagar"><p class="err" hidden></p></div>
+          <div class="row">
+            <div class="field"><label for="city">Where</label><input id="city" name="city" required data-say="Where will it happen?" placeholder="Bengaluru, Karnataka"><p class="err" hidden></p></div>
+            <div class="field"><label for="when">When <small>(optional)</small></label><input id="when" name="when" placeholder="All of December"><p class="err" hidden></p></div>
+          </div>
+
+        </div>
+
+        <div class="m-step" data-step="You">
+          <h3>Who is running it?</h3>
+          <div class="row">
+            <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
+            <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+          </div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add an email, so PFA can reply." autocomplete="email"><p class="err" hidden></p></div>
+          <div class="field"><label for="story">Why you are doing it <small>(optional)</small></label><textarea id="story" name="story" maxlength="900" placeholder="I feed nine dogs on my street. This year, instead of presents, I want all nine sterilised and vaccinated."></textarea></div>
+          <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>I will wait for PFA's reply before collecting anything in its name.</span></label>
+          <p class="err" data-err-for="consent" hidden></p>
+          <p class="status" data-form-status hidden></p>
+        </div>
+
+        <div class="m-nav">
+          <button class="back" type="button" data-back hidden>Back</button>
+          <button class="btn" type="button" data-next>Continue</button>
+          <button class="btn" type="submit" data-send hidden>Send the plan</button>
+          <span class="clock" data-clock></span>
+        </div>
+      </form>
+
+      <div class="m-done" id="done" hidden>
+        <p class="eyebrow">Received</p>
+        <p class="ref" id="doneRef"></p>
+        <p>PFA will reply on the contact you gave. Please wait for it before you collect anything in PFA's name.</p>
+        <div class="acts">
+          <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+          <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="band" id="causes">
+  <section class="band m-more m-twin" id="more">
     <div class="band__head">
-      <p class="eyebrow">Causes</p>
-      <h2 class="display">Six causes to raise for.</h2>
-      <p>Choose one and the plan below starts from it.</p>
-    </div>
-    <ul class="m-grid cause">
-      <li class="m-card feat">
-        <figure class="m-ph" data-ph><img src="media/site/campaign/gau-seva-03.jpg" alt="A cow in PFA's care" loading="lazy" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Gau Seva</figcaption></figure>
-        <div class="m-card__body">
-          <span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 8c-1.7 0-3-1-3-2.5C3.5 6 5 6 6 6.5M19 8c1.7 0 3-1 3-2.5C20.5 6 19 6 18 6.5"/><path d="M6 6.5C7 5 9 4.5 12 4.5s5 .5 6 2V13c0 3.5-2.5 7-6 7s-6-3.5-6-7z"/><path d="M9.5 16.5c.8.7 4.2.7 5 0"/><circle cx="9.5" cy="11" r=".6"/><circle cx="14.5" cy="11" r=".6"/></svg></span>
-          <h3>Cows in need</h3>
-          <p>Cows abandoned when they stop giving milk wait on the streets: many old, injured or hungry. PFA's Gau Seva campaign raised for their care; yours can carry it on.</p>
-          <button class="cause__pick" type="button" data-cause="Cows in need">Raise for this</button>
-        </div>
-      </li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 9l-1-5 4 2.5h8L20 4l-1 5"/><path d="M5 9c0 6 2.7 11 7 11s7-5 7-11"/><circle cx="9.5" cy="12" r=".6"/><circle cx="14.5" cy="12" r=".6"/><path d="M11 15.5h2l-1 1.2z"/></svg></span><h3>Community dogs</h3><p>Sterilisation and vaccination for the dogs of a neighbourhood, the humane way to fewer puppies on the street and no rabies.</p><button class="cause__pick" type="button" data-cause="Community dogs">Raise for this</button></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.6" y="8.2" width="18.8" height="7.6" rx="3.8" transform="rotate(-45 12 12)"/><path d="M10 10h.01M14 14h.01M12 12h.01M10 14h.01M14 10h.01"/></svg></span><h3>Injured and sick animals</h3><p>Treatment for the animals hit by traffic, hurt by people or simply ill, who have no one to pay for it.</p><button class="cause__pick" type="button" data-cause="Injured and sick animals">Raise for this</button></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M9 8.5c0-1.6 1.6-1.9 1.6-3.5M13.5 8.5c0-1.6 1.6-1.9 1.6-3.5"/></svg></span><h3>Feeding drives</h3><p>Food for the animals that community feeders look after, when one person's money no longer stretches.</p><button class="cause__pick" type="button" data-cause="Feeding drives">Raise for this</button></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6M3 21h18"/></svg></span><h3>The animal care centre</h3><p>The Sanjay Gandhi Animal Care Centre in Delhi and the thousands of animals in its care at any time.</p><button class="cause__pick" type="button" data-cause="The Sanjay Gandhi Animal Care Centre">Raise for this</button></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.2L12 17l-5.4 3 1-6.2-4.4-4.3 6.1-.9z"/></svg></span><h3>Where it is needed most</h3><p>Let PFA put what you raise where it will do the most good at the time.</p><button class="cause__pick" type="button" data-cause="Where it is needed most">Raise for this</button></li>
-    </ul>
-  </section>
-
-  <section class="band" id="formats">
-    <div class="band__head">
-      <p class="eyebrow">Ways to run one</p>
-      <h2 class="display">Pick the one that suits you.</h2>
-    </div>
-    <ul class="m-grid">
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 21v-8h16v8M3 21h18"/><path d="M4 16c2 1.5 4 1.5 5.3 0 1.4 1.5 4 1.5 5.4 0 1.3 1.5 3.3 1.5 5.3 0"/><path d="M8 13v-3M12 13v-3M16 13v-3M8 7.5c0-1 .8-1.6.8-2.5M12 7.5c0-1 .8-1.6.8-2.5M16 7.5c0-1 .8-1.6.8-2.5"/></svg></span><h3>A birthday or celebration</h3><p>Ask the people coming to give to the animals instead of bringing a present.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="7" width="18" height="13"/><path d="M8 7V4h8v3M3 12.5h18"/></svg></span><h3>A workplace drive</h3><p>Colleagues give for a month, and the company may match what they raise.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></svg></span><h3>A school or college drive</h3><p>A class, a house or a whole campus. For something that lasts, see <a href="campus.html">PFA Campus</a>.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="15" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v4M6 12l3-4h5l3 4h3M11 15l1-5"/></svg></span><h3>A run, walk or challenge</h3><p>Friends sponsor your distance, your match or a challenge you set yourself.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7.5l9-4.5 9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5l9 4.5 9-4.5M12 12v9"/></svg></span><h3>A collection of supplies</h3><p>Food, blankets and medicines, collected in your building, office or temple.</p></li>
-      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10v4h3l7 4V6L6 10z"/><path d="M16.5 9.2a4 4 0 0 1 0 5.6M19 6.7a7.5 7.5 0 0 1 0 10.6"/></svg></span><h3>An awareness event</h3><p>A talk, a screening, a stall at a fair: raising voices, not only money.</p></li>
-    </ul>
-  </section>
-
-  <section class="band" id="plan">
-    <div class="band__head">
-      <p class="eyebrow">Plan yours</p>
-      <h2 class="display">Your campaign, in four screens.</h2>
-      <p>The card beside the form is your campaign as people will see it, taking shape as you go.</p>
-    </div>
-    <div class="m-builder">
-      <div>
-        <ol class="m-tabs" aria-hidden="true"><li><span>01</span>Cause</li><li><span>02</span>Way</li><li><span>03</span>Goal</li><li><span>04</span>You</li></ol>
-        <div class="m-bar" aria-hidden="true"><span></span></div>
-        <form class="m-form" id="campForm" novalidate>
-          <div class="m-step" data-step="Cause">
-            <h3>Who is it for?</h3>
-            <ul class="m-picks m-picks--compact" data-need="cause" data-say="Choose the cause your campaign is for.">
-              <li class="m-pick"><input type="radio" name="cause" id="c1" value="Cows in need"><label for="c1"><b>Cows in need</b></label></li>
-              <li class="m-pick"><input type="radio" name="cause" id="c2" value="Community dogs"><label for="c2"><b>Community dogs</b></label></li>
-              <li class="m-pick"><input type="radio" name="cause" id="c3" value="Injured and sick animals"><label for="c3"><b>Injured and sick animals</b></label></li>
-              <li class="m-pick"><input type="radio" name="cause" id="c4" value="Feeding drives"><label for="c4"><b>Feeding drives</b></label></li>
-              <li class="m-pick"><input type="radio" name="cause" id="c5" value="The Sanjay Gandhi Animal Care Centre"><label for="c5"><b>The animal care centre</b></label></li>
-              <li class="m-pick"><input type="radio" name="cause" id="c6" value="Where it is needed most"><label for="c6"><b>Where it is needed most</b></label></li>
-            </ul>
-            <p class="err" data-err-for="cause" hidden></p>
-          </div>
-
-          <div class="m-step" data-step="Way">
-            <h3>How will you run it?</h3>
-            <ul class="m-picks m-picks--compact" data-need="format" data-say="Choose the kind of campaign.">
-              <li class="m-pick"><input type="radio" name="format" id="f1" value="A birthday or celebration"><label for="f1"><b>A birthday or celebration</b></label></li>
-              <li class="m-pick"><input type="radio" name="format" id="f2" value="A workplace drive"><label for="f2"><b>A workplace drive</b></label></li>
-              <li class="m-pick"><input type="radio" name="format" id="f3" value="A school or college drive"><label for="f3"><b>A school or college drive</b></label></li>
-              <li class="m-pick"><input type="radio" name="format" id="f4" value="A run, walk or sports challenge"><label for="f4"><b>A run, walk or challenge</b></label></li>
-              <li class="m-pick"><input type="radio" name="format" id="f5" value="A collection of supplies"><label for="f5"><b>A collection of supplies</b></label></li>
-              <li class="m-pick"><input type="radio" name="format" id="f6" value="An awareness event"><label for="f6"><b>An awareness event</b></label></li>
-            </ul>
-            <p class="err" data-err-for="format" hidden></p>
-          </div>
-
-          <div class="m-step" data-step="Goal">
-            <h3>The goal.</h3>
-            <div class="field">
-              <label>What are you raising?</label>
-              <ul class="m-picks m-picks--compact">
-                <li class="m-pick"><input type="radio" name="goalType" id="gt1" value="Money" checked><label for="gt1"><b>Money</b></label></li>
-                <li class="m-pick"><input type="radio" name="goalType" id="gt2" value="Supplies"><label for="gt2"><b>Supplies</b></label></li>
-                <li class="m-pick"><input type="radio" name="goalType" id="gt3" value="Awareness"><label for="gt3"><b>Awareness</b></label></li>
-              </ul>
-            </div>
-            <div class="m-range goal-money">
-              <label class="eyebrow" for="goalMoney">How much</label>
-              <output id="goalOut" for="goalMoney">₹25,000</output>
-              <input type="range" id="goalMoney" min="5000" max="500000" step="5000" value="25000">
-              <div class="ends"><span>₹5,000</span><span>₹5,00,000</span></div>
-            </div>
-            <div class="field goal-text" hidden><label for="goalText" id="goalTextLab">What you will collect</label><input id="goalText" placeholder="100 blankets before winter"><p class="err" hidden></p></div>
-            <div class="row">
-              <div class="field"><label for="title">Campaign name</label><input id="title" name="title" required data-say="Give your campaign a name." maxlength="80" placeholder="Asha's birthday for the dogs of Indiranagar"><p class="err" hidden></p></div>
-              <div class="field"><label for="when">When</label><input id="when" name="when" placeholder="All of December"><p class="err" hidden></p></div>
-            </div>
-            <div class="row">
-              <div class="field"><label for="city">Where</label><input id="city" name="city" required data-say="Where will it happen?" placeholder="Bengaluru, Karnataka"><p class="err" hidden></p></div>
-              <div class="field"><label for="reach">People you hope to reach</label><input id="reach" name="reach" inputmode="numeric" placeholder="50"><p class="err" hidden></p></div>
-            </div>
-          </div>
-
-          <div class="m-step" data-step="You">
-            <h3>Who is running it.</h3>
-            <div class="row">
-              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
-              <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
-            </div>
-            <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add an email, so PFA can reply." autocomplete="email"><p class="err" hidden></p></div>
-            <div class="field"><label for="story">Why you are doing it <small>(optional, and the line people remember)</small></label><textarea id="story" name="story" maxlength="900" placeholder="I feed nine dogs on my street. This year, instead of presents, I want all nine sterilised and vaccinated."></textarea></div>
-            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>I will not collect money in PFA's name until PFA has replied to this plan. PFA may contact me about it.</span></label>
-            <p class="err" data-err-for="consent" hidden></p>
-            <p class="status" data-form-status hidden></p>
-          </div>
-
-          <div class="m-nav">
-            <button class="back" type="button" data-back hidden>Back</button>
-            <button class="btn" type="button" data-next>Continue</button>
-            <button class="btn" type="submit" data-send hidden>Send the plan</button>
-            <span class="clock" data-clock></span>
-          </div>
-        </form>
-
-        <div class="m-done" id="done" hidden>
-          <p class="eyebrow">Received</p>
-          <p class="ref" id="doneRef"></p>
-          <p>Keep this number. A named person at PFA reads every plan and will reply on the contact you gave. Please wait for that reply before you announce the campaign in PFA's name or collect anything.</p>
-          <div class="acts">
-            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
-            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
-          </div>
-        </div>
-      </div>
-
-      <aside class="m-aside" aria-label="Your campaign, as people will see it">
-        <article class="camp">
-          <figure class="m-ph" data-ph id="campPh" data-cause="A cause"><img id="campImg" src="media/site/campaign/gau-seva-04.jpg" alt="" loading="lazy" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"></figure>
-          <div class="camp__body">
-            <span class="m-tag" id="campCause">Choose a cause</span>
-            <h4 class="display" id="campTitle" style="font-size:clamp(22px,2vw,30px)">Your campaign</h4>
-            <p class="camp__by dots" id="campBy"><span>by you</span><span>a way to raise</span></p>
-            <div class="camp__goal"><span>raised so far</span><b id="campGoal">₹25,000</b></div>
-            <div class="camp__track"><span></span></div>
-            <p class="camp__by dots" id="campWhen"><span>When and where</span></p>
-          </div>
-        </article>
-        <p class="m-note">A preview. Nothing is published until PFA has read your plan and replied.</p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="band" id="tips">
-    <div class="band__head">
-      <p class="eyebrow">What works</p>
-      <h2 class="display">Four things good campaigns share.</h2>
-    </div>
-    <ul class="m-grid m-grid--4">
-      <li class="m-card"><span class="m-card__no">01</span><h3>One clear cause</h3><p>Nine dogs on one street moves people more than all the dogs everywhere.</p></li>
-      <li class="m-card"><span class="m-card__no">02</span><h3>A deadline</h3><p>A birthday, a month, a race day. People give when there is a date.</p></li>
-      <li class="m-card"><span class="m-card__no">03</span><h3>A picture</h3><p>One honest photograph of the animal or the place, with a line about why it matters to you.</p></li>
-      <li class="m-card"><span class="m-card__no">04</span><h3>A thank-you</h3><p>Tell everyone who gave what their money did. It is how the next campaign starts.</p></li>
-    </ul>
-  </section>
-
-  <section class="band" id="questions">
-    <div class="band__head">
-      <p class="eyebrow">Questions</p>
-      <h2 class="display">Before you begin.</h2>
+      <p class="eyebrow">Good to know</p>
+      <h2 class="display">Open what you need.</h2>
     </div>
     <div class="m-acc">
-      <details><summary>Can I collect money myself?</summary><p>Please do not collect money in PFA's name until PFA has replied to your plan. Donations made through PFA's own <a href="donate.html">donate page</a> are receipted by PFA, and donations to People for Animals are eligible for tax deduction under Section 80G.</p></details>
-      <details><summary>Will PFA give me a page, a poster or a letter?</summary><p>Say what you need in your plan. The reply will tell you what PFA can provide for it.</p></details>
-      <details><summary>Can I collect supplies instead of money?</summary><p>Yes. Choose "Supplies" as the goal and say what you will collect; PFA will tell you where they are needed and how to get them there.</p></details>
-      <details><summary>What about a corporate campaign?</summary><p>A drive among colleagues can be planned here. For a company's CSR, see <a href="csr.html">CSR partnerships</a>.</p></details>
+      <details><summary>What makes a campaign work?</summary><ul><li>One clear cause: nine dogs on one street.</li><li>A deadline: a birthday, a month, a race day.</li><li>One honest photograph.</li><li>A thank-you, telling people what their money did.</li></ul></details>
+      <details><summary>Can I collect money myself?</summary><p>Not in PFA's name until PFA replies to your plan. Gifts through PFA's <a href="donate.html">donate page</a> get an 80G receipt.</p></details>
+      <details><summary>Can I collect supplies instead?</summary><p>Yes. Choose Supplies as the goal; PFA tells you where they are needed.</p></details>
+      <details><summary>Will PFA give me a poster or a letter?</summary><p>Ask in your plan, and the reply will say what PFA can provide.</p></details>
+      <details><summary>A campaign at work?</summary><p>A drive among colleagues can be planned here. For company CSR, see <a href="csr.html">CSR partnerships</a>.</p></details>
     </div>
   </section>
 </main>
@@ -726,55 +626,20 @@ if (root.document && root.document.head) apply(read());
   var form = $('#campForm');
   if (!M || !form) return;
   function rupees(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
-  /* a dotted run of items that never wraps onto a dot (.dots, assets/chrome.css) */
-  function run(el, items) {
-    el.textContent = '';
-    items.forEach(function (t) { var b = document.createElement('span'); b.textContent = t; el.appendChild(b); });
-  }
 
-  /* the campaign card beside the form */
-  function paint() {
-    var cause = M.picked(form, 'cause');
-    var format = M.picked(form, 'format');
+  /* the goal: an amount for money, a line for supplies or awareness */
+  function fit() {
     var type = M.picked(form, 'goalType') || 'Money';
-    var money = Number($('#goalMoney').value);
-    $('#goalOut').textContent = rupees(money);
+    $('#goalOut').textContent = rupees($('#goalMoney').value);
     form.querySelector('.goal-money').hidden = type !== 'Money';
-    var text = form.querySelector('.goal-text');
-    text.hidden = type === 'Money';
+    form.querySelector('.goal-text').hidden = type === 'Money';
     $('#goalTextLab').textContent = type === 'Supplies' ? 'What you will collect' : 'What you want people to know';
     $('#goalText').placeholder = type === 'Supplies' ? '100 blankets before winter' : 'That community dogs are protected by law';
-    $('#campCause').textContent = cause || 'Choose a cause';
-    $('#campPh').setAttribute('data-cause', cause || 'A cause');
-    var title = $('#title').value.trim();
-    $('#campTitle').textContent = title || 'Your campaign';
-    var name = $('#name').value.trim();
-    run($('#campBy'), ['by ' + (name || 'you'), format ? format.charAt(0).toLowerCase() + format.slice(1) : 'a way to raise']);
-    $('#campGoal').textContent = type === 'Money' ? rupees(money) : ($('#goalText').value.trim() || (type === 'Supplies' ? 'Supplies' : 'Awareness'));
-    form.closest('.m-builder').querySelector('.camp__goal span').textContent = type === 'Money' ? 'goal' : (type === 'Supplies' ? 'collecting' : 'raising');
-    var where = [$('#when').value.trim(), $('#city').value.trim()].filter(Boolean);
-    run($('#campWhen'), where.length ? where : ['When and where']);
-    /* the cows have their own photographs; every other cause shows its name on a plate */
-    var img = $('#campImg');
-    var ph = $('#campPh');
-    if (cause === 'Cows in need' || !cause) { ph.classList.remove('is-gone'); if (!img.getAttribute('src')) img.setAttribute('src', 'media/site/campaign/gau-seva-04.jpg'); }
-    else ph.classList.add('is-gone');
   }
-  form.addEventListener('input', paint);
-  form.addEventListener('change', paint);
-
-  /* a cause card above starts the plan from it */
+  form.addEventListener('input', fit);
+  form.addEventListener('change', fit);
+  fit();
   var flow = M.steps(form);
-  document.querySelectorAll('[data-cause]').forEach(function (b) {
-    if (b.tagName !== 'BUTTON') return;
-    b.addEventListener('click', function () {
-      var r = form.querySelector('input[name="cause"][value="' + b.getAttribute('data-cause') + '"]');
-      if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
-      $('#plan').scrollIntoView({ block: 'start', behavior: 'smooth' });
-      if (flow.at() === 0) flow.go(1);
-    });
-  });
-  paint();
 
   M.send({
     form: form,
@@ -786,7 +651,7 @@ if (root.document && root.document.head) apply(read());
     done: $('#done'),
     doneRef: $('#doneRef'),
     hideOnDone: [$('#plan .m-tabs'), $('#plan .m-bar')],
-    preview: { title: 'Check your plan before it is sent', send: 'Send the plan', labels: { cause: 'Cause', format: 'Kind of campaign', goalType: 'Raising', title: 'Campaign name', reach: 'People you hope to reach', story: 'Why you are doing it' }, extra: [['Goal', '']] },
+    preview: { title: 'Check your plan before it is sent', send: 'Send the plan', labels: { cause: 'Cause', format: 'Kind of campaign', goalType: 'Raising', title: 'Campaign name', story: 'Why you are doing it' } },
     data: function () {
       var type = M.picked(form, 'goalType') || 'Money';
       return {
@@ -797,7 +662,6 @@ if (root.document && root.document.head) apply(read());
         title: $('#title').value.trim(),
         when: $('#when').value.trim(),
         city: $('#city').value.trim(),
-        reach: $('#reach').value.trim(),
         name: $('#name').value.trim(),
         mobile: M.digits($('#mobile').value),
         email: $('#email').value.trim(),
