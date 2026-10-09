@@ -101,7 +101,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>Events 2026 | People for Animals</title>
 <meta name="description" content="Adoption drives, free sterilisation and vaccination camps, CineKind screenings, and shelter open days across India.">
-<link rel="stylesheet" href="assets/chrome.css?v=355cc1b9d7">
+<link rel="stylesheet" href="assets/chrome.css?v=2c562881d7">
 <style>
 :root{
   --paper:#fff;
@@ -320,6 +320,19 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 /* Both columns open on a rule with a 22px gap under it, so their small
    labels ("Most recent", "Bring one to your area") sit level. */
 .ev-lower .band__head .eyebrow{margin-top:0}
+/* The request opens when it is asked for (assets/chrome.js). Closed, the row
+   is the latest event alone, its words beside its picture; open, the request
+   is the page, its heading beside its two steps. */
+.pfa-flows .ev-lower{grid-template-columns:minmax(0,1fr)}
+@media (min-width:901px){
+  .pfa-flows .ev-next{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);column-gap:clamp(28px,5vw,80px);align-items:start}
+  .pfa-flows .ev-next > *{grid-column:1}
+  .pfa-flows .ev-next > .ev-next__photo{grid-column:2;grid-row:1 / span 6;margin:0}
+  .ev-lower > #request.is-flow{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.45fr);gap:clamp(28px,5vw,80px);align-items:start}
+}
+/* open, the request stands on the page's gutter, under the bar */
+.ev-lower.pfa-flow-path{--ev-gutter:max(clamp(16px,4vw,72px),calc((100% - 1440px) / 2));padding-top:0}
+#request .pfa-steps__nav .btn{min-width:180px}
 @media (max-width:900px){.ev-lower{grid-template-columns:minmax(0,1fr)}.ev-now__meta{width:100%;margin-left:0}}
 @media (max-width:560px){.ev-card{width:calc(100vw - 48px);min-width:0}.ev-bars{grid-template-columns:repeat(2,minmax(0,1fr))}.ev-card__title{font-size:30px}.ev-pola figcaption{font-size:21px}}
 @media (max-width:720px){.ev-head{padding-top:calc(var(--ann) + var(--nav) + 36px)}}
@@ -581,7 +594,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=706817d398"></script>
+<script src="assets/chrome.js?v=c4a39f89b1"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
 
@@ -653,65 +666,79 @@ if (root.document && root.document.head) apply(read());
 </article>
 <!-- events-next:end -->
 
-  <section class="band" id="request">
+  <section class="band" id="request" data-flow data-flow-back="Events">
     <div class="band__head">
       <p class="eyebrow">Bring one to your area</p>
       <h2 class="display">Ask for&nbsp;an&nbsp;event.</h2>
-      <p>PFA has no standing calendar of drives and camps. They happen where someone local asks for one and can help make it possible: a ground, a hall, a residents association, a school, a clinic willing to give a day. Tell us what you have in mind and a named person will come back to you.</p>
+      <p>Drives and camps happen where someone local asks for one. Tell PFA what you have in mind; a named person comes back to you.</p>
     </div>
 
-    <form class="form" id="eventForm" novalidate>
-      <div class="field">
-        <label for="evKind">What are you asking for</label>
-        <select id="evKind" required>
-          <option value="">Choose one</option>
-          <option>An adoption drive</option>
-          <option>A sterilisation or vaccination camp</option>
-          <option>A CineKind screening</option>
-          <option>A talk or a school session</option>
-          <option>Something else</option>
-        </select>
-        <span class="error">Choose what you are asking for.</span>
+    <!-- Two steps, one at a time (owner, 9 Oct 2026: "open step 1 after
+         another"): the event, then you. assets/chrome.js steps it; the
+         submit handler below still checks every field before anything goes. -->
+    <form class="form" id="eventForm" data-steps novalidate>
+      <ol class="pfa-steps__tabs" aria-hidden="true"><li><span>01</span>The event</li><li><span>02</span>You</li></ol>
+      <div class="pfa-steps__bar" aria-hidden="true"><span></span></div>
+
+      <div class="pfa-step" data-step="The event">
+        <div class="field">
+          <label for="evKind">What are you asking for</label>
+          <select id="evKind" required>
+            <option value="">Choose one</option>
+            <option>An adoption drive</option>
+            <option>A sterilisation or vaccination camp</option>
+            <option>A CineKind screening</option>
+            <option>A talk or a school session</option>
+            <option>Something else</option>
+          </select>
+          <span class="error">Choose what you are asking for.</span>
+        </div>
+
+        <div class="field">
+          <label for="evCity">City or town</label>
+          <input id="evCity" type="text" autocomplete="address-level2" required>
+          <span class="error">Tell us where.</span>
+        </div>
+
+        <div class="field">
+          <label for="evPlace">Where it could be held <span class="opt">(optional)</span></label>
+          <input id="evPlace" type="text" autocomplete="off" placeholder="A ground, a hall, a society, a school">
+        </div>
+
+        <div class="field">
+          <label for="evNotes">Anything else <span class="opt">(optional)</span></label>
+          <textarea id="evNotes" rows="3" maxlength="1200" placeholder="How many animals, who else is involved, dates that suit you"></textarea>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="evCity">City or town</label>
-        <input id="evCity" type="text" autocomplete="address-level2" required>
-        <span class="error">Tell us where.</span>
+      <div class="pfa-step" data-step="You">
+        <div class="field">
+          <label for="evName">Your name</label>
+          <input id="evName" type="text" autocomplete="name" required>
+          <span class="error">Add your name.</span>
+        </div>
+
+        <div class="field">
+          <label for="evMobile">Mobile number</label>
+          <input id="evMobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required>
+          <span class="error">Enter a 10-digit Indian mobile number.</span>
+        </div>
+
+        <div class="field">
+          <label for="evEmail">Email</label>
+          <input id="evEmail" type="email" autocomplete="email" required>
+          <span class="error">Add a valid email, so PFA can confirm your request.</span>
+        </div>
+        <p class="fine">A request, not a booking: nothing is confirmed until someone at PFA replies.</p>
       </div>
 
-      <div class="field">
-        <label for="evPlace">Where it could be held <span class="opt">(optional)</span></label>
-        <input id="evPlace" type="text" autocomplete="off" placeholder="A ground, a hall, a society, a school">
-        <span class="hint">A drive needs somewhere to happen. If you already have a place in mind, say so.</span>
+      <div class="pfa-steps__nav">
+        <button class="pfa-steps__back" type="button" data-step-back hidden>Back</button>
+        <button class="btn" type="button" data-step-next>Continue</button>
+        <button class="btn" type="submit" id="evSend" hidden>Send the request</button>
+        <span class="pfa-steps__count" data-step-count></span>
       </div>
-
-      <div class="field">
-        <label for="evName">Your name</label>
-        <input id="evName" type="text" autocomplete="name" required>
-        <span class="error">Add your name.</span>
-      </div>
-
-      <div class="field">
-        <label for="evMobile">Mobile number</label>
-        <input id="evMobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required>
-        <span class="error">Enter a 10-digit Indian mobile number.</span>
-      </div>
-
-      <div class="field">
-        <label for="evEmail">Email</label>
-        <input id="evEmail" type="email" autocomplete="email" required>
-        <span class="error">Add a valid email, so PFA can confirm your request.</span>
-      </div>
-
-      <div class="field">
-        <label for="evNotes">Anything else <span class="opt">(optional)</span></label>
-        <textarea id="evNotes" rows="4" maxlength="1200" placeholder="How many animals, who else is involved, dates that suit you"></textarea>
-      </div>
-
-      <button class="btn btn--full" type="submit" id="evSend">Send the request</button>
       <p class="formstatus" data-form-status hidden></p>
-      <p class="fine">This goes to PFA with a reference number you can quote. It is a request, not a booking: nothing is confirmed until someone at PFA replies.</p>
     </form>
   </section>
   </div>

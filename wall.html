@@ -72,7 +72,7 @@
 <title>The Wall | People for Animals</title>
 <meta name="description" content="A community film wall for awareness, the law in plain words, and how a case was handled. Sent in by supporters and volunteers, read by an editor before it goes up. Not for cruelty footage: report that instead.">
 <link rel="stylesheet" href="assets/theatre.css">
-<link rel="stylesheet" href="assets/chrome.css?v=355cc1b9d7">
+<link rel="stylesheet" href="assets/chrome.css?v=2c562881d7">
 <style>
 :root{
   --paper:#fff;
@@ -289,6 +289,18 @@ html.wall-docked header.site{border-bottom-color:transparent;transition:none}
 .form .actions{margin-top:6px}
 .form-success{display:none;border:1px solid var(--ink);padding:24px;font-size:14px;line-height:1.6}
 .form-success.show{display:block}
+/* The form opens when it is asked for (assets/chrome.js): the heading, one
+   line and "How it works" under a plus sign beside it; the form in two steps. */
+.submit__head h2{font-size:clamp(26px,3.2vw,48px)}
+.submit__sub{margin:14px 0 0;max-width:40ch;font-size:15px;line-height:1.6;color:var(--muted)}
+.how{margin-top:28px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.how summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;list-style:none;cursor:pointer;font-size:14px;font-weight:700}
+.how summary::-webkit-details-marker{display:none}
+.how summary::after{content:"+";font-size:20px;font-weight:300;line-height:1}
+.how[open] summary::after{content:"\2212"}
+.how .steps{border-top:1px solid var(--line)}
+.how .step:last-child{border-bottom:0}
+.wall-foot .eyebrow a{color:inherit;border-bottom:1px solid currentColor}
 .wall-foot{padding:0 var(--gutter) 40px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 32px}
 @media (max-width:1000px){.wall__grid{grid-template-columns:repeat(3,minmax(0,1fr))}.wall__grid.is-long{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:860px){.submit{grid-template-columns:1fr}.wall__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wall__grid.is-long{grid-template-columns:1fr}}
@@ -600,7 +612,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=706817d398"></script>
+<script src="assets/chrome.js?v=c4a39f89b1"></script>
 <script src="assets/theatre.js"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
@@ -658,58 +670,73 @@ if (root.document && root.document.head) apply(read());
     </div>
   </section>
 
-  <section class="wall" id="submit">
-    <div class="wall__head">
-      <h2 class="display">Send us yours</h2>
-      <p class="eyebrow">Paste a public link, we do the rest</p>
-    </div>
+  <section class="wall" id="submit" data-flow data-flow-back="The Wall">
     <div class="submit">
-      <div class="steps">
-        <div class="step"><span>01</span><div><p>Paste the link</p><p>Copy the address of your reel, post or video. The post has to be public, or the wall cannot reach it.</p></div></div>
-        <div class="step"><span>02</span><div><p>An editor watches it</p><p>Someone at PFA watches every submission. Nothing that identifies a rescue address, nothing about a live case, and no footage of an animal being hurt. If you have that, it is evidence: <a href="report.html">report it</a> instead, where it stays private and reaches a named person.</p></div></div>
-        <div class="step"><span>03</span><div><p>It goes up on the wall</p><p>Approved pieces publish under your name with a link back to the original post. Ask us to take it down at any time and it comes down.</p></div></div>
+      <div class="submit__head">
+        <h2 class="display">Send us yours</h2>
+        <p class="submit__sub">Paste a public link. An editor watches it, and it goes up under your name.</p>
+        <details class="how">
+          <summary>How it works</summary>
+          <div class="steps">
+      <div class="step"><span>01</span><div><p>Paste the link</p><p>Copy the address of your reel, post or video. The post has to be public, or the wall cannot reach it.</p></div></div>
+              <div class="step"><span>02</span><div><p>An editor watches it</p><p>Someone at PFA watches every submission. Nothing that identifies a rescue address, nothing about a live case, and no footage of an animal being hurt. If you have that, it is evidence: <a href="report.html">report it</a> instead, where it stays private and reaches a named person.</p></div></div>
+              <div class="step"><span>03</span><div><p>It goes up on the wall</p><p>Approved pieces publish under your name with a link back to the original post. <a href="ask.html">Ask us</a> to take it down at any time and it comes down.</p></div></div>
+          </div>
+        </details>
       </div>
       <div>
-        <form class="form" id="wallForm" novalidate>
-          <div class="field">
-            <label for="wallUrl">Link to your video</label>
-            <input id="wallUrl" name="link" type="url" required placeholder="https://www.instagram.com/reel/">
-            <span class="error">Paste the full link to a public post.</span>
-            <span class="hint">Instagram, Facebook, YouTube or Vimeo. Awareness, the law, or how a case was handled, not footage of an animal being hurt.</span>
+        <!-- Two steps, one at a time (owner, 9 Oct 2026: "open step 1 after
+             another"): the video, then you. assets/chrome.js steps it; the
+             submit handler below still checks every field before anything goes. -->
+        <form class="form" id="wallForm" data-steps novalidate>
+          <ol class="pfa-steps__tabs" aria-hidden="true"><li><span>01</span>The video</li><li><span>02</span>You</li></ol>
+          <div class="pfa-steps__bar" aria-hidden="true"><span></span></div>
+          <div class="pfa-step" data-step="The video">
+            <div class="field">
+              <label for="wallUrl">Link to your video</label>
+              <input id="wallUrl" name="link" type="url" required placeholder="https://www.instagram.com/reel/">
+              <span class="error">Paste the full link to a public post on Instagram, Facebook, YouTube or Vimeo.</span>
+              <span class="hint">Awareness, the law, or how a case was handled; not footage of an animal being hurt.</span>
+            </div>
+            <div class="field">
+              <label for="wallWhich">Which wall</label>
+              <select id="wallWhich" name="wall" required>
+                <option value="long">Long form, over three minutes</option>
+                <option value="short">Short form, under a minute</option>
+              </select>
+              <span class="error">Choose a wall.</span>
+            </div>
+            <div class="field">
+              <label for="wallNote">Anything we should know <span class="opt">(optional)</span></label>
+              <textarea id="wallNote" name="note" rows="3" placeholder="Where it was filmed, who is in it, whether an animal in it is now safe."></textarea>
+            </div>
           </div>
-          <div class="field">
-            <label for="wallWhich">Which wall</label>
-            <select id="wallWhich" name="wall" required>
-              <option value="long">Long form, over three minutes</option>
-              <option value="short">Short form, under a minute</option>
-            </select>
-            <span class="error">Choose a wall.</span>
+          <div class="pfa-step" data-step="You">
+            <div class="field">
+              <label for="wallName">Name to publish it under</label>
+              <input id="wallName" name="name" type="text" required placeholder="Asha K.">
+              <span class="error">Add the name to credit.</span>
+            </div>
+            <div class="field">
+              <label for="wallEmail">Email</label>
+              <input id="wallEmail" name="email" type="email" autocomplete="email" required placeholder="So an editor can reach you">
+              <span class="error">Add a valid email, so an editor can reach you.</span>
+            </div>
+            <div class="field">
+              <label for="wallMobile">Mobile <span class="opt">(optional)</span></label>
+              <input id="wallMobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel">
+              <span class="error">An Indian mobile number is 10 digits, starting 6, 7, 8 or 9.</span>
+            </div>
+            <label class="consent" for="wallConsent">
+              <input id="wallConsent" name="consent" type="checkbox" required>
+              <span>I filmed this or have the right to share it, and I am happy for People for Animals to publish it on the wall with credit.</span>
+            </label>
           </div>
-          <div class="field">
-            <label for="wallName">Name to publish it under</label>
-            <input id="wallName" name="name" type="text" required placeholder="Asha K.">
-            <span class="error">Add the name to credit.</span>
-          </div>
-          <div class="field">
-            <label for="wallEmail">Email</label>
-            <input id="wallEmail" name="email" type="email" autocomplete="email" required placeholder="So an editor can reach you">
-            <span class="error">Add a valid email, so an editor can reach you.</span>
-          </div>
-          <div class="field">
-            <label for="wallMobile">Mobile <span class="opt">(optional)</span></label>
-            <input id="wallMobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel">
-            <span class="error">An Indian mobile number is 10 digits, starting 6, 7, 8 or 9.</span>
-          </div>
-          <div class="field">
-            <label for="wallNote">Anything we should know</label>
-            <textarea id="wallNote" name="note" placeholder="Where it was filmed, who is in it, whether an animal in it is now safe."></textarea>
-          </div>
-          <label class="consent" for="wallConsent">
-            <input id="wallConsent" name="consent" type="checkbox" required>
-            <span>I filmed this or have the right to share it, and I am happy for People for Animals to publish it on the wall with credit.</span>
-          </label>
-          <div class="actions">
-            <button class="btn" type="submit">Send for review</button>
+          <div class="pfa-steps__nav">
+            <button class="pfa-steps__back" type="button" data-step-back hidden>Back</button>
+            <button class="btn" type="button" data-step-next>Continue</button>
+            <button class="btn" type="submit" hidden>Send for review</button>
+            <span class="pfa-steps__count" data-step-count></span>
           </div>
         </form>
         <p class="formstatus" id="wallStatus" data-form-status hidden></p>
@@ -720,7 +747,7 @@ if (root.document && root.document.head) apply(read());
 
   <div class="wall-foot">
     <p class="eyebrow">People for Animals</p>
-    <p class="eyebrow">Ask us to remove yours at any time</p>
+    <p class="eyebrow"><a href="ask.html">Ask us</a> to remove yours at any time</p>
   </div>
 </main>
 
@@ -913,6 +940,12 @@ if (root.document && root.document.head) apply(read());
       }
     });
     f.addEventListener('input', function(e){ var t = e.target; if (t && t.closest) bad(t, false); });
+    /* the first step's link must be one of the six platforms, as on sending */
+    f.addEventListener('pfa:step-check', function(e){
+      if (!e.detail || e.detail.index !== 0) return;
+      var url = $('#wallUrl');
+      if (url.value.trim() && bad(url, !knownHost(url.value.trim()))) e.preventDefault();
+    });
   })();
 
   /* ---------- the wall's films ----------

@@ -529,3 +529,57 @@ button.pfa-close.pfa-close:focus-visible{outline:none;text-decoration:underline;
    (.band__head p, .feature__body p ...), which made the label 14 to 16px in
    those places and 11px everywhere else (7 Oct 2026). */
 .eyebrow.eyebrow.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+
+/* ======================================================================
+   A form opens when it is asked for (assets/chrome.js, PFAFlow). Owner,
+   9 Oct 2026: "open step 1 after another, else register button has no
+   meaning/purpose", and "always have a link to contact when at such
+   stages". A section marked data-flow is closed until a link or the
+   address asks for it; open, it is the page, under a bar with the way back
+   and a way to reach PFA. html.pfa-flows is set by the script, so without
+   it every form stays on the page as before.
+   ====================================================================== */
+.pfa-flows [data-flow]:not(.is-flow){display:none}
+.pfa-flow-off{display:none!important}
+body.in-flow .pfa-footer,body.in-flow .announce{display:none}
+.pfa-flow-bar{display:none}
+.pfa-flow-bar.is-on{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;box-sizing:border-box;width:100%;
+  margin-top:calc(var(--ann,0px) + var(--nav,81px));
+  padding:clamp(18px,2.4vw,30px) var(--gutter,max(clamp(16px,4vw,72px),(100% - 1440px) / 2)) 0}
+.pfa-flow-bar a{text-decoration:none}
+.pfa-flow-bar__back{display:inline-flex;align-items:center;gap:10px;min-height:40px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.62);transition:color .2s}
+.pfa-flow-bar__back:hover{color:#111}
+.pfa-flow-bar__help{display:inline-flex;align-items:center;min-height:40px;font-size:13px;color:rgba(17,17,17,.62)}
+.pfa-flow-bar__help b{margin-left:4px;font-weight:600;color:#111;border-bottom:1px solid rgba(17,17,17,.35);padding-bottom:1px;transition:border-color .2s}
+.pfa-flow-bar__help:hover b{border-bottom-color:#111}
+/* the open form starts under the bar, not under the header */
+body.in-flow .is-flow{margin-top:0!important;padding-top:clamp(20px,3vw,40px)!important}
+@media (max-width:400px){.pfa-flow-bar__q{display:none}.pfa-flow-bar__help b{margin-left:0}}
+
+/* A long form, one step at a time (assets/chrome.js). Only with the script:
+   without it every step shows, as a plain form. */
+.pfa-flows form[data-steps] .pfa-step:not(.is-current){display:none}
+form[data-steps] .pfa-step{display:grid;gap:22px;min-width:0}
+.pfa-flows form[data-steps] .pfa-step.is-current{animation:pfaStepIn .35s cubic-bezier(.2,.7,.2,1)}
+@keyframes pfaStepIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pfa-flows form[data-steps] .pfa-step.is-current{animation:none}}
+.pfa-steps__tabs{display:flex;flex-wrap:wrap;gap:6px 26px;margin:0 0 16px;padding:0;list-style:none}
+.pfa-steps__tabs li{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6a6a6a;padding-bottom:6px;border-bottom:2px solid transparent}
+.pfa-steps__tabs li span{margin-right:8px}
+.pfa-steps__tabs li.is-current{color:#111;border-bottom-color:#111}
+.pfa-steps__tabs li.is-done{color:#111}
+.pfa-steps__bar{height:2px;background:#e4e2df;margin:0 0 28px}
+.pfa-steps__bar span{display:block;height:100%;width:0;background:#111;transition:width .35s cubic-bezier(.2,.7,.2,1)}
+/* the stepper sets its own rhythm, whatever gap the page gives its form */
+form[data-steps]{row-gap:0!important}
+.pfa-steps__nav{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:28px}
+.pfa-steps__nav [hidden]{display:none!important}
+.pfa-steps__back{background:none;border:0;padding:12px 0;font:inherit;font-size:13px;color:#6a6a6a;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.pfa-steps__back:hover{color:#111}
+.pfa-steps__count{margin-left:auto;font-size:12px;color:#6a6a6a}
+html:not(.pfa-flows) .pfa-steps__tabs,html:not(.pfa-flows) .pfa-steps__bar,html:not(.pfa-flows) [data-step-next],html:not(.pfa-flows) .pfa-steps__count{display:none}
+
+/* "Sent one already? Follow it": the one line a closed follow form leaves */
+.pfa-follow-line{margin:0;padding:clamp(22px,3vw,32px) var(--gutter,max(clamp(16px,4vw,72px),(100% - 1440px) / 2));border-top:1px solid var(--line,#e4e2df);font-size:14px;line-height:1.5;color:rgba(17,17,17,.62)}
+.pfa-follow-line a{margin-left:4px;color:#111;text-decoration:none;border-bottom:1px solid rgba(17,17,17,.35);padding-bottom:1px}
+.pfa-follow-line a:hover{border-bottom-color:#111}

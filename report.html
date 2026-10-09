@@ -65,7 +65,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>Report cruelty | People for Animals</title>
 <meta name="description" content="Report an animal being hurt, neglected or abandoned. It reaches a named person at PFA, you get a reference, and you can follow what happens.">
-<link rel="stylesheet" href="assets/chrome.css?v=355cc1b9d7">
+<link rel="stylesheet" href="assets/chrome.css?v=2c562881d7">
 <style>
 :root{
   --paper:#fff;
@@ -511,7 +511,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=706817d398"></script>
+<script src="assets/chrome.js?v=c4a39f89b1"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
 
@@ -623,7 +623,12 @@ if (root.document && root.document.head) apply(read());
     </div>
   </section>
 
-  <section class="follow" id="follow">
+  <!-- Following up is for someone who has already sent something, so the
+       form opens when asked for (owner, 9 Oct 2026: "show more only when one
+       shows interest"); assets/chrome.js opens it, and #follow=REF still lands
+       in it with the number filled in. -->
+  <p class="pfa-follow-line">Sent a report already? <a href="#follow">Follow it</a></p>
+  <section class="follow" id="follow" data-flow data-flow-back="Report cruelty">
     <div class="follow__in">
       <h2>Follow a report you sent</h2>
       <p class="sub">The reference number and the mobile or email you gave with it.</p>
@@ -867,7 +872,7 @@ if (root.document && root.document.head) apply(read());
   }
   fForm.addEventListener('submit', function (e) { e.preventDefault(); follow($('#fRef').value.trim().toUpperCase(), $('#fContact').value.trim()); });
   var m = /[#&]follow=([^&]+)/.exec(location.hash || '');
-  if (m) { $('#fRef').value = decodeURIComponent(m[1]); $('#follow').scrollIntoView(); $('#fContact').focus(); }
+  if (m) { $('#fRef').value = decodeURIComponent(m[1]); if (window.PFAFlow) window.PFAFlow.open('follow'); else $('#follow').scrollIntoView(); $('#fContact').focus(); }
 }());
 </script>
 <script>

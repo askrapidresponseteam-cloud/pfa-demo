@@ -24,7 +24,7 @@ test('dollars are offered beside rupees and route to PayPal, amount in the path'
 test('the rupee flow is untouched by the dollar panel', () => {
   assert.match(html, /action="\/api\/payment\/create"/, 'the CCAvenue post stands');
   assert.match(html, /id="next1"/, 'step one still continues to details');
-  assert.match(html, /#p1\.usd > :not\(#giveCur\):not\(#usdPane\):not\(#giveKind\)\{display:none\}/,
+  assert.match(html, /#p1\.usd > :not\(\.give__opts\):not\(#usdPane\)\{display:none\}/,
     'dollars hide the rupee flow as one thing rather than editing it, and leave the gift choice in view (v1.401)');
 });
 
@@ -85,12 +85,16 @@ test('other amount opens the field, using the class the stylesheet answers to', 
   assert.ok(!/classList\.toggle\('open'/.test(html), 'nothing still toggles a class no rule matches');
 });
 
-test('the chosen card can be read: its caption is not ink on ink', () => {
-  /* Selecting an amount turns the card black. The caption stayed at
-     rgba(17,17,17,.7), so the one card a donor had actually decided on was
-     the one card that would not say what it bought. Same fault as the
-     membership tiers in v1.339, in a second place. */
+test('the chosen card can be read: it stays paper, so its caption stays ink', () => {
+  /* Selecting an amount used to turn the card black, and its caption had to
+     be turned white to be read at all (v1.339). Since 9 Oct 2026 the chosen
+     card stays paper, drawn round in ink (owner: "looks a bit hard and uneasy
+     on the eyes"), so the caption is a dark grey on white. */
+  const sel = /\.amts button\[aria-pressed="true"\]\{([^}]+)\}/.exec(html);
+  assert.ok(sel, 'the chosen card has a rule');
+  assert.doesNotMatch(sel[1], /background/, 'not filled');
+  assert.match(sel[1], /border-color:var\(--ink\)/);
   const rule = /\.amts button\[aria-pressed="true"\] small\{color:([^}]+)\}/.exec(html);
   assert.ok(rule, 'the selected caption still has a rule of its own');
-  assert.match(rule[1], /^rgba\(255,255,255/, `selected caption is ${rule[1]} on #111`);
+  assert.match(rule[1], /^#3f3d3a$/, `selected caption is ${rule[1]} on white`);
 });

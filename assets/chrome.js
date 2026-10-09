@@ -914,3 +914,296 @@
   window.addEventListener('load', soon);
   window.addEventListener('resize', soon);
 })();
+
+/* ---------- a form opens when it is asked for --------------------------
+   Owner, 9 Oct 2026, of a microsite's Register button with the form already
+   on the screen under it: "open step 1 after another, else register button
+   has no meaning/purpose. be sensible. you need to think like apple/google.
+   across the whole site". And, the same minute: "always have a link to
+   contact when at such stages".
+
+   A section marked data-flow holds a form. It stays closed until something
+   asks for it: a link to its id, or an address that names it (so site search
+   and links from other pages land straight in it). Then it is the page: the
+   rest of main, the announcement and the footer step aside, and a bar over
+   it carries the way back to the page and a way to reach PFA, which the
+   footer it hides would otherwise have been. The browser's Back closes it.
+   Closing keeps what was typed, so opening it again carries on.
+
+   The class that closes the forms is set here, while the header is being
+   read and before the page's body is, so a form is never seen and then
+   hidden. Without this script nothing is closed and the links scroll to the
+   forms, as they always did. ---------------------------------------------- */
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  /* a real browser only: an address, a history and a page to mark */
+  if (!root || !root.classList || !window.location || !window.history || !window.history.pushState) return;
+  root.classList.add('pfa-flows');
+
+  var HELP = 'ask.html';
+  var current = null;   /* the open flow */
+  var opener = null;    /* the link that opened it, to return to */
+
+  function bare(p) { return String(p || '').replace(/\.html$/, '').replace(/\/index$/, '/'); }
+  function idOf(hash) { return decodeURIComponent(String(hash || '').replace(/^#/, '').split(/[&?=]/)[0] || ''); }
+  function flowById(id) {
+    var el = id && document.getElementById(id);
+    return el && el.hasAttribute('data-flow') ? el : null;
+  }
+  /* The id a link points at on this page, or '' if it goes anywhere else. */
+  function hereId(a) {
+    var href = a.getAttribute('href') || '';
+    if (href.charAt(0) === '#') return idOf(href);
+    if (href.indexOf('#') === -1 || a.target === '_blank') return '';
+    if (bare(a.pathname) !== bare(location.pathname) || a.host !== location.host) return '';
+    return idOf(a.hash);
+  }
+
+  function label(flow) {
+    return flow.getAttribute('data-flow-back') || String(document.title || '').split(' | ')[0] || 'Back';
+  }
+  /* The bar opens main, on the page's own gutter, whatever the flow sits in. */
+  function bar(flow) {
+    var main = flow.closest('main') || document.body;
+    var have = main.querySelectorAll(':scope > .pfa-flow-bar');
+    for (var i = 0; i < have.length; i++) if (have[i].getAttribute('data-for') === flow.id) return have[i];
+    var b = document.createElement('div');
+    b.className = 'pfa-flow-bar';
+    b.setAttribute('data-for', flow.id);
+    var back = document.createElement('a');
+    back.className = 'pfa-flow-bar__back';
+    back.href = location.pathname + location.search;
+    back.setAttribute('data-flow-close', '');
+    back.innerHTML = '<span aria-hidden="true">←</span> ';
+    back.appendChild(document.createTextNode(label(flow)));
+    var help = document.createElement('a');
+    help.className = 'pfa-flow-bar__help';
+    help.href = HELP;
+    help.target = '_blank';
+    help.rel = 'noopener';
+    help.innerHTML = '<span class="pfa-flow-bar__q">Need help? </span><b>Contact PFA</b>';
+    help.setAttribute('aria-label', 'Need help? Contact PFA (opens in a new tab, so nothing here is lost)');
+    b.appendChild(back);
+    b.appendChild(help);
+    main.insertBefore(b, main.firstChild);
+    return b;
+  }
+
+  /* Everything in main beside the flow's own line of ancestors steps aside;
+     the ancestors are marked so a page can let a grid fall to one column. */
+  function aside(flow, on) {
+    var main = flow.closest('main') || document.body;
+    var marked = main.querySelectorAll('.pfa-flow-off, .pfa-flow-path');
+    for (var i = 0; i < marked.length; i++) marked[i].classList.remove('pfa-flow-off', 'pfa-flow-path');
+    if (!on) return;
+    var b = bar(flow);
+    for (var el = flow; el && el !== main; el = el.parentElement) {
+      if (el !== flow) el.classList.add('pfa-flow-path');
+      var kids = el.parentElement ? el.parentElement.children : [];
+      for (var k = 0; k < kids.length; k++) {
+        var sib = kids[k];
+        if (sib === el || sib === b || /^(SCRIPT|STYLE|TEMPLATE|DIALOG)$/.test(sib.tagName)) continue;
+        if (sib.classList.contains('pfa-flow-bar')) continue;
+        sib.classList.add('pfa-flow-off');
+      }
+    }
+  }
+  function remeasure() {
+    if (window.PFA_CHROME && window.PFA_CHROME.measure) window.PFA_CHROME.measure();
+  }
+  function tell(flow, name) {
+    try { flow.dispatchEvent(new CustomEvent(name, { bubbles: true })); } catch (_) {}
+  }
+
+  function show(flow) {
+    if (current === flow) return;
+    if (current) hide(true);
+    current = flow;
+    flow.classList.add('is-flow');
+    bar(flow).classList.add('is-on');
+    aside(flow, true);
+    document.body.classList.add('in-flow');
+    remeasure();
+    window.scrollTo(0, 0);
+    var head = flow.querySelector('h1, h2, h3');
+    if (head) {
+      if (!head.hasAttribute('tabindex')) head.setAttribute('tabindex', '-1');
+      try { head.focus({ preventScroll: true }); } catch (_) {}
+    }
+    tell(flow, 'pfa:flow-open');
+  }
+  function hide(quiet) {
+    var flow = current;
+    if (!flow) return;
+    current = null;
+    flow.classList.remove('is-flow');
+    bar(flow).classList.remove('is-on');
+    aside(flow, false);
+    document.body.classList.remove('in-flow');
+    remeasure();
+    if (!quiet) {
+      var back = opener && document.body.contains(opener) && !flow.contains(opener) ? opener : null;
+      if (back) back.scrollIntoView({ block: 'center' });
+      else window.scrollTo(0, 0);
+    }
+    opener = null;
+    tell(flow, 'pfa:flow-close');
+  }
+
+  /* Open by id: the address gains it, so Back closes and a copied link opens. */
+  function open(id, from) {
+    var flow = flowById(id);
+    if (!flow) return false;
+    opener = from || opener;
+    if (idOf(location.hash) !== id) history.pushState({ pfaFlow: id }, '', '#' + id);
+    show(flow);
+    return true;
+  }
+  function close() {
+    if (!current) return;
+    if (history.state && history.state.pfaFlow) { history.back(); return; }
+    history.replaceState(null, '', location.pathname + location.search);
+    hide(false);
+  }
+  function sync() {
+    var flow = flowById(idOf(location.hash));
+    if (flow) show(flow);
+    else hide(false);
+  }
+
+  window.PFAFlow = { open: open, close: close, isOpen: function () { return !!current; } };
+
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    if (a.hasAttribute('data-flow-close')) { e.preventDefault(); close(); return; }
+    var id = hereId(a);
+    if (!id) return;
+    if (flowById(id)) { e.preventDefault(); open(id, a); return; }
+    /* a link to another part of this page, from inside a flow: the page
+       comes back first, so there is somewhere to go */
+    if (current && document.getElementById(id)) hide(true);
+  }, true);
+  window.addEventListener('popstate', sync);
+  window.addEventListener('hashchange', sync);
+
+  function ready(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, { once: true });
+    else fn();
+  }
+  ready(function () {
+    var flow = flowById(idOf(location.hash));
+    if (flow && !current) show(flow);
+  });
+})();
+
+/* ---------- a long form, one step at a time ------------------------------
+   The same owner's note: "show things one after another in stages like you
+   have for application.. dont bombard people". A form marked data-steps is
+   written as .pfa-step blocks, each with data-step="its name", followed by a
+   .pfa-steps__nav holding Back, Continue and the form's own submit button.
+   One block shows at a time; Continue checks the block on screen (required,
+   an email, an Indian mobile, a link) in the markup the pages already use
+   (.field.is-bad shows the field's own .error), and a page with a rule of
+   its own listens for pfa:step-check and cancels it. The page's own submit
+   handler still checks everything; if it flags a field in an earlier step,
+   that step comes back. Without this script every block shows, as a plain
+   form. ---------------------------------------------------------------- */
+(function () {
+  'use strict';
+  var EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/;
+  var MOBILE = /^[6-9]\d{9}$/;
+  var LINK = /^https?:\/\/[^\s/]+\.[^\s]+/;
+
+  function boxOf(el) { return el.closest('.field') || el.closest('.consent') || el.closest('label'); }
+
+  function wire(form) {
+    if (form.getAttribute('data-steps-wired')) return;
+    form.setAttribute('data-steps-wired', '1');
+    var steps = [].slice.call(form.querySelectorAll('.pfa-step'));
+    if (steps.length < 2) return;
+    var tabs = [].slice.call(form.querySelectorAll('.pfa-steps__tabs li'));
+    var bar = form.querySelector('.pfa-steps__bar span');
+    var back = form.querySelector('[data-step-back]');
+    var next = form.querySelector('[data-step-next]');
+    var send = form.querySelector('.pfa-steps__nav [type="submit"]');
+    var count = form.querySelector('[data-step-count]');
+    var at = 0;
+
+    function paint(focus) {
+      steps.forEach(function (s, i) { s.classList.toggle('is-current', i === at); });
+      tabs.forEach(function (t, i) { t.classList.toggle('is-current', i === at); t.classList.toggle('is-done', i < at); });
+      if (bar) bar.style.width = Math.round(((at + 1) / steps.length) * 100) + '%';
+      var last = at === steps.length - 1;
+      if (back) back.hidden = at === 0;
+      if (next) next.hidden = last;
+      if (send) send.hidden = !last;
+      if (count) count.textContent = 'Step ' + (at + 1) + ' of ' + steps.length;
+      if (!focus) return;
+      if (form.getBoundingClientRect().top < 90) form.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      var f = steps[at].querySelector('input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea');
+      if (f) { try { f.focus({ preventScroll: true }); } catch (_) {} }
+    }
+    function check(step) {
+      var first = null;
+      [].forEach.call(step.querySelectorAll('input, select, textarea'), function (el) {
+        if (el.disabled || el.type === 'hidden' || el.closest('[hidden]')) return;
+        var v = String(el.value || '').trim(), bad = false;
+        if (el.type === 'checkbox') bad = el.required && !el.checked;
+        else if (el.required && !v) bad = true;
+        else if (v && el.type === 'email') bad = !EMAIL.test(v);
+        else if (v && el.type === 'tel') bad = !MOBILE.test(v.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, ''));
+        else if (v && el.type === 'url') bad = !LINK.test(v);
+        var box = boxOf(el);
+        if (box) box.classList.toggle('is-bad', bad);
+        if (bad && !first) first = el;
+      });
+      var ev;
+      try { ev = new CustomEvent('pfa:step-check', { cancelable: true, detail: { step: step, index: steps.indexOf(step) } }); } catch (_) { ev = null; }
+      if (ev && !form.dispatchEvent(ev) && !first) first = step.querySelector('.is-bad input, .is-bad select, .is-bad textarea') || step;
+      return first;
+    }
+    function go(n, focus) { at = Math.max(0, Math.min(steps.length - 1, n)); paint(focus); }
+
+    if (next) next.addEventListener('click', function () {
+      var bad = check(steps[at]);
+      if (bad) { if (bad.focus) bad.focus(); return; }
+      go(at + 1, true);
+    });
+    if (back) back.addEventListener('click', function () { go(at - 1, true); });
+    /* Enter in a box moves on, as Continue does; it never sends from an early step */
+    form.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' || at === steps.length - 1) return;
+      var t = e.target;
+      if (!t || t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON' || t.tagName === 'A') return;
+      e.preventDefault();
+      if (next) next.click();
+    }, true);
+    form.addEventListener('input', function (e) { var box = e.target && boxOf(e.target); if (box) box.classList.remove('is-bad'); });
+    form.addEventListener('change', function (e) { var box = e.target && boxOf(e.target); if (box && e.target.type === 'checkbox') box.classList.remove('is-bad'); });
+    /* the page checks the whole form on sending: a fault in an earlier step brings that step back */
+    form.addEventListener('submit', function () {
+      setTimeout(function () {
+        var bad = form.querySelector('.is-bad');
+        if (!bad) return;
+        for (var i = 0; i < steps.length; i++) {
+          if (steps[i].contains(bad)) {
+            if (i !== at) go(i, false);
+            var f = bad.querySelector('input, select, textarea');
+            if (f) { try { f.focus(); } catch (_) {} }
+            return;
+          }
+        }
+      }, 0);
+    });
+    paint(false);
+  }
+
+  function ready(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, { once: true });
+    else fn();
+  }
+  ready(function () { [].forEach.call(document.querySelectorAll('form[data-steps]'), wire); });
+})();

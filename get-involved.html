@@ -64,7 +64,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Get Involved &#183; People for Animals</title>
 <meta name="description" content="Volunteer with People for Animals, become a member, or apply for a colony caregiver card. Every application is read by a named person and you are told where yours has got to.">
-<link rel="stylesheet" href="assets/chrome.css?v=355cc1b9d7">
+<link rel="stylesheet" href="assets/chrome.css?v=2c562881d7">
 <style>
 :root{
   --paper:#fff;
@@ -408,6 +408,10 @@ body.in-flow .pfa-footer,body.in-flow .announce{display:none}
 .gi.is-guided.has-open .gi__back{display:inline-flex}
 .gi__back:hover{color:var(--ink)}
 .gi__back:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+/* a way to reach PFA at every step (owner, 9 Oct 2026: "always have a link to
+   contact when at such stages"); the footer is not there in a journey */
+.gi__bar .gi__progress{margin-left:auto}
+.gi__help{flex:none}
 .gi__section:focus{outline:none}
 /* PFA_GI_CSS_END */
 
@@ -716,7 +720,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=706817d398"></script>
+<script src="assets/chrome.js?v=c4a39f89b1"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
 
@@ -755,6 +759,7 @@ if (root.document && root.document.head) apply(read());
       <div class="gi__bar">
         <button type="button" class="gi__back" data-gi-back><span aria-hidden="true">&larr;</span> Back to the tribe</button>
         <ol class="gi__progress" aria-label="Steps"><li>Areas</li><li>About you</li><li>Send</li></ol>
+        <a class="pfa-flow-bar__help gi__help" href="ask.html" target="_blank" rel="noopener" aria-label="Need help? Contact PFA (opens in a new tab, so nothing here is lost)"><span class="pfa-flow-bar__q">Need help? </span><b>Contact PFA</b></a>
       </div>
 
       <form class="form gi__form" id="volForm" novalidate>
@@ -823,6 +828,7 @@ if (root.document && root.document.head) apply(read());
       <div class="gi__bar">
         <button type="button" class="gi__back" data-gi-back><span aria-hidden="true">&larr;</span> Back to the tribe</button>
         <ol class="gi__progress" aria-label="Steps"><li>The membership</li><li>About you</li><li>Your address</li><li>Pay</li></ol>
+        <a class="pfa-flow-bar__help gi__help" href="ask.html" target="_blank" rel="noopener" aria-label="Need help? Contact PFA (opens in a new tab, so nothing here is lost)"><span class="pfa-flow-bar__q">Need help? </span><b>Contact PFA</b></a>
       </div>
 
       <form class="form gi__form" id="memForm" method="post" action="/api/payment/create" novalidate>
@@ -894,6 +900,7 @@ if (root.document && root.document.head) apply(read());
       <div class="gi__bar">
         <button type="button" class="gi__back" data-gi-back><span aria-hidden="true">&larr;</span> Back to the tribe</button>
         <ol class="gi__progress" aria-label="Steps"><li>The card</li><li>About you</li><li>Your colony</li><li>Pay</li></ol>
+        <a class="pfa-flow-bar__help gi__help" href="ask.html" target="_blank" rel="noopener" aria-label="Need help? Contact PFA (opens in a new tab, so nothing here is lost)"><span class="pfa-flow-bar__q">Need help? </span><b>Contact PFA</b></a>
       </div>
 
       <form class="form gi__form" id="cgForm" method="post" action="/api/payment/create" novalidate>
