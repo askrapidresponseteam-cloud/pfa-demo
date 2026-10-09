@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Leave a legacy | People for Animals</title>
+<meta name="description" content="Remember the animals in your will: the ways a gift in a will can work, wording to take to your lawyer, and a private way to talk to PFA about it.">
+<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<style>
+/* Leave a legacy (owner, 9 Oct 2026: a microsite for it). The old page offered a bequest, a facility named after the donor, and a PDF; this keeps both promises, tells the true story of the legacy that built the Sanjay Gandhi Animal Care Centre, and lets a visitor draft the wording. */
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#fff;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --pop:#ff3b18;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav and its rule; assets/chrome.js measures the real height. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+::selection{background:var(--pop);color:#fff}
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none!important}
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 30px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light,.btn--ghost{background:#fff;color:var(--ink)}
+.btn--light:hover,.btn--ghost:hover{background:var(--ink);color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- hero: the family's room above the headline (test/hero-alignment.test.js) ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  overflow:hidden;isolation:isolate;border-bottom:1px solid var(--line)}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
+.hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:18px}
+
+/* ---------- bands: the numbered head is the editorial theme's ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band + .band{padding-top:0}
+.band__head{max-width:var(--max);margin:0 0 clamp(32px,4vw,56px)}
+.band__head h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:17ch}
+.band__head p{margin:20px 0 0;max-width:58ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.72)}
+
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .band{padding-left:16px;padding-right:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- this page ---------- */
+.clause{position:relative;border:1px solid var(--ink);padding:clamp(26px,3vw,44px);background:var(--paper)}
+.clause::before{content:"";position:absolute;left:0;top:0;width:56px;height:3px;background:var(--pop)}
+.clause__lab{margin:0 0 18px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.clause__text{margin:0;font-family:var(--display);font-size:clamp(19px,1.7vw,25px);line-height:1.45;letter-spacing:.005em}
+.clause__text mark{background:none;color:inherit;border-bottom:2px solid var(--pop);padding:0 2px}
+.clause__acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.wording{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(28px,4vw,64px);align-items:start}
+.wording .controls{display:grid;gap:22px}
+.talk{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.promise{display:grid;gap:0;border-top:1px solid var(--ink)}
+.promise li{padding:18px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.6}
+.promise b{display:block;font-family:var(--display);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:6px}
+@media (max-width:900px){.wording,.talk{grid-template-columns:minmax(0,1fr)}}
+/* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
+@media (max-width:700px),(pointer:coarse){
+  
+}
+/* ---- end phone pass ---- */
+</style>
+<link rel="stylesheet" href="assets/micro.css">
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<!-- The editorial layer: loads after the page's own style and the microsite
+     kit, so the theme wins ties (test/hero-alignment.test.js). -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/legacy">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Leave a legacy">
+  <meta property="og:description" content="Remember the animals in your will: the ways a gift in a will can work, wording to take to your lawyer, and a private way to talk to PFA about it.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/legacy">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Leave a legacy">
+  <meta name="twitter:description" content="Remember the animals in your will: the ways a gift in a will can work, wording to take to your lawyer, and a private way to talk to PFA about it.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Leave a legacy","item":"https://peopleforanimalsindia.org/legacy"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<script id="pfa-vis">
+(function (root) {
+'use strict';
+var KEY = 'pfa:visibility';
+var LOCKED = { index: 1, track: 2, search: 2 };
+var NOTICE = 'This page is not available right now.';
+var HOME = 'Go to the home page';
+var CSS_ID = 'pfa-vis-css';
+var ROBOTS_ID = 'pfa-vis-robots';
+var GONE_ID = 'pfa-gone';
+var PAGE = /^[a-z0-9][a-z0-9-]*$/;
+var PART = /^[A-Za-z][A-Za-z0-9_-]*$/;
+var applied = { version: 0, pages: [], modules: [] };
+var title = null;
+function pagesOf(state) {
+return (state && Array.isArray(state.pages) ? state.pages : []).filter(function (p) {
+return typeof p === 'string' && PAGE.test(p) && !LOCKED[p];
+});
+}
+function modulesOf(state) {
+return (state && Array.isArray(state.modules) ? state.modules : []).filter(function (m) {
+var at = typeof m === 'string' ? m.indexOf('#') : -1;
+return at > 0 && PAGE.test(m.slice(0, at)) && PART.test(m.slice(at + 1)) && LOCKED[m.slice(0, at)] !== 2;
+});
+}
+function clean(state) {
+return { version: Number(state && state.version) || 0, pages: pagesOf(state), modules: modulesOf(state) };
+}
+function pageOf(url) {
+var p = String(url == null ? '' : url).split('#')[0].split('?')[0];
+p = p.slice(p.lastIndexOf('/') + 1).replace(/\.html$/, '');
+try { p = decodeURIComponent(p); } catch (e) {}
+return p || 'index';
+}
+function linksTo(page) {
+var f = page + '.html';
+return ['a[href="' + f + '"]', 'a[href^="' + f + '#"]', 'a[href^="' + f + '?"]',
+'a[href$="/' + f + '"]', 'a[href*="/' + f + '#"]', 'a[href*="/' + f + '?"]'];
+}
+function plan(state, page) {
+var s = clean(state);
+var here = String(page || 'index');
+var gone = s.pages.indexOf(here) > -1;
+var links = [];
+var own = [];
+var css = '';
+s.pages.forEach(function (p) { links = links.concat(linksTo(p)); });
+s.modules.forEach(function (m) {
+var at = m.indexOf('#');
+var p = m.slice(0, at);
+var id = m.slice(at + 1);
+links.push('a[href$="' + p + '.html#' + id + '"]');
+if (p === here) {
+own.push('[id="' + id + '"]', '[data-module="' + id + '"]');
+links.push('a[href="#' + id + '"]:not([aria-current])');
+}
+});
+if (gone) links.push('a[aria-current="page"]');
+if (own.length) css += own.join(',') + '{display:none!important}';
+if (links.length) {
+var list = links.join(',');
+css += list + '{display:none!important}';
+css += links.map(function (l) { return '.navitem>' + l; }).join(',') + '{display:revert!important;pointer-events:none;cursor:default}';
+css += 'li:has(>:is(' + list + '):only-child){display:none!important}';
+css += '.navitem:not(:has(.menu>a:not(' + list + '))){display:none!important}';
+css += '.mnav__group:not(:has(>a:not(' + list + '))){display:none!important}';
+css += '.pfa-footer__col:not(:has(li>a:not(' + list + '))){display:none!important}';
+css += '.menu-label:has(+a:is(' + list + ')),.menu-label:has(+a:is(' + list + '))~.menu-sep,.mnav__sub:has(+a:is(' + list + ')){display:none!important}';
+}
+if (gone) {
+css += 'body>:not(.announce):not(header):not(.pfa-footer):not(.mnav):not(.cursor-layer):not(.pfa-search):not(#pfa-gone){display:none!important}'
++ '#pfa-gone{display:block!important;box-sizing:border-box;min-height:62vh;padding:calc(var(--ann,34px) + var(--nav,81px) + 72px) var(--gutter,20px) 96px;text-align:center;color:var(--ink,#111);background:#fff}'
++ '#pfa-gone h1{font-family:var(--display,Georgia,serif);font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.15;margin:0 0 20px}'
++ '#pfa-gone p{margin:0;font-size:16px}'
++ '#pfa-gone a{color:inherit;text-decoration:underline;text-underline-offset:4px}';
+}
+return { css: css, gone: gone };
+}
+function blocked(url, state, anchors) {
+var s = clean(state || applied);
+var u = String(url == null ? '' : url);
+var page = pageOf(u);
+if (s.pages.indexOf(page) > -1) return true;
+var at = u.indexOf('#');
+if (at < 0 || !s.modules.length) return false;
+var hash = u.slice(at + 1);
+var part = (anchors && anchors[page] && anchors[page][hash]) || hash;
+return s.modules.indexOf(page + '#' + part) > -1;
+}
+function read() {
+try {
+var raw = root.localStorage.getItem(KEY);
+return raw ? clean(JSON.parse(raw)) : null;
+} catch (e) { return null; }
+}
+function save(state) {
+try { root.localStorage.setItem(KEY, JSON.stringify(clean(state))); } catch (e) {}
+}
+function drop(node) { if (node && node.parentNode) node.parentNode.removeChild(node); }
+function apply(state) {
+var d = root.document;
+if (!d || !d.head) return null;
+applied = clean(state);
+var p = plan(applied, pageOf(root.location && root.location.pathname));
+var tag = d.getElementById(CSS_ID);
+if (!tag && p.css) {
+tag = d.createElement('style');
+tag.setAttribute('id', CSS_ID);
+d.head.appendChild(tag);
+}
+if (tag) tag.textContent = p.css;
+var robots = d.getElementById(ROBOTS_ID);
+var box = d.getElementById(GONE_ID);
+if (p.gone) {
+if (!robots) {
+robots = d.createElement('meta');
+robots.setAttribute('id', ROBOTS_ID);
+robots.setAttribute('name', 'robots');
+robots.setAttribute('content', 'noindex');
+d.head.appendChild(robots);
+}
+if (!box && d.body) {
+box = d.createElement('div');
+box.setAttribute('id', GONE_ID);
+var h = d.createElement('h1');
+h.textContent = NOTICE;
+var line = d.createElement('p');
+var home = d.createElement('a');
+home.setAttribute('href', '/');
+home.textContent = HOME;
+line.appendChild(home);
+box.appendChild(h);
+box.appendChild(line);
+d.body.insertBefore(box, d.body.firstChild);
+}
+if (title === null) title = d.title;
+d.title = 'Not available right now · People for Animals';
+} else {
+drop(robots);
+drop(box);
+if (title !== null) { d.title = title; title = null; }
+}
+return p;
+}
+root.PFA_VISIBILITY = {
+KEY: KEY, LOCKED: LOCKED, NOTICE: NOTICE,
+clean: clean, pageOf: pageOf, plan: plan, blocked: blocked,
+read: read, save: save, apply: apply,
+state: function () { return applied; }
+};
+try {
+if (root.document && root.document.head) apply(read());
+} catch (e) {}
+}(this));
+</script>
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="library.html" data-nav="library.html">Resources library</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
+        <div class="menu">
+          <span class="menu-label">Join the tribe</span>
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <a href="campus.html" data-nav="campus.html">PFA Campus</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <span class="menu-label">Give and partner</span>
+          <a href="campaign.html" data-nav="campaign.html">Plan a campaign</a>
+          <a href="#top" data-nav="legacy.html" class="current" aria-current="page">Leave a legacy</a>
+          <a href="csr.html" data-nav="csr.html">CSR partnerships</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="sgacc.html" data-nav="sgacc.html">Sanjay Gandhi Animal Care Centre</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+      <a href="shop.html" data-nav="shop.html" class="shop">Shop</a>
+    </div>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
+  </nav>
+</header>
+<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/field-rules.js"></script>
+<script src="assets/field-validate.js"></script>
+
+<main>
+  <section class="hero m-hero" id="top">
+    <div class="m-hero__in">
+      <div>
+        <p class="eyebrow">Leave a legacy</p>
+        <h1 class="display">Remember the animals in your will.</h1>
+        <p class="lede">A gift in your will reaches animals long after you, and it costs nothing today. Find the wording to take to your lawyer, or talk to PFA in confidence. Nothing you write here commits you.</p>
+        <div class="m-hero__acts">
+          <a class="btn" href="#wording">Find the wording</a>
+          <a class="btn btn--light" href="#talk">Talk to us in confidence</a>
+        </div>
+      </div>
+      <div class="m-hero__media">
+        <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-05.jpg" alt="At the Sanjay Gandhi Animal Care Centre" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>A legacy built this centre in 1980</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="story">
+    <div class="m-split">
+      <figure class="m-ph" data-ph style="aspect-ratio:5/4"><img src="media/site/sgacc/centre-06.jpg" alt="At the Sanjay Gandhi Animal Care Centre" loading="lazy" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Sanjay Gandhi Animal Care Centre, Raja Garden</figcaption></figure>
+      <div>
+        <p class="eyebrow">Where it began</p>
+        <h2 class="display">One will. Forty-six years of care.</h2>
+        <p>In 1980, Mrs Ruth Cowell of New South Wales, Australia, left a legacy to Shri Sanjay Gandhi for the care of animals. It built the Sanjay Gandhi Animal Care Centre in Raja Garden, New Delhi, which today looks after more than three thousand animals at any one time.</p>
+        <p class="m-quote">She never saw the animals her gift would care for. Every one of them is her legacy.</p>
+        <p><a class="btn btn--light" href="sgacc.html">See the centre</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="ways">
+    <div class="band__head">
+      <p class="eyebrow">Ways to give</p>
+      <h2 class="display">Five ways a will can remember them.</h2>
+      <p>Provide for the people you love first. Then, if you wish, the animals.</p>
+    </div>
+    <ul class="m-grid">
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9"/></svg></span><h3>A share of what you leave</h3><p>A percentage of your estate, once your family and loved ones are provided for. It keeps its value however the years change prices.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="8" width="17" height="4"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8c-1.5-3-5-4-5-1.5S11 8 12 8zM12 8c1.5-3 5-4 5-1.5S13 8 12 8z"/></svg></span><h3>A sum of money</h3><p>A fixed amount, named in your will.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M12 17s-3-1.8-3-3.7a1.6 1.6 0 0 1 3-.7 1.6 1.6 0 0 1 3 .7c0 1.9-3 3.7-3 3.7z"/></svg></span><h3>Property or another asset</h3><p>A house, land, shares, jewellery or another asset, named in your will.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.2L12 17l-5.4 3 1-6.2-4.4-4.3 6.1-.9z"/></svg></span><h3>In memory of someone</h3><p>A gift in the name of a person, or an animal, you loved.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6M3 21h18"/></svg></span><h3>A place with your name</h3><p>PFA names a facility after a donor who leaves it a legacy, so the gift is remembered where it does its work.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.5 4.5l4 4L8 20H4v-4z"/><path d="M13.5 6.5l4 4"/></svg></span><h3>Not sure yet?</h3><p>Most people are not, at first. Talk it through with PFA, privately, before you decide anything.</p><p class="m-card__foot"><a href="#talk">Talk to us</a></p></li>
+    </ul>
+  </section>
+
+  <section class="band" id="how">
+    <div class="band__head">
+      <p class="eyebrow">How a will works</p>
+      <h2 class="display">Four steps, with a lawyer beside you.</h2>
+    </div>
+    <ol class="m-path">
+      <li><b>List what you own</b><span>Property, savings, investments, vehicles and valuables.</span></li>
+      <li><b>Decide who receives what</b><span>The people you love, and any cause you want to remember.</span></li>
+      <li><b>Sign it before two witnesses</b><span>They sign too. Registering a will is optional in India, but keeps it safe.</span></li>
+      <li><b>Keep it safe, and review it</b><span>With your lawyer or someone you trust. Look at it again after a marriage, a birth or a move.</span></li>
+    </ol>
+    <p class="m-fine" style="margin-top:28px">General information, not legal advice. Personal law can change what applies to you; a lawyer will tell you what does.</p>
+  </section>
+
+  <section class="band" id="wording">
+    <div class="band__head">
+      <p class="eyebrow">The wording</p>
+      <h2 class="display">Draft the line for your will.</h2>
+      <p>Choose what you would leave; the sentence writes itself. Copy it for your lawyer, and ask PFA to confirm its name and registration details before you sign.</p>
+    </div>
+    <div class="wording">
+      <form class="controls m-form" id="clauseForm" onsubmit="return false">
+        <div class="field">
+          <label>What you would leave</label>
+          <ul class="m-picks m-picks--2">
+            <li class="m-pick"><input type="radio" name="gift" id="g-share" value="share" checked><label for="g-share"><b>A share</b><small>of what I leave</small></label></li>
+            <li class="m-pick"><input type="radio" name="gift" id="g-sum" value="sum"><label for="g-sum"><b>A sum</b><small>of money</small></label></li>
+            <li class="m-pick"><input type="radio" name="gift" id="g-asset" value="asset"><label for="g-asset"><b>An asset</b><small>property, shares, jewellery</small></label></li>
+            <li class="m-pick"><input type="radio" name="gift" id="g-memory" value="memory"><label for="g-memory"><b>In memory</b><small>of someone I loved</small></label></li>
+          </ul>
+        </div>
+        <div class="m-range" data-show="share">
+          <label class="eyebrow" for="pct">Share of the estate</label>
+          <output id="pctOut" for="pct">10 per cent</output>
+          <input type="range" id="pct" min="1" max="100" step="1" value="10">
+        </div>
+        <div class="field" data-show="sum" hidden><label for="sum">Amount in rupees</label><input id="sum" inputmode="numeric" placeholder="5,00,000"></div>
+        <div class="field" data-show="asset" hidden><label for="asset">The asset</label><input id="asset" placeholder="my flat at 12 Park Street, Kolkata"></div>
+        <div class="field" data-show="memory" hidden><label for="memory">In memory of</label><input id="memory" placeholder="my mother, Kamala Rao"></div>
+      </form>
+      <div class="clause">
+        <p class="clause__lab">For your will</p>
+        <p class="clause__text" id="clause"></p>
+        <div class="clause__acts">
+          <button class="btn" type="button" id="copyClause">Copy the wording</button>
+          <a class="btn btn--light" href="#talk">Ask PFA to confirm it</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="talk">
+    <div class="band__head">
+      <p class="eyebrow">Talk to us</p>
+      <h2 class="display">In confidence, at your pace.</h2>
+    </div>
+    <div class="talk">
+      <div>
+        <form class="m-form" id="legacyForm" novalidate>
+          <div class="m-step is-current" data-step="Talk">
+            <div class="field">
+              <label>What are you thinking of?</label>
+              <ul class="m-picks m-picks--2 m-picks--compact" data-need="interest" data-say="Choose what you are thinking of.">
+                <li class="m-pick"><input type="radio" name="interest" id="t1" value="A share of what I leave"><label for="t1"><b>A share of what I leave</b></label></li>
+                <li class="m-pick"><input type="radio" name="interest" id="t2" value="A sum of money"><label for="t2"><b>A sum of money</b></label></li>
+                <li class="m-pick"><input type="radio" name="interest" id="t3" value="Property or another asset"><label for="t3"><b>Property or another asset</b></label></li>
+                <li class="m-pick"><input type="radio" name="interest" id="t4" value="A gift in memory of someone"><label for="t4"><b>A gift in memory</b></label></li>
+                <li class="m-pick"><input type="radio" name="interest" id="t5" value="A named place or programme"><label for="t5"><b>A place with a name</b></label></li>
+                <li class="m-pick"><input type="radio" name="interest" id="t6" value="I am only exploring"><label for="t6"><b>I am only exploring</b></label></li>
+              </ul>
+              <p class="err" data-err-for="interest" hidden></p>
+            </div>
+            <div class="row">
+              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add an email, so PFA can reply in confidence." autocomplete="email"><p class="err" hidden></p></div>
+            </div>
+            <div class="field">
+              <label>How should PFA reach you?</label>
+              <ul class="m-picks m-picks--2 m-picks--compact" data-need="contactBy" data-say="Choose how PFA should reach you.">
+                <li class="m-pick"><input type="radio" name="contactBy" id="c-email" value="Email" checked><label for="c-email"><b>By email</b></label></li>
+                <li class="m-pick"><input type="radio" name="contactBy" id="c-phone" value="Phone"><label for="c-phone"><b>By phone</b></label></li>
+              </ul>
+              <p class="err" data-err-for="contactBy" hidden></p>
+            </div>
+            <div class="row">
+              <div class="field" id="mobileField" hidden><label for="mobile">Mobile</label><input id="mobile" name="mobile" data-mobile data-say="Add a mobile, so PFA can call you." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+              <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2"><p class="err" hidden></p></div>
+            </div>
+            <div class="field"><label for="message">Anything you would like to say <small>(optional)</small></label><textarea id="message" name="message" maxlength="1500"></textarea></div>
+            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>PFA may contact me about this, the way I asked.</span></label>
+            <p class="err" data-err-for="consent" hidden></p>
+            <p class="status" data-form-status hidden></p>
+            <div class="m-nav"><button class="btn" type="submit" data-send>Send in confidence</button></div>
+          </div>
+        </form>
+        <div class="m-done" id="done" hidden>
+          <p class="eyebrow">Received</p>
+          <p class="ref" id="doneRef"></p>
+          <p>Thank you for thinking of the animals. A named person at PFA will reply the way you asked. Nothing you wrote commits you to anything.</p>
+          <div class="acts">
+            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
+          </div>
+        </div>
+      </div>
+      <ol class="promise">
+        <li><b>Private</b>What you write is read by the people at PFA who answer it, and no one else.</li>
+        <li><b>No pressure</b>You can ask a question and never write again. Nothing here is a pledge.</li>
+        <li><b>Yours to change</b>A will can be changed whenever you wish, and so can your mind.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
+       table: a hairline under every label, six equal columns that squeezed
+       the office into three lines, and its own gutter, a few pixels inside
+       the page's. Now it sits on the page's gutter, with the header. A bar
+       opens it: the name, and the two things most people come down here
+       for, reporting cruelty and giving. Under a single rule, the office
+       column (a little wider, so the address reads as an address) and five
+       link groups, each opened by a short pop tick and its label, no rules
+       between them. The legal line closes it, with the privacy policy.
+
+       The groups follow the header: Our Work, Learn, Get Involved, then its
+       "Give and partner" list as a group of its own, and About.
+
+       Every block is block-level in the markup: assets/ is cached for an hour
+       and the HTML is not, so for up to an hour after a deploy this markup
+       meets the previous chrome.css, and it still reads top to bottom. -->
+  <div class="pfa-footer__bar">
+    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
+    <div class="pfa-footer__acts">
+      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
+      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
+    </div>
+  </div>
+  <div class="pfa-footer__grid">
+    <div class="pfa-footer__office">
+      <p class="pfa-footer__label">Registered office</p>
+      <!-- As published on peopleforanimalsindia.org. tel: and mailto: so a
+           phone dials and a mail client opens; the numbers hold together with
+           non-breaking spaces, because a number split across two lines cannot
+           be dialled. -->
+      <address class="pfa-footer__where" id="contact">
+        <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+        <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+        <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+      </address>
+      <nav class="pfa-footer__social" aria-label="Social media">
+        <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.youtube.com/@peopleforanimals9047" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
+      <!-- Real count, from /api/visits. Hidden until a number actually
+           arrives, so a counter that cannot reach the server shows nothing
+           rather than a zero or an invented figure. No caption; the
+           aria-label names it for a screen reader. -->
+      <div class="pfa-tally" id="pfaTally" hidden>
+        <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+      </div>
+    </div>
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="campus.html">PFA Campus</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Give and partner">
+      <p class="pfa-footer__label">Give and partner</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="campaign.html">Plan a campaign</a></li>
+        <li><a href="legacy.html">Leave a legacy</a></li>
+        <li><a href="csr.html">CSR partnerships</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="sgacc.html">Animal Care Centre</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <p>Registered charity · All donations tax-deductible</p>
+    <p><a href="privacy.html">Privacy policy</a></p>
+  </div>
+</footer>
+
+<script src="assets/form-preview.js"></script>
+<script src="pfa-forms.js"></script>
+<script src="assets/micro.js"></script>
+<script>
+(function () {
+  'use strict';
+  var M = window.PFAMicro;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  if (!M) return;
+
+  /* ---- the wording ---- */
+  var PFA = 'People for Animals, a registered charitable trust whose registered office is at 4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001';
+  var cf = $('#clauseForm');
+  var WORDS = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  var TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  function words(n) {
+    if (n === 100) return 'one hundred';
+    if (n < 20) return WORDS[n];
+    return TENS[Math.floor(n / 10)] + (n % 10 ? '-' + WORDS[n % 10] : '');
+  }
+  function esc(v) { return String(v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function mark(v, blank) { return '<mark>' + esc(v || blank) + '</mark>'; }
+  function clause() {
+    var g = M.picked(cf, 'gift');
+    cf.querySelectorAll('[data-show]').forEach(function (el) { el.hidden = el.getAttribute('data-show') !== g; });
+    var pct = Number($('#pct').value);
+    $('#pctOut').textContent = pct + ' per cent';
+    var what;
+    if (g === 'share') what = mark(words(pct) + ' per cent (' + pct + '%) of the residue of my estate', '');
+    else if (g === 'sum') {
+      var n = String($('#sum').value || '').replace(/[^0-9]/g, '');
+      what = 'the sum of ' + mark(n ? '₹' + Number(n).toLocaleString('en-IN') : '₹ ______', '');
+    } else if (g === 'asset') what = mark($('#asset').value.trim(), '[the asset, described]');
+    else what = mark('[the gift]', '');
+    var memory = g === 'memory' ? ' in memory of ' + mark($('#memory').value.trim(), '[name]') : '';
+    var html = 'I give ' + what + ' to ' + esc(PFA) + memory + ', for its charitable work for animals, and the receipt of its authorised signatory shall be a full discharge to my executors.';
+    $('#clause').innerHTML = html;
+  }
+  cf.addEventListener('input', clause);
+  cf.addEventListener('change', clause);
+  clause();
+  $('#copyClause').addEventListener('click', function () {
+    var b = this;
+    try { navigator.clipboard.writeText($('#clause').textContent); b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy the wording'; }, 1800); } catch (_) {}
+  });
+
+  /* ---- talk to us ---- */
+  var form = $('#legacyForm');
+  function phone() {
+    var on = M.picked(form, 'contactBy') === 'Phone';
+    $('#mobileField').hidden = !on;
+    $('#mobile').required = on;
+  }
+  form.addEventListener('change', function (e) { if (e.target.name === 'contactBy') phone(); });
+  phone();
+  form.addEventListener('input', function (e) { if (e.target.closest('.field')) M.flag(e.target, ''); });
+
+  M.send({
+    form: form,
+    ready: function () { var bad = M.checkStep(form); if (bad && bad.focus) bad.focus(); return !bad; },
+    kind: 'PFA-LEG',
+    page: 'legacy.html',
+    button: form.querySelector('[data-send]'),
+    status: form.querySelector('[data-form-status]'),
+    done: $('#done'),
+    doneRef: $('#doneRef'),
+    preview: { title: 'Check this before it is sent', send: 'Send in confidence', labels: { interest: 'Thinking of', contactBy: 'Reach me by' } },
+    data: function () {
+      var by = M.picked(form, 'contactBy');
+      return {
+        interest: M.picked(form, 'interest'),
+        name: $('#name').value.trim(),
+        email: $('#email').value.trim(),
+        contactBy: by,
+        mobile: by === 'Phone' ? M.digits($('#mobile').value) : '',
+        city: $('#city').value.trim(),
+        message: $('#message').value.trim()
+      };
+    }
+  });
+}());
+</script>
+</body>
+</html>

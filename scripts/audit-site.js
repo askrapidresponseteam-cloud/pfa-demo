@@ -82,6 +82,16 @@ function audit() {
     [...readme.matchAll(/`([^`/]+\.(?:webp|jpg|jpeg|png|mp4|webm))`/g)].forEach((m) => documentedMissing.add(m[1]));
     [...readme.matchAll(/`media\/[^`]*?([^`/]+\.(?:webp|jpg|jpeg|png|mp4|webm))`/g)].forEach((m) => documentedMissing.add(m[1]));
   } catch (_) { /* no README: nothing is documented, so nothing is excused */ }
+  /* The microsites' photographs and documents from PFA's old site
+     (data/site-photos.json): fetched at deploy, so a release built where that
+     site cannot be reached does not have them yet. Each frame turns into a
+     plate with its caption when its file is absent. Only files the manifest
+     names are excused, by their full path. */
+  const fetchedAtDeploy = new Set();
+  try {
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'site-photos.json'), 'utf8'));
+    [...(manifest.photos || []), ...(manifest.documents || [])].forEach((e) => fetchedAtDeploy.add(e.file));
+  } catch (_) { /* no manifest: nothing is excused */ }
   const routes = mountedRoutes();
   const rewrites = vercelRewrites();
   const pageIds = new Map(pages.map((p) => [path.basename(p), ids(read(p))]));
@@ -123,7 +133,7 @@ function audit() {
         try { bare = decodeURIComponent(bare); } catch (e) { /* a stray % stays as written */ }
         const target = bare.startsWith('/') ? path.join(ROOT, bare.slice(1)) : path.join(ROOT, bare);
         const isDynamic = rewrites.some((r) => new RegExp('^' + r.replace(/:[a-z]+\*?/g, '.*').replace(/\//g, '\\/') + '$').test('/' + rel(target)));
-        if (!exists(target) && !isDynamic && !exists(path.join(target, 'index.html'))) problems.push(`${name}: link to missing page ${href}`);
+        if (!exists(target) && !isDynamic && !exists(path.join(target, 'index.html')) && !fetchedAtDeploy.has(rel(target))) problems.push(`${name}: link to missing page ${href}`);
       }
       if (file && file.startsWith('/api/')) {
         const r = routeFor(file);
@@ -152,6 +162,7 @@ function audit() {
              Reporting them here as well left two tests disagreeing about the same
              nine files. An undocumented missing file is still a fault. */
           if (documentedMissing.has(path.basename(target))) return;
+          if (fetchedAtDeploy.has(rel(target))) return;
           /* A reference ending in a slash is a prefix that code composes full
              URLs from (media/units/ + slug + .webp); the composed files are
              optional by design and remove themselves on error. Only complete

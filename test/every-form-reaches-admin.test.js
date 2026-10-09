@@ -29,6 +29,12 @@ const FORMS = [
   ['get-involved.html', 'cgForm',     'PFA-CG', 'applying for a caregiver card'],
   ['events.html',       'eventForm',  'PFA-EV', 'asking for an event'],
   ['cinekind.html',     'ckNominate', 'PFA-CK', 'nominating for CineKind 2027'],
+  ['campus.html',       'campusForm', 'PFA-CAM', 'registering a campus society'],
+  ['sgacc.html',        'sgForm',     'PFA-SG', 'offering help to the Animal Care Centre'],
+  ['csr.html',          'csrForm',    'PFA-CSR', 'proposing a corporate partnership'],
+  ['legacy.html',       'legacyForm', 'PFA-LEG', 'asking about a legacy'],
+  ['campaign.html',     'campForm',   'PFA-CMP', 'planning a campaign'],
+  ['privacy.html',      'privacyForm', 'PFA-PRV', 'asking for their data'],
 ];
 
 test('every kind a form sends has a name the panel can print', () => {

@@ -45,7 +45,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "media:reels": "node scripts/fetch-reel-stills.js",
-    "media:units": "node scripts/fetch-unit-photos.js"
+    "media:units": "node scripts/fetch-unit-photos.js",
+    "media:site": "node scripts/fetch-site-photos.js"
   },
   "dependencies": {
     "firebase-admin": "^13.4.0",

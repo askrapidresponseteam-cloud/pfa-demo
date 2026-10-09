@@ -1,0 +1,271 @@
+/* ======================================================================
+   PFA microsites: one kit for the pages that each tell one story and take
+   one kind of request (owner, 9 Oct 2026: "separate microsites for SGACC,
+   CSR, Leave a Legacy, Privacy Policy and Plan a Campaign, all aligned with
+   the new website theme ... premium card-based layouts and creative ways to
+   explore or submit details ... consistent, modern, sharp and uncluttered").
+
+   Pages: campus.html, sgacc.html, csr.html, legacy.html, campaign.html,
+   privacy.html, careers.html. Each page keeps its own :root tokens and its
+   .hero rule (test/hero-alignment.test.js reads them there); this file holds
+   only what the pages share, so a card or a step looks the same on all of
+   them. Loaded after the page's own <style> and before assets/pfa-theme.css.
+
+   The vocabulary is the site's own: ink on paper, hairlines, Marcellus in
+   capitals for display, the pop orange only as a tick or a rule, square
+   corners, and black controls that go white on hover.
+   ====================================================================== */
+
+/* ---------- the hero, split: words on the left, a photograph on the right */
+.m-hero__in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,88px);align-items:end;width:100%}
+.m-hero h1{font-size:clamp(38px,5.2vw,82px);max-width:13ch}
+.m-hero .lede{margin:26px 0 0;max-width:46ch;font-size:clamp(15px,1.15vw,17px);line-height:1.65;color:rgba(17,17,17,.78)}
+.m-hero__acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.m-hero__facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0;margin:clamp(32px,4vw,48px) 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.m-hero__facts li{padding:16px 18px 0 0}
+.m-hero__facts li + li{padding-left:18px;border-left:1px solid var(--line)}
+.m-hero__facts b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(22px,2vw,30px);line-height:1;text-transform:uppercase;letter-spacing:.01em}
+.m-hero__facts span{display:block;margin-top:8px;font-size:12px;line-height:1.45;color:var(--muted)}
+.m-hero__media{position:relative;min-width:0}
+.m-hero__media .m-ph{aspect-ratio:4/5}
+.m-hero__media--wide .m-ph{aspect-ratio:5/4}
+/* two photographs, the second smaller and stepped down over the first's corner */
+.m-duo{position:relative;padding:0 0 clamp(40px,6vw,80px) 0}
+.m-duo .m-ph:first-child{width:82%;aspect-ratio:4/5}
+.m-duo .m-ph:last-child{position:absolute;right:0;bottom:0;width:46%;aspect-ratio:1/1;border:6px solid var(--paper)}
+
+/* ---------- photographs ----------------------------------------------
+   Every photograph sits in a frame that keeps its shape. If the file is not
+   there (the old site's photographs are fetched at deploy, data/site-photos.json)
+   the frame turns into a plate of the page's own colours with the caption
+   on it, so the layout holds and nothing shows a broken image. */
+.m-ph{position:relative;margin:0;overflow:hidden;background:#f3f1ed;aspect-ratio:4/3}
+.m-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.2,.7,.2,1),opacity .4s}
+.m-ph figcaption{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:28px 16px 12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:linear-gradient(180deg,rgba(10,10,10,0),rgba(10,10,10,.62))}
+.m-ph.is-gone img{display:none}
+.m-ph.is-gone{background:linear-gradient(135deg,#f6f4f0 0%,#ece8e1 100%)}
+.m-ph.is-gone::before{content:"";position:absolute;left:50%;top:50%;width:64px;height:58px;transform:translate(-50%,-60%);background:url("../img/mail/logo-mark.png") center/contain no-repeat;opacity:.16;filter:grayscale(1)}
+.m-ph.is-gone figcaption{color:var(--ink);background:none}
+a:hover .m-ph img,.m-ph--zoom:hover img{transform:scale(1.03)}
+
+/* ---------- section heads inside a band ---------- */
+.m-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,72px);align-items:end;margin-bottom:clamp(32px,4vw,56px)}
+.m-head h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:16ch}
+.m-head p{margin:0;max-width:52ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.72)}
+.m-sub{font-family:var(--display);font-weight:400;font-size:clamp(20px,1.8vw,26px);text-transform:uppercase;letter-spacing:.01em;line-height:1.1;margin:0}
+
+/* ---------- cards in a hairline grid ----------------------------------
+   One table of cards: the gaps are the page's hairline, so a row of cards
+   reads as one ruled object rather than boxes floating apart. */
+.m-grid{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:0;padding:0;list-style:none}
+.m-grid--4{--cols:4}
+.m-grid--2{--cols:2}
+.m-card{position:relative;display:flex;flex-direction:column;gap:12px;min-width:0;background:var(--paper);padding:clamp(24px,2.4vw,36px);transition:background .25s}
+.m-card::before{content:"";position:absolute;left:0;top:0;width:0;height:3px;background:var(--pop,#ff3b18);transition:width .35s cubic-bezier(.2,.7,.2,1)}
+.m-card:hover::before,.m-card:focus-within::before{width:56px}
+.m-card__no{font-family:var(--display);font-size:15px;letter-spacing:.04em;color:var(--muted)}
+.m-card__ico{width:30px;height:30px;color:var(--ink)}
+.m-card__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.m-card h3{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(19px,1.55vw,24px);line-height:1.1;text-transform:uppercase;letter-spacing:.01em}
+.m-card p{margin:0;font-size:14px;line-height:1.65;color:rgba(17,17,17,.72)}
+.m-card ul{margin:4px 0 0;padding:0;list-style:none}
+.m-card li{position:relative;padding:7px 0 7px 16px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.5}
+.m-card li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:1px;background:var(--ink)}
+.m-card__foot{margin-top:auto;padding-top:14px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.m-card__foot a{border-bottom:1px solid var(--ink);padding-bottom:2px}
+.m-card--photo{padding:0}
+.m-card--photo .m-ph{aspect-ratio:3/2}
+.m-card--photo .m-card__body{display:flex;flex-direction:column;gap:12px;padding:clamp(22px,2.2vw,32px);flex:1}
+.m-tag{display:inline-block;align-self:flex-start;padding:5px 9px;border:1px solid var(--line);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- a strip of facts ---------- */
+.m-facts{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));margin:0;padding:0;list-style:none;border-top:1px solid var(--ink);border-bottom:1px solid var(--line)}
+.m-facts li{padding:22px 20px 24px 0}
+.m-facts li + li{padding-left:20px;border-left:1px solid var(--line)}
+.m-facts b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(26px,2.6vw,40px);line-height:1;text-transform:uppercase}
+.m-facts span{display:block;margin-top:10px;font-size:13px;line-height:1.5;color:var(--muted)}
+
+/* ---------- chips that filter a grid ---------- */
+.m-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.m-chip{height:38px;padding:0 16px;border:1px solid var(--line);background:var(--paper);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.m-chip:hover{color:var(--ink);border-color:var(--ink)}
+.m-chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+[data-filtered="out"]{display:none!important}
+
+/* ---------- cards you choose: a radio or a checkbox, dressed ----------
+   The input stays a real input (keyboard, screen reader, the form's own
+   values); the label is the card. Chosen, the card turns ink, as the
+   amounts on the donate page do. */
+.m-picks{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.m-picks--2{--cols:2}
+.m-picks--4{--cols:4}
+.m-pick{position:relative;min-width:0}
+.m-pick input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.m-pick label{display:flex;flex-direction:column;gap:6px;height:100%;padding:16px 18px 16px;border:1px solid var(--line);background:var(--paper);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.m-pick label:hover{border-color:var(--ink)}
+.m-pick b{font-size:14px;font-weight:700;letter-spacing:.01em;line-height:1.3}
+.m-pick small{font-size:12px;line-height:1.5;color:var(--muted)}
+.m-pick input:checked + label{background:var(--ink);border-color:var(--ink);color:#fff}
+.m-pick input:checked + label small{color:rgba(255,255,255,.72)}
+.m-pick input:focus-visible + label{outline:2px solid var(--ink);outline-offset:2px}
+.m-pick label::after{content:"";position:absolute;top:12px;right:12px;width:14px;height:14px;border:1px solid var(--line);border-radius:50%;background:var(--paper)}
+.m-pick input[type="checkbox"] + label::after{border-radius:0}
+.m-pick input:checked + label::after{border-color:#fff;background:#fff;box-shadow:inset 0 0 0 3px var(--ink)}
+.m-pick label b{padding-right:22px}
+/* one line to a card, for a short list of plain answers */
+.m-picks--compact label{justify-content:center;min-height:52px;padding:12px 16px}
+.m-picks--compact label::after{top:50%;transform:translateY(-50%)}
+
+/* ---------- a form in steps ---------- */
+.m-builder{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.m-tabs{display:flex;flex-wrap:wrap;gap:6px 26px;margin:0 0 22px;padding:0;list-style:none}
+.m-tabs li{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:2px solid transparent}
+.m-tabs li span{margin-right:8px}
+.m-tabs li.is-current{color:var(--ink);border-color:var(--ink)}
+.m-tabs li.is-done{color:var(--ink)}
+.m-bar{height:2px;background:var(--line);margin:0 0 30px}
+.m-bar span{display:block;height:100%;width:0;background:var(--ink);transition:width .35s cubic-bezier(.2,.7,.2,1)}
+.m-step{display:none}
+.m-step.is-current{display:grid;gap:22px;animation:mStepIn .35s cubic-bezier(.2,.7,.2,1)}
+@keyframes mStepIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.m-step h3{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(22px,2.2vw,30px);text-transform:uppercase;letter-spacing:.01em;line-height:1.05}
+.m-step .ask{margin:-10px 0 0;font-size:14px;line-height:1.6;color:var(--muted)}
+.m-nav{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px}
+.m-nav .back{background:none;border:0;padding:12px 0;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.m-nav .clock{margin-left:auto;font-size:12px;color:var(--muted)}
+
+/* fields, the site's own (test/design-consistency.test.js) */
+.m-form .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px 18px}
+.field{display:grid;gap:6px;min-width:0}
+.field label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.field>label{line-height:1.5}
+.field small{font-size:12px;color:var(--muted);line-height:1.5;font-weight:400;letter-spacing:0;text-transform:none}
+.field input,.field textarea,.field select{border:1px solid var(--line);padding:14px;font-size:14px;outline:none;background:#fff;border-radius:0;font-family:inherit;color:inherit;width:100%}
+.field textarea{min-height:130px;resize:vertical;line-height:1.55}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--ink)}
+.field.is-bad input,.field.is-bad textarea,.field.is-bad select{border-color:#b3261e}
+.err{margin:0;font-size:12px;line-height:1.5;color:#b3261e}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:13px;line-height:1.55;color:var(--muted);cursor:pointer}
+.check input{margin:3px 0 0;width:auto}
+.status{margin:0;font-size:13px;line-height:1.6}
+.status[data-state="bad"]{color:#b3261e}
+.status[data-state="good"]{color:#1f6b3a}
+.m-range{display:grid;gap:10px}
+.m-range output{font-family:var(--display);font-size:clamp(30px,3vw,44px);line-height:1;letter-spacing:.01em}
+.m-range input[type="range"]{width:100%;accent-color:var(--ink)}
+.m-range .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+
+/* ---------- the live card beside a builder ---------- */
+.m-aside{position:sticky;top:calc(var(--ann) + var(--nav) + 24px)}
+.m-live{border:1px solid var(--ink);background:var(--paper);padding:clamp(22px,2.4vw,34px);display:grid;gap:16px}
+.m-live__top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.m-live__top img{width:34px;height:auto}
+.m-live h4{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(22px,2vw,30px);text-transform:uppercase;line-height:1.05;letter-spacing:.01em;overflow-wrap:anywhere}
+.m-live p{margin:0;font-size:13.5px;line-height:1.6;color:rgba(17,17,17,.75)}
+.m-live dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+.m-live dt{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.m-live dd{margin:0;overflow-wrap:anywhere}
+.m-live .is-empty{color:var(--muted)}
+.m-chipset{display:flex;flex-wrap:wrap;gap:6px}
+.m-chipset span{padding:5px 9px;border:1px solid var(--ink);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.m-note{margin:14px 0 0;font-size:12px;line-height:1.6;color:var(--muted)}
+
+/* ---------- after sending ---------- */
+.m-done{display:grid;gap:16px;border-top:3px solid var(--pop,#ff3b18);padding-top:26px}
+.m-done .ref{font-family:var(--display);font-size:clamp(28px,4vw,46px);letter-spacing:.02em;margin:0}
+.m-done p{margin:0;font-size:14px;line-height:1.65;color:var(--muted)}
+.m-done .acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+
+/* ---------- questions and long text ---------- */
+.m-acc{border-top:1px solid var(--line)}
+.m-acc details{border-bottom:1px solid var(--line)}
+.m-acc summary{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:56px;padding:14px 0;cursor:pointer;list-style:none;font-size:15px;font-weight:700;line-height:1.4}
+.m-acc summary::-webkit-details-marker{display:none}
+.m-acc summary::after{content:"+";flex:none;font-size:20px;font-weight:400;color:var(--muted)}
+.m-acc details[open] summary::after{content:"\2212"}
+.m-acc details > :not(summary){margin:0 0 18px;max-width:72ch;font-size:14px;line-height:1.7;color:rgba(17,17,17,.78)}
+.m-acc details ul{padding-left:18px;list-style:disc}
+.m-acc details li{margin:0 0 6px}
+
+/* ---------- a gallery with a viewer ---------- */
+/* Five to a set, every row full: a large photograph with two beside it, then
+   two halves under them. The second set mirrors the first. */
+.m-gallery{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-flow:dense;gap:8px;margin:0;padding:0;list-style:none}
+.m-gallery li{grid-column:span 4;min-width:0}
+.m-gallery li:nth-child(5n+1){grid-column:span 8;grid-row:span 2}
+.m-gallery li:nth-child(10n+6){grid-column:5 / span 8}
+.m-gallery li:nth-child(5n+4),.m-gallery li:nth-child(5n+5){grid-column:span 6}
+.m-gallery li:nth-child(5n+1) .m-ph{aspect-ratio:auto;height:100%}
+.m-gallery li:nth-child(5n+4) .m-ph,.m-gallery li:nth-child(5n+5) .m-ph{aspect-ratio:16/10}
+.m-gallery button{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:zoom-in}
+.m-gallery .m-ph{aspect-ratio:4/3}
+.m-gallery li.is-gone{display:none}
+dialog.m-lb{width:min(1100px,100vw - 32px);max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));padding:0;border:0;background:var(--paper);color:var(--ink)}
+dialog.m-lb::backdrop{background:rgba(17,17,17,.82)}
+.m-lb__bar{display:flex;justify-content:space-between;align-items:center;padding:6px 14px 6px 18px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.m-lb img{display:block;width:100%;max-height:calc(100dvh - 140px);object-fit:contain;background:#f3f1ed}
+.m-lb__nav{display:flex;justify-content:space-between;padding:10px 14px}
+.m-lb__nav button{min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--paper);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+
+/* ---------- a split block: words beside a photograph ---------- */
+.m-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,5vw,88px);align-items:center}
+.m-split--rev > :first-child{order:2}
+.m-split h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:15ch}
+.m-split p{margin:20px 0 0;max-width:54ch;font-size:15px;line-height:1.7;color:rgba(17,17,17,.75)}
+.m-quote{margin:26px 0 0;padding:4px 0 4px 22px;border-left:3px solid var(--pop,#ff3b18);font-family:var(--display);font-size:clamp(19px,1.7vw,25px);line-height:1.3;max-width:34ch}
+
+/* ---------- a numbered path ---------- */
+.m-path{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0;margin:0;padding:0;list-style:none;counter-reset:mpath}
+.m-path li{position:relative;padding:28px 24px 0 0;border-top:1px solid var(--ink);counter-increment:mpath}
+.m-path li::before{content:counter(mpath,decimal-leading-zero);display:block;margin-bottom:14px;font-family:var(--display);font-size:clamp(28px,2.6vw,40px);line-height:1}
+.m-path li::after{content:"";position:absolute;left:0;top:-4px;width:7px;height:7px;border-radius:50%;background:var(--pop,#ff3b18)}
+.m-path b{display:block;font-size:15px;line-height:1.35;margin-bottom:8px}
+.m-path span{display:block;font-size:13.5px;line-height:1.6;color:rgba(17,17,17,.72)}
+
+/* ---------- the closing call ---------- */
+.m-cta{display:grid;grid-template-columns:minmax(0,1.4fr) auto;gap:24px 48px;align-items:end;padding:clamp(32px,4vw,56px);border:1px solid var(--ink)}
+.m-cta h2{font-size:clamp(26px,3vw,46px);max-width:18ch}
+.m-cta p{margin:16px 0 0;max-width:52ch;font-size:14.5px;line-height:1.65;color:rgba(17,17,17,.72)}
+.m-cta .acts{display:flex;flex-wrap:wrap;gap:12px}
+
+/* ---------- small print on a page ---------- */
+.m-fine{font-size:12.5px;line-height:1.65;color:var(--muted);max-width:80ch}
+
+/* ---------- widths ---------- */
+@media (max-width:1100px){
+  .m-grid--4,.m-picks--4{--cols:2}
+  .m-facts{--cols:2}
+  .m-facts li:nth-child(3){padding-left:0;border-left:0}
+  .m-facts li:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:900px){
+  .m-hero__in,.m-builder,.m-split,.m-head{grid-template-columns:minmax(0,1fr)}
+  .m-split--rev > :first-child{order:0}
+  .m-hero__media{max-width:560px}
+  .m-grid{--cols:2}
+  .m-path{--cols:2;row-gap:32px}
+  .m-aside{position:static}
+  .m-cta{grid-template-columns:minmax(0,1fr)}
+  .m-gallery li,.m-gallery li:nth-child(5n+1),.m-gallery li:nth-child(10n+6),.m-gallery li:nth-child(5n+4),.m-gallery li:nth-child(5n+5){grid-column:span 6;grid-row:auto}
+  .m-gallery li:nth-child(5n+1) .m-ph,.m-gallery li:nth-child(5n+4) .m-ph,.m-gallery li:nth-child(5n+5) .m-ph{aspect-ratio:4/3;height:auto}
+}
+@media (max-width:600px){
+  .m-grid,.m-grid--2,.m-grid--4{--cols:1}
+  .m-picks,.m-picks--4{--cols:1}
+  .m-picks--2{--cols:2}
+  .m-form .row{grid-template-columns:minmax(0,1fr)}
+  .m-path{--cols:1}
+  .m-facts{--cols:1}
+  .m-facts li,.m-facts li + li{padding-left:0;border-left:0}
+  .m-facts li + li{border-top:1px solid var(--line)}
+  .m-hero__facts{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .m-hero__facts li:nth-child(3){padding-left:0;border-left:0}
+  .m-gallery li,.m-gallery li:nth-child(5n+1),.m-gallery li:nth-child(10n+6),.m-gallery li:nth-child(5n+4),.m-gallery li:nth-child(5n+5){grid-column:span 12}
+  .m-duo .m-ph:first-child{width:86%}
+  .m-tabs{gap:6px 16px}
+  .m-nav .clock{width:100%;margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .m-step.is-current{animation:none}
+  .m-ph img,.m-card::before,.m-bar span{transition:none}
+}

@@ -81,10 +81,17 @@ function radioValues(html, name) {
 const MARKUP = {
   'PFA-CR': { animal: ['select', 'animal'], urgency: ['select', 'urgency'] },
   'PFA-Q': { topic: ['select', 'topic'] },
-  'PFA-J': { pfaMember: ['radio', 'member'], travel: ['radio', 'travel'] },
+  'PFA-J': { pfaMember: ['radio', 'member'], travel: ['radio', 'travel'], roleId: ['radio', 'roleId'], level: ['radio', 'level'] },
   'PFA-S': { wall: ['labels', 'wallWhich'] },
   'PFA-EV': { title: ['select', 'evKind'] },
-  'PFA-CK': { category: ['select', 'ckCategory'] }
+  'PFA-CK': { category: ['select', 'ckCategory'] },
+  /* the microsites (9 Oct 2026): every choice is a card, a dressed radio */
+  'PFA-CAM': { faculty: ['radio', 'faculty'], institution: ['radio', 'institution'] },
+  'PFA-CSR': { budget: ['radio', 'budget'], span: ['radio', 'span'] },
+  'PFA-LEG': { interest: ['radio', 'interest'], contactBy: ['radio', 'contactBy'] },
+  'PFA-CMP': { cause: ['radio', 'cause'], format: ['radio', 'format'], goalType: ['radio', 'goalType'] },
+  'PFA-SG': { offer: ['radio', 'offer'] },
+  'PFA-PRV': { request: ['radio', 'request'] }
 };
 
 test('every list of choices the API enforces is the list the page offers', () => {

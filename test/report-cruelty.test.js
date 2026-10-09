@@ -103,7 +103,13 @@ test('Careers: one footer link, a page of real roles, and applications filed as 
   const index = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   assert.match(index, /href="careers\.html">Careers</, 'stamped into every page');
   const page = fs.readFileSync(path.join(ROOT, 'careers.html'), 'utf8');
-  assert.match(page, /var PFA_ROLE = \{ id: 'zonal-head'/);
+  /* five openings since 9 Oct 2026 (owner: "properly update the existing
+     Jobs section"), the Zonal Head first */
+  assert.match(page, /var PFA_ROLES = \[\n {2}\{ id: 'zonal-head'/);
+  for (const id of ['zonal-head', 'veterinary-team', 'cruelty-response-coordinator', 'social-media-fundraising', 'internship']) {
+    assert.match(page, new RegExp(`<article class="opening role" id="${id}" data-role="${id}">`), `${id} has its own description`);
+    assert.match(page, new RegExp(`name="roleId" id="r-${id}" value="${id}"`), `${id} can be chosen in the application`);
+  }
   assert.match(page, /<ul class="zones" id="zones"><\/ul>/, 'zones are rendered from PFA_ZONES, not hand-written');
   assert.match(page, /PFA_ZONES = \[[\s\S]*'south-south'/, 'all nine zones');
   assert.match(page, /\u20b935,000 per month/, 'the pay is stated');

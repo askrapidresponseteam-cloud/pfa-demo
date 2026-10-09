@@ -56,11 +56,16 @@ const NAV = [
   'get-involved.html|Volunteer',
   'get-involved.html#membership|Become a member',
   'get-involved.html#caregiver|Colony caregiver', /* leads to applying; the card page itself left the nav, 15 Sep 2026 */
+  'campus.html|PFA Campus',                          /* the microsites, 9 Oct 2026 */
+  'campaign.html|Plan a campaign',
+  'legacy.html|Leave a legacy',
+  'csr.html|CSR partnerships',
   'wall.html|The Wall',
   'events.html|Events',
   'cinekind.html|CineKind',
   'founder.html|About',
   'founder.html|The founder',
+  'sgacc.html|Sanjay Gandhi Animal Care Centre',
   'careers.html|Careers',
   'ask.html|Contact',
   'donate.html|Donate',
@@ -100,7 +105,15 @@ const EXPECTED = {
   'shop.html':         ['Shop',                      null],
   'careers.html':      ['Careers',                   'founder.html'],
   'caregiver-card.html': [null,                       'get-involved.html'], /* in the section, no longer a destination in it */
-  'donate.html':       ['Donate',                    null]
+  'donate.html':       ['Donate',                    null],
+  /* the microsites (9 Oct 2026): each its own entry, in the section whose
+     menu lists it; privacy sits in none, as track and search do */
+  'campus.html':       ['PFA Campus',                'get-involved.html'],
+  'campaign.html':     ['Plan a campaign',           'get-involved.html'],
+  'legacy.html':       ['Leave a legacy',            'get-involved.html'],
+  'csr.html':          ['CSR partnerships',          'get-involved.html'],
+  'sgacc.html':        ['Sanjay Gandhi Animal Care Centre', 'founder.html'],
+  'privacy.html':      [null,                        null]
 };
 
 test('no page marks the wrong item as the current one', () => {

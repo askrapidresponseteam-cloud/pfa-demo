@@ -64,8 +64,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Careers | People for Animals</title>
-<meta name="description" content="People for Animals is hiring Zonal Heads: field-based coordinators for its network of Units across India. Two-year term, ₹35,000 a month plus travel. Apply in two minutes.">
-<link rel="stylesheet" href="assets/chrome.css?v=b3b247505e">
+<meta name="description" content="Work for People for Animals: a Zonal Head in each of nine Zones, veterinary doctors at the Sanjay Gandhi Animal Care Centre, a Cruelty Response Coordinator, Social Media and Fundraising, and interns. One application, five short screens.">
+<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
 <style>
 :root{
   --paper:#fff;
@@ -121,7 +121,6 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .hero__in{position:relative;z-index:1;width:100%}
 .hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
 .hero h1{font-size:clamp(34px,4.4vw,62px);max-width:15ch}
-.hero p.lede{margin:26px 0 0;max-width:46ch;font-size:14px;line-height:1.6;color:rgba(17,17,17,.78)}
 .hero .meta{display:flex;flex-wrap:wrap;gap:12px 40px;margin:32px 0 0;font-size:13px;color:rgba(17,17,17,.85)}
 
 /* ---------- filter bar, same component as the shop ---------- */
@@ -254,7 +253,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .timeline li span:first-child{color:var(--muted);font-size:13px}
 .timeline li:last-child{border-bottom:1px solid var(--line)}
 /* ---------- careers ---------- */
-.role{padding:var(--band) var(--gutter) 0;max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(40px,6vw,96px)}
+.role{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(40px,6vw,96px);align-items:start}
 @media(max-width:860px){.role{grid-template-columns:1fr}}
 .role h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(26px,3vw,40px);margin:0 0 14px;letter-spacing:.01em}
 .role .facts{margin:0 0 24px;padding:0;list-style:none;border-top:1px solid var(--line)}
@@ -320,6 +319,42 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .hero,.u-hero{border-bottom:1px solid var(--line)}
 .leg__panel{border-top:3px solid var(--pop,#ff3b18)}
 ::selection{background:var(--pop,#ff3b18);color:#fff}
+/* ---------- the openings board (9 Oct 2026) ---------- */
+#openings .band__head,#roles .band__head{margin-bottom:clamp(28px,3vw,44px)}
+/* the form's .btn below is redefined after .btn--light, so the light one needs the pair */
+.btn.btn--light{background:#fff;color:var(--ink)}
+.btn.btn--light:hover{background:var(--ink);color:#fff}
+.jobs .m-card h3{font-size:clamp(21px,1.8vw,27px)}
+.jobs .job{justify-content:flex-start}
+.job__meta{display:grid;gap:0;margin:4px 0 0;border-top:1px solid var(--line)}
+.job__meta div{display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.45}
+.job__meta dt{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.job__meta dd{margin:0}
+.job__acts{display:flex;flex-wrap:wrap;gap:10px 22px}
+.job--more{background:#faf9f7}
+.roletabs{margin-bottom:clamp(28px,3vw,44px)}
+.opening[hidden]{display:none}
+.opening + .opening{margin-top:clamp(56px,6vw,96px);padding-top:clamp(40px,4vw,64px);border-top:1px solid var(--line)}
+.roletabs:not([hidden]) ~ .opening + .opening{margin-top:0;padding-top:0;border-top:0}
+.opening h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(28px,3.2vw,46px);line-height:1.02;margin:12px 0 22px;letter-spacing:.01em}
+.opening > div:first-child{position:sticky;top:calc(var(--ann) + var(--nav) + 24px)}
+.opening .facts a{border-bottom:1px solid currentColor}
+.jd ul{padding:0;margin:0 0 6px}
+.jd li{position:relative;margin:0;padding:8px 0 8px 18px;border-top:1px solid var(--line)}
+.jd li:last-child{border-bottom:1px solid var(--line)}
+.jd li::before{content:"";position:absolute;left:0;top:19px;width:7px;height:1px;background:var(--ink)}
+.jd details li:last-child{border-bottom:0}
+.jd p a{border-bottom:1px solid currentColor}
+.rolepick{--cols:2;margin-top:4px}
+.rolepick li:last-child{grid-column:1 / -1}
+.apply .m-live{margin:6px 0 20px}
+.apply .m-live h4{font-size:clamp(20px,1.8vw,26px)}
+@media (max-width:860px){
+  .opening > div:first-child{position:static}
+}
+@media (max-width:600px){
+  .rolepick{--cols:1}
+}
 /* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
 @media (max-width:700px),(pointer:coarse){
   .search{height:44px}
@@ -329,6 +364,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 }
 /* ---- end phone pass ---- */
 </style>
+<link rel="stylesheet" href="assets/micro.css">
 <link rel="stylesheet" href="pfa-search.css">
 <script src="pfa-search.js" defer></script>
 <!-- The editorial layer from the Sep 2026 theme pass: labels, display
@@ -342,7 +378,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   <meta property="og:locale" content="en_IN">
   <meta property="og:type" content="article">
   <meta property="og:title" content="Careers">
-  <meta property="og:description" content="People for Animals is hiring Zonal Heads: field-based coordinators for its network of Units across India. Two-year term, ₹35,000 a month plus travel. Apply in two minutes.">
+  <meta property="og:description" content="Work for People for Animals: a Zonal Head in each of nine Zones, veterinary doctors at the Sanjay Gandhi Animal Care Centre, a Cruelty Response Coordinator, Social Media and Fundraising, and interns. One application, five short screens.">
   <meta property="og:url" content="https://peopleforanimalsindia.org/careers">
   <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <meta property="og:image:width" content="1200">
@@ -351,7 +387,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@pfaindia">
   <meta name="twitter:title" content="Careers">
-  <meta name="twitter:description" content="People for Animals is hiring Zonal Heads: field-based coordinators for its network of Units across India. Two-year term, ₹35,000 a month plus travel. Apply in two minutes.">
+  <meta name="twitter:description" content="Work for People for Animals: a Zonal Head in each of nine Zones, veterinary doctors at the Sanjay Gandhi Animal Care Centre, a Cruelty Response Coordinator, Social Media and Fundraising, and interns. One application, five short screens.">
   <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"JobPosting","title":"Zonal Head","description":"PFA’s coordinator for every Unit in a Zone: growing the network, mentoring local leadership, and making sure a cruelty complaint becomes a case that survives prosecution.","datePosted":"2026-08-28","validThrough":"2027-02-28","employmentType":"FULL_TIME","hiringOrganization":{"@id":"https://peopleforanimalsindia.org/#organisation"},"jobLocationType":"TELECOMMUTE","applicantLocationRequirements":{"@type":"Country","name":"India"},"jobLocation":{"@type":"Place","address":{"@type":"PostalAddress","addressCountry":"IN"}},"baseSalary":{"@type":"MonetaryAmount","currency":"INR","value":{"@type":"QuantitativeValue","value":35000,"unitText":"MONTH"}},"directApply":true}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Careers","item":"https://peopleforanimalsindia.org/careers"}]}</script>
@@ -548,6 +584,12 @@ if (root.document && root.document.head) apply(read());
           <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
           <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
           <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <a href="campus.html" data-nav="campus.html">PFA Campus</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <span class="menu-label">Give and partner</span>
+          <a href="campaign.html" data-nav="campaign.html">Plan a campaign</a>
+          <a href="legacy.html" data-nav="legacy.html">Leave a legacy</a>
+          <a href="csr.html" data-nav="csr.html">CSR partnerships</a>
           <span class="menu-sep" aria-hidden="true"></span>
           <a href="wall.html" data-nav="wall.html">The Wall</a>
           <a href="events.html" data-nav="events.html">Events</a>
@@ -558,6 +600,7 @@ if (root.document && root.document.head) apply(read());
         <a href="founder.html" data-nav="founder.html" class="in-section">About</a>
         <div class="menu right">
           <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="sgacc.html" data-nav="sgacc.html">Sanjay Gandhi Animal Care Centre</a>
           <a href="#top" data-nav="careers.html" class="current" aria-current="page">Careers</a>
           <a href="ask.html" data-nav="ask.html">Contact</a>
         </div>
@@ -573,16 +616,103 @@ if (root.document && root.document.head) apply(read());
 <script src="assets/field-validate.js"></script>
 
 <main>
-  <section class="hero" id="top">
-    <div class="hero__in">
-      <p class="eyebrow">Careers · one opening</p>
-      <h1 class="display">Zonal Head.</h1>
+  <section class="hero m-hero" id="top">
+    <div class="m-hero__in">
+      <div class="hero__in">
+        <p class="eyebrow">Careers · five openings</p>
+        <h1 class="display">Work for the animals.</h1>
+        <p class="lede">In the field across nine Zones, at the Sanjay Gandhi Animal Care Centre, and at PFA's head office in New Delhi. One application, five short screens, a reference the moment it is sent, and an answer either way.</p>
+        <div class="m-hero__acts">
+          <a class="btn" href="#openings">See the openings</a>
+          <a class="btn btn--light" href="#apply">Apply</a>
+        </div>
+        <ul class="m-hero__facts">
+          <li><b>5</b><span>openings now</span></li>
+          <li><b>9</b><span>Zones for a Zonal Head</span></li>
+          <li><b>3 weeks</b><span>to hear back, if shortlisted</span></li>
+        </ul>
+      </div>
+      <div class="m-hero__media">
+        <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-03.jpg" alt="At the Sanjay Gandhi Animal Care Centre" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>At the Sanjay Gandhi Animal Care Centre</figcaption></figure>
+      </div>
     </div>
   </section>
 
-  <section class="role" id="role">
+  <section class="band" id="openings">
+    <div class="band__head">
+      <p class="eyebrow">Openings</p>
+      <h2 class="display">Five ways to make it your work.</h2>
+      <p>Choose where you would do it. Every role is read by a named person at PFA, and everyone who applies hears back.</p>
+    </div>
+    <div class="m-chips" id="jobChips" role="group" aria-label="Show openings">
+      <button class="m-chip" type="button" data-filter="" aria-pressed="true">All</button>
+      <button class="m-chip" type="button" data-filter="field" aria-pressed="false">In the field</button>
+      <button class="m-chip" type="button" data-filter="vet" aria-pressed="false">Veterinary</button>
+      <button class="m-chip" type="button" data-filter="office" aria-pressed="false">Head office</button>
+      <button class="m-chip" type="button" data-filter="intern" aria-pressed="false">Internship</button>
+    </div>
+    <ul class="m-grid jobs">
+      <li class="m-card job" data-kind="field">
+        <span class="m-tag">In the field · nine Zones</span>
+        <h3>Zonal Head</h3>
+        <p>PFA's coordinator for every Unit in a Zone: growing the network, mentoring local leadership, and making sure a cruelty complaint becomes a case that survives prosecution.</p>
+        <dl class="job__meta"><div><dt>Term</dt><dd>Two years, renewable</dd></div><div><dt>Pay</dt><dd>₹35,000 a month, plus travel</dd></div></dl>
+        <p class="m-card__foot job__acts"><a href="#zonal-head" data-show-role="zonal-head">Read the role</a><a href="#apply" data-apply="zonal-head">Apply</a></p>
+      </li>
+      <li class="m-card job" data-kind="vet">
+        <span class="m-tag">Veterinary · New Delhi</span>
+        <h3>Veterinary doctors</h3>
+        <p>Senior and junior vets, and para vets, at the Sanjay Gandhi Animal Care Centre. Treat many species, and help train the Indian vets and para vets beside you.</p>
+        <dl class="job__meta"><div><dt>Where</dt><dd>Raja Garden, New Delhi</dd></div><div><dt>Also</dt><dd>Visiting vets and students welcome</dd></div></dl>
+        <p class="m-card__foot job__acts"><a href="#veterinary-team" data-show-role="veterinary-team">Read the role</a><a href="#apply" data-apply="veterinary-team">Apply</a></p>
+      </li>
+      <li class="m-card job" data-kind="office">
+        <span class="m-tag">Head office · New Delhi</span>
+        <h3>Cruelty Response Coordinator</h3>
+        <p>Handle the cruelty complaints that reach PFA every day, coordinate rescues anywhere in India, and arrange treatment for animals that cannot be moved.</p>
+        <dl class="job__meta"><div><dt>Hours</dt><dd>Monday to Friday, 10 am to 5 pm</dd></div><div><dt>Needs</dt><dd>A graduate, Hindi and English</dd></div></dl>
+        <p class="m-card__foot job__acts"><a href="#cruelty-response-coordinator" data-show-role="cruelty-response-coordinator">Read the role</a><a href="#apply" data-apply="cruelty-response-coordinator">Apply</a></p>
+      </li>
+      <li class="m-card job" data-kind="office">
+        <span class="m-tag">Head office · New Delhi</span>
+        <h3>Social Media and Fundraising</h3>
+        <p>Tell more people what PFA does, and raise what the work needs: social media, CSR proposals, grants, newsletters, exhibitions and fundraisers.</p>
+        <dl class="job__meta"><div><dt>Hours</dt><dd>Monday to Friday, 10 am to 5 pm</dd></div><div><dt>Suits</dt><dd>A writer who can ask for money</dd></div></dl>
+        <p class="m-card__foot job__acts"><a href="#social-media-fundraising" data-show-role="social-media-fundraising">Read the role</a><a href="#apply" data-apply="social-media-fundraising">Apply</a></p>
+      </li>
+      <li class="m-card job" data-kind="intern">
+        <span class="m-tag">Internship · New Delhi</span>
+        <h3>Internship</h3>
+        <p>Research, writing and campaigns beside the people who run PFA. Interns are one of the pillars of the organisation.</p>
+        <dl class="job__meta"><div><dt>Hours</dt><dd>10 am to 5 pm, five days a week</dd></div><div><dt>Certificate</dt><dd>After 25 working days</dd></div></dl>
+        <p class="m-card__foot job__acts"><a href="#internship" data-show-role="internship">Read the role</a><a href="#apply" data-apply="internship">Apply</a></p>
+      </li>
+      <li class="m-card job job--more" data-kind="">
+        <span class="m-tag">Not a job, still the work</span>
+        <h3>Volunteer instead</h3>
+        <p>Give a few hours to the animals at the Sanjay Gandhi Animal Care Centre, or to a PFA Unit near you. No application, no interview.</p>
+        <p class="m-card__foot job__acts"><a href="sgacc.html#help">At the centre</a><a href="get-involved.html#volunteer">Near you</a></p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="band" id="roles">
+    <div class="band__head">
+      <p class="eyebrow">The roles</p>
+      <h2 class="display">Read the role.</h2>
+    </div>
+    <div class="m-chips roletabs" id="roleTabs" role="group" aria-label="Choose a role to read" hidden>
+      <button class="m-chip" type="button" data-role="zonal-head" aria-pressed="true">Zonal Head</button>
+      <button class="m-chip" type="button" data-role="veterinary-team" aria-pressed="false">Veterinary doctors</button>
+      <button class="m-chip" type="button" data-role="cruelty-response-coordinator" aria-pressed="false">Cruelty Response Coordinator</button>
+      <button class="m-chip" type="button" data-role="social-media-fundraising" aria-pressed="false">Social Media and Fundraising</button>
+      <button class="m-chip" type="button" data-role="internship" aria-pressed="false">Internship</button>
+    </div>
+
+    <article class="opening role" id="zonal-head" data-role="zonal-head">
     <div>
-      <h2>The role at a glance</h2>
+      <p class="eyebrow">In the field · nine Zones</p>
+      <h2>Zonal Head</h2>
       <ul class="facts">
         <li><span>Title</span><span>Zonal Head</span></li>
         <li><span>Where</span><span>Based in the assigned PFA Zone; extensive travel across its States and districts</span></li>
@@ -591,7 +721,7 @@ if (root.document && root.document.head) apply(read());
         <li><span>Reports to</span><span>The Chairperson / Principal Organisation</span></li>
         <li><span>Best fit</span><span>An active working member of a recognised PFA Unit in the Zone, with animal welfare, rescue, NGO, social work or organising experience</span></li>
       </ul>
-      <a class="go" href="#apply">Apply now <small>Five short screens.</small></a>
+      <a class="go" href="#apply" data-apply="zonal-head">Apply for this role <small>Five short screens.</small></a>
     </div>
     <div class="jd">
       <p class="lead">People For Animals is India's largest animal welfare organisation, working through a nationwide network of independently registered Units: rescue, shelter and adoption, animal birth control and anti-rabies programmes, cruelty complaints and prosecution, enforcement of animal protection laws, and engagement with government on policy.</p>
@@ -649,13 +779,134 @@ if (root.document && root.document.head) apply(read());
         <li>Working knowledge of animal welfare law, enforcement mechanisms and government structures is a strong advantage.</li></ul></details>
       <details><summary>Accountability</summary><p>The Zonal Head reports to the Chairperson / Principal Organisation and is assessed on network growth, animal welfare and enforcement response, programme delivery, government coordination, movement building, training, compliance and reporting. The Zonal Head must act in the interests of PFA, maintain confidentiality, disclose conflicts of interest, and not use the position for personal, political or commercial gain.</p></details>
     </div>
+    </article>
+
+    <article class="opening role" id="veterinary-team" data-role="veterinary-team">
+      <div>
+        <p class="eyebrow">Veterinary · New Delhi</p>
+        <h2>Veterinary doctors</h2>
+        <ul class="facts">
+          <li><span>Posts</span><span>Senior veterinary doctor, junior veterinary doctor, para vet</span></li>
+          <li><span>Where</span><span>Sanjay Gandhi Animal Care Centre, Raja Garden, New Delhi, near Rajouri Garden metro</span></li>
+          <li><span>Pay</span><span>Paid posts for veterinarians, discussed at interview</span></li>
+          <li><span>Visiting</span><span>Vets, para vets, interns and veterinary students, from India or abroad, as volunteers</span></li>
+          <li><span>Stay</span><span>For a visiting vet or student, boarding and meals are free for as long as you stay</span></li>
+          <li><span>Questions</span><span>Ms. Ambika Shukla, <a href="tel:+919810054077">+91&nbsp;98100&nbsp;54077</a></span></li>
+        </ul>
+        <a class="go" href="#apply" data-apply="veterinary-team">Apply for this role <small>Five short screens.</small></a>
+      </div>
+      <div class="jd">
+        <p class="lead">The Sanjay Gandhi Animal Care Centre is PFA's flagship in Delhi: an animal hospital and shelter in one, caring for more than three thousand animals at any one time, round the clock.</p>
+        <p>It treats every kind of animal the city brings to its gate, from community dogs and cats to cattle, horses, donkeys and birds. A vet here sees in a month what many see in a year, and helps train the Indian vets and para vets who work alongside.</p>
+        <h3>What the work is</h3>
+        <ul>
+          <li>Treat in-patients in the wards and out-patients at the gate, across many species.</li>
+          <li>Surgery in the centre's operation theatre, including the animal birth control programme for the city's community dogs.</li>
+          <li>Intensive care for large animals and small ones, with X-ray and blood tests on site.</li>
+          <li>Teach: share what you know with the centre's vets, para vets and students.</li>
+        </ul>
+        <h3>Who it suits</h3>
+        <ul>
+          <li>A qualified veterinarian, for the senior and junior posts; a trained para vet for the para vet post.</li>
+          <li>Students and visiting vets who want hands-on experience across species, as volunteers.</li>
+          <li>Anyone who can stay calm with a frightened animal, and kind with a frightened owner.</li>
+        </ul>
+        <p>See the centre: <a href="sgacc.html">Sanjay Gandhi Animal Care Centre</a>.</p>
+      </div>
+    </article>
+
+    <article class="opening role" id="cruelty-response-coordinator" data-role="cruelty-response-coordinator">
+      <div>
+        <p class="eyebrow">Head office · New Delhi</p>
+        <h2>Cruelty Response Coordinator</h2>
+        <ul class="facts">
+          <li><span>Where</span><span>PFA head office, 14 Ashoka Road, New Delhi</span></li>
+          <li><span>Hours</span><span>Monday to Friday, 10 am to 5 pm</span></li>
+          <li><span>Needs</span><span>At least a graduate; computer savvy; an animal person</span></li>
+          <li><span>Languages</span><span>Hindi and English, spoken and written</span></li>
+        </ul>
+        <a class="go" href="#apply" data-apply="cruelty-response-coordinator">Apply for this role <small>Five short screens.</small></a>
+      </div>
+      <div class="jd">
+        <p class="lead">PFA receives cruelty complaints every day, from every part of India. This is the person who makes sure each one is answered, and that something happens for the animal.</p>
+        <h3>What the work is</h3>
+        <ul>
+          <li>Handle complaints about resident welfare associations harassing feeders and pet owners: what the law says, who to write to, and how to keep the peace.</li>
+          <li>Coordinate rescues across India, with the nearest PFA Unit, volunteers, police and local authorities.</li>
+          <li>Arrange treatment on the spot for animals that cannot be moved.</li>
+          <li>Keep a record of every complaint and follow it until it is resolved.</li>
+        </ul>
+        <h3>Who it suits</h3>
+        <ul>
+          <li>Someone who stays steady on the phone with a person in distress, and firm with an official who would rather not act.</li>
+          <li>Organised enough that no complaint is forgotten.</li>
+        </ul>
+        <p>Learn what the law says first: <a href="laws.html">the animal welfare law, explained</a>.</p>
+      </div>
+    </article>
+
+    <article class="opening role" id="social-media-fundraising" data-role="social-media-fundraising">
+      <div>
+        <p class="eyebrow">Head office · New Delhi</p>
+        <h2>Social Media and Fundraising</h2>
+        <ul class="facts">
+          <li><span>Where</span><span>PFA head office, New Delhi</span></li>
+          <li><span>Hours</span><span>Monday to Friday, 10 am to 5 pm</span></li>
+          <li><span>Suits</span><span>A clear writer, at ease online and in a meeting, who is not shy of asking for money</span></li>
+        </ul>
+        <a class="go" href="#apply" data-apply="social-media-fundraising">Apply for this role <small>Five short screens.</small></a>
+      </div>
+      <div class="jd">
+        <p class="lead">PFA needs someone who can tell more and more people about animal welfare, and raise what the work needs to grow.</p>
+        <h3>What the work is</h3>
+        <ul>
+          <li>Run PFA's social media: posts, films and campaigns that move people to act.</li>
+          <li>Meet companies about their CSR, and write the proposals.</li>
+          <li>Write to embassies, and send proposals to philanthropic institutions abroad.</li>
+          <li>Apply for Indian and foreign grants.</li>
+          <li>Send PFA's newsletters to its supporters.</li>
+          <li>Organise exhibitions and fundraisers.</li>
+        </ul>
+        <p>See how companies can work with PFA: <a href="csr.html">CSR partnerships</a>.</p>
+      </div>
+    </article>
+
+    <article class="opening role" id="internship" data-role="internship">
+      <div>
+        <p class="eyebrow">Internship · New Delhi</p>
+        <h2>Internship</h2>
+        <ul class="facts">
+          <li><span>Where</span><span>PFA office, 14 Ashoka Road, New Delhi</span></li>
+          <li><span>Hours</span><span>10 am to 5 pm, five days a week</span></li>
+          <li><span>Certificate</span><span>After a minimum of 25 working days</span></li>
+        </ul>
+        <a class="go" href="#apply" data-apply="internship">Apply for this role <small>Five short screens.</small></a>
+      </div>
+      <div class="jd">
+        <p class="lead">Interns are one of the pillars of PFA. The work is real, and it goes out under PFA's name.</p>
+        <h3>What the work is</h3>
+        <ul>
+          <li>Research for columns and articles.</li>
+          <li>Writing scripts for films.</li>
+          <li>Keeping PFA's social media up to date.</li>
+          <li>Research for pamphlets, and work on books.</li>
+          <li>Calling supporters to raise donations.</li>
+        </ul>
+        <p>Students who would rather start something on their own campus: <a href="campus.html">PFA Campus</a>.</p>
+      </div>
+    </article>
   </section>
 
   <section class="apply" id="apply">
     <div class="apply__in">
       <div class="aside">
-        <h2>Apply in two minutes.</h2>
-        <p>No cover letter, no account. Five short screens: your Zone, who you are, and two questions the job asks every week. Your answers are what a named person at PFA reads first.</p>
+        <h2>Apply in five short screens.</h2>
+        <p>No cover letter, no account. The role, who you are, you and PFA, and two questions the job asks every week. Your answers are what a named person at PFA reads first.</p>
+        <div class="m-live" id="applyCard">
+          <p class="m-live__top"><span>Applying for</span><img src="img/mail/logo-mark.png" alt="" width="34" height="30"></p>
+          <h4 id="applyRole">Choose a role</h4>
+          <p id="applyWhere" class="is-empty">The role, the place and the questions follow your choice.</p>
+        </div>
         <p>You get a reference the moment it is sent. Shortlisted candidates are called within three weeks; everyone hears back either way.</p>
         <p>PFA hires on ability and does not discriminate on caste, religion, gender, disability or anything else that is not the work.</p>
       </div>
@@ -663,11 +914,33 @@ if (root.document && root.document.head) apply(read());
       <form class="form" id="jobForm" novalidate>
         <ol class="steps" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li></ol>
 
-        <div class="step" data-step="Zone">
-          <h3>Which Zone are you applying for?</h3>
-          <p class="ask">Where you live and can be on the ground. One Zone per application.</p>
-          <ul class="zones" id="zones"></ul>
-          <p class="err" id="zoneErr" hidden></p>
+        <div class="step" data-step="Role">
+          <h3>Which role?</h3>
+          <p class="ask">One role per application. You can apply again for another.</p>
+          <ul class="m-picks rolepick" id="rolePick">
+            <li class="m-pick"><input type="radio" name="roleId" id="r-zonal-head" value="zonal-head"><label for="r-zonal-head"><b>Zonal Head</b><small>In the field, nine Zones</small></label></li>
+            <li class="m-pick"><input type="radio" name="roleId" id="r-veterinary-team" value="veterinary-team"><label for="r-veterinary-team"><b>Veterinary doctors</b><small>The Animal Care Centre, Delhi</small></label></li>
+            <li class="m-pick"><input type="radio" name="roleId" id="r-cruelty-response-coordinator" value="cruelty-response-coordinator"><label for="r-cruelty-response-coordinator"><b>Cruelty Response Coordinator</b><small>Head office, Delhi</small></label></li>
+            <li class="m-pick"><input type="radio" name="roleId" id="r-social-media-fundraising" value="social-media-fundraising"><label for="r-social-media-fundraising"><b>Social Media and Fundraising</b><small>Head office, Delhi</small></label></li>
+            <li class="m-pick"><input type="radio" name="roleId" id="r-internship" value="internship"><label for="r-internship"><b>Internship</b><small>Head office, Delhi</small></label></li>
+          </ul>
+          <p class="err" id="roleErr" hidden></p>
+          <div class="field" data-for="zonal-head" hidden>
+            <label>Which Zone are you applying for? <small>Where you live and can be on the ground. One Zone per application.</small></label>
+            <ul class="zones" id="zones"></ul>
+            <p class="err" id="zoneErr" hidden></p>
+          </div>
+          <div class="field" data-for="veterinary-team" hidden>
+            <label>Which post?</label>
+            <ul class="m-picks m-picks--2 m-picks--compact">
+              <li class="m-pick"><input type="radio" name="level" id="lv1" value="Senior veterinary doctor"><label for="lv1"><b>Senior veterinary doctor</b></label></li>
+              <li class="m-pick"><input type="radio" name="level" id="lv2" value="Junior veterinary doctor"><label for="lv2"><b>Junior veterinary doctor</b></label></li>
+              <li class="m-pick"><input type="radio" name="level" id="lv3" value="Para vet"><label for="lv3"><b>Para vet</b></label></li>
+              <li class="m-pick"><input type="radio" name="level" id="lv4" value="Visiting vet or veterinary student"><label for="lv4"><b>Visiting vet or student</b></label></li>
+            </ul>
+            <p class="err" id="levelErr" hidden></p>
+          </div>
+          <div class="field" data-for="internship" hidden><label for="dates">When can you start, and for how long?</label><input id="dates" name="dates" placeholder="From 1 December, for six weeks"><p class="err" hidden></p></div>
         </div>
 
         <div class="step" data-step="You">
@@ -693,8 +966,8 @@ if (root.document && root.document.head) apply(read());
             <p class="err" id="memberErr" hidden></p>
           </div>
           <div class="field" id="unitField" hidden><label for="unit">Which Unit, and your role there</label><input id="unit" name="unit" placeholder="PFA Lucknow, Secretary since 2021"><p class="err" hidden></p></div>
-          <div class="field"><label for="background">Your background, in one or two lines</label><input id="background" name="background" required placeholder="Eight years in rescue; ran the ABC programme for two districts; a lawyer by training"><p class="err" hidden></p></div>
-          <div class="field">
+          <div class="field"><label for="background" id="backgroundLabel">Your background, in one or two lines</label><input id="background" name="background" required placeholder="Eight years in rescue; ran the ABC programme for two districts; a lawyer by training"><p class="err" hidden></p></div>
+          <div class="field" data-for="zonal-head" hidden>
             <label>Can you travel extensively across the Zone and respond at short notice?</label>
             <div class="pill">
               <span><input type="radio" name="travel" id="travelYes" value="Yes"><label for="travelYes">Yes</label></span>
@@ -706,17 +979,17 @@ if (root.document && root.document.head) apply(read());
         </div>
 
         <div class="step" data-step="Case">
-          <h3>A poisoning, and a refusal.</h3>
+          <h3 id="q1Title">A poisoning, and a refusal.</h3>
           <p class="ask" id="q1Ask">A colony of eleven dogs is poisoned overnight in a district of your Zone; four are dead and a feeder has photographs. The SHO refuses to register an FIR and says it is a municipal matter. What do you do in the first 48 hours? Be concrete: who you call, what you file, what you secure.</p>
           <div class="field"><textarea id="q1" name="q1" required maxlength="900" aria-labelledby="q1Ask" placeholder="Steps, in order."></textarea><p class="chars" data-count-for="q1">0 / 900</p><p class="err" hidden></p></div>
         </div>
 
-        <div class="step" data-step="Zone plan">
-          <h3>Your first ninety days.</h3>
+        <div class="step" data-step="Last">
+          <h3 id="q2Title">Your first ninety days.</h3>
           <p class="ask" id="q2Ask">Name the districts in your Zone where PFA has no first responder today, as far as you know, and say how you would get one in place in each within ninety days. Names, not principles.</p>
           <div class="field"><textarea id="q2" name="q2" required maxlength="900" aria-labelledby="q2Ask" placeholder="District, who, how."></textarea><p class="chars" data-count-for="q2">0 / 900</p><p class="err" hidden></p></div>
-          <div class="field"><label for="link">Anything that shows your work <small>(optional: a news link, a case, a page)</small></label><input id="link" name="link" type="url" inputmode="url" placeholder="https://"><p class="err" hidden></p></div>
-          <label class="check"><input type="checkbox" id="consent"> <span>What I have written is true. PFA may contact me about this application and check what I have said with the Unit I named.</span></label>
+          <div class="field"><label for="link">A CV, or anything that shows your work <small>(optional: a link to a CV, a news story, a case, a page)</small></label><input id="link" name="link" type="url" inputmode="url" placeholder="https://"><p class="err" hidden></p></div>
+          <label class="check"><input type="checkbox" id="consent"> <span>What I have written is true. PFA may contact me about this application and check what I have said with anyone I named.</span></label>
           <p class="err" id="consentErr" hidden></p>
           <p class="status" data-form-status hidden></p>
         </div>
@@ -757,29 +1030,28 @@ if (root.document && root.document.head) apply(read());
 </main>
 
 <footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
-  <!-- Compact (owner, 8 Oct 2026: "make footer compact in the whole site"),
-       then set on one grid (owner, same day: "this can be better. alignment
-       and look wise"). The name and the social links share a bar at the top;
-       under it the registered office and the four link groups are columns of
-       one width, each opened by the same label on the same hairline, so every
-       group starts on one line and the gaps between them are equal. Get
-       Involved takes two columns, under one label whose hairline runs across
-       both. The legal line closes it.
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
+       table: a hairline under every label, six equal columns that squeezed
+       the office into three lines, and its own gutter, a few pixels inside
+       the page's. Now it sits on the page's gutter, with the header. A bar
+       opens it: the name, and the two things most people come down here
+       for, reporting cruelty and giving. Under a single rule, the office
+       column (a little wider, so the address reads as an address) and five
+       link groups, each opened by a short pop tick and its label, no rules
+       between them. The legal line closes it, with the privacy policy.
 
-       The link groups are the same four the header uses, in the same order,
-       with the same labels, so a link is in one group at the top of a page and
-       the same group at the bottom.
+       The groups follow the header: Our Work, Learn, Get Involved, then its
+       "Give and partner" list as a group of its own, and About.
 
        Every block is block-level in the markup: assets/ is cached for an hour
        and the HTML is not, so for up to an hour after a deploy this markup
        meets the previous chrome.css, and it still reads top to bottom. -->
   <div class="pfa-footer__bar">
     <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
-    <nav class="pfa-footer__social" aria-label="Social media">
-      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
-      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
-    </nav>
+    <div class="pfa-footer__acts">
+      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
+      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
+    </div>
   </div>
   <div class="pfa-footer__grid">
     <div class="pfa-footer__office">
@@ -793,6 +1065,12 @@ if (root.document && root.document.head) apply(read());
         <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
         <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
       </address>
+      <nav class="pfa-footer__social" aria-label="Social media">
+        <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.youtube.com/@peopleforanimals9047" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
       <!-- Real count, from /api/visits. Hidden until a number actually
            arrives, so a counter that cannot reach the server shows nothing
            rather than a zero or an invented figure. No caption; the
@@ -819,22 +1097,26 @@ if (root.document && root.document.head) apply(read());
         <li><a href="quiz.html">Test yourself</a></li>
       </ul>
     </nav>
-    <!-- Two lists under one label: giving, then joining in. Each sits on a
-         column of the grid, so the second lines up with the groups around it
-         instead of floating as a column with no name. -->
-    <nav class="pfa-footer__col pfa-footer__col--wide" aria-label="Get Involved">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
       <p class="pfa-footer__label">Get Involved</p>
       <ul>
-        <li><a href="donate.html">Donate</a></li>
-        <li><a href="donate.html?gift=1">Make a gift</a></li>
         <li><a href="get-involved.html#volunteer">Volunteer</a></li>
         <li><a href="get-involved.html#membership">Become a member</a></li>
         <li><a href="caregiver-card.html">Colony caregiver card</a></li>
-      </ul>
-      <ul>
+        <li><a href="campus.html">PFA Campus</a></li>
         <li><a href="wall.html">The Wall</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Give and partner">
+      <p class="pfa-footer__label">Give and partner</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="campaign.html">Plan a campaign</a></li>
+        <li><a href="legacy.html">Leave a legacy</a></li>
+        <li><a href="csr.html">CSR partnerships</a></li>
         <li><a href="shop.html">Shop</a></li>
       </ul>
     </nav>
@@ -842,6 +1124,7 @@ if (root.document && root.document.head) apply(read());
       <p class="pfa-footer__label">About</p>
       <ul>
         <li><a href="founder.html">Founder</a></li>
+        <li><a href="sgacc.html">Animal Care Centre</a></li>
         <li><a href="careers.html">Careers</a></li>
         <li><a href="ask.html">Contact</a></li>
       </ul>
@@ -850,6 +1133,7 @@ if (root.document && root.document.head) apply(read());
   <div class="pfa-footer__base">
     <p>People for Animals © 2026</p>
     <p>Registered charity · All donations tax-deductible</p>
+    <p><a href="privacy.html">Privacy policy</a></p>
   </div>
 </footer>
 
@@ -857,10 +1141,45 @@ if (root.document && root.document.head) apply(read());
 
 <script src="assets/form-preview.js" defer></script>
 <script src="pfa-forms.js" defer></script>
+<script src="assets/micro.js"></script>
 <script>
-/* The opening. One role, nine Zones. Change ROLE to hire for something else;
-   the application's questions live in the markup above. */
-var PFA_ROLE = { id: 'zonal-head', title: 'Zonal Head', pay: '\u20b935,000 per month + travel', term: 'Two years, renewable' };
+/* The openings (owner, 9 Oct 2026: "properly update the existing Jobs
+   section"). Each role names its two questions; the markup above holds
+   each role's description, under the same id. The Zone and the travel
+   question are the Zonal Head's alone, the post the vets', the dates the
+   interns'; lib/submission-fields.js requires each for its own role. */
+var PFA_ROLES = [
+  { id: 'zonal-head', title: 'Zonal Head', where: 'In the field, in one of nine Zones', pay: '₹35,000 per month + travel', term: 'Two years, renewable',
+    background: 'Your background, in one or two lines',
+    q1: { label: 'Poisoning and FIR refusal', title: 'A poisoning, and a refusal.', placeholder: 'Steps, in order.',
+      ask: 'A colony of eleven dogs is poisoned overnight in a district of your Zone; four are dead and a feeder has photographs. The SHO refuses to register an FIR and says it is a municipal matter. What do you do in the first 48 hours? Be concrete: who you call, what you file, what you secure.' },
+    q2: { label: 'First ninety days', title: 'Your first ninety days.', placeholder: 'District, who, how.',
+      ask: 'Name the districts in your Zone where PFA has no first responder today, as far as you know, and say how you would get one in place in each within ninety days. Names, not principles.' } },
+  { id: 'veterinary-team', title: 'Veterinary doctors', where: 'Sanjay Gandhi Animal Care Centre, Raja Garden, New Delhi',
+    background: 'Your qualification and experience, in one or two lines',
+    q1: { label: 'A dog hit by a car', title: 'A night admission.', placeholder: 'What you check, what you do, in order.',
+      ask: 'A community dog is carried in at night after being hit by a car. It cannot stand, its gums are pale and it is breathing fast. Walk us through your first thirty minutes.' },
+    q2: { label: 'Why the centre', title: 'Why this centre.', placeholder: 'The animals you know, what you would bring.',
+      ask: 'Tell us about the animals you have treated, which species you are most and least at home with, and what you would bring to a centre caring for three thousand animals at a time.' } },
+  { id: 'cruelty-response-coordinator', title: 'Cruelty Response Coordinator', where: 'PFA head office, 14 Ashoka Road, New Delhi',
+    background: 'Your education and work so far, in one or two lines',
+    q1: { label: 'A complaint from far away', title: 'A call from far away.', placeholder: 'Who you call, in order.',
+      ask: 'A caller in another State says a horse has collapsed at a wedding venue and is being beaten to make it stand. The local police are not answering. What do you do in the next hour, from the office?' },
+    q2: { label: 'Keeping track', title: 'Nothing forgotten.', placeholder: 'The system you would keep.',
+      ask: 'Dozens of complaints reach PFA every week, by phone, email and message. How would you make sure none of them is forgotten, and that each one is followed until it is resolved?' } },
+  { id: 'social-media-fundraising', title: 'Social Media and Fundraising', where: 'PFA head office, New Delhi',
+    background: 'What you have written, run or raised, in one or two lines',
+    q1: { label: 'A post that asks', title: 'Ask for it.', placeholder: 'The post, as you would publish it.',
+      ask: 'Write the post, as you would publish it, asking people to pay for the surgery of a dog whose leg was broken by a car. Then say in one line where you would put it, and why there.' },
+    q2: { label: 'Something you grew', title: 'Something you grew.', placeholder: 'What it was, what you did, what changed.',
+      ask: 'Tell us about an account, a page, a campaign or an appeal you have run or grown. What did you do, and what changed because of it? Numbers help.' } },
+  { id: 'internship', title: 'Internship', where: 'PFA office, 14 Ashoka Road, New Delhi',
+    background: 'What you study, and where',
+    q1: { label: 'Why PFA', title: 'Why PFA.', placeholder: 'In your own words.',
+      ask: 'Why do you want to intern at People for Animals, and what do you hope to learn in your weeks here?' },
+    q2: { label: 'What you do well', title: 'What you do well.', placeholder: 'Writing, research, design, film, calling, organising.',
+      ask: 'What can you do well already: writing, research, design, film, social media, talking to people? Tell us about something you made or did.' } }
+];
 var PFA_ZONES = [
   { id: 'north-north', name: 'North North', states: 'Ladakh, Jammu & Kashmir' },
   { id: 'north', name: 'North', states: 'Himachal Pradesh, Punjab, Haryana, Chandigarh' },
@@ -880,15 +1199,74 @@ var PFA_ZONES = [
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (v) { return String(v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var form = $('#jobForm');
+  function roleOf(id) { return PFA_ROLES.filter(function (r) { return r.id === id; })[0] || null; }
+
+  /* ---- the board: chips that show one kind of opening ---- */
+  if (window.PFAMicro) window.PFAMicro.filter($('#jobChips'), '.jobs > li');
+
+  /* ---- the roles: one at a time, the rest a tap away. Without script every
+     role is on the page, one under the other. ---- */
+  var sheets = $$('.opening');
+  var tabs = $$('#roleTabs [data-role]');
+  $('#roleTabs').hidden = false;
+  function showRole(id, scroll) {
+    if (!roleOf(id)) return;
+    sheets.forEach(function (s) { s.hidden = s.getAttribute('data-role') !== id; });
+    tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t.getAttribute('data-role') === id)); });
+    if (scroll) $('#roles').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { showRole(t.getAttribute('data-role')); }); });
+  $$('[data-show-role]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); showRole(a.getAttribute('data-show-role'), true); history.replaceState(null, '', '#' + a.getAttribute('data-show-role')); });
+  });
+  var fromHash = /^#([a-z-]+)$/.exec(location.hash || '');
+  var deep = fromHash && roleOf(fromHash[1]) ? fromHash[1] : '';
+  showRole(deep || 'zonal-head', false);
+  if (deep) setTimeout(function () { var el = document.getElementById(deep); if (el) el.scrollIntoView({ block: 'start' }); }, 60);
 
   /* ---- zones ---- */
   $('#zones').innerHTML = PFA_ZONES.map(function (z) {
     return '<li><input type="radio" name="zone" id="z-' + z.id + '" value="' + z.id + '"><label for="z-' + z.id + '"><b>' + esc(z.name) + '</b><small>' + esc(z.states) + '</small></label></li>';
   }).join('');
-  var pre = /[#&?]zone=([^&]+)/.exec(location.hash + location.search);
-  if (pre) { var r = $('#z-' + decodeURIComponent(pre[1]).replace(/[^a-z0-9-]/g, '')); if (r) r.checked = true; }
   function picked(name) { return $$('input', form).filter(function (i) { return i.type === 'radio' && i.getAttribute('name') === name && i.checked; })[0] || null; }
   function zoneName() { var c = picked('zone'); var z = c && PFA_ZONES.filter(function (x) { return x.id === c.value; })[0]; return z ? z.name : ''; }
+  function role() { var c = picked('roleId'); return c ? roleOf(c.value) : null; }
+
+  /* ---- the role decides the rest: the Zone, the post or the dates, the
+     travel question, and the two questions. A part that is not this role's
+     is hidden and its controls disabled, so it is neither checked, shown in
+     the last look, nor sent. ---- */
+  function fit() {
+    var r = role();
+    $$('[data-for]', form).forEach(function (box) {
+      var on = !!r && box.getAttribute('data-for') === r.id;
+      box.hidden = !on;
+      $$('input, textarea, select', box).forEach(function (i) { i.disabled = !on; });
+    });
+    var card = $('#applyRole');
+    var where = $('#applyWhere');
+    if (!r) { card.textContent = 'Choose a role'; where.textContent = 'The role, the place and the questions follow your choice.'; where.className = 'is-empty'; return; }
+    card.textContent = r.title + (r.id === 'zonal-head' && zoneName() ? ', ' + zoneName() : '');
+    where.textContent = r.where + (r.pay ? '. ' + r.pay + '.' : '.');
+    where.className = '';
+    $('#backgroundLabel').textContent = r.background;
+    $('#q1Title').textContent = r.q1.title; $('#q1Ask').textContent = r.q1.ask; $('#q1').placeholder = r.q1.placeholder;
+    $('#q2Title').textContent = r.q2.title; $('#q2Ask').textContent = r.q2.ask; $('#q2').placeholder = r.q2.placeholder;
+  }
+  function choose(id) {
+    var input = $('#r-' + id);
+    if (!input) return;
+    input.checked = true;
+    say('roleErr', '');
+    fit();
+  }
+  $$('[data-apply]').forEach(function (a) {
+    a.addEventListener('click', function () { choose(a.getAttribute('data-apply')); });
+  });
+  var pre = /[#&?]zone=([^&]+)/.exec(location.hash + location.search);
+  if (pre) { var zr = $('#z-' + decodeURIComponent(pre[1]).replace(/[^a-z0-9-]/g, '')); if (zr) { zr.checked = true; choose('zonal-head'); } }
+  var preRole = /[#&?]role=([a-z-]+)/.exec(location.hash + location.search);
+  if (preRole) choose(preRole[1]);
 
   /* ---- steps ---- */
   var steps = $$('.step', form), dots = $$('.steps li', form), at = 0;
@@ -900,7 +1278,10 @@ var PFA_ZONES = [
     var last = at === steps.length - 1;
     $('#next').hidden = last; $('#send').hidden = !last;
     $('#clock').textContent = 'Step ' + (at + 1) + ' of ' + steps.length;
-    if (focus) { var f = steps[at].querySelector('input:not([type="radio"]), textarea'); if (f) f.focus({ preventScroll: true }); }
+    if (focus) {
+      if (form.getBoundingClientRect().top < 90) form.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      var f = steps[at].querySelector('input:not([type="radio"]):not([disabled]), textarea'); if (f) f.focus({ preventScroll: true });
+    }
   }
   function flag(el, message) {
     var box = el.closest('.field'); var err = box && box.querySelector('.err');
@@ -912,12 +1293,17 @@ var PFA_ZONES = [
   function digits(v) { return v.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, ''); }
 
   function stepOk() {
-    var s = steps[at], bad = 0;
-    if (s.getAttribute('data-step') === 'Zone') {
-      var ok = !!picked('zone');
-      say('zoneErr', ok ? '' : 'Choose the Zone you would work in.'); return ok;
+    var s = steps[at], bad = 0, r = role();
+    var name = s.getAttribute('data-step');
+    if (name === 'Role') {
+      say('roleErr', r ? '' : 'Choose the role you are applying for.'); if (!r) bad++;
+      if (r && r.id === 'zonal-head') { var z = !!picked('zone'); say('zoneErr', z ? '' : 'Choose the Zone you would work in.'); if (!z) bad++; }
+      if (r && r.id === 'veterinary-team') { var l = !!picked('level'); say('levelErr', l ? '' : 'Choose the post you are applying for.'); if (!l) bad++; }
+      if (r && r.id === 'internship') { var d = $('#dates'); var dm = d.value.trim() ? '' : 'Say when you can start and for how long.'; flag(d, dm); if (dm) bad++; }
+      if (bad) { var first = $('#roleErr:not([hidden])') ? $('#r-zonal-head') : $('[data-for]:not([hidden]) input', s); if (first) first.focus(); }
+      return !bad;
     }
-    $$('input, textarea', s).filter(function (el) { return el.hasAttribute('required') && el.closest('.step') === s; }).forEach(function (el) {
+    $$('input, textarea', s).filter(function (el) { return el.hasAttribute('required') && !el.disabled && el.closest('.step') === s; }).forEach(function (el) {
       var v = el.value.trim(), m = '';
       if (!v) m = el.tagName === 'TEXTAREA' ? 'This one is the application. Please answer it.' : 'Needed.';
       else if (el.id === 'mobile' && !MOBILE.test(digits(v))) m = 'An Indian mobile number is 10 digits, starting 6, 7, 8 or 9.';
@@ -925,14 +1311,13 @@ var PFA_ZONES = [
       else if (el.tagName === 'TEXTAREA' && v.length < 80) m = 'A little more: at least a few sentences.';
       flag(el, m); if (m) bad++;
     });
-    if (s.getAttribute('data-step') === 'PFA') {
+    if (name === 'PFA') {
       var member = picked('member');
       say('memberErr', member ? '' : 'Yes or not yet.'); if (!member) bad++;
       if (member && member.value === 'Yes' && !$('#unit').value.trim()) { flag($('#unit'), 'Which Unit?'); bad++; }
-      var travel = picked('travel');
-      say('travelErr', travel ? '' : 'Pick one.'); if (!travel) bad++;
+      if (r && r.id === 'zonal-head') { var travel = picked('travel'); say('travelErr', travel ? '' : 'Pick one.'); if (!travel) bad++; }
     }
-    if (s.getAttribute('data-step') === 'Zone plan') {
+    if (name === 'Last') {
       var link = $('#link');
       if (link.value.trim() && !/^https?:\/\/\S+\.\S+/.test(link.value.trim())) { flag(link, 'A link starts with https://'); bad++; }
       var c = $('#consent'); say('consentErr', c.checked ? '' : 'Please confirm before sending.'); if (!c.checked) bad++;
@@ -952,10 +1337,14 @@ var PFA_ZONES = [
     if (counter) counter.textContent = e.target.value.length + ' / ' + e.target.maxLength;
   });
   form.addEventListener('change', function (e) {
-    if (e.target.getAttribute('name') === 'zone') say('zoneErr', '');
-    if (e.target.getAttribute('name') === 'member') { $('#unitField').hidden = e.target.value !== 'Yes'; say('memberErr', ''); }
-    if (e.target.getAttribute('name') === 'travel') say('travelErr', '');
+    var n = e.target.getAttribute('name');
+    if (n === 'roleId') { say('roleErr', ''); fit(); }
+    if (n === 'zone') { say('zoneErr', ''); fit(); }
+    if (n === 'level') say('levelErr', '');
+    if (n === 'member') { $('#unitField').hidden = e.target.value !== 'Yes'; say('memberErr', ''); }
+    if (n === 'travel') say('travelErr', '');
   });
+  fit();
   paint(false);
 
   /* ---- send ---- */
@@ -965,11 +1354,15 @@ var PFA_ZONES = [
     if (busy || !stepOk()) return;
     var status = $('[data-form-status]'), button = $('#send');
     if (!window.PFAForms) { status.textContent = 'The page did not finish loading. Reload and try again.'; status.setAttribute('data-state', 'bad'); status.hidden = false; return; }
+    var r = role();
     var member = picked('member').value;
+    var level = r.id === 'veterinary-team' && picked('level') ? picked('level').value : '';
     var data = {
-      role: PFA_ROLE.title + ' - ' + zoneName(),
-      roleId: PFA_ROLE.id,
-      zone: zoneName(),
+      role: r.title + (r.id === 'zonal-head' ? ' - ' + zoneName() : level ? ' - ' + level : ''),
+      roleId: r.id,
+      zone: r.id === 'zonal-head' ? zoneName() : '',
+      level: level,
+      dates: r.id === 'internship' ? $('#dates').value.trim() : '',
       name: $('#name').value.trim(),
       city: $('#city').value.trim(),
       mobile: digits($('#mobile').value),
@@ -977,20 +1370,21 @@ var PFA_ZONES = [
       pfaMember: member,
       unit: member === 'Yes' ? $('#unit').value.trim() : '',
       background: $('#background').value.trim(),
-      travel: picked('travel').value,
-      'Q1 Poisoning and FIR refusal': $('#q1').value.trim(),
-      'Q2 First ninety days': $('#q2').value.trim(),
-      link: $('#link').value.trim(),
-      timeToApply: started ? Math.round((Date.now() - started) / 1000) + ' seconds' : ''
+      travel: r.id === 'zonal-head' && picked('travel') ? picked('travel').value : ''
     };
+    data['Q1 ' + r.q1.label] = $('#q1').value.trim();
+    data['Q2 ' + r.q2.label] = $('#q2').value.trim();
+    data.link = $('#link').value.trim();
+    data.timeToApply = started ? Math.round((Date.now() - started) / 1000) + ' seconds' : '';
+    Object.keys(data).forEach(function (k) { if (data[k] === '') delete data[k]; });
     busy = true; status.hidden = true;
     /* the last look, then the email and mobile on their own; nothing is sent until confirmed */
-    var look = window.PFAForms.preview ? window.PFAForms.preview(form, { title: 'Check your application before it is sent', send: 'Send the application', labels: { member: 'Already a PFA member', travel: 'Can you travel', q1: 'Q1. Poisoning and FIR refusal', q2: 'Q2. Your first ninety days' }, extra: [['Role', PFA_ROLE.title]] }) : null;
+    var look = window.PFAForms.preview ? window.PFAForms.preview(form, { title: 'Check your application before it is sent', send: 'Send the application', labels: { roleId: 'Role', zone: 'Zone', level: 'Post', member: 'Already a PFA member', travel: 'Can you travel', q1: 'Q1. ' + r.q1.label, q2: 'Q2. ' + r.q2.label } }) : null;
     if (look) look.then(go); else go(true);
     function go(confirmed) {
       if (!confirmed) { busy = false; return; }
       data.email = $('#email').value.trim();   /* the preview may have corrected it */
-      button.disabled = true; button.textContent = 'Sending\u2026';
+      button.disabled = true; button.textContent = 'Sending…';
       window.PFAForms.submit('PFA-J', data, { page: 'careers.html' })
         .then(function (reference) {
           form.hidden = true;
@@ -1014,15 +1408,15 @@ var PFA_ZONES = [
   function follow(ref, contact) {
     fSay.hidden = true; tl.hidden = true;
     if (!ref || !contact) { fSay.textContent = 'Both the reference and the mobile or email are needed.'; fSay.setAttribute('data-state', 'bad'); fSay.hidden = false; return; }
-    fSay.textContent = 'Looking\u2026'; fSay.removeAttribute('data-state'); fSay.hidden = false;
+    fSay.textContent = 'Looking…'; fSay.removeAttribute('data-state'); fSay.hidden = false;
     fetch('/api/pfa-submissions?reference=' + encodeURIComponent(ref) + '&contact=' + encodeURIComponent(contact), { headers: { Accept: 'application/json' } })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (p) { return { ok: r.ok, p: p }; }); })
       .then(function (res) {
         var p = res.p || {};
         if (!res.ok) { fSay.textContent = p.error || 'Nothing found for that number and contact.'; fSay.setAttribute('data-state', 'bad'); return; }
-        fSay.textContent = (p.kindLabel || 'Application') + ' \u00b7 ' + (p.statusLabel || p.status || '') + (p.next ? ' \u00b7 ' + p.next : '');
+        fSay.textContent = (p.kindLabel || 'Application') + ' · ' + (p.statusLabel || p.status || '') + (p.next ? ' · ' + p.next : '');
         fSay.setAttribute('data-state', 'good');
-        tl.innerHTML = (p.timeline || []).map(function (t) { return '<li><span>' + when(t.at) + '</span><span>' + (t.label || t.status) + '</span></li>'; }).join('');
+        tl.innerHTML = (p.timeline || []).map(function (t) { return '<li><span>' + when(t.at) + '</span><span>' + esc(t.label || t.status) + '</span></li>'; }).join('');
         tl.hidden = !tl.innerHTML;
       })
       .catch(function () { fSay.textContent = 'That could not be checked. Try again in a moment.'; fSay.setAttribute('data-state', 'bad'); });

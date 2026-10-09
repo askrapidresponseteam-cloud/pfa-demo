@@ -60,12 +60,12 @@
 }
 </style>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.411">
+<meta name="pfa-build" content="v1.412">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Policies and achievements | People for Animals</title>
 <meta name="description" content="Thirty years of changes People for Animals has made to India’s animal law and to the systems that run it. A selection of them, each naming what changed; the record itself is longer.">
-<link rel="stylesheet" href="assets/chrome.css?v=b3b247505e">
+<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
 <style>
 :root{
   --paper:#fff;
@@ -575,6 +575,12 @@ if (root.document && root.document.head) apply(read());
           <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
           <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
           <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <a href="campus.html" data-nav="campus.html">PFA Campus</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <span class="menu-label">Give and partner</span>
+          <a href="campaign.html" data-nav="campaign.html">Plan a campaign</a>
+          <a href="legacy.html" data-nav="legacy.html">Leave a legacy</a>
+          <a href="csr.html" data-nav="csr.html">CSR partnerships</a>
           <span class="menu-sep" aria-hidden="true"></span>
           <a href="wall.html" data-nav="wall.html">The Wall</a>
           <a href="events.html" data-nav="events.html">Events</a>
@@ -585,6 +591,7 @@ if (root.document && root.document.head) apply(read());
         <a href="founder.html" data-nav="founder.html">About</a>
         <div class="menu right">
           <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="sgacc.html" data-nav="sgacc.html">Sanjay Gandhi Animal Care Centre</a>
           <a href="careers.html" data-nav="careers.html">Careers</a>
           <a href="ask.html" data-nav="ask.html">Contact</a>
         </div>
@@ -750,29 +757,28 @@ if (root.document && root.document.head) apply(read());
 </main>
 
 <footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
-  <!-- Compact (owner, 8 Oct 2026: "make footer compact in the whole site"),
-       then set on one grid (owner, same day: "this can be better. alignment
-       and look wise"). The name and the social links share a bar at the top;
-       under it the registered office and the four link groups are columns of
-       one width, each opened by the same label on the same hairline, so every
-       group starts on one line and the gaps between them are equal. Get
-       Involved takes two columns, under one label whose hairline runs across
-       both. The legal line closes it.
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
+       table: a hairline under every label, six equal columns that squeezed
+       the office into three lines, and its own gutter, a few pixels inside
+       the page's. Now it sits on the page's gutter, with the header. A bar
+       opens it: the name, and the two things most people come down here
+       for, reporting cruelty and giving. Under a single rule, the office
+       column (a little wider, so the address reads as an address) and five
+       link groups, each opened by a short pop tick and its label, no rules
+       between them. The legal line closes it, with the privacy policy.
 
-       The link groups are the same four the header uses, in the same order,
-       with the same labels, so a link is in one group at the top of a page and
-       the same group at the bottom.
+       The groups follow the header: Our Work, Learn, Get Involved, then its
+       "Give and partner" list as a group of its own, and About.
 
        Every block is block-level in the markup: assets/ is cached for an hour
        and the HTML is not, so for up to an hour after a deploy this markup
        meets the previous chrome.css, and it still reads top to bottom. -->
   <div class="pfa-footer__bar">
     <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
-    <nav class="pfa-footer__social" aria-label="Social media">
-      <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
-      <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
-    </nav>
+    <div class="pfa-footer__acts">
+      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
+      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
+    </div>
   </div>
   <div class="pfa-footer__grid">
     <div class="pfa-footer__office">
@@ -786,6 +792,12 @@ if (root.document && root.document.head) apply(read());
         <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
         <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
       </address>
+      <nav class="pfa-footer__social" aria-label="Social media">
+        <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.youtube.com/@peopleforanimals9047" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
       <!-- Real count, from /api/visits. Hidden until a number actually
            arrives, so a counter that cannot reach the server shows nothing
            rather than a zero or an invented figure. No caption; the
@@ -812,22 +824,26 @@ if (root.document && root.document.head) apply(read());
         <li><a href="quiz.html">Test yourself</a></li>
       </ul>
     </nav>
-    <!-- Two lists under one label: giving, then joining in. Each sits on a
-         column of the grid, so the second lines up with the groups around it
-         instead of floating as a column with no name. -->
-    <nav class="pfa-footer__col pfa-footer__col--wide" aria-label="Get Involved">
+    <nav class="pfa-footer__col" aria-label="Get Involved">
       <p class="pfa-footer__label">Get Involved</p>
       <ul>
-        <li><a href="donate.html">Donate</a></li>
-        <li><a href="donate.html?gift=1">Make a gift</a></li>
         <li><a href="get-involved.html#volunteer">Volunteer</a></li>
         <li><a href="get-involved.html#membership">Become a member</a></li>
         <li><a href="caregiver-card.html">Colony caregiver card</a></li>
-      </ul>
-      <ul>
+        <li><a href="campus.html">PFA Campus</a></li>
         <li><a href="wall.html">The Wall</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Give and partner">
+      <p class="pfa-footer__label">Give and partner</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="campaign.html">Plan a campaign</a></li>
+        <li><a href="legacy.html">Leave a legacy</a></li>
+        <li><a href="csr.html">CSR partnerships</a></li>
         <li><a href="shop.html">Shop</a></li>
       </ul>
     </nav>
@@ -835,6 +851,7 @@ if (root.document && root.document.head) apply(read());
       <p class="pfa-footer__label">About</p>
       <ul>
         <li><a href="founder.html">Founder</a></li>
+        <li><a href="sgacc.html">Animal Care Centre</a></li>
         <li><a href="careers.html">Careers</a></li>
         <li><a href="ask.html">Contact</a></li>
       </ul>
@@ -843,6 +860,7 @@ if (root.document && root.document.head) apply(read());
   <div class="pfa-footer__base">
     <p>People for Animals © 2026</p>
     <p>Registered charity · All donations tax-deductible</p>
+    <p><a href="privacy.html">Privacy policy</a></p>
   </div>
 </footer>
 

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>PFA Campus | People for Animals</title>
+<meta name="description" content="Start an animal care society at your college with PFA Campus: what a society does, the six desks a team runs, and how to register yours with PFA.">
+<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<style>
+/* PFA Campus (owner, 9 Oct 2026: "revamp PFA Campus into a cool, modern experience, not an outdated form"). The old page was a Google Form and three lists; this is the same programme, from the old site's own words, as a page a student team can plan on. */
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#fff;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --pop:#ff3b18;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav and its rule; assets/chrome.js measures the real height. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+::selection{background:var(--pop);color:#fff}
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none!important}
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 30px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light,.btn--ghost{background:#fff;color:var(--ink)}
+.btn--light:hover,.btn--ghost:hover{background:var(--ink);color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- hero: the family's room above the headline (test/hero-alignment.test.js) ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  overflow:hidden;isolation:isolate;border-bottom:1px solid var(--line)}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
+.hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:18px}
+
+/* ---------- bands: the numbered head is the editorial theme's ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band + .band{padding-top:0}
+.band__head{max-width:var(--max);margin:0 0 clamp(32px,4vw,56px)}
+.band__head h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:17ch}
+.band__head p{margin:20px 0 0;max-width:58ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.72)}
+
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .band{padding-left:16px;padding-right:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- this page ---------- */
+.desk__add{align-self:flex-start;margin-top:auto;min-height:40px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
+.desk__add[aria-pressed="true"]{background:var(--ink);color:#fff}
+.desk__add[aria-pressed="true"]::before{content:"\2713\00a0"}
+.soc__mark{display:flex;align-items:center;gap:10px}
+.m-live h4 small{display:block;margin-top:6px;font-family:var(--body);font-size:12px;letter-spacing:.14em;color:var(--muted)}
+/* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
+@media (max-width:700px),(pointer:coarse){
+  
+}
+/* ---- end phone pass ---- */
+</style>
+<link rel="stylesheet" href="assets/micro.css">
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<!-- The editorial layer: loads after the page's own style and the microsite
+     kit, so the theme wins ties (test/hero-alignment.test.js). -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/campus">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PFA Campus">
+  <meta property="og:description" content="Start an animal care society at your college with PFA Campus: what a society does, the six desks a team runs, and how to register yours with PFA.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/campus">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="PFA Campus">
+  <meta name="twitter:description" content="Start an animal care society at your college with PFA Campus: what a society does, the six desks a team runs, and how to register yours with PFA.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"PFA Campus","item":"https://peopleforanimalsindia.org/campus"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<script id="pfa-vis">
+(function (root) {
+'use strict';
+var KEY = 'pfa:visibility';
+var LOCKED = { index: 1, track: 2, search: 2 };
+var NOTICE = 'This page is not available right now.';
+var HOME = 'Go to the home page';
+var CSS_ID = 'pfa-vis-css';
+var ROBOTS_ID = 'pfa-vis-robots';
+var GONE_ID = 'pfa-gone';
+var PAGE = /^[a-z0-9][a-z0-9-]*$/;
+var PART = /^[A-Za-z][A-Za-z0-9_-]*$/;
+var applied = { version: 0, pages: [], modules: [] };
+var title = null;
+function pagesOf(state) {
+return (state && Array.isArray(state.pages) ? state.pages : []).filter(function (p) {
+return typeof p === 'string' && PAGE.test(p) && !LOCKED[p];
+});
+}
+function modulesOf(state) {
+return (state && Array.isArray(state.modules) ? state.modules : []).filter(function (m) {
+var at = typeof m === 'string' ? m.indexOf('#') : -1;
+return at > 0 && PAGE.test(m.slice(0, at)) && PART.test(m.slice(at + 1)) && LOCKED[m.slice(0, at)] !== 2;
+});
+}
+function clean(state) {
+return { version: Number(state && state.version) || 0, pages: pagesOf(state), modules: modulesOf(state) };
+}
+function pageOf(url) {
+var p = String(url == null ? '' : url).split('#')[0].split('?')[0];
+p = p.slice(p.lastIndexOf('/') + 1).replace(/\.html$/, '');
+try { p = decodeURIComponent(p); } catch (e) {}
+return p || 'index';
+}
+function linksTo(page) {
+var f = page + '.html';
+return ['a[href="' + f + '"]', 'a[href^="' + f + '#"]', 'a[href^="' + f + '?"]',
+'a[href$="/' + f + '"]', 'a[href*="/' + f + '#"]', 'a[href*="/' + f + '?"]'];
+}
+function plan(state, page) {
+var s = clean(state);
+var here = String(page || 'index');
+var gone = s.pages.indexOf(here) > -1;
+var links = [];
+var own = [];
+var css = '';
+s.pages.forEach(function (p) { links = links.concat(linksTo(p)); });
+s.modules.forEach(function (m) {
+var at = m.indexOf('#');
+var p = m.slice(0, at);
+var id = m.slice(at + 1);
+links.push('a[href$="' + p + '.html#' + id + '"]');
+if (p === here) {
+own.push('[id="' + id + '"]', '[data-module="' + id + '"]');
+links.push('a[href="#' + id + '"]:not([aria-current])');
+}
+});
+if (gone) links.push('a[aria-current="page"]');
+if (own.length) css += own.join(',') + '{display:none!important}';
+if (links.length) {
+var list = links.join(',');
+css += list + '{display:none!important}';
+css += links.map(function (l) { return '.navitem>' + l; }).join(',') + '{display:revert!important;pointer-events:none;cursor:default}';
+css += 'li:has(>:is(' + list + '):only-child){display:none!important}';
+css += '.navitem:not(:has(.menu>a:not(' + list + '))){display:none!important}';
+css += '.mnav__group:not(:has(>a:not(' + list + '))){display:none!important}';
+css += '.pfa-footer__col:not(:has(li>a:not(' + list + '))){display:none!important}';
+css += '.menu-label:has(+a:is(' + list + ')),.menu-label:has(+a:is(' + list + '))~.menu-sep,.mnav__sub:has(+a:is(' + list + ')){display:none!important}';
+}
+if (gone) {
+css += 'body>:not(.announce):not(header):not(.pfa-footer):not(.mnav):not(.cursor-layer):not(.pfa-search):not(#pfa-gone){display:none!important}'
++ '#pfa-gone{display:block!important;box-sizing:border-box;min-height:62vh;padding:calc(var(--ann,34px) + var(--nav,81px) + 72px) var(--gutter,20px) 96px;text-align:center;color:var(--ink,#111);background:#fff}'
++ '#pfa-gone h1{font-family:var(--display,Georgia,serif);font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.15;margin:0 0 20px}'
++ '#pfa-gone p{margin:0;font-size:16px}'
++ '#pfa-gone a{color:inherit;text-decoration:underline;text-underline-offset:4px}';
+}
+return { css: css, gone: gone };
+}
+function blocked(url, state, anchors) {
+var s = clean(state || applied);
+var u = String(url == null ? '' : url);
+var page = pageOf(u);
+if (s.pages.indexOf(page) > -1) return true;
+var at = u.indexOf('#');
+if (at < 0 || !s.modules.length) return false;
+var hash = u.slice(at + 1);
+var part = (anchors && anchors[page] && anchors[page][hash]) || hash;
+return s.modules.indexOf(page + '#' + part) > -1;
+}
+function read() {
+try {
+var raw = root.localStorage.getItem(KEY);
+return raw ? clean(JSON.parse(raw)) : null;
+} catch (e) { return null; }
+}
+function save(state) {
+try { root.localStorage.setItem(KEY, JSON.stringify(clean(state))); } catch (e) {}
+}
+function drop(node) { if (node && node.parentNode) node.parentNode.removeChild(node); }
+function apply(state) {
+var d = root.document;
+if (!d || !d.head) return null;
+applied = clean(state);
+var p = plan(applied, pageOf(root.location && root.location.pathname));
+var tag = d.getElementById(CSS_ID);
+if (!tag && p.css) {
+tag = d.createElement('style');
+tag.setAttribute('id', CSS_ID);
+d.head.appendChild(tag);
+}
+if (tag) tag.textContent = p.css;
+var robots = d.getElementById(ROBOTS_ID);
+var box = d.getElementById(GONE_ID);
+if (p.gone) {
+if (!robots) {
+robots = d.createElement('meta');
+robots.setAttribute('id', ROBOTS_ID);
+robots.setAttribute('name', 'robots');
+robots.setAttribute('content', 'noindex');
+d.head.appendChild(robots);
+}
+if (!box && d.body) {
+box = d.createElement('div');
+box.setAttribute('id', GONE_ID);
+var h = d.createElement('h1');
+h.textContent = NOTICE;
+var line = d.createElement('p');
+var home = d.createElement('a');
+home.setAttribute('href', '/');
+home.textContent = HOME;
+line.appendChild(home);
+box.appendChild(h);
+box.appendChild(line);
+d.body.insertBefore(box, d.body.firstChild);
+}
+if (title === null) title = d.title;
+d.title = 'Not available right now · People for Animals';
+} else {
+drop(robots);
+drop(box);
+if (title !== null) { d.title = title; title = null; }
+}
+return p;
+}
+root.PFA_VISIBILITY = {
+KEY: KEY, LOCKED: LOCKED, NOTICE: NOTICE,
+clean: clean, pageOf: pageOf, plan: plan, blocked: blocked,
+read: read, save: save, apply: apply,
+state: function () { return applied; }
+};
+try {
+if (root.document && root.document.head) apply(read());
+} catch (e) {}
+}(this));
+</script>
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="library.html" data-nav="library.html">Resources library</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
+        <div class="menu">
+          <span class="menu-label">Join the tribe</span>
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <a href="#top" data-nav="campus.html" class="current" aria-current="page">PFA Campus</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <span class="menu-label">Give and partner</span>
+          <a href="campaign.html" data-nav="campaign.html">Plan a campaign</a>
+          <a href="legacy.html" data-nav="legacy.html">Leave a legacy</a>
+          <a href="csr.html" data-nav="csr.html">CSR partnerships</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="sgacc.html" data-nav="sgacc.html">Sanjay Gandhi Animal Care Centre</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+      <a href="shop.html" data-nav="shop.html" class="shop">Shop</a>
+    </div>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
+  </nav>
+</header>
+<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/field-rules.js"></script>
+<script src="assets/field-validate.js"></script>
+
+<main>
+  <section class="hero m-hero" id="top">
+    <div class="m-hero__in">
+      <div>
+        <p class="eyebrow">PFA Campus</p>
+        <h1 class="display">Start an animal care society on your campus.</h1>
+        <p class="lede">PFA Campus brings students and faculty together around one goal: the animals who live on and around their campus. Their health, their sterilisation, homes for the ones who need them, and a campus that knows how to help, run by a student team with PFA behind it.</p>
+        <div class="m-hero__acts">
+          <a class="btn" href="#register">Register your society</a>
+          <a class="btn btn--light" href="media/site/campus/pfa-campus-guide.pdf" download>The campus guide</a>
+        </div>
+        <ul class="m-hero__facts">
+          <li><b>4 steps</b><span>to a society PFA recognises</span></li>
+          <li><b>6 desks</b><span>a student team can run</span></li>
+          <li><b>₹50</b><span>a PFA Campus card, per member</span></li>
+        </ul>
+      </div>
+      <div class="m-hero__media">
+        <figure class="m-ph" data-ph><img src="media/site/campus/campus.jpg" alt="PFA Campus" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>PFA Campus</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="what">
+    <div class="band__head">
+      <p class="eyebrow">What a society does</p>
+      <h2 class="display">Care for the animals you walk past every day.</h2>
+      <p>The same idea as a campus music or dance society, with a different purpose: the dogs by the canteen, the cats in the hostel block, the birds on the lawns. Six things every PFA Campus society works on.</p>
+    </div>
+    <ul class="m-grid">
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3h6v3H9z"/><path d="M7 4.5H5V21h14V4.5h-2"/><path d="M8.5 11h7M8.5 15h4.5"/></svg></span><h3>Know your campus</h3><p>List every animal on and around campus, species by species, and keep the list current, so nobody is missed.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M12 9v6M9 12h6"/></svg></span><h3>Sterilised and vaccinated</h3><p>Check who is sterilised and vaccinated, and arrange it with the nearest facility for the ones who are not.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M9 8.5c0-1.6 1.6-1.9 1.6-3.5M13.5 8.5c0-1.6 1.6-1.9 1.6-3.5"/></svg></span><h3>Fed and cared for</h3><p>Food, water and a dry place, on a rota shared across the team, so no animal depends on one person.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M7.4 8l3.4 7.8M16.6 8l-3.4 7.8M8.4 6h7.2"/></svg></span><h3>A rescue network</h3><p>A list of the vets, shelters and animal hospitals near campus, so help is one call away when an animal is hurt.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M12 17s-3-1.8-3-3.7a1.6 1.6 0 0 1 3-.7 1.6 1.6 0 0 1 3 .7c0 1.9-3 3.7-3 3.7z"/></svg></span><h3>Homes and fosters</h3><p>Adoption and fostering drives for the young and the vulnerable, through your campus and your networks.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10v4h3l7 4V6L6 10z"/><path d="M16.5 9.2a4 4 0 0 1 0 5.6M19 6.7a7.5 7.5 0 0 1 0 10.6"/></svg></span><h3>A kinder campus</h3><p>Talks, drives and webinars with PFA, and work with your campus's photography, drama and other societies.</p></li>
+    </ul>
+  </section>
+
+  <section class="band" id="desks">
+    <div class="band__head">
+      <p class="eyebrow">The team</p>
+      <h2 class="display">Six desks. Pick the ones you can staff.</h2>
+      <p>A society splits its work into desks, each with a few members and a monthly job. Start with the ones you can run well; add the rest as the team grows. What you pick here goes straight into your registration below.</p>
+    </div>
+    <ul class="m-grid">
+      <li class="m-card"><span class="m-card__no">01</span><h3>Feeding</h3><p>A rota for food and water for every animal on your list, and a monthly drive for food, medicine, blankets and beds given in kind.</p><button class="desk__add" type="button" data-desk="Feeding" aria-pressed="false">Add to my society</button></li>
+      <li class="m-card"><span class="m-card__no">02</span><h3>Medical assistance</h3><p>Watch over the animals nearby; when one is hurt or sick, find help from your rescue list and stay with the case until it is handled.</p><button class="desk__add" type="button" data-desk="Medical assistance" aria-pressed="false">Add to my society</button></li>
+      <li class="m-card"><span class="m-card__no">03</span><h3>Fundraising</h3><p>A monthly target for each member, met through social media, networks and word of mouth, for the society's work.</p><button class="desk__add" type="button" data-desk="Fundraising" aria-pressed="false">Add to my society</button></li>
+      <li class="m-card"><span class="m-card__no">04</span><h3>Social media</h3><p>The society's own accounts: adoption appeals, the animals you care for, your events, and thanks to the people who help.</p><button class="desk__add" type="button" data-desk="Social media" aria-pressed="false">Add to my society</button></li>
+      <li class="m-card"><span class="m-card__no">05</span><h3>Public relations</h3><p>The society's link to the college, the other societies, the local press and PFA, and the reason people hear about the work.</p><button class="desk__add" type="button" data-desk="Public relations" aria-pressed="false">Add to my society</button></li>
+      <li class="m-card"><span class="m-card__no">06</span><h3>Education</h3><p>Talks, seminars and webinars with PFA, and events that bring new students in and turn them into members.</p><button class="desk__add" type="button" data-desk="Education" aria-pressed="false">Add to my society</button></li>
+    </ul>
+  </section>
+
+  <section class="band" id="steps">
+    <div class="band__head">
+      <p class="eyebrow">How it works</p>
+      <h2 class="display">From an idea to a recognised society.</h2>
+    </div>
+    <ol class="m-path">
+      <li><b>Form a core team</b><span>A handful of students who will meet, share one group chat, and split the desks between them.</span></li>
+      <li><b>Find a faculty supervisor</b><span>Ask a faculty member to supervise, and have the society recognised by your college, as any other society is.</span></li>
+      <li><b>Register with PFA Campus</b><span>Send the registration below. One or two of your core team are then added to the PFA Campus group.</span></li>
+      <li><b>Get going</b><span>Societies are recognised by Smt. Maneka Sanjay Gandhi, members receive volunteer certificates, and PFA Campus cards are ₹50 each.</span></li>
+    </ol>
+  </section>
+
+  <section class="band" id="register">
+    <div class="band__head">
+      <p class="eyebrow">Register</p>
+      <h2 class="display">Put your society on the map.</h2>
+      <p>Four short screens. The card beside the form is your society as PFA Campus will read it, filling in as you go.</p>
+    </div>
+    <div class="m-builder">
+      <div>
+        <ol class="m-tabs" aria-hidden="true"><li><span>01</span>Campus</li><li><span>02</span>Team</li><li><span>03</span>Lead</li><li><span>04</span>Send</li></ol>
+        <div class="m-bar" aria-hidden="true"><span></span></div>
+        <form class="m-form" id="campusForm" novalidate>
+          <div class="m-step" data-step="Campus">
+            <h3>Your campus.</h3>
+            <p class="ask">Where the society will be.</p>
+            <ul class="m-picks m-picks--4" data-need="institution" data-say="Choose the kind of institution.">
+              <li class="m-pick"><input type="radio" name="institution" id="in-college" value="A college" checked><label for="in-college"><b>A college</b></label></li>
+              <li class="m-pick"><input type="radio" name="institution" id="in-university" value="A university"><label for="in-university"><b>A university</b></label></li>
+              <li class="m-pick"><input type="radio" name="institution" id="in-school" value="A school"><label for="in-school"><b>A school</b></label></li>
+              <li class="m-pick"><input type="radio" name="institution" id="in-institute" value="An institute"><label for="in-institute"><b>An institute</b></label></li>
+            </ul>
+            <p class="err" data-err-for="institution" hidden></p>
+            <div class="row">
+              <div class="field"><label for="college">Name of the college or university</label><input id="college" name="college" required data-say="Name your college or university." autocomplete="organization" placeholder="Hansraj College"><p class="err" hidden></p></div>
+              <div class="field"><label for="city">City and state</label><input id="city" name="city" required data-say="Which city and state is it in?" placeholder="New Delhi, Delhi"><p class="err" hidden></p></div>
+            </div>
+          </div>
+
+          <div class="m-step" data-step="Team">
+            <h3>Your team.</h3>
+            <p class="ask">The desks you will run first, and who you are.</p>
+            <ul class="m-picks" data-need="desks" data-say="Choose at least one desk your team will run.">
+              <li class="m-pick"><input type="checkbox" name="desks" id="d-feeding" value="Feeding"><label for="d-feeding"><b>Feeding</b><small>Food, water, a rota</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="desks" id="d-medical" value="Medical assistance"><label for="d-medical"><b>Medical assistance</b><small>The hurt and the sick</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="desks" id="d-fund" value="Fundraising"><label for="d-fund"><b>Fundraising</b><small>A monthly target</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="desks" id="d-social" value="Social media"><label for="d-social"><b>Social media</b><small>Appeals and stories</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="desks" id="d-pr" value="Public relations"><label for="d-pr"><b>Public relations</b><small>College, press, PFA</small></label></li>
+              <li class="m-pick"><input type="checkbox" name="desks" id="d-edu" value="Education"><label for="d-edu"><b>Education</b><small>Talks and webinars</small></label></li>
+            </ul>
+            <p class="err" data-err-for="desks" hidden></p>
+            <div class="m-range">
+              <label class="eyebrow" for="teamSize">Core team</label>
+              <output id="teamOut" for="teamSize">6 students</output>
+              <input type="range" id="teamSize" name="teamSize" min="2" max="40" step="1" value="6">
+              <div class="ends"><span>2</span><span>40</span></div>
+            </div>
+            <div class="field">
+              <label>Has a faculty member agreed to supervise?</label>
+              <ul class="m-picks m-picks--2" data-need="faculty" data-say="Has a faculty member agreed to supervise?">
+                <li class="m-pick"><input type="radio" name="faculty" id="f-yes" value="Yes"><label for="f-yes"><b>Yes</b></label></li>
+                <li class="m-pick"><input type="radio" name="faculty" id="f-no" value="Not yet"><label for="f-no"><b>Not yet</b></label></li>
+              </ul>
+              <p class="err" data-err-for="faculty" hidden></p>
+            </div>
+            <div class="field" id="facultyField" hidden><label for="facultyName">Their name and department</label><input id="facultyName" name="facultyName" placeholder="Dr. Meera Iyer, Zoology"><p class="err" hidden></p></div>
+          </div>
+
+          <div class="m-step" data-step="Lead">
+            <h3>Who leads it.</h3>
+            <p class="ask">The student PFA Campus will talk to. If you are under 18, ask your faculty supervisor to register the society instead.</p>
+            <div class="row">
+              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add the name of the student who leads the team." autocomplete="name"><p class="err" hidden></p></div>
+              <div class="field"><label for="role">Course and year</label><input id="role" name="role" placeholder="B.Sc. Zoology, second year"><p class="err" hidden></p></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add an email, so PFA Campus can reply." autocomplete="email"><p class="err" hidden></p></div>
+            </div>
+          </div>
+
+          <div class="m-step" data-step="Send">
+            <h3>The first thing you will do.</h3>
+            <p class="ask">Optional, and the most useful line on the form: the animal or the problem your team will start with.</p>
+            <div class="field"><label for="plan">Your first project</label><textarea id="plan" name="plan" maxlength="900" placeholder="Count the dogs on campus and get the four puppies by the library sterilised and vaccinated before the monsoon."></textarea></div>
+            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>I lead this team and am 18 or over, or I am its faculty supervisor. PFA Campus may contact me about this registration.</span></label>
+            <p class="err" data-err-for="consent" hidden></p>
+            <p class="status" data-form-status hidden></p>
+          </div>
+
+          <div class="m-nav">
+            <button class="back" type="button" data-back hidden>Back</button>
+            <button class="btn" type="button" data-next>Continue</button>
+            <button class="btn" type="submit" data-send hidden>Register the society</button>
+            <span class="clock" data-clock></span>
+          </div>
+        </form>
+
+        <div class="m-done" id="done" hidden>
+          <p class="eyebrow">Registered</p>
+          <p class="ref" id="doneRef"></p>
+          <p>Keep this number. Someone at PFA Campus reads every registration and will call or write to you. Recognition comes from PFA after that, not on the spot.</p>
+          <div class="acts">
+            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="m-aside" aria-label="Your society, as it will be read">
+        <div class="m-live" id="soc">
+          <div class="m-live__top"><span class="soc__mark"><img src="img/mail/logo-mark.png" alt="" width="34" height="30">PFA Campus</span><span>Society</span></div>
+          <h4 id="socName" class="is-empty">Your college<small>Animal Care Society</small></h4>
+          <p id="socWhere" class="is-empty">City and state</p>
+          <div class="m-chipset" id="socDesks"></div>
+          <dl>
+            <dt>Core team</dt><dd id="socTeam">6 students</dd>
+            <dt>Supervisor</dt><dd id="socFaculty" class="is-empty">Not said yet</dd>
+            <dt>Lead</dt><dd id="socLead" class="is-empty">Not said yet</dd>
+          </dl>
+        </div>
+        <p class="m-note">Registering is free. Recognition, certificates and a place in the PFA Campus group come once PFA has read your registration.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band" id="questions">
+    <div class="band__head">
+      <p class="eyebrow">Questions</p>
+      <h2 class="display">Before you start.</h2>
+    </div>
+    <div class="m-acc">
+      <details><summary>Who can register a society?</summary><p>The student who leads the team, if they are 18 or over. In a school, or when the lead is under 18, the faculty supervisor registers the society for the team.</p></details>
+      <details><summary>Does it cost anything?</summary><p>Registering is free. Members who want a PFA Campus card pay ₹50 a card.</p></details>
+      <details><summary>What does PFA give a society?</summary><p>Recognition by Smt. Maneka Sanjay Gandhi, volunteer certificates for members, a place in the PFA Campus group, and seminars or webinars with PFA for your students.</p></details>
+      <details><summary>We already have an animal society. Can we join?</summary><p>Yes. Register it as it is, with the desks it already runs; nothing about it has to change.</p></details>
+      <details><summary>What if an animal on campus needs help today?</summary><p>Do not wait for the registration. Find the PFA unit nearest you on <a href="units.html">Units near you</a>, and see the Academy for <a href="academy.html">first aid</a> while help comes.</p></details>
+    </div>
+  </section>
+
+  <section class="band" id="next">
+    <div class="m-cta">
+      <div>
+        <h2 class="display">Bring PFA to your campus.</h2>
+        <p>A society of six students can change what happens to every animal on a campus. Register yours, or volunteer with PFA on your own.</p>
+      </div>
+      <div class="acts">
+        <a class="btn" href="#register">Register your society</a>
+        <a class="btn btn--light" href="get-involved.html">Volunteer with PFA</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
+       table: a hairline under every label, six equal columns that squeezed
+       the office into three lines, and its own gutter, a few pixels inside
+       the page's. Now it sits on the page's gutter, with the header. A bar
+       opens it: the name, and the two things most people come down here
+       for, reporting cruelty and giving. Under a single rule, the office
+       column (a little wider, so the address reads as an address) and five
+       link groups, each opened by a short pop tick and its label, no rules
+       between them. The legal line closes it, with the privacy policy.
+
+       The groups follow the header: Our Work, Learn, Get Involved, then its
+       "Give and partner" list as a group of its own, and About.
+
+       Every block is block-level in the markup: assets/ is cached for an hour
+       and the HTML is not, so for up to an hour after a deploy this markup
+       meets the previous chrome.css, and it still reads top to bottom. -->
+  <div class="pfa-footer__bar">
+    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
+    <div class="pfa-footer__acts">
+      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
+      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
+    </div>
+  </div>
+  <div class="pfa-footer__grid">
+    <div class="pfa-footer__office">
+      <p class="pfa-footer__label">Registered office</p>
+      <!-- As published on peopleforanimalsindia.org. tel: and mailto: so a
+           phone dials and a mail client opens; the numbers hold together with
+           non-breaking spaces, because a number split across two lines cannot
+           be dialled. -->
+      <address class="pfa-footer__where" id="contact">
+        <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+        <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+        <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+      </address>
+      <nav class="pfa-footer__social" aria-label="Social media">
+        <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.youtube.com/@peopleforanimals9047" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
+      <!-- Real count, from /api/visits. Hidden until a number actually
+           arrives, so a counter that cannot reach the server shows nothing
+           rather than a zero or an invented figure. No caption; the
+           aria-label names it for a screen reader. -->
+      <div class="pfa-tally" id="pfaTally" hidden>
+        <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+      </div>
+    </div>
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="campus.html">PFA Campus</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Give and partner">
+      <p class="pfa-footer__label">Give and partner</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="campaign.html">Plan a campaign</a></li>
+        <li><a href="legacy.html">Leave a legacy</a></li>
+        <li><a href="csr.html">CSR partnerships</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="sgacc.html">Animal Care Centre</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <p>Registered charity · All donations tax-deductible</p>
+    <p><a href="privacy.html">Privacy policy</a></p>
+  </div>
+</footer>
+
+<script src="assets/form-preview.js"></script>
+<script src="pfa-forms.js"></script>
+<script src="assets/micro.js"></script>
+<script>
+(function () {
+  'use strict';
+  var M = window.PFAMicro;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var form = $('#campusForm');
+  if (!M || !form) return;
+
+  /* the society card beside the form */
+  function text(el, value, empty) { el.textContent = value || empty; el.classList.toggle('is-empty', !value); }
+  function paint() {
+    var college = $('#college').value.trim();
+    var name = $('#socName');
+    name.textContent = college || 'Your college';
+    var small = document.createElement('small'); small.textContent = 'Animal Care Society';
+    name.appendChild(small);
+    name.classList.toggle('is-empty', !college);
+    text($('#socWhere'), $('#city').value.trim(), 'City and state');
+    var desks = M.picked(form, 'desks');
+    $('#socDesks').innerHTML = '';
+    desks.forEach(function (d) { var s = document.createElement('span'); s.textContent = d; $('#socDesks').appendChild(s); });
+    var n = Number($('#teamSize').value);
+    $('#teamOut').textContent = n + ' students';
+    $('#socTeam').textContent = n + ' students';
+    var fac = M.picked(form, 'faculty');
+    var facName = $('#facultyName').value.trim();
+    text($('#socFaculty'), fac === 'Yes' ? (facName || 'Agreed') : (fac ? 'Not yet' : ''), 'Not said yet');
+    text($('#socLead'), $('#name').value.trim(), 'Not said yet');
+    $('#facultyField').hidden = fac !== 'Yes';
+    document.querySelectorAll('[data-desk]').forEach(function (b) {
+      var on = desks.indexOf(b.getAttribute('data-desk')) > -1;
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? 'In my society' : 'Add to my society';
+    });
+  }
+  form.addEventListener('input', paint);
+  form.addEventListener('change', paint);
+
+  /* a desk card above adds that desk to the registration */
+  document.querySelectorAll('[data-desk]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var box = form.querySelector('input[name="desks"][value="' + b.getAttribute('data-desk') + '"]');
+      if (!box) return;
+      box.checked = !box.checked;
+      box.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+
+  var flow = M.steps(form);
+  paint();
+
+  M.send({
+    form: form,
+    ready: flow.allOk,
+    kind: 'PFA-CAM',
+    page: 'campus.html',
+    button: form.querySelector('[data-send]'),
+    status: form.querySelector('[data-form-status]'),
+    done: $('#done'),
+    doneRef: $('#doneRef'),
+    hideOnDone: [$('.m-tabs'), $('.m-bar')],
+    preview: { title: 'Check your registration before it is sent', send: 'Register the society', labels: { institution: 'Kind of institution', desks: 'Desks', teamSize: 'Core team', faculty: 'Faculty supervisor agreed', role: 'Course and year', plan: 'First project' } },
+    data: function () {
+      return {
+        college: $('#college').value.trim(),
+        institution: M.picked(form, 'institution'),
+        city: $('#city').value.trim(),
+        desks: M.picked(form, 'desks').join(', '),
+        teamSize: $('#teamSize').value + ' students',
+        faculty: M.picked(form, 'faculty'),
+        facultyName: M.picked(form, 'faculty') === 'Yes' ? $('#facultyName').value.trim() : '',
+        name: $('#name').value.trim(),
+        role: $('#role').value.trim(),
+        mobile: M.digits($('#mobile').value),
+        email: $('#email').value.trim(),
+        plan: $('#plan').value.trim()
+      };
+    }
+  });
+}());
+</script>
+</body>
+</html>

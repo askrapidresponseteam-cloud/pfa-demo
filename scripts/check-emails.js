@@ -84,7 +84,13 @@ const FORMS = [
   ['wall.html', 'Send a film to The Wall', 'PFA-S', { url: 'https://youtu.be/abc123', wall: 'Short form, under a minute' }],
   ['get-involved.html', 'Volunteer', 'PFA-V', { city: 'Udupi', title: 'Volunteer: Rescue Operations' }],
   ['events.html', 'Ask for an event', 'PFA-EV', { title: 'An adoption drive', city: 'Udupi' }],
-  ['cinekind.html', 'Nominate for CineKind', 'PFA-CK', { nominee: 'A rescue documentary', category: 'A film or documentary', why: 'It changed how a town treats its dogs' }]
+  ['cinekind.html', 'Nominate for CineKind', 'PFA-CK', { nominee: 'A rescue documentary', category: 'A film or documentary', why: 'It changed how a town treats its dogs' }],
+  ['campus.html', 'Register a campus society', 'PFA-CAM', { college: 'Government College, Udupi', city: 'Udupi, Karnataka', desks: 'Rescue and first aid', faculty: 'Yes' }],
+  ['sgacc.html', 'Offer help to the Animal Care Centre', 'PFA-SG', { offer: 'Supplies for the animals', items: 'Blankets and bedding' }],
+  ['csr.html', 'Propose a CSR partnership', 'PFA-CSR', { focus: 'Rural animal hospitals', company: 'Udupi Foods Limited' }],
+  ['legacy.html', 'Ask about a legacy', 'PFA-LEG', { interest: 'I am only exploring', contactBy: 'Email' }],
+  ['campaign.html', 'Plan a campaign', 'PFA-CMP', { cause: 'Community dogs', format: 'A birthday or celebration', title: 'A birthday for the dogs', city: 'Udupi' }],
+  ['privacy.html', 'Ask for my data', 'PFA-PRV', { request: 'A copy of what PFA holds about me' }]
 ];
 
 function request(body, headers = {}) {
@@ -164,6 +170,9 @@ async function run() {
   console.warn = () => {}; console.info = () => {};
   try {
     for (const form of FORMS) {
+      /* one connection sending three of every form would meet the intake's
+         own flood brake by the fifth form; each form is its own visitor */
+      S.resetForTests();
       const r = classify(await freeForm(form));
       const plain = await freeForm(form, { withEmail: false });
       const off = await freeForm(form, { configured: false });

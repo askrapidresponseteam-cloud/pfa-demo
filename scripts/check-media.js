@@ -47,12 +47,27 @@ function referencedIn(html) {
   return found;
 }
 
-function check() {
+/* The microsites' photographs from PFA's old site, fetched at deploy
+   (data/site-photos.json, npm run media:site). Absent until then by design;
+   reported separately, never as a fault. */
+function fetchedAtDeploy() {
+  try {
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'site-photos.json'), 'utf8'));
+    return new Set([...(manifest.photos || []), ...(manifest.documents || [])].map((e) => e.file));
+  } catch (_) {
+    return new Set();
+  }
+}
+
+function check(options) {
   const missing = new Map();     // file -> [pages]
+  const waiting = fetchedAtDeploy();
+  const pending = options && options.pending;
   for (const page of pages()) {
     const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
     for (const asset of referencedIn(html)) {
       if (fs.existsSync(path.join(ROOT, asset))) continue;
+      if (waiting.has(asset) !== Boolean(pending)) continue;
       missing.set(asset, (missing.get(asset) || []).concat(page));
     }
   }
@@ -71,6 +86,8 @@ if (require.main === module) {
     }
     console.log('\nDrop the files in at those paths, or change the reference.');
   }
+  const pending = check({ pending: true });
+  if (pending.size) console.log(`\n${pending.size} site photograph(s) wait to be fetched from PFA's old site at deploy (npm run media:site).`);
 }
 
-module.exports = { check, referencedIn, SKIP_DIRS };
+module.exports = { check, referencedIn, fetchedAtDeploy, SKIP_DIRS };

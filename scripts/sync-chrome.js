@@ -72,7 +72,14 @@ const PAGES = {
   'events.html':       { current: 'events.html',      group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
   'shop.html':         { current: 'shop.html',        group: null,               announce: 'Every purchase supports PFA\u2019s work for animals' },
   'search.html':       { current: null,               group: null,               announce: DEFAULT_ANNOUNCE },
-  'quiz.html':         { current: 'quiz.html',        group: 'laws.html',        announce: DEFAULT_ANNOUNCE }
+  'quiz.html':         { current: 'quiz.html',        group: 'laws.html',        announce: DEFAULT_ANNOUNCE },
+  /* The microsites (9 Oct 2026). Privacy is in the footer's legal line, not a menu. */
+  'campus.html':       { current: 'campus.html',      group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
+  'campaign.html':     { current: 'campaign.html',    group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
+  'legacy.html':       { current: 'legacy.html',      group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
+  'csr.html':          { current: 'csr.html',         group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
+  'sgacc.html':        { current: 'sgacc.html',       group: 'founder.html',     announce: DEFAULT_ANNOUNCE },
+  'privacy.html':      { current: null,               group: null,               announce: DEFAULT_ANNOUNCE }
 };
 
 /* submission-collage.html is a full-viewport piece with no site chrome.

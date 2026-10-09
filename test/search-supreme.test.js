@@ -75,7 +75,7 @@ test('the first result is the answer to what people type', () => {
     ['membership', 'Become a member'],
     ['memebership', 'Become a member'],
     ['voluntere', 'Volunteer'],
-    ['internship', 'Volunteer'],
+    ['internship', 'Careers: five openings'],   /* a real opening since 9 Oct 2026 */
     ['adopt a dog', 'Events near you'],
     ['what to do if I find a puppy', 'Found a puppy or kitten on its own'],
     ['saanp ne kaata', 'Snakebite: first aid and antivenom'],

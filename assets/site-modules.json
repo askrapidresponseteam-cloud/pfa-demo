@@ -324,6 +324,142 @@
    ]
   },
   {
+   "id": "campus",
+   "file": "campus.html",
+   "title": "PFA Campus",
+   "group": "Get Involved",
+   "menu": "PFA Campus",
+   "modules": [
+    {
+     "id": "top",
+     "label": "Start an animal care society on your campus."
+    },
+    {
+     "id": "what",
+     "label": "Care for the animals you walk past every day."
+    },
+    {
+     "id": "desks",
+     "label": "Six desks. Pick the ones you can staff."
+    },
+    {
+     "id": "steps",
+     "label": "From an idea to a recognised society."
+    },
+    {
+     "id": "register",
+     "label": "Put your society on the map."
+    },
+    {
+     "id": "questions",
+     "label": "Before you start."
+    },
+    {
+     "id": "next",
+     "label": "Bring PFA to your campus."
+    }
+   ]
+  },
+  {
+   "id": "campaign",
+   "file": "campaign.html",
+   "title": "Plan a campaign",
+   "group": "Get Involved",
+   "menu": "Plan a campaign",
+   "modules": [
+    {
+     "id": "top",
+     "label": "Start something for the animals."
+    },
+    {
+     "id": "causes",
+     "label": "Six causes to raise for."
+    },
+    {
+     "id": "formats",
+     "label": "Pick the one that suits you."
+    },
+    {
+     "id": "plan",
+     "label": "Your campaign, in four screens."
+    },
+    {
+     "id": "tips",
+     "label": "Four things good campaigns share."
+    },
+    {
+     "id": "questions",
+     "label": "Before you begin."
+    }
+   ]
+  },
+  {
+   "id": "legacy",
+   "file": "legacy.html",
+   "title": "Leave a legacy",
+   "group": "Get Involved",
+   "menu": "Leave a legacy",
+   "modules": [
+    {
+     "id": "top",
+     "label": "Remember the animals in your will."
+    },
+    {
+     "id": "story",
+     "label": "One will. Forty-six years of care."
+    },
+    {
+     "id": "ways",
+     "label": "Five ways a will can remember them."
+    },
+    {
+     "id": "how",
+     "label": "Four steps, with a lawyer beside you."
+    },
+    {
+     "id": "wording",
+     "label": "Draft the line for your will."
+    },
+    {
+     "id": "talk",
+     "label": "In confidence, at your pace."
+    }
+   ]
+  },
+  {
+   "id": "csr",
+   "file": "csr.html",
+   "title": "CSR partnerships",
+   "group": "Get Involved",
+   "menu": "CSR partnerships",
+   "modules": [
+    {
+     "id": "top",
+     "label": "CSR that reaches the animals."
+    },
+    {
+     "id": "programmes",
+     "label": "Twelve programmes, each built to last."
+    },
+    {
+     "id": "why",
+     "label": "A cause that reaches every community."
+    },
+    {
+     "id": "how",
+     "label": "From a first note to an agreed plan."
+    },
+    {
+     "id": "shape",
+     "label": "Your brief, in three screens."
+    },
+    {
+     "id": "questions",
+     "label": "What CSR teams ask."
+    }
+   ]
+  },
+  {
    "id": "wall",
    "file": "wall.html",
    "title": "The Wall",
@@ -481,6 +617,39 @@
    ]
   },
   {
+   "id": "sgacc",
+   "file": "sgacc.html",
+   "title": "Sanjay Gandhi Animal Care Centre",
+   "group": "About",
+   "menu": "Sanjay Gandhi Animal Care Centre",
+   "modules": [
+    {
+     "id": "top",
+     "label": "Sanjay Gandhi Animal Care Centre."
+    },
+    {
+     "id": "inside",
+     "label": "What happens here, round the clock."
+    },
+    {
+     "id": "gallery",
+     "label": "A glimpse of the centre."
+    },
+    {
+     "id": "help",
+     "label": "Three ways to help, one form for all of them."
+    },
+    {
+     "id": "visit",
+     "label": "Raja Garden, West Delhi."
+    },
+    {
+     "id": "legacy",
+     "label": "One legacy built this centre."
+    }
+   ]
+  },
+  {
    "id": "careers",
    "file": "careers.html",
    "title": "Careers",
@@ -489,15 +658,19 @@
    "modules": [
     {
      "id": "top",
-     "label": "Zonal Head."
+     "label": "Work for the animals."
     },
     {
-     "id": "role",
-     "label": "The role at a glance"
+     "id": "openings",
+     "label": "Five ways to make it your work."
+    },
+    {
+     "id": "roles",
+     "label": "Read the role."
     },
     {
      "id": "apply",
-     "label": "Apply in two minutes."
+     "label": "Apply in five short screens."
     },
     {
      "id": "follow",
@@ -574,6 +747,31 @@
     {
      "id": "founder",
      "label": "Founder"
+    }
+   ]
+  },
+  {
+   "id": "privacy",
+   "file": "privacy.html",
+   "title": "Privacy policy",
+   "group": "Not in the menus",
+   "menu": "",
+   "modules": [
+    {
+     "id": "top",
+     "label": "Privacy, in plain words."
+    },
+    {
+     "id": "glance",
+     "label": "Four things to know."
+    },
+    {
+     "id": "policy",
+     "label": "The full policy."
+    },
+    {
+     "id": "request",
+     "label": "Ask for your data."
     }
    ]
   },
@@ -1047,6 +1245,36 @@
   "quiz": {
    "qz": "the-quiz"
   },
+  "campus": {
+   "facultyField": "register",
+   "done": "register",
+   "doneRef": "register",
+   "soc": "register",
+   "socName": "register",
+   "socWhere": "register",
+   "socDesks": "register"
+  },
+  "campaign": {
+   "done": "plan",
+   "doneRef": "plan",
+   "campPh": "plan",
+   "campTitle": "plan",
+   "campBy": "plan",
+   "campWhen": "plan"
+  },
+  "legacy": {
+   "clause": "wording",
+   "mobileField": "talk",
+   "done": "talk",
+   "doneRef": "talk"
+  },
+  "csr": {
+   "progChips": "programmes",
+   "done": "shape",
+   "doneRef": "shape",
+   "brCompany": "shape",
+   "brFocus": "shape"
+  },
   "wall": {
    "wallStatus": "submit",
    "wallSuccess": "submit"
@@ -1109,14 +1337,35 @@
    "reels": "watch",
    "rrt-title": "rapid-response"
   },
+  "sgacc": {
+   "galleryList": "gallery",
+   "galleryNone": "gallery",
+   "done": "help",
+   "doneRef": "help"
+  },
   "careers": {
+   "jobChips": "openings",
+   "roleTabs": "roles",
+   "zonal-head": "roles",
+   "veterinary-team": "roles",
+   "cruelty-response-coordinator": "roles",
+   "social-media-fundraising": "roles",
+   "internship": "roles",
+   "applyCard": "apply",
+   "applyRole": "apply",
+   "applyWhere": "apply",
+   "rolePick": "apply",
+   "roleErr": "apply",
    "zones": "apply",
    "zoneErr": "apply",
+   "levelErr": "apply",
    "unitPick": "apply",
    "memberErr": "apply",
    "unitField": "apply",
    "travelErr": "apply",
+   "q1Title": "apply",
    "q1Ask": "apply",
+   "q2Title": "apply",
    "q2Ask": "apply",
    "consentErr": "apply",
    "done": "apply",
@@ -1179,6 +1428,22 @@
    "masaba-gupta": "collection",
    "ashima-singh": "collection",
    "none": "collection"
+  },
+  "privacy": {
+   "who": "policy",
+   "collect": "policy",
+   "not": "policy",
+   "why": "policy",
+   "others": "policy",
+   "kept": "policy",
+   "long": "policy",
+   "browser": "policy",
+   "children": "policy",
+   "rights": "policy",
+   "changes": "policy",
+   "reach": "policy",
+   "done": "request",
+   "doneRef": "request"
   }
  }
 }

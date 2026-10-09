@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>CSR partnerships | People for Animals</title>
+<meta name="description" content="Fund animal welfare through your company's CSR: twelve programmes PFA can build with you, how a partnership works, and a quick way to start one.">
+<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<style>
+/* CSR partnerships (owner, 9 Oct 2026: a microsite for CSR). The twelve programmes are the old site's own list of what an animal-friendly CSR could include; Schedule VII (iv) of the Companies Act, 2013 names animal welfare among the activities CSR may fund. */
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#fff;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --pop:#ff3b18;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav and its rule; assets/chrome.js measures the real height. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+::selection{background:var(--pop);color:#fff}
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none!important}
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 30px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light,.btn--ghost{background:#fff;color:var(--ink)}
+.btn--light:hover,.btn--ghost:hover{background:var(--ink);color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- hero: the family's room above the headline (test/hero-alignment.test.js) ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  overflow:hidden;isolation:isolate;border-bottom:1px solid var(--line)}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
+.hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:18px}
+
+/* ---------- bands: the numbered head is the editorial theme's ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band + .band{padding-top:0}
+.band__head{max-width:var(--max);margin:0 0 clamp(32px,4vw,56px)}
+.band__head h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:17ch}
+.band__head p{margin:20px 0 0;max-width:58ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.72)}
+
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .band{padding-left:16px;padding-right:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- this page ---------- */
+.prog .m-card{padding-bottom:24px}
+.prog__add{align-self:flex-start;margin-top:auto;min-height:40px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
+.prog__add[aria-pressed="true"]{background:var(--ink);color:#fff}
+.prog__add[aria-pressed="true"]::before{content:"\2713\00a0"}
+.prog .m-tag{margin-top:2px}
+.brief__company{font-family:var(--display);font-size:clamp(22px,2vw,30px);text-transform:uppercase;line-height:1.05;margin:0;overflow-wrap:anywhere}
+.m-picks--compact label{padding:12px 14px}
+.m-picks--compact b{font-size:13px}
+/* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
+@media (max-width:700px),(pointer:coarse){
+  
+}
+/* ---- end phone pass ---- */
+</style>
+<link rel="stylesheet" href="assets/micro.css">
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<!-- The editorial layer: loads after the page's own style and the microsite
+     kit, so the theme wins ties (test/hero-alignment.test.js). -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/csr">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CSR partnerships">
+  <meta property="og:description" content="Fund animal welfare through your company's CSR: twelve programmes PFA can build with you, how a partnership works, and a quick way to start one.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/csr">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="CSR partnerships">
+  <meta name="twitter:description" content="Fund animal welfare through your company's CSR: twelve programmes PFA can build with you, how a partnership works, and a quick way to start one.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"CSR partnerships","item":"https://peopleforanimalsindia.org/csr"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<script id="pfa-vis">
+(function (root) {
+'use strict';
+var KEY = 'pfa:visibility';
+var LOCKED = { index: 1, track: 2, search: 2 };
+var NOTICE = 'This page is not available right now.';
+var HOME = 'Go to the home page';
+var CSS_ID = 'pfa-vis-css';
+var ROBOTS_ID = 'pfa-vis-robots';
+var GONE_ID = 'pfa-gone';
+var PAGE = /^[a-z0-9][a-z0-9-]*$/;
+var PART = /^[A-Za-z][A-Za-z0-9_-]*$/;
+var applied = { version: 0, pages: [], modules: [] };
+var title = null;
+function pagesOf(state) {
+return (state && Array.isArray(state.pages) ? state.pages : []).filter(function (p) {
+return typeof p === 'string' && PAGE.test(p) && !LOCKED[p];
+});
+}
+function modulesOf(state) {
+return (state && Array.isArray(state.modules) ? state.modules : []).filter(function (m) {
+var at = typeof m === 'string' ? m.indexOf('#') : -1;
+return at > 0 && PAGE.test(m.slice(0, at)) && PART.test(m.slice(at + 1)) && LOCKED[m.slice(0, at)] !== 2;
+});
+}
+function clean(state) {
+return { version: Number(state && state.version) || 0, pages: pagesOf(state), modules: modulesOf(state) };
+}
+function pageOf(url) {
+var p = String(url == null ? '' : url).split('#')[0].split('?')[0];
+p = p.slice(p.lastIndexOf('/') + 1).replace(/\.html$/, '');
+try { p = decodeURIComponent(p); } catch (e) {}
+return p || 'index';
+}
+function linksTo(page) {
+var f = page + '.html';
+return ['a[href="' + f + '"]', 'a[href^="' + f + '#"]', 'a[href^="' + f + '?"]',
+'a[href$="/' + f + '"]', 'a[href*="/' + f + '#"]', 'a[href*="/' + f + '?"]'];
+}
+function plan(state, page) {
+var s = clean(state);
+var here = String(page || 'index');
+var gone = s.pages.indexOf(here) > -1;
+var links = [];
+var own = [];
+var css = '';
+s.pages.forEach(function (p) { links = links.concat(linksTo(p)); });
+s.modules.forEach(function (m) {
+var at = m.indexOf('#');
+var p = m.slice(0, at);
+var id = m.slice(at + 1);
+links.push('a[href$="' + p + '.html#' + id + '"]');
+if (p === here) {
+own.push('[id="' + id + '"]', '[data-module="' + id + '"]');
+links.push('a[href="#' + id + '"]:not([aria-current])');
+}
+});
+if (gone) links.push('a[aria-current="page"]');
+if (own.length) css += own.join(',') + '{display:none!important}';
+if (links.length) {
+var list = links.join(',');
+css += list + '{display:none!important}';
+css += links.map(function (l) { return '.navitem>' + l; }).join(',') + '{display:revert!important;pointer-events:none;cursor:default}';
+css += 'li:has(>:is(' + list + '):only-child){display:none!important}';
+css += '.navitem:not(:has(.menu>a:not(' + list + '))){display:none!important}';
+css += '.mnav__group:not(:has(>a:not(' + list + '))){display:none!important}';
+css += '.pfa-footer__col:not(:has(li>a:not(' + list + '))){display:none!important}';
+css += '.menu-label:has(+a:is(' + list + ')),.menu-label:has(+a:is(' + list + '))~.menu-sep,.mnav__sub:has(+a:is(' + list + ')){display:none!important}';
+}
+if (gone) {
+css += 'body>:not(.announce):not(header):not(.pfa-footer):not(.mnav):not(.cursor-layer):not(.pfa-search):not(#pfa-gone){display:none!important}'
++ '#pfa-gone{display:block!important;box-sizing:border-box;min-height:62vh;padding:calc(var(--ann,34px) + var(--nav,81px) + 72px) var(--gutter,20px) 96px;text-align:center;color:var(--ink,#111);background:#fff}'
++ '#pfa-gone h1{font-family:var(--display,Georgia,serif);font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.15;margin:0 0 20px}'
++ '#pfa-gone p{margin:0;font-size:16px}'
++ '#pfa-gone a{color:inherit;text-decoration:underline;text-underline-offset:4px}';
+}
+return { css: css, gone: gone };
+}
+function blocked(url, state, anchors) {
+var s = clean(state || applied);
+var u = String(url == null ? '' : url);
+var page = pageOf(u);
+if (s.pages.indexOf(page) > -1) return true;
+var at = u.indexOf('#');
+if (at < 0 || !s.modules.length) return false;
+var hash = u.slice(at + 1);
+var part = (anchors && anchors[page] && anchors[page][hash]) || hash;
+return s.modules.indexOf(page + '#' + part) > -1;
+}
+function read() {
+try {
+var raw = root.localStorage.getItem(KEY);
+return raw ? clean(JSON.parse(raw)) : null;
+} catch (e) { return null; }
+}
+function save(state) {
+try { root.localStorage.setItem(KEY, JSON.stringify(clean(state))); } catch (e) {}
+}
+function drop(node) { if (node && node.parentNode) node.parentNode.removeChild(node); }
+function apply(state) {
+var d = root.document;
+if (!d || !d.head) return null;
+applied = clean(state);
+var p = plan(applied, pageOf(root.location && root.location.pathname));
+var tag = d.getElementById(CSS_ID);
+if (!tag && p.css) {
+tag = d.createElement('style');
+tag.setAttribute('id', CSS_ID);
+d.head.appendChild(tag);
+}
+if (tag) tag.textContent = p.css;
+var robots = d.getElementById(ROBOTS_ID);
+var box = d.getElementById(GONE_ID);
+if (p.gone) {
+if (!robots) {
+robots = d.createElement('meta');
+robots.setAttribute('id', ROBOTS_ID);
+robots.setAttribute('name', 'robots');
+robots.setAttribute('content', 'noindex');
+d.head.appendChild(robots);
+}
+if (!box && d.body) {
+box = d.createElement('div');
+box.setAttribute('id', GONE_ID);
+var h = d.createElement('h1');
+h.textContent = NOTICE;
+var line = d.createElement('p');
+var home = d.createElement('a');
+home.setAttribute('href', '/');
+home.textContent = HOME;
+line.appendChild(home);
+box.appendChild(h);
+box.appendChild(line);
+d.body.insertBefore(box, d.body.firstChild);
+}
+if (title === null) title = d.title;
+d.title = 'Not available right now · People for Animals';
+} else {
+drop(robots);
+drop(box);
+if (title !== null) { d.title = title; title = null; }
+}
+return p;
+}
+root.PFA_VISIBILITY = {
+KEY: KEY, LOCKED: LOCKED, NOTICE: NOTICE,
+clean: clean, pageOf: pageOf, plan: plan, blocked: blocked,
+read: read, save: save, apply: apply,
+state: function () { return applied; }
+};
+try {
+if (root.document && root.document.head) apply(read());
+} catch (e) {}
+}(this));
+</script>
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="library.html" data-nav="library.html">Resources library</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
+        <div class="menu">
+          <span class="menu-label">Join the tribe</span>
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <a href="campus.html" data-nav="campus.html">PFA Campus</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <span class="menu-label">Give and partner</span>
+          <a href="campaign.html" data-nav="campaign.html">Plan a campaign</a>
+          <a href="legacy.html" data-nav="legacy.html">Leave a legacy</a>
+          <a href="#top" data-nav="csr.html" class="current" aria-current="page">CSR partnerships</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="sgacc.html" data-nav="sgacc.html">Sanjay Gandhi Animal Care Centre</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+      <a href="shop.html" data-nav="shop.html" class="shop">Shop</a>
+    </div>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
+  </nav>
+</header>
+<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/field-rules.js"></script>
+<script src="assets/field-validate.js"></script>
+
+<main>
+  <section class="hero m-hero" id="top">
+    <div class="m-hero__in">
+      <div>
+        <p class="eyebrow">Corporate partnerships</p>
+        <h1 class="display">CSR that reaches the animals.</h1>
+        <p class="lede">Animal welfare is named in Schedule VII of the Companies Act, 2013, among the activities a company's CSR can fund. Here are twelve programmes PFA can build with a company, each one meant to leave something standing: a town where dogs are sterilised, a rescue centre, a vet trained for a village.</p>
+        <div class="m-hero__acts">
+          <a class="btn" href="#shape">Shape a partnership</a>
+          <a class="btn btn--light" href="#programmes">See the programmes</a>
+        </div>
+        <ul class="m-hero__facts">
+          <li><b>Item (iv)</b><span>of Schedule VII names animal welfare</span></li>
+          <li><b>12</b><span>programmes to choose from</span></li>
+          <li><b>4 steps</b><span>from a first note to an agreed plan</span></li>
+        </ul>
+      </div>
+      <div class="m-hero__media">
+        <figure class="m-ph" data-ph><img src="media/site/sgacc/centre-04.jpg" alt="An animal in care at the Sanjay Gandhi Animal Care Centre" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Sanjay Gandhi Animal Care Centre, Delhi</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="programmes">
+    <div class="band__head">
+      <p class="eyebrow">Programmes</p>
+      <h2 class="display">Twelve programmes, each built to last.</h2>
+      <p>Filter by where the work happens. Add the ones your company would consider; they go straight into the brief below.</p>
+    </div>
+    <div class="m-chips" id="progChips" role="group" aria-label="Show programmes">
+      <button class="m-chip" type="button" data-filter="">All</button>
+      <button class="m-chip" type="button" data-filter="rural">Villages and farms</button>
+      <button class="m-chip" type="button" data-filter="towns">Towns and cities</button>
+      <button class="m-chip" type="button" data-filter="wild">Wildlife</button>
+      <button class="m-chip" type="button" data-filter="disaster">Disasters</button>
+      <button class="m-chip" type="button" data-filter="learning">Training and teaching</button>
+    </div>
+    <ul class="m-grid m-grid--4 prog">
+      <li class="m-card" data-kind="rural"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/></svg></span><span class="m-tag">Villages and farms</span><h3>Rural animal hospitals</h3><p>Build or run a hospital for farm animals in a district where none is within reach.</p><button class="prog__add" type="button" data-prog="Rural animal hospitals" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="rural learning"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></svg></span><span class="m-tag">Villages and farms</span><h3>Village veterinary compounders</h3><p>Train young people as veterinary compounders who go back to work in their own villages.</p><button class="prog__add" type="button" data-prog="Village veterinary compounders" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="rural learning"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15z"/><path d="M5 19l8-8"/></svg></span><span class="m-tag">Villages and farms</span><h3>Organic farming workshops</h3><p>Teach farmers organic methods that keep their animals, their soil and their water healthy.</p><button class="prog__add" type="button" data-prog="Organic farming workshops" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="rural towns"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.6"/><path d="M12 4v6.4M12 13.6V20M4 12h6.4M13.6 12H20"/></svg></span><span class="m-tag">Working animals</span><h3>Better carts</h3><p>Redesign animal carts so the oxen that pull them stop suffering neck injuries.</p><button class="prog__add" type="button" data-prog="Better carts for working animals" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="towns"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6.2" r="1.8"/><circle cx="14" cy="6.2" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M12 11.5c-2.8 0-4.6 3-4.6 5 0 1.4 1.1 2.4 2.4 2.4.9 0 1.4-.5 2.2-.5s1.3.5 2.2.5c1.3 0 2.4-1 2.4-2.4 0-2-1.8-5-4.6-5z"/></svg></span><span class="m-tag">Towns and cities</span><h3>Sterilisation for a town</h3><p>Fund dog sterilisation and vaccination in smaller towns, bringing down rabies and bites humanely.</p><button class="prog__add" type="button" data-prog="Sterilisation for a town" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="towns"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21V9h6v12M9 21V4h8v17M17 21v-9h4v9M2 21h20"/><path d="M12 8h2M12 12h2M12 16h2"/></svg></span><span class="m-tag">Towns and cities</span><h3>A shelter for a city</h3><p>One shelter and treatment centre for a city that has none, to care for its animals.</p><button class="prog__add" type="button" data-prog="A shelter for a city" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21v-6"/><path d="M12 15c-4 0-7-2.4-7-5.6C5 6 8 3 12 3s7 3 7 6.4C19 12.6 16 15 12 15z"/><circle cx="9.5" cy="9" r=".6"/><circle cx="14" cy="10.5" r=".6"/><circle cx="12" cy="7" r=".6"/></svg></span><span class="m-tag">Wildlife</span><h3>Fruit trees by the forest</h3><p>Plant fruit trees along forest edges, so monkeys find food there instead of coming into towns.</p><button class="prog__add" type="button" data-prog="Fruit trees by the forest" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 4C11 4 6 9 6 18l-2 2"/><path d="M6 18c9 0 14-5 14-14M9 15h6M11 12h6"/></svg></span><span class="m-tag">Wildlife</span><h3>Wildlife rescue centres</h3><p>Rescue and care centres for elephants, injured birds and leopards, and campaigns for species in trouble, like the sparrow.</p><button class="prog__add" type="button" data-prog="Wildlife rescue centres" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M2 19c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M9 9.5a3 3 0 0 1 6 0"/><path d="M8 9.5h8"/></svg></span><span class="m-tag">Wildlife</span><h3>Turtle nesting sites</h3><p>Protect the beaches where turtles nest, and with them the rivers and the coast.</p><button class="prog__add" type="button" data-prog="Turtle nesting sites" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="wild"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="m-tag">Wildlife</span><h3>Stopping poachers</h3><p>Fund the units that catch wildlife poachers and the people who trade in what they take.</p><button class="prog__add" type="button" data-prog="Units against poaching" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="disaster"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 16a4.5 4.5 0 1 1 .9-8.9A6 6 0 0 1 19 9a3.5 3.5 0 0 1 0 7z"/><path d="M8 19l-1 2M12 19l-1 2M16 19l-1 2"/></svg></span><span class="m-tag">Disasters</span><h3>Floods and cyclones</h3><p>Fund the rescue and care of animals when floods and cyclones strike, when they are the last to be thought of.</p><button class="prog__add" type="button" data-prog="Rescue in floods and cyclones" aria-pressed="false">Add to the brief</button></li>
+      <li class="m-card" data-kind="learning"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></svg></span><span class="m-tag">Training and teaching</span><h3>Veterinary teaching</h3><p>Veterinary teaching that covers wildlife, zoo animals, birds and small animals, not only livestock.</p><button class="prog__add" type="button" data-prog="Veterinary teaching for every animal" aria-pressed="false">Add to the brief</button></li>
+    </ul>
+  </section>
+
+  <section class="band" id="why">
+    <div class="band__head">
+      <p class="eyebrow">Why animal welfare</p>
+      <h2 class="display">A cause that reaches every community.</h2>
+    </div>
+    <ul class="m-grid">
+      <li class="m-card"><span class="m-card__no">01</span><h3>It is in the law</h3><p>Schedule VII of the Companies Act, 2013 lists animal welfare among the activities CSR may fund, beside environmental sustainability and the protection of flora and fauna.</p></li>
+      <li class="m-card"><span class="m-card__no">02</span><h3>It touches every life</h3><p>Rabies, road safety, livelihoods that depend on working and farm animals, and the health of rivers and forests all run through how animals are treated.</p></li>
+      <li class="m-card"><span class="m-card__no">03</span><h3>You can see it</h3><p>A sterilised town, a rescue centre, a trained vet: work your people can visit, and outcomes your board can read.</p></li>
+    </ul>
+  </section>
+
+  <section class="band" id="how">
+    <div class="band__head">
+      <p class="eyebrow">How it works</p>
+      <h2 class="display">From a first note to an agreed plan.</h2>
+    </div>
+    <ol class="m-path">
+      <li><b>Send a brief</b><span>The areas you would fund, the shape and the budget, in the form below. Two minutes.</span></li>
+      <li><b>Talk it through</b><span>A named person at PFA writes back to understand what your company wants the money to change.</span></li>
+      <li><b>Agree a plan</b><span>A plan with its costs, its place and what it will achieve, for your CSR committee to approve.</span></li>
+      <li><b>See it happen</b><span>The work, reported against what you agreed to track, and open to your people to visit.</span></li>
+    </ol>
+  </section>
+
+  <section class="band" id="shape">
+    <div class="band__head">
+      <p class="eyebrow">Shape a partnership</p>
+      <h2 class="display">Your brief, in three screens.</h2>
+      <p>The card beside the form is the brief PFA will read. Nothing here commits your company to anything.</p>
+    </div>
+    <div class="m-builder">
+      <div>
+        <ol class="m-tabs" aria-hidden="true"><li><span>01</span>Areas</li><li><span>02</span>Shape</li><li><span>03</span>Company</li></ol>
+        <div class="m-bar" aria-hidden="true"><span></span></div>
+        <form class="m-form" id="csrForm" novalidate>
+          <div class="m-step" data-step="Areas">
+            <h3>What would you fund?</h3>
+            <p class="ask">As many as you like.</p>
+            <ul class="m-picks m-picks--compact" data-need="focus" data-say="Choose at least one area your company would fund.">
+              <li class="m-pick"><input type="checkbox" name="focus" id="p1" value="Rural animal hospitals"><label for="p1"><b>Rural animal hospitals</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p2" value="Village veterinary compounders"><label for="p2"><b>Village vet compounders</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p3" value="Organic farming workshops"><label for="p3"><b>Organic farming</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p4" value="Better carts for working animals"><label for="p4"><b>Better carts</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p5" value="Sterilisation for a town"><label for="p5"><b>Sterilisation for a town</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p6" value="A shelter for a city"><label for="p6"><b>A shelter for a city</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p7" value="Fruit trees by the forest"><label for="p7"><b>Fruit trees by the forest</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p8" value="Wildlife rescue centres"><label for="p8"><b>Wildlife rescue centres</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p9" value="Turtle nesting sites"><label for="p9"><b>Turtle nesting sites</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p10" value="Units against poaching"><label for="p10"><b>Stopping poachers</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p11" value="Rescue in floods and cyclones"><label for="p11"><b>Floods and cyclones</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p12" value="Veterinary teaching for every animal"><label for="p12"><b>Veterinary teaching</b></label></li>
+              <li class="m-pick"><input type="checkbox" name="focus" id="p13" value="Open to PFA's suggestion"><label for="p13"><b>Open to suggestion</b></label></li>
+            </ul>
+            <p class="err" data-err-for="focus" hidden></p>
+          </div>
+
+          <div class="m-step" data-step="Shape">
+            <h3>The shape of it.</h3>
+            <div class="field">
+              <label>Ways to work together</label>
+              <ul class="m-picks m-picks--2 m-picks--compact">
+                <li class="m-pick"><input type="checkbox" name="ways" id="w1" value="Fund a programme"><label for="w1"><b>Fund a programme</b></label></li>
+                <li class="m-pick"><input type="checkbox" name="ways" id="w2" value="Employee volunteering"><label for="w2"><b>Employee volunteering</b></label></li>
+                <li class="m-pick"><input type="checkbox" name="ways" id="w3" value="Supplies in kind"><label for="w3"><b>Supplies in kind</b></label></li>
+                <li class="m-pick"><input type="checkbox" name="ways" id="w4" value="A cause campaign with customers"><label for="w4"><b>A campaign with customers</b></label></li>
+              </ul>
+            </div>
+            <div class="field">
+              <label>Budget for the year</label>
+              <ul class="m-picks m-picks--compact">
+                <li class="m-pick"><input type="radio" name="budget" id="b1" value="Under ₹10 lakh"><label for="b1"><b>Under ₹10 lakh</b></label></li>
+                <li class="m-pick"><input type="radio" name="budget" id="b2" value="₹10 lakh to ₹50 lakh"><label for="b2"><b>₹10 to 50 lakh</b></label></li>
+                <li class="m-pick"><input type="radio" name="budget" id="b3" value="₹50 lakh to ₹1 crore"><label for="b3"><b>₹50 lakh to 1 crore</b></label></li>
+                <li class="m-pick"><input type="radio" name="budget" id="b4" value="Above ₹1 crore"><label for="b4"><b>Above ₹1 crore</b></label></li>
+                <li class="m-pick"><input type="radio" name="budget" id="b5" value="Not decided yet" checked><label for="b5"><b>Not decided yet</b></label></li>
+              </ul>
+            </div>
+            <div class="field">
+              <label>Over</label>
+              <ul class="m-picks m-picks--4 m-picks--compact">
+                <li class="m-pick"><input type="radio" name="span" id="s1" value="A single project"><label for="s1"><b>One project</b></label></li>
+                <li class="m-pick"><input type="radio" name="span" id="s2" value="One year"><label for="s2"><b>One year</b></label></li>
+                <li class="m-pick"><input type="radio" name="span" id="s3" value="Two to three years"><label for="s3"><b>Two to three years</b></label></li>
+                <li class="m-pick"><input type="radio" name="span" id="s4" value="Not decided yet" checked><label for="s4"><b>Not decided</b></label></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="m-step" data-step="Company">
+            <h3>Your company.</h3>
+            <div class="row">
+              <div class="field"><label for="company">Company</label><input id="company" name="company" required data-say="Add the company's name." autocomplete="organization"><p class="err" hidden></p></div>
+              <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" placeholder="Mumbai"><p class="err" hidden></p></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
+              <div class="field"><label for="role">Designation</label><input id="role" name="role" autocomplete="organization-title" placeholder="Head of CSR"><p class="err" hidden></p></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="email">Work email</label><input id="email" name="email" type="email" required data-say="Add a work email, so PFA can send a proposal." autocomplete="email"><p class="err" hidden></p></div>
+              <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+            </div>
+            <div class="field"><label for="message">Anything PFA should know</label><textarea id="message" name="message" maxlength="1500" placeholder="Our plant is in Pune district; our employees already feed the dogs around it."></textarea></div>
+            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>PFA may contact me about this enquiry.</span></label>
+            <p class="err" data-err-for="consent" hidden></p>
+            <p class="status" data-form-status hidden></p>
+          </div>
+
+          <div class="m-nav">
+            <button class="back" type="button" data-back hidden>Back</button>
+            <button class="btn" type="button" data-next>Continue</button>
+            <button class="btn" type="submit" data-send hidden>Send the brief</button>
+            <span class="clock" data-clock></span>
+          </div>
+        </form>
+
+        <div class="m-done" id="done" hidden>
+          <p class="eyebrow">Received</p>
+          <p class="ref" id="doneRef"></p>
+          <p>Keep this number. A named person at PFA will write to you about what a partnership in those areas could look like. Nothing is committed on either side until you both agree it.</p>
+          <div class="acts">
+            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="m-aside" aria-label="Your brief, as PFA will read it">
+        <div class="m-live">
+          <div class="m-live__top"><span>Partnership brief</span><span>People for Animals</span></div>
+          <p class="brief__company is-empty" id="brCompany">Your company</p>
+          <div class="m-chipset" id="brFocus"></div>
+          <dl>
+            <dt>Ways</dt><dd id="brWays" class="is-empty">Not said yet</dd>
+            <dt>Budget</dt><dd id="brBudget">Not decided yet</dd>
+            <dt>Over</dt><dd id="brSpan">Not decided yet</dd>
+            <dt>Contact</dt><dd id="brContact" class="is-empty">Not said yet</dd>
+          </dl>
+        </div>
+        <p class="m-note">A brief, not a commitment. PFA replies to every one, and tells your team what it can share for due diligence.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band" id="questions">
+    <div class="band__head">
+      <p class="eyebrow">Questions</p>
+      <h2 class="display">What CSR teams ask.</h2>
+    </div>
+    <div class="m-acc">
+      <details><summary>Is animal welfare an eligible CSR activity?</summary><p>Yes. Item (iv) of Schedule VII of the Companies Act, 2013 includes animal welfare, alongside environmental sustainability, ecological balance and the protection of flora and fauna. Your CSR committee decides how it applies to your policy.</p></details>
+      <details><summary>Can we fund something that is not on the list?</summary><p>Yes. The twelve are where PFA would start; say what you have in mind in the brief, or choose "Open to suggestion".</p></details>
+      <details><summary>Can our people volunteer?</summary><p>Employee volunteering can be part of any partnership. Tell PFA in the brief, and say where your offices are.</p></details>
+      <details><summary>What documents will you share?</summary><p>Ask in your brief for what your CSR team needs for due diligence, and PFA will tell you what it can provide.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
+       table: a hairline under every label, six equal columns that squeezed
+       the office into three lines, and its own gutter, a few pixels inside
+       the page's. Now it sits on the page's gutter, with the header. A bar
+       opens it: the name, and the two things most people come down here
+       for, reporting cruelty and giving. Under a single rule, the office
+       column (a little wider, so the address reads as an address) and five
+       link groups, each opened by a short pop tick and its label, no rules
+       between them. The legal line closes it, with the privacy policy.
+
+       The groups follow the header: Our Work, Learn, Get Involved, then its
+       "Give and partner" list as a group of its own, and About.
+
+       Every block is block-level in the markup: assets/ is cached for an hour
+       and the HTML is not, so for up to an hour after a deploy this markup
+       meets the previous chrome.css, and it still reads top to bottom. -->
+  <div class="pfa-footer__bar">
+    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
+    <div class="pfa-footer__acts">
+      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
+      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
+    </div>
+  </div>
+  <div class="pfa-footer__grid">
+    <div class="pfa-footer__office">
+      <p class="pfa-footer__label">Registered office</p>
+      <!-- As published on peopleforanimalsindia.org. tel: and mailto: so a
+           phone dials and a mail client opens; the numbers hold together with
+           non-breaking spaces, because a number split across two lines cannot
+           be dialled. -->
+      <address class="pfa-footer__where" id="contact">
+        <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+        <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+        <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+      </address>
+      <nav class="pfa-footer__social" aria-label="Social media">
+        <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.youtube.com/@peopleforanimals9047" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
+      <!-- Real count, from /api/visits. Hidden until a number actually
+           arrives, so a counter that cannot reach the server shows nothing
+           rather than a zero or an invented figure. No caption; the
+           aria-label names it for a screen reader. -->
+      <div class="pfa-tally" id="pfaTally" hidden>
+        <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+      </div>
+    </div>
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="campus.html">PFA Campus</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Give and partner">
+      <p class="pfa-footer__label">Give and partner</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="campaign.html">Plan a campaign</a></li>
+        <li><a href="legacy.html">Leave a legacy</a></li>
+        <li><a href="csr.html">CSR partnerships</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="sgacc.html">Animal Care Centre</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <p>Registered charity · All donations tax-deductible</p>
+    <p><a href="privacy.html">Privacy policy</a></p>
+  </div>
+</footer>
+
+<script src="assets/form-preview.js"></script>
+<script src="pfa-forms.js"></script>
+<script src="assets/micro.js"></script>
+<script>
+(function () {
+  'use strict';
+  var M = window.PFAMicro;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  if (!M) return;
+  M.filter($('#progChips'), '.prog > li');
+
+  var form = $('#csrForm');
+  if (!form) return;
+  function text(el, value, empty) { el.textContent = value || empty; el.classList.toggle('is-empty', !value); }
+  function paint() {
+    text($('#brCompany'), $('#company').value.trim(), 'Your company');
+    var focus = M.picked(form, 'focus');
+    $('#brFocus').innerHTML = '';
+    focus.forEach(function (f) { var s = document.createElement('span'); s.textContent = f; $('#brFocus').appendChild(s); });
+    text($('#brWays'), M.picked(form, 'ways').join(', '), 'Not said yet');
+    text($('#brBudget'), M.picked(form, 'budget'), 'Not decided yet');
+    text($('#brSpan'), M.picked(form, 'span'), 'Not decided yet');
+    var who = [$('#name').value.trim(), $('#role').value.trim()].filter(Boolean).join(', ');
+    text($('#brContact'), who, 'Not said yet');
+    document.querySelectorAll('[data-prog]').forEach(function (b) {
+      var on = focus.indexOf(b.getAttribute('data-prog')) > -1;
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? 'In the brief' : 'Add to the brief';
+    });
+  }
+  form.addEventListener('input', paint);
+  form.addEventListener('change', paint);
+  document.querySelectorAll('[data-prog]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var box = form.querySelector('input[name="focus"][value="' + b.getAttribute('data-prog') + '"]');
+      if (!box) return;
+      box.checked = !box.checked;
+      box.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+  var flow = M.steps(form);
+  paint();
+
+  M.send({
+    form: form,
+    ready: flow.allOk,
+    kind: 'PFA-CSR',
+    page: 'csr.html',
+    button: form.querySelector('[data-send]'),
+    status: form.querySelector('[data-form-status]'),
+    done: $('#done'),
+    doneRef: $('#doneRef'),
+    hideOnDone: [$('#shape .m-tabs'), $('#shape .m-bar')],
+    preview: { title: 'Check your brief before it is sent', send: 'Send the brief', labels: { focus: 'Areas to fund', ways: 'Ways to work together', budget: 'Budget for the year', span: 'Over', role: 'Designation' } },
+    data: function () {
+      return {
+        focus: M.picked(form, 'focus').join(', '),
+        ways: M.picked(form, 'ways').join(', '),
+        budget: M.picked(form, 'budget'),
+        span: M.picked(form, 'span'),
+        company: $('#company').value.trim(),
+        city: $('#city').value.trim(),
+        name: $('#name').value.trim(),
+        role: $('#role').value.trim(),
+        email: $('#email').value.trim(),
+        mobile: M.digits($('#mobile').value),
+        message: $('#message').value.trim()
+      };
+    }
+  });
+}());
+</script>
+</body>
+</html>

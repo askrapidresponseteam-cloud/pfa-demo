@@ -1,20 +1,22 @@
 'use strict';
 
-/* The footer, set on one grid (owner, 8 Oct 2026: "this can be better.
-   alignment and look wise.. right now doesnt look that great").
+/* The footer.
 
-   It had been the name and the office on the left and the four link groups
-   packed to the right at their own widths: every gap between the groups was
-   different, Get Involved's second column (CSS columns) stood with no label
-   over it, and nothing on one side lined up with anything on the other.
+   8 Oct 2026 (owner: "this can be better. alignment and look wise"): set on
+   one grid. 9 Oct 2026 (owner: "footer looking nasty"): it had become a
+   table, a hairline under every label, six equal columns that folded the
+   address into three lines, and a gutter of its own (clamp(20px,5vw,84px))
+   that sat 14px inside the page's and the header's at 1440.
 
-   Now the name and the social links share a bar; under it the office and the
-   four groups are columns of one width with one gap, each opened by the same
-   label on the same hairline, Get Involved across two columns under one
-   label; the legal line under all of it. These hold the structure; the
-   widths were measured in a browser at 18 widths from 1920 to 320 (every
-   label on one line, equal gaps, no sideways scroll, no link wrapped above
-   375 wide). */
+   Now it stands on the page's gutter; a bar carries the name and the two
+   calls most people scroll down for (report cruelty, donate) above one rule;
+   under it the office (a little wider) and five link groups, each opened by
+   the pop tick the page titles carry and a label, with no rules between
+   them; the legal line closes it with the privacy policy. These hold the
+   structure; the widths were measured in a browser from 1920 to 320: one
+   gutter with the header at every width, no sideways scroll, no link
+   wrapped above 375 wide, the social links on one line wherever the office
+   is its own column at desktop width. */
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -31,55 +33,61 @@ const rule = (sel) => {
   return m ? m[1] : '';
 };
 
-test('the bar carries the name with the mark, and the social links', () => {
+test('the bar carries the name with the mark, and the two calls', () => {
   const bar = doc.querySelector('.pfa-footer > .pfa-footer__bar');
   assert.ok(bar, 'the bar opens the footer');
   assert.ok(bar.querySelector('.pfa-footer__mark img.pfa-footer__bird[src="img/mail/logo-mark.png"][alt=""]'), 'the mark beside the name');
   assert.equal(bar.querySelector('.pfa-footer__mark').textContent.trim(), 'People for Animals');
-  assert.deepEqual([...bar.querySelectorAll('.pfa-footer__social a')].map((a) => a.textContent), ['Instagram', 'Facebook', 'X']);
-  assert.equal(doc.querySelectorAll('.pfa-footer__social').length, 1, 'once, not again in the legal line');
+  assert.deepEqual([...bar.querySelectorAll('.pfa-footer__acts a')].map((a) => [a.getAttribute('href'), a.textContent]),
+    [['report.html', 'Report cruelty'], ['donate.html', 'Donate']]);
+  /* ink on ink, otherwise: .pfa-footer a{color:inherit} outranks a lone class */
+  assert.match(rule('.pfa-footer a.pfa-footer__btn--solid'), /background:var\(--ff-fg\);color:#fff/);
 });
 
-test('the office and the four groups are one grid, in the header\'s order, each opened by a label', () => {
+test('the office and five groups, in the header\'s order, each opened by a tick and a label', () => {
   const cells = [...doc.querySelectorAll('.pfa-footer__grid > *')];
-  assert.deepEqual(cells.map((c) => c.querySelector('.pfa-footer__label').textContent), ['Registered office', 'Our Work', 'Learn', 'Get Involved', 'About']);
+  assert.deepEqual(cells.map((c) => c.querySelector('.pfa-footer__label').textContent),
+    ['Registered office', 'Our Work', 'Learn', 'Get Involved', 'Give and partner', 'About']);
   for (const c of cells) assert.equal(c.firstElementChild.className, 'pfa-footer__label', 'the label comes first, so every column starts on the same line');
   /* the office is not a link group: the visibility rules hide a .pfa-footer__col left with no link */
   assert.equal(cells[0].className, 'pfa-footer__office');
   assert.ok(cells[0].querySelector('address#contact.pfa-footer__where'));
   assert.ok(cells[0].querySelector('#pfaTally[hidden] #pfaTallyOdo[aria-label="Visit counter"]'));
-  /* Get Involved: two lists under one label, giving and then joining in */
-  const gi = doc.querySelector('.pfa-footer__col--wide');
-  assert.deepEqual([...gi.querySelectorAll('ul')].map((u) => [...u.querySelectorAll('a')].map((a) => a.textContent)), [
-    ['Donate', 'Make a gift', 'Volunteer', 'Become a member', 'Colony caregiver card'],
-    ['The Wall', 'Events', 'CineKind', 'Shop']
-  ]);
-  assert.deepEqual([...doc.querySelectorAll('.pfa-footer__base p')].map((p) => p.textContent), ['People for Animals © 2026', 'Registered charity · All donations tax-deductible']);
+  assert.deepEqual([...cells[0].querySelectorAll('.pfa-footer__social a')].map((a) => a.textContent), ['Instagram', 'Facebook', 'X', 'YouTube']);
+  assert.equal(doc.querySelectorAll('.pfa-footer__social').length, 1, 'once');
+  const group = (label) => [...doc.querySelector(`nav[aria-label="${label}"]`).querySelectorAll('a')].map((a) => a.textContent);
+  assert.deepEqual(group('Get Involved'), ['Volunteer', 'Become a member', 'Colony caregiver card', 'PFA Campus', 'The Wall', 'Events', 'CineKind']);
+  assert.deepEqual(group('Give and partner'), ['Donate', 'Make a gift', 'Plan a campaign', 'Leave a legacy', 'CSR partnerships', 'Shop']);
+  assert.deepEqual(group('About'), ['Founder', 'Animal Care Centre', 'Careers', 'Contact']);
+  assert.deepEqual([...doc.querySelectorAll('.pfa-footer__base p')].map((p) => p.textContent),
+    ['People for Animals © 2026', 'Registered charity · All donations tax-deductible', 'Privacy policy']);
+  assert.ok(doc.querySelector('.pfa-footer__base a[href="privacy.html"]'));
 });
 
-test('one width for every column and one gap; Get Involved spans two on the same grid', () => {
-  assert.match(rule('.pfa-footer__grid'), /grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
-  assert.match(rule('.pfa-footer__grid'), /gap:30px var\(--ff-gap\)/);
-  assert.match(rule('.pfa-footer__col--wide'), /grid-column:span 2;display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);column-gap:var\(--ff-gap\)/);
-  assert.match(rule('.pfa-footer__col--wide .pfa-footer__label'), /grid-column:1 \/ -1/);
-  assert.match(rule('.pfa-footer__label'), /border-bottom:1px solid var\(--ff-line\)/);
+test('one gutter with the header and the page, one gap, labels without rules', () => {
+  /* the page's own token, which the header uses; the fallback is the same formula */
+  assert.match(rule('.pfa-footer'), /--ff-gutter:var\(--gutter,max\(clamp\(16px,4vw,72px\),\(100% - 1440px\) \/ 2\)\)/);
+  assert.match(CSS, /header\.site\{[^}]*padding:0 var\(--gutter\)/);
+  assert.match(rule('.pfa-footer__grid'), /grid-template-columns:minmax\(0,1\.6fr\) repeat\(5,minmax\(0,1fr\)\)/);
+  assert.match(rule('.pfa-footer__grid'), /gap:36px var\(--ff-gap\)/);
+  assert.doesNotMatch(rule('.pfa-footer__label'), /border/, 'no hairline under each label');
   assert.match(rule('.pfa-footer__label'), /white-space:nowrap/);
-  assert.doesNotMatch(CSS, /\.pfa-footer__col--wide ul\{columns:/, 'no CSS columns: they do not land on the grid');
+  assert.match(rule('.pfa-footer__label::before'), /width:18px;height:2px;[^}]*background:var\(--ff-pop\)/);
   /* the office's lines sit on the links' lines */
-  assert.match(rule('.pfa-footer ul'), /font-size:13px;line-height:1\.45/);
-  assert.match(rule('.pfa-footer__where'), /font-style:normal;font-size:13px;line-height:1\.45/);
-  assert.match(rule('.pfa-footer ul a'), /padding:4px 0/);
-  assert.match(rule('.pfa-footer__where div'), /padding:4px 0/);
+  assert.match(rule('.pfa-footer ul'), /font-size:13\.5px;line-height:1\.45/);
+  assert.match(rule('.pfa-footer__where'), /font-style:normal;font-size:13\.5px;line-height:1\.45/);
+  assert.match(rule('.pfa-footer ul a'), /padding:5px 0/);
+  assert.match(rule('.pfa-footer__where div'), /padding:5px 0/);
 });
 
-test('three columns below 1240, two on phones', () => {
+test('three columns below 1440, two on phones', () => {
   const at = (w) => (CSS.match(new RegExp(`@media \\(max-width:${w}px\\)\\{([\\s\\S]*?)\\n\\}`)) || [])[1] || '';
-  assert.match(at(1239), /\.pfa-footer__grid\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(at(1439), /\.pfa-footer__grid\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   const phone = at(719);
   assert.match(phone, /\.pfa-footer__grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(phone, /\.pfa-footer__office\{grid-column:1 \/ -1\}/);
-  assert.match(phone, /\.pfa-footer__col--wide\{grid-column:1 \/ -1/);
-  assert.match(phone, /\.pfa-footer ul a,\.pfa-footer__where div\{padding:5px 0\}/, 'finger-sized rows');
+  assert.match(phone, /\.pfa-footer__acts\{display:grid;grid-template-columns:1fr 1fr\}/, 'the two calls side by side');
+  assert.match(phone, /\.pfa-footer ul a,\.pfa-footer__where div\{padding:6px 0\}/, 'finger-sized rows');
 });
 
 test('the counter is one framed instrument, and the script turns the wheels by the height the stylesheet gives them', () => {
@@ -89,4 +97,13 @@ test('the counter is one framed instrument, and the script turns the wheels by t
   assert.match(CSS, new RegExp(`\\.pfa-tally__strip span\\{[^}]*height:${h.replace('.', '\\.')}em`));
   const js = fs.readFileSync(path.join(ROOT, 'assets', 'chrome.js'), 'utf8');
   assert.match(js, new RegExp(`translateY\\(' \\+ \\(-d \\* ${h.replace('.', '\\.')}\\) \\+ 'em\\)'`));
+});
+
+test('every page the footer links to exists', () => {
+  for (const a of doc.querySelectorAll('.pfa-footer a[href]')) {
+    const href = a.getAttribute('href');
+    if (/^(https?:|mailto:|tel:)/.test(href)) continue;
+    const file = href.split(/[?#]/)[0];
+    assert.ok(fs.existsSync(path.join(ROOT, file)), `${href} (${a.textContent}) points at a page that is not there`);
+  }
 });

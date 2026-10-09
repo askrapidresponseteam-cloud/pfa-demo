@@ -143,6 +143,95 @@ const FORMS = {
       "notes": "Consent given for PFA to show this on The Wall.",
       "mobile": "9876543210"
     }
+  },
+  /* The microsites (9 Oct 2026). Each is a form like any other: on record,
+     confirmed, copied to gandhim, in the panel. */
+  "PFA-CAM": {
+    "page": "campus.html",
+    "data": {
+      "college": "Lady Shri Ram College for Women",
+      "institution": "A college",
+      "city": "New Delhi, Delhi",
+      "desks": "Rescue and first aid, Feeding and water",
+      "teamSize": "8 students",
+      "faculty": "Yes",
+      "facultyName": "Dr Meera Kapoor, Zoology",
+      "name": "Asha Rao",
+      "role": "BSc Zoology, second year",
+      "mobile": "9876543210",
+      "email": "tester.pfa@example.com",
+      "plan": "A feeding roster for the campus dogs before the winter"
+    }
+  },
+  "PFA-SG": {
+    "page": "sgacc.html",
+    "data": {
+      "offer": "A visit with a group",
+      "items": "Blankets and bedding",
+      "group": "Class 9, Springdales School",
+      "groupSize": "30",
+      "when": "A Saturday in November",
+      "name": "Asha Rao",
+      "mobile": "9876543210",
+      "email": "tester.pfa@example.com",
+      "message": "The students have collected blankets for the wards"
+    }
+  },
+  "PFA-CSR": {
+    "page": "csr.html",
+    "data": {
+      "focus": "Rural animal hospitals, Sterilisation for a town",
+      "ways": "Employee volunteering",
+      "budget": "\u20b910 lakh to \u20b950 lakh",
+      "span": "Two to three years",
+      "company": "Asha Foods Private Limited",
+      "city": "Pune, Maharashtra",
+      "name": "Asha Rao",
+      "role": "Head of CSR",
+      "email": "tester.pfa@example.com",
+      "mobile": "9876543210",
+      "message": "Our board meets in December to approve next year's projects"
+    }
+  },
+  "PFA-LEG": {
+    "page": "legacy.html",
+    "data": {
+      "interest": "A share of what I leave",
+      "name": "Asha Rao",
+      "email": "tester.pfa@example.com",
+      "contactBy": "Phone",
+      "mobile": "9876543210",
+      "city": "Bengaluru",
+      "message": "Please call after six in the evening"
+    }
+  },
+  "PFA-CMP": {
+    "page": "campaign.html",
+    "data": {
+      "cause": "Cows in need",
+      "format": "A birthday or celebration",
+      "goalType": "Money",
+      "goal": "\u20b925,000",
+      "title": "Asha turns thirty for the cows",
+      "when": "December 2026",
+      "city": "Jaipur, Rajasthan",
+      "reach": "About 60 friends and family",
+      "name": "Asha Rao",
+      "mobile": "9876543210",
+      "email": "tester.pfa@example.com",
+      "story": "Instead of presents I would like my friends to help the cows"
+    }
+  },
+  "PFA-PRV": {
+    "page": "privacy.html",
+    "data": {
+      "request": "A copy of what PFA holds about me",
+      "name": "Asha Rao",
+      "email": "tester.pfa@example.com",
+      "mobile": "9876543210",
+      "references": "PFA-Q-2026-00012",
+      "details": "Please send what you hold about my question from March"
+    }
   }
 };
 

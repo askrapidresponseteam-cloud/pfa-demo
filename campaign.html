@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Plan a campaign | People for Animals</title>
+<meta name="description" content="Raise money, supplies or voices for animals: pick a cause and a format, set a goal, watch your campaign take shape, and send the plan to PFA.">
+<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<style>
+/* Plan a campaign (owner, 9 Oct 2026: a microsite for it). The old Campaigns page listed two fundraisers; this keeps the cow care cause they raised for and lets anyone plan one of their own, with PFA's reply before anything is collected in its name. */
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#fff;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --pop:#ff3b18;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav and its rule; assets/chrome.js measures the real height. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+::selection{background:var(--pop);color:#fff}
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none!important}
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 30px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light,.btn--ghost{background:#fff;color:var(--ink)}
+.btn--light:hover,.btn--ghost:hover{background:var(--ink);color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- hero: the family's room above the headline (test/hero-alignment.test.js) ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  overflow:hidden;isolation:isolate;border-bottom:1px solid var(--line)}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
+.hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:18px}
+
+/* ---------- bands: the numbered head is the editorial theme's ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band + .band{padding-top:0}
+.band__head{max-width:var(--max);margin:0 0 clamp(32px,4vw,56px)}
+.band__head h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:17ch}
+.band__head p{margin:20px 0 0;max-width:58ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.72)}
+
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .band{padding-left:16px;padding-right:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- this page ---------- */
+.cause .m-card{cursor:default}
+.cause__pick{align-self:flex-start;margin-top:auto;min-height:40px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.cause__pick:hover{background:var(--ink);color:#fff}
+.cause > li:last-child{grid-column:1 / -1}
+.cause > li:last-child p{max-width:56ch}
+.cause .feat{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:0}
+.cause .feat .m-ph{aspect-ratio:auto;height:100%;min-height:280px}
+.cause .feat .m-card__body{display:flex;flex-direction:column;gap:12px;padding:clamp(24px,2.4vw,36px)}
+.camp{border:1px solid var(--ink);background:var(--paper)}
+.camp .m-ph{aspect-ratio:16/9}
+.camp .m-ph.is-gone::after{content:attr(data-cause);position:absolute;left:18px;bottom:16px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.camp__body{display:grid;gap:12px;padding:clamp(20px,2.2vw,30px)}
+.camp__by{margin:0;font-size:12px;color:var(--muted)}
+.camp__goal{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13px;color:var(--muted)}
+.camp__goal b{font-family:var(--display);font-weight:400;font-size:clamp(22px,2vw,30px);color:var(--ink)}
+.camp__track{height:6px;background:var(--line);position:relative;overflow:hidden}
+.camp__track span{position:absolute;inset:0 auto 0 0;width:3%;background:var(--pop)}
+.goal-money[hidden],.goal-text[hidden]{display:none}
+@media (max-width:900px){.cause .feat{grid-column:span 2}}
+@media (max-width:600px){.cause .feat{grid-column:span 1;grid-template-columns:minmax(0,1fr)}.cause .feat .m-ph{min-height:220px}}
+/* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
+@media (max-width:700px),(pointer:coarse){
+  
+}
+/* ---- end phone pass ---- */
+</style>
+<link rel="stylesheet" href="assets/micro.css">
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<!-- The editorial layer: loads after the page's own style and the microsite
+     kit, so the theme wins ties (test/hero-alignment.test.js). -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/campaign">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Plan a campaign">
+  <meta property="og:description" content="Raise money, supplies or voices for animals: pick a cause and a format, set a goal, watch your campaign take shape, and send the plan to PFA.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/campaign">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Plan a campaign">
+  <meta name="twitter:description" content="Raise money, supplies or voices for animals: pick a cause and a format, set a goal, watch your campaign take shape, and send the plan to PFA.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Plan a campaign","item":"https://peopleforanimalsindia.org/campaign"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<script id="pfa-vis">
+(function (root) {
+'use strict';
+var KEY = 'pfa:visibility';
+var LOCKED = { index: 1, track: 2, search: 2 };
+var NOTICE = 'This page is not available right now.';
+var HOME = 'Go to the home page';
+var CSS_ID = 'pfa-vis-css';
+var ROBOTS_ID = 'pfa-vis-robots';
+var GONE_ID = 'pfa-gone';
+var PAGE = /^[a-z0-9][a-z0-9-]*$/;
+var PART = /^[A-Za-z][A-Za-z0-9_-]*$/;
+var applied = { version: 0, pages: [], modules: [] };
+var title = null;
+function pagesOf(state) {
+return (state && Array.isArray(state.pages) ? state.pages : []).filter(function (p) {
+return typeof p === 'string' && PAGE.test(p) && !LOCKED[p];
+});
+}
+function modulesOf(state) {
+return (state && Array.isArray(state.modules) ? state.modules : []).filter(function (m) {
+var at = typeof m === 'string' ? m.indexOf('#') : -1;
+return at > 0 && PAGE.test(m.slice(0, at)) && PART.test(m.slice(at + 1)) && LOCKED[m.slice(0, at)] !== 2;
+});
+}
+function clean(state) {
+return { version: Number(state && state.version) || 0, pages: pagesOf(state), modules: modulesOf(state) };
+}
+function pageOf(url) {
+var p = String(url == null ? '' : url).split('#')[0].split('?')[0];
+p = p.slice(p.lastIndexOf('/') + 1).replace(/\.html$/, '');
+try { p = decodeURIComponent(p); } catch (e) {}
+return p || 'index';
+}
+function linksTo(page) {
+var f = page + '.html';
+return ['a[href="' + f + '"]', 'a[href^="' + f + '#"]', 'a[href^="' + f + '?"]',
+'a[href$="/' + f + '"]', 'a[href*="/' + f + '#"]', 'a[href*="/' + f + '?"]'];
+}
+function plan(state, page) {
+var s = clean(state);
+var here = String(page || 'index');
+var gone = s.pages.indexOf(here) > -1;
+var links = [];
+var own = [];
+var css = '';
+s.pages.forEach(function (p) { links = links.concat(linksTo(p)); });
+s.modules.forEach(function (m) {
+var at = m.indexOf('#');
+var p = m.slice(0, at);
+var id = m.slice(at + 1);
+links.push('a[href$="' + p + '.html#' + id + '"]');
+if (p === here) {
+own.push('[id="' + id + '"]', '[data-module="' + id + '"]');
+links.push('a[href="#' + id + '"]:not([aria-current])');
+}
+});
+if (gone) links.push('a[aria-current="page"]');
+if (own.length) css += own.join(',') + '{display:none!important}';
+if (links.length) {
+var list = links.join(',');
+css += list + '{display:none!important}';
+css += links.map(function (l) { return '.navitem>' + l; }).join(',') + '{display:revert!important;pointer-events:none;cursor:default}';
+css += 'li:has(>:is(' + list + '):only-child){display:none!important}';
+css += '.navitem:not(:has(.menu>a:not(' + list + '))){display:none!important}';
+css += '.mnav__group:not(:has(>a:not(' + list + '))){display:none!important}';
+css += '.pfa-footer__col:not(:has(li>a:not(' + list + '))){display:none!important}';
+css += '.menu-label:has(+a:is(' + list + ')),.menu-label:has(+a:is(' + list + '))~.menu-sep,.mnav__sub:has(+a:is(' + list + ')){display:none!important}';
+}
+if (gone) {
+css += 'body>:not(.announce):not(header):not(.pfa-footer):not(.mnav):not(.cursor-layer):not(.pfa-search):not(#pfa-gone){display:none!important}'
++ '#pfa-gone{display:block!important;box-sizing:border-box;min-height:62vh;padding:calc(var(--ann,34px) + var(--nav,81px) + 72px) var(--gutter,20px) 96px;text-align:center;color:var(--ink,#111);background:#fff}'
++ '#pfa-gone h1{font-family:var(--display,Georgia,serif);font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.15;margin:0 0 20px}'
++ '#pfa-gone p{margin:0;font-size:16px}'
++ '#pfa-gone a{color:inherit;text-decoration:underline;text-underline-offset:4px}';
+}
+return { css: css, gone: gone };
+}
+function blocked(url, state, anchors) {
+var s = clean(state || applied);
+var u = String(url == null ? '' : url);
+var page = pageOf(u);
+if (s.pages.indexOf(page) > -1) return true;
+var at = u.indexOf('#');
+if (at < 0 || !s.modules.length) return false;
+var hash = u.slice(at + 1);
+var part = (anchors && anchors[page] && anchors[page][hash]) || hash;
+return s.modules.indexOf(page + '#' + part) > -1;
+}
+function read() {
+try {
+var raw = root.localStorage.getItem(KEY);
+return raw ? clean(JSON.parse(raw)) : null;
+} catch (e) { return null; }
+}
+function save(state) {
+try { root.localStorage.setItem(KEY, JSON.stringify(clean(state))); } catch (e) {}
+}
+function drop(node) { if (node && node.parentNode) node.parentNode.removeChild(node); }
+function apply(state) {
+var d = root.document;
+if (!d || !d.head) return null;
+applied = clean(state);
+var p = plan(applied, pageOf(root.location && root.location.pathname));
+var tag = d.getElementById(CSS_ID);
+if (!tag && p.css) {
+tag = d.createElement('style');
+tag.setAttribute('id', CSS_ID);
+d.head.appendChild(tag);
+}
+if (tag) tag.textContent = p.css;
+var robots = d.getElementById(ROBOTS_ID);
+var box = d.getElementById(GONE_ID);
+if (p.gone) {
+if (!robots) {
+robots = d.createElement('meta');
+robots.setAttribute('id', ROBOTS_ID);
+robots.setAttribute('name', 'robots');
+robots.setAttribute('content', 'noindex');
+d.head.appendChild(robots);
+}
+if (!box && d.body) {
+box = d.createElement('div');
+box.setAttribute('id', GONE_ID);
+var h = d.createElement('h1');
+h.textContent = NOTICE;
+var line = d.createElement('p');
+var home = d.createElement('a');
+home.setAttribute('href', '/');
+home.textContent = HOME;
+line.appendChild(home);
+box.appendChild(h);
+box.appendChild(line);
+d.body.insertBefore(box, d.body.firstChild);
+}
+if (title === null) title = d.title;
+d.title = 'Not available right now · People for Animals';
+} else {
+drop(robots);
+drop(box);
+if (title !== null) { d.title = title; title = null; }
+}
+return p;
+}
+root.PFA_VISIBILITY = {
+KEY: KEY, LOCKED: LOCKED, NOTICE: NOTICE,
+clean: clean, pageOf: pageOf, plan: plan, blocked: blocked,
+read: read, save: save, apply: apply,
+state: function () { return applied; }
+};
+try {
+if (root.document && root.document.head) apply(read());
+} catch (e) {}
+}(this));
+</script>
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="library.html" data-nav="library.html">Resources library</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
+        <div class="menu">
+          <span class="menu-label">Join the tribe</span>
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <a href="campus.html" data-nav="campus.html">PFA Campus</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <span class="menu-label">Give and partner</span>
+          <a href="#top" data-nav="campaign.html" class="current" aria-current="page">Plan a campaign</a>
+          <a href="legacy.html" data-nav="legacy.html">Leave a legacy</a>
+          <a href="csr.html" data-nav="csr.html">CSR partnerships</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="sgacc.html" data-nav="sgacc.html">Sanjay Gandhi Animal Care Centre</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+      <a href="shop.html" data-nav="shop.html" class="shop">Shop</a>
+    </div>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
+  </nav>
+</header>
+<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/field-rules.js"></script>
+<script src="assets/field-validate.js"></script>
+
+<main>
+  <section class="hero m-hero" id="top">
+    <div class="m-hero__in">
+      <div>
+        <p class="eyebrow">Plan a campaign</p>
+        <h1 class="display">Start something for the animals.</h1>
+        <p class="lede">A birthday, a workplace drive, a run, a school collection. Pick a cause and a way to raise for it, set a goal and watch the campaign take shape. Then send the plan to PFA, who will reply on how to run it well.</p>
+        <div class="m-hero__acts">
+          <a class="btn" href="#plan">Plan yours</a>
+          <a class="btn btn--light" href="#causes">See the causes</a>
+        </div>
+        <ul class="m-hero__facts">
+          <li><b>6 causes</b><span>to raise for</span></li>
+          <li><b>6 ways</b><span>to run a campaign</span></li>
+          <li><b>4 screens</b><span>from an idea to a plan</span></li>
+        </ul>
+      </div>
+      <div class="m-hero__media">
+        <div class="m-duo">
+          <figure class="m-ph" data-ph><img src="media/site/campaign/gau-seva-01.jpg" alt="A cow in PFA's care" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Gau Seva</figcaption></figure>
+          <figure class="m-ph" data-ph><img src="media/site/campaign/gau-seva-02.jpg" alt="A cow in PFA's care" loading="eager" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>In care</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="causes">
+    <div class="band__head">
+      <p class="eyebrow">Causes</p>
+      <h2 class="display">Six causes to raise for.</h2>
+      <p>Choose one and the plan below starts from it.</p>
+    </div>
+    <ul class="m-grid cause">
+      <li class="m-card feat">
+        <figure class="m-ph" data-ph><img src="media/site/campaign/gau-seva-03.jpg" alt="A cow in PFA's care" loading="lazy" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"><figcaption>Gau Seva</figcaption></figure>
+        <div class="m-card__body">
+          <span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 8c-1.7 0-3-1-3-2.5C3.5 6 5 6 6 6.5M19 8c1.7 0 3-1 3-2.5C20.5 6 19 6 18 6.5"/><path d="M6 6.5C7 5 9 4.5 12 4.5s5 .5 6 2V13c0 3.5-2.5 7-6 7s-6-3.5-6-7z"/><path d="M9.5 16.5c.8.7 4.2.7 5 0"/><circle cx="9.5" cy="11" r=".6"/><circle cx="14.5" cy="11" r=".6"/></svg></span>
+          <h3>Cows in need</h3>
+          <p>Cows abandoned when they stop giving milk wait on the streets: many old, injured or hungry. PFA's Gau Seva campaign raised for their care; yours can carry it on.</p>
+          <button class="cause__pick" type="button" data-cause="Cows in need">Raise for this</button>
+        </div>
+      </li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 9l-1-5 4 2.5h8L20 4l-1 5"/><path d="M5 9c0 6 2.7 11 7 11s7-5 7-11"/><circle cx="9.5" cy="12" r=".6"/><circle cx="14.5" cy="12" r=".6"/><path d="M11 15.5h2l-1 1.2z"/></svg></span><h3>Community dogs</h3><p>Sterilisation and vaccination for the dogs of a neighbourhood, the humane way to fewer puppies on the street and no rabies.</p><button class="cause__pick" type="button" data-cause="Community dogs">Raise for this</button></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.6" y="8.2" width="18.8" height="7.6" rx="3.8" transform="rotate(-45 12 12)"/><path d="M10 10h.01M14 14h.01M12 12h.01M10 14h.01M14 10h.01"/></svg></span><h3>Injured and sick animals</h3><p>Treatment for the animals hit by traffic, hurt by people or simply ill, who have no one to pay for it.</p><button class="cause__pick" type="button" data-cause="Injured and sick animals">Raise for this</button></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M9 8.5c0-1.6 1.6-1.9 1.6-3.5M13.5 8.5c0-1.6 1.6-1.9 1.6-3.5"/></svg></span><h3>Feeding drives</h3><p>Food for the animals that community feeders look after, when one person's money no longer stretches.</p><button class="cause__pick" type="button" data-cause="Feeding drives">Raise for this</button></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6M3 21h18"/></svg></span><h3>The animal care centre</h3><p>The Sanjay Gandhi Animal Care Centre in Delhi and the thousands of animals in its care at any time.</p><button class="cause__pick" type="button" data-cause="The Sanjay Gandhi Animal Care Centre">Raise for this</button></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.2L12 17l-5.4 3 1-6.2-4.4-4.3 6.1-.9z"/></svg></span><h3>Where it is needed most</h3><p>Let PFA put what you raise where it will do the most good at the time.</p><button class="cause__pick" type="button" data-cause="Where it is needed most">Raise for this</button></li>
+    </ul>
+  </section>
+
+  <section class="band" id="formats">
+    <div class="band__head">
+      <p class="eyebrow">Ways to run one</p>
+      <h2 class="display">Pick the one that suits you.</h2>
+    </div>
+    <ul class="m-grid">
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 21v-8h16v8M3 21h18"/><path d="M4 16c2 1.5 4 1.5 5.3 0 1.4 1.5 4 1.5 5.4 0 1.3 1.5 3.3 1.5 5.3 0"/><path d="M8 13v-3M12 13v-3M16 13v-3M8 7.5c0-1 .8-1.6.8-2.5M12 7.5c0-1 .8-1.6.8-2.5M16 7.5c0-1 .8-1.6.8-2.5"/></svg></span><h3>A birthday or celebration</h3><p>Ask the people coming to give to the animals instead of bringing a present.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="7" width="18" height="13"/><path d="M8 7V4h8v3M3 12.5h18"/></svg></span><h3>A workplace drive</h3><p>Colleagues give for a month, and the company may match what they raise.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></svg></span><h3>A school or college drive</h3><p>A class, a house or a whole campus. For something that lasts, see <a href="campus.html">PFA Campus</a>.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="15" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v4M6 12l3-4h5l3 4h3M11 15l1-5"/></svg></span><h3>A run, walk or challenge</h3><p>Friends sponsor your distance, your match or a challenge you set yourself.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7.5l9-4.5 9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5l9 4.5 9-4.5M12 12v9"/></svg></span><h3>A collection of supplies</h3><p>Food, blankets and medicines, collected in your building, office or temple.</p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10v4h3l7 4V6L6 10z"/><path d="M16.5 9.2a4 4 0 0 1 0 5.6M19 6.7a7.5 7.5 0 0 1 0 10.6"/></svg></span><h3>An awareness event</h3><p>A talk, a screening, a stall at a fair: raising voices, not only money.</p></li>
+    </ul>
+  </section>
+
+  <section class="band" id="plan">
+    <div class="band__head">
+      <p class="eyebrow">Plan yours</p>
+      <h2 class="display">Your campaign, in four screens.</h2>
+      <p>The card beside the form is your campaign as people will see it, taking shape as you go.</p>
+    </div>
+    <div class="m-builder">
+      <div>
+        <ol class="m-tabs" aria-hidden="true"><li><span>01</span>Cause</li><li><span>02</span>Way</li><li><span>03</span>Goal</li><li><span>04</span>You</li></ol>
+        <div class="m-bar" aria-hidden="true"><span></span></div>
+        <form class="m-form" id="campForm" novalidate>
+          <div class="m-step" data-step="Cause">
+            <h3>Who is it for?</h3>
+            <ul class="m-picks m-picks--compact" data-need="cause" data-say="Choose the cause your campaign is for.">
+              <li class="m-pick"><input type="radio" name="cause" id="c1" value="Cows in need"><label for="c1"><b>Cows in need</b></label></li>
+              <li class="m-pick"><input type="radio" name="cause" id="c2" value="Community dogs"><label for="c2"><b>Community dogs</b></label></li>
+              <li class="m-pick"><input type="radio" name="cause" id="c3" value="Injured and sick animals"><label for="c3"><b>Injured and sick animals</b></label></li>
+              <li class="m-pick"><input type="radio" name="cause" id="c4" value="Feeding drives"><label for="c4"><b>Feeding drives</b></label></li>
+              <li class="m-pick"><input type="radio" name="cause" id="c5" value="The Sanjay Gandhi Animal Care Centre"><label for="c5"><b>The animal care centre</b></label></li>
+              <li class="m-pick"><input type="radio" name="cause" id="c6" value="Where it is needed most"><label for="c6"><b>Where it is needed most</b></label></li>
+            </ul>
+            <p class="err" data-err-for="cause" hidden></p>
+          </div>
+
+          <div class="m-step" data-step="Way">
+            <h3>How will you run it?</h3>
+            <ul class="m-picks m-picks--compact" data-need="format" data-say="Choose the kind of campaign.">
+              <li class="m-pick"><input type="radio" name="format" id="f1" value="A birthday or celebration"><label for="f1"><b>A birthday or celebration</b></label></li>
+              <li class="m-pick"><input type="radio" name="format" id="f2" value="A workplace drive"><label for="f2"><b>A workplace drive</b></label></li>
+              <li class="m-pick"><input type="radio" name="format" id="f3" value="A school or college drive"><label for="f3"><b>A school or college drive</b></label></li>
+              <li class="m-pick"><input type="radio" name="format" id="f4" value="A run, walk or sports challenge"><label for="f4"><b>A run, walk or challenge</b></label></li>
+              <li class="m-pick"><input type="radio" name="format" id="f5" value="A collection of supplies"><label for="f5"><b>A collection of supplies</b></label></li>
+              <li class="m-pick"><input type="radio" name="format" id="f6" value="An awareness event"><label for="f6"><b>An awareness event</b></label></li>
+            </ul>
+            <p class="err" data-err-for="format" hidden></p>
+          </div>
+
+          <div class="m-step" data-step="Goal">
+            <h3>The goal.</h3>
+            <div class="field">
+              <label>What are you raising?</label>
+              <ul class="m-picks m-picks--compact">
+                <li class="m-pick"><input type="radio" name="goalType" id="gt1" value="Money" checked><label for="gt1"><b>Money</b></label></li>
+                <li class="m-pick"><input type="radio" name="goalType" id="gt2" value="Supplies"><label for="gt2"><b>Supplies</b></label></li>
+                <li class="m-pick"><input type="radio" name="goalType" id="gt3" value="Awareness"><label for="gt3"><b>Awareness</b></label></li>
+              </ul>
+            </div>
+            <div class="m-range goal-money">
+              <label class="eyebrow" for="goalMoney">How much</label>
+              <output id="goalOut" for="goalMoney">₹25,000</output>
+              <input type="range" id="goalMoney" min="5000" max="500000" step="5000" value="25000">
+              <div class="ends"><span>₹5,000</span><span>₹5,00,000</span></div>
+            </div>
+            <div class="field goal-text" hidden><label for="goalText" id="goalTextLab">What you will collect</label><input id="goalText" placeholder="100 blankets before winter"><p class="err" hidden></p></div>
+            <div class="row">
+              <div class="field"><label for="title">Campaign name</label><input id="title" name="title" required data-say="Give your campaign a name." maxlength="80" placeholder="Asha's birthday for the dogs of Indiranagar"><p class="err" hidden></p></div>
+              <div class="field"><label for="when">When</label><input id="when" name="when" placeholder="All of December"><p class="err" hidden></p></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="city">Where</label><input id="city" name="city" required data-say="Where will it happen?" placeholder="Bengaluru, Karnataka"><p class="err" hidden></p></div>
+              <div class="field"><label for="reach">People you hope to reach</label><input id="reach" name="reach" inputmode="numeric" placeholder="50"><p class="err" hidden></p></div>
+            </div>
+          </div>
+
+          <div class="m-step" data-step="You">
+            <h3>Who is running it.</h3>
+            <div class="row">
+              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
+              <div class="field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" required data-mobile data-say="Enter a 10-digit Indian mobile number." inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+            </div>
+            <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add an email, so PFA can reply." autocomplete="email"><p class="err" hidden></p></div>
+            <div class="field"><label for="story">Why you are doing it <small>(optional, and the line people remember)</small></label><textarea id="story" name="story" maxlength="900" placeholder="I feed nine dogs on my street. This year, instead of presents, I want all nine sterilised and vaccinated."></textarea></div>
+            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>I will not collect money in PFA's name until PFA has replied to this plan. PFA may contact me about it.</span></label>
+            <p class="err" data-err-for="consent" hidden></p>
+            <p class="status" data-form-status hidden></p>
+          </div>
+
+          <div class="m-nav">
+            <button class="back" type="button" data-back hidden>Back</button>
+            <button class="btn" type="button" data-next>Continue</button>
+            <button class="btn" type="submit" data-send hidden>Send the plan</button>
+            <span class="clock" data-clock></span>
+          </div>
+        </form>
+
+        <div class="m-done" id="done" hidden>
+          <p class="eyebrow">Received</p>
+          <p class="ref" id="doneRef"></p>
+          <p>Keep this number. A named person at PFA reads every plan and will reply on the contact you gave. Please wait for that reply before you announce the campaign in PFA's name or collect anything.</p>
+          <div class="acts">
+            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="m-aside" aria-label="Your campaign, as people will see it">
+        <article class="camp">
+          <figure class="m-ph" data-ph id="campPh" data-cause="A cause"><img id="campImg" src="media/site/campaign/gau-seva-04.jpg" alt="" loading="lazy" decoding="async" onerror="this.closest('[data-ph]').classList.add('is-gone')"></figure>
+          <div class="camp__body">
+            <span class="m-tag" id="campCause">Choose a cause</span>
+            <h4 class="display" id="campTitle" style="font-size:clamp(22px,2vw,30px)">Your campaign</h4>
+            <p class="camp__by" id="campBy">by you &middot; a way to raise</p>
+            <div class="camp__goal"><span>raised so far</span><b id="campGoal">₹25,000</b></div>
+            <div class="camp__track"><span></span></div>
+            <p class="camp__by" id="campWhen">When and where</p>
+          </div>
+        </article>
+        <p class="m-note">A preview. Nothing is published until PFA has read your plan and replied.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band" id="tips">
+    <div class="band__head">
+      <p class="eyebrow">What works</p>
+      <h2 class="display">Four things good campaigns share.</h2>
+    </div>
+    <ul class="m-grid m-grid--4">
+      <li class="m-card"><span class="m-card__no">01</span><h3>One clear cause</h3><p>Nine dogs on one street moves people more than all the dogs everywhere.</p></li>
+      <li class="m-card"><span class="m-card__no">02</span><h3>A deadline</h3><p>A birthday, a month, a race day. People give when there is a date.</p></li>
+      <li class="m-card"><span class="m-card__no">03</span><h3>A picture</h3><p>One honest photograph of the animal or the place, with a line about why it matters to you.</p></li>
+      <li class="m-card"><span class="m-card__no">04</span><h3>A thank-you</h3><p>Tell everyone who gave what their money did. It is how the next campaign starts.</p></li>
+    </ul>
+  </section>
+
+  <section class="band" id="questions">
+    <div class="band__head">
+      <p class="eyebrow">Questions</p>
+      <h2 class="display">Before you begin.</h2>
+    </div>
+    <div class="m-acc">
+      <details><summary>Can I collect money myself?</summary><p>Please do not collect money in PFA's name until PFA has replied to your plan. Donations made through PFA's own <a href="donate.html">donate page</a> are receipted by PFA, and donations to People for Animals are eligible for tax deduction under Section 80G.</p></details>
+      <details><summary>Will PFA give me a page, a poster or a letter?</summary><p>Say what you need in your plan. The reply will tell you what PFA can provide for it.</p></details>
+      <details><summary>Can I collect supplies instead of money?</summary><p>Yes. Choose "Supplies" as the goal and say what you will collect; PFA will tell you where they are needed and how to get them there.</p></details>
+      <details><summary>What about a corporate campaign?</summary><p>A drive among colleagues can be planned here. For a company's CSR, see <a href="csr.html">CSR partnerships</a>.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
+       table: a hairline under every label, six equal columns that squeezed
+       the office into three lines, and its own gutter, a few pixels inside
+       the page's. Now it sits on the page's gutter, with the header. A bar
+       opens it: the name, and the two things most people come down here
+       for, reporting cruelty and giving. Under a single rule, the office
+       column (a little wider, so the address reads as an address) and five
+       link groups, each opened by a short pop tick and its label, no rules
+       between them. The legal line closes it, with the privacy policy.
+
+       The groups follow the header: Our Work, Learn, Get Involved, then its
+       "Give and partner" list as a group of its own, and About.
+
+       Every block is block-level in the markup: assets/ is cached for an hour
+       and the HTML is not, so for up to an hour after a deploy this markup
+       meets the previous chrome.css, and it still reads top to bottom. -->
+  <div class="pfa-footer__bar">
+    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
+    <div class="pfa-footer__acts">
+      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
+      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
+    </div>
+  </div>
+  <div class="pfa-footer__grid">
+    <div class="pfa-footer__office">
+      <p class="pfa-footer__label">Registered office</p>
+      <!-- As published on peopleforanimalsindia.org. tel: and mailto: so a
+           phone dials and a mail client opens; the numbers hold together with
+           non-breaking spaces, because a number split across two lines cannot
+           be dialled. -->
+      <address class="pfa-footer__where" id="contact">
+        <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+        <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+        <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+      </address>
+      <nav class="pfa-footer__social" aria-label="Social media">
+        <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.youtube.com/@peopleforanimals9047" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
+      <!-- Real count, from /api/visits. Hidden until a number actually
+           arrives, so a counter that cannot reach the server shows nothing
+           rather than a zero or an invented figure. No caption; the
+           aria-label names it for a screen reader. -->
+      <div class="pfa-tally" id="pfaTally" hidden>
+        <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+      </div>
+    </div>
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="campus.html">PFA Campus</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Give and partner">
+      <p class="pfa-footer__label">Give and partner</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="campaign.html">Plan a campaign</a></li>
+        <li><a href="legacy.html">Leave a legacy</a></li>
+        <li><a href="csr.html">CSR partnerships</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="sgacc.html">Animal Care Centre</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <p>Registered charity · All donations tax-deductible</p>
+    <p><a href="privacy.html">Privacy policy</a></p>
+  </div>
+</footer>
+
+<script src="assets/form-preview.js"></script>
+<script src="pfa-forms.js"></script>
+<script src="assets/micro.js"></script>
+<script>
+(function () {
+  'use strict';
+  var M = window.PFAMicro;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var form = $('#campForm');
+  if (!M || !form) return;
+  function rupees(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+  /* the campaign card beside the form */
+  function paint() {
+    var cause = M.picked(form, 'cause');
+    var format = M.picked(form, 'format');
+    var type = M.picked(form, 'goalType') || 'Money';
+    var money = Number($('#goalMoney').value);
+    $('#goalOut').textContent = rupees(money);
+    form.querySelector('.goal-money').hidden = type !== 'Money';
+    var text = form.querySelector('.goal-text');
+    text.hidden = type === 'Money';
+    $('#goalTextLab').textContent = type === 'Supplies' ? 'What you will collect' : 'What you want people to know';
+    $('#goalText').placeholder = type === 'Supplies' ? '100 blankets before winter' : 'That community dogs are protected by law';
+    $('#campCause').textContent = cause || 'Choose a cause';
+    $('#campPh').setAttribute('data-cause', cause || 'A cause');
+    var title = $('#title').value.trim();
+    $('#campTitle').textContent = title || 'Your campaign';
+    var name = $('#name').value.trim();
+    $('#campBy').textContent = 'by ' + (name || 'you') + ' · ' + (format ? format.charAt(0).toLowerCase() + format.slice(1) : 'a way to raise');
+    $('#campGoal').textContent = type === 'Money' ? rupees(money) : ($('#goalText').value.trim() || (type === 'Supplies' ? 'Supplies' : 'Awareness'));
+    form.closest('.m-builder').querySelector('.camp__goal span').textContent = type === 'Money' ? 'goal' : (type === 'Supplies' ? 'collecting' : 'raising');
+    var where = [$('#when').value.trim(), $('#city').value.trim()].filter(Boolean).join(' · ');
+    $('#campWhen').textContent = where || 'When and where';
+    /* the cows have their own photographs; every other cause shows its name on a plate */
+    var img = $('#campImg');
+    var ph = $('#campPh');
+    if (cause === 'Cows in need' || !cause) { ph.classList.remove('is-gone'); if (!img.getAttribute('src')) img.setAttribute('src', 'media/site/campaign/gau-seva-04.jpg'); }
+    else ph.classList.add('is-gone');
+  }
+  form.addEventListener('input', paint);
+  form.addEventListener('change', paint);
+
+  /* a cause card above starts the plan from it */
+  var flow = M.steps(form);
+  document.querySelectorAll('[data-cause]').forEach(function (b) {
+    if (b.tagName !== 'BUTTON') return;
+    b.addEventListener('click', function () {
+      var r = form.querySelector('input[name="cause"][value="' + b.getAttribute('data-cause') + '"]');
+      if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
+      $('#plan').scrollIntoView({ block: 'start', behavior: 'smooth' });
+      if (flow.at() === 0) flow.go(1);
+    });
+  });
+  paint();
+
+  M.send({
+    form: form,
+    ready: flow.allOk,
+    kind: 'PFA-CMP',
+    page: 'campaign.html',
+    button: form.querySelector('[data-send]'),
+    status: form.querySelector('[data-form-status]'),
+    done: $('#done'),
+    doneRef: $('#doneRef'),
+    hideOnDone: [$('#plan .m-tabs'), $('#plan .m-bar')],
+    preview: { title: 'Check your plan before it is sent', send: 'Send the plan', labels: { cause: 'Cause', format: 'Kind of campaign', goalType: 'Raising', title: 'Campaign name', reach: 'People you hope to reach', story: 'Why you are doing it' }, extra: [['Goal', '']] },
+    data: function () {
+      var type = M.picked(form, 'goalType') || 'Money';
+      return {
+        cause: M.picked(form, 'cause'),
+        format: M.picked(form, 'format'),
+        goalType: type,
+        goal: type === 'Money' ? rupees($('#goalMoney').value) : $('#goalText').value.trim(),
+        title: $('#title').value.trim(),
+        when: $('#when').value.trim(),
+        city: $('#city').value.trim(),
+        reach: $('#reach').value.trim(),
+        name: $('#name').value.trim(),
+        mobile: M.digits($('#mobile').value),
+        email: $('#email').value.trim(),
+        story: $('#story').value.trim()
+      };
+    }
+  });
+}());
+</script>
+</body>
+</html>

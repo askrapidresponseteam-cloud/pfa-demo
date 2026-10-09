@@ -74,6 +74,13 @@ echo "  $(ls resources | wc -l | tr -d ' ') library documents, $(ls test/fixture
 
 
 step "Fetching media (best effort; the test suite is the backstop)"
+# The microsites' photographs (data/site-photos.json) come from PFA's old site.
+# Once fetched they are in the live tree, so they are taken from there first and
+# survive the old site going away; only what is still missing is fetched.
+if [ -d "$HOME/Desktop/PFA_Website/media/site" ]; then
+  mkdir -p media/site && cp -R -n "$HOME/Desktop/PFA_Website/media/site/." media/site/ 2>/dev/null || true
+fi
+npm run media:site || echo "  Some site photographs could not be fetched; their frames show a plain plate until a later run fetches them"
 node scripts/fetch-cinekind-media.js --rewrite || echo "  CineKind media fetch failed; continuing, the tests will judge the tree"
 npm run media:films -- --rewrite || echo "  founder-film fetch failed; continuing"
 npm run media:units || echo "  unit-photo fetch failed; continuing"

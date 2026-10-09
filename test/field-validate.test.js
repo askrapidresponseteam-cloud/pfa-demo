@@ -246,7 +246,9 @@ const WIRED = ['report.html', 'ask.html', 'careers.html', 'wall.html', 'get-invo
   /* newsroom.html left this list on 16 Sep 2026: the editorial cut carries
      no entry box at all, which the left-out check below confirms. */
   /* the CineKind nomination form, back for 2027 (16 Sep 2026) */
-  'cinekind.html'];
+  'cinekind.html',
+  /* the microsites (9 Oct 2026) */
+  'campus.html', 'sgacc.html', 'csr.html', 'legacy.html', 'campaign.html', 'privacy.html'];
 
 test('every page that takes an entry loads the rules, and loads them first', () => {
   for (const file of WIRED) {

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Marcellus self-hosted, same files as the home page, so every display heading renders identically even when Google Fonts is slow or blocked -->
+<!-- Requested at parse time rather than when layout first needs it. Without this the
+     browser does not ask for the file until it lays out a heading, which is why the
+     display face arrived a beat late and swapped in over the fallback. Only the latin
+     file: latin-ext covers characters these pages do not use. -->
+<link rel="preload" href="fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* No black grounds (owner's instruction, 15 Sep 2026): the deep sections
+   now stand on stone with ink type, converted through the page's own
+   tokens; buttons, tags and photographs keep their weight. */
+/* latin-ext */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/marcellus-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* What a cold load paints while Marcellus arrives is the next face in the
+   stack, and the flash is the difference between the two: Georgia runs about
+   2% wider per line and sits on different vertical metrics, so the swap
+   rewrapped every heading and the boxes around them moved - the flash of
+   unstyled text, back on every hard refresh. These two faces are Georgia and
+   Times dressed in Marcellus's measurements (ascent 1995, descent 573, gap 0,
+   weighted advance 932.4, all per 2048 em, read from the woff2 itself;
+   Georgia 913, Times 832 per capsize). Scaled and overridden to occupy the
+   same lines and the same boxes, the swap exchanges glyphs in place and
+   moves nothing. The preload makes the window short; these make it
+   invisible. Keep the numbers and the font in step: they are pinned by
+   test/fout.test.js against the file on disk. */
+@font-face {
+  font-family: 'Marcellus Fallback';
+  src: local('Georgia');
+  size-adjust: 102.13%;
+  ascent-override: 95.38%;
+  descent-override: 27.39%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Marcellus Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112.07%;
+  ascent-override: 86.92%;
+  descent-override: 24.96%;
+  line-gap-override: 0%;
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Privacy policy | People for Animals</title>
+<meta name="description" content="What the People for Animals website collects, why, who else handles it, how long it is kept, and how to ask for a copy, a correction or erasure under India's data protection law.">
+<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<style>
+/* Privacy policy (owner, 9 Oct 2026: a microsite for it). Written from what the site actually does: the forms, the payment providers, the mail, the browser storage keys, the rate limits that hash an address. A request made here is a submission like any other (PFA-PRV): on record, in the admin panel, and copied to PFA's office inbox. */
+:root{
+  --paper:#fff;
+  --ink:#111;
+  --deep:#0a0a0a;
+  --muted:#6a6a6a;
+  --stone:#fff;
+  --bone:#fff;
+  --line:#e4e2df;
+  --line-dark:#3a3a3a;
+  --accent:#111;
+  --pop:#ff3b18;
+  --display:Marcellus,'Marcellus Fallback','Marcellus Fallback Times',Georgia,'Times New Roman',serif;
+  --body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ann:34px;
+  /* 81px: the nav and its rule; assets/chrome.js measures the real height. */
+  --nav:81px;
+  --max:1440px;
+  --gutter:max(clamp(16px,4vw,72px),(100% - 1440px) / 2);
+  --gutter-lg:max(clamp(24px,5vw,84px),(100% - 1440px) / 2);
+  --band:clamp(76px,8.5vw,136px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.65}
+img,svg{display:block}
+::selection{background:var(--pop);color:#fff}
+:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+input,button,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+[hidden]{display:none!important}
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 30px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--ink);opacity:1}
+.btn--light,.btn--ghost{background:#fff;color:var(--ink)}
+.btn--light:hover,.btn--ghost:hover{background:var(--ink);color:#fff}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- hero: the family's room above the headline (test/hero-alignment.test.js) ---------- */
+.hero{position:relative;display:flex;align-items:flex-start;background:var(--stone);color:var(--ink);
+  padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 64px;
+  overflow:hidden;isolation:isolate;border-bottom:1px solid var(--line)}
+.hero .eyebrow{color:rgba(17,17,17,.55);margin:0 0 18px}
+.hero h1::before{content:"";display:block;width:34px;height:3px;background:var(--pop);margin-bottom:18px}
+
+/* ---------- bands: the numbered head is the editorial theme's ---------- */
+.band{padding:var(--band) var(--gutter)}
+.band + .band{padding-top:0}
+.band__head{max-width:var(--max);margin:0 0 clamp(32px,4vw,56px)}
+.band__head h2{font-size:clamp(28px,3.4vw,52px);margin-top:14px;max-width:17ch}
+.band__head p{margin:20px 0 0;max-width:58ch;font-size:15px;line-height:1.65;color:rgba(17,17,17,.72)}
+
+@media (max-width:720px){
+  .hero{min-height:0;padding:calc(var(--ann) + var(--nav) + 36px) 16px 48px}
+  .band{padding-left:16px;padding-right:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- this page ---------- */
+.pledge{border:1px solid var(--ink);background:var(--paper);padding:clamp(24px,2.6vw,38px);display:grid;gap:18px}
+.pledge__top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.pledge__top img{width:34px;height:auto}
+.pledge ul{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.pledge li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:14px;align-items:start;padding:16px 0;border-bottom:1px solid var(--line)}
+.pledge li svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+.pledge b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(18px,1.5vw,22px);line-height:1.1;text-transform:uppercase;letter-spacing:.01em}
+.pledge span{display:block;margin-top:6px;font-size:13px;line-height:1.55;color:rgba(17,17,17,.72)}
+.pledge__date{margin:0;font-size:12px;color:var(--muted)}
+
+.policy{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:clamp(32px,5vw,88px);align-items:start}
+.toc{position:sticky;top:calc(var(--ann) + var(--nav) + 24px)}
+.toc p{margin:0 0 12px}
+.toc ol{margin:0;padding:0;list-style:none;border-top:1px solid var(--ink);counter-reset:toc}
+.toc li{counter-increment:toc;border-bottom:1px solid var(--line)}
+.toc a{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;padding:10px 0;font-size:13px;line-height:1.4;color:var(--muted)}
+.toc a::before{content:counter(toc,decimal-leading-zero);font-size:11px;letter-spacing:.06em;padding-top:1px}
+.toc a:hover{color:var(--ink);opacity:1}
+.toc a[aria-current="true"]{color:var(--ink);font-weight:700}
+.toc a[aria-current="true"]::before{color:var(--pop)}
+.policy__body{counter-reset:pol;max-width:78ch}
+.pol{counter-increment:pol;padding:0 0 clamp(36px,4vw,52px);margin:0 0 clamp(36px,4vw,52px);border-bottom:1px solid var(--line);scroll-margin-top:calc(var(--ann) + var(--nav) + 24px)}
+.pol:last-child{border-bottom:0;margin-bottom:0}
+.pol h3{display:flex;gap:16px;align-items:baseline;margin:0 0 18px;font-family:var(--display);font-weight:400;font-size:clamp(22px,2.2vw,32px);line-height:1.08;text-transform:uppercase;letter-spacing:.01em}
+.pol h3::before{content:counter(pol,decimal-leading-zero);flex:none;font-size:.55em;color:var(--pop);letter-spacing:.04em}
+.pol p{margin:0 0 14px;font-size:15px;line-height:1.72;color:rgba(17,17,17,.8)}
+.pol ul{margin:0 0 14px;padding:0;list-style:none}
+.pol li{position:relative;padding:9px 0 9px 18px;border-top:1px solid var(--line);font-size:14.5px;line-height:1.6;color:rgba(17,17,17,.8)}
+.pol li:last-child{border-bottom:1px solid var(--line)}
+.pol li::before{content:"";position:absolute;left:0;top:19px;width:7px;height:1px;background:var(--ink)}
+.pol li b{color:var(--ink)}
+.pol a{border-bottom:1px solid currentColor}
+.pol code{font-size:12.5px;padding:1px 5px;background:#f3f1ed}
+.proc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:6px 0 16px;padding:0;list-style:none}
+.proc li{padding:18px 20px;background:var(--paper);border:0}
+.proc li:last-child{border:0}
+.proc li::before{display:none}
+.proc b{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.proc span{display:block;font-size:13.5px;line-height:1.55;color:rgba(17,17,17,.75)}
+.rights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:6px 0 16px;padding:0;list-style:none}
+.rights li{padding:18px 20px;background:var(--paper);border:0}
+.rights li:last-child{border:0}
+.rights li::before{display:none}
+.rights b{display:block;font-family:var(--display);font-weight:400;font-size:18px;text-transform:uppercase;letter-spacing:.01em;margin-bottom:6px}
+.rights span{display:block;font-size:13px;line-height:1.55;color:rgba(17,17,17,.75)}
+
+.req{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.req .m-picks li:last-child{grid-column:1 / -1}
+.req .m-path{--cols:1;row-gap:26px}
+.req .m-path li{padding-top:22px}
+.req .m-path li::before{font-size:26px;margin-bottom:10px}
+
+@media (max-width:1100px){.rights{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){
+  .policy,.req{grid-template-columns:minmax(0,1fr)}
+  .toc{position:static}
+  .toc ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px}
+}
+@media (max-width:600px){
+  .toc ol{grid-template-columns:minmax(0,1fr)}
+  .proc,.rights{grid-template-columns:minmax(0,1fr)}
+}
+/* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
+@media (max-width:700px),(pointer:coarse){
+  
+}
+/* ---- end phone pass ---- */
+</style>
+<link rel="stylesheet" href="assets/micro.css">
+<link rel="stylesheet" href="pfa-search.css">
+<script src="pfa-search.js" defer></script>
+<!-- The editorial layer: loads after the page's own style and the microsite
+     kit, so the theme wins ties (test/hero-alignment.test.js). -->
+<link rel="stylesheet" href="assets/pfa-theme.css">
+  <!-- seo:start  generated by scripts/build-seo.js - do not edit by hand -->
+  <link rel="canonical" href="https://peopleforanimalsindia.org/privacy">
+  <meta property="og:site_name" content="People for Animals">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Privacy policy">
+  <meta property="og:description" content="What the People for Animals website collects, why, who else handles it, how long it is kept, and how to ask for a copy, a correction or erasure under India's data protection law.">
+  <meta property="og:url" content="https://peopleforanimalsindia.org/privacy">
+  <meta property="og:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A People for Animals caregiver with a rescued animal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@pfaindia">
+  <meta name="twitter:title" content="Privacy policy">
+  <meta name="twitter:description" content="What the People for Animals website collects, why, who else handles it, how long it is kept, and how to ask for a copy, a correction or erasure under India's data protection law.">
+  <meta name="twitter:image" content="https://peopleforanimalsindia.org/img/og-default.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://peopleforanimalsindia.org/"},{"@type":"ListItem","position":2,"name":"Privacy policy","item":"https://peopleforanimalsindia.org/privacy"}]}</script>
+  <!-- seo:end -->
+</head>
+<body>
+
+<script id="pfa-vis">
+(function (root) {
+'use strict';
+var KEY = 'pfa:visibility';
+var LOCKED = { index: 1, track: 2, search: 2 };
+var NOTICE = 'This page is not available right now.';
+var HOME = 'Go to the home page';
+var CSS_ID = 'pfa-vis-css';
+var ROBOTS_ID = 'pfa-vis-robots';
+var GONE_ID = 'pfa-gone';
+var PAGE = /^[a-z0-9][a-z0-9-]*$/;
+var PART = /^[A-Za-z][A-Za-z0-9_-]*$/;
+var applied = { version: 0, pages: [], modules: [] };
+var title = null;
+function pagesOf(state) {
+return (state && Array.isArray(state.pages) ? state.pages : []).filter(function (p) {
+return typeof p === 'string' && PAGE.test(p) && !LOCKED[p];
+});
+}
+function modulesOf(state) {
+return (state && Array.isArray(state.modules) ? state.modules : []).filter(function (m) {
+var at = typeof m === 'string' ? m.indexOf('#') : -1;
+return at > 0 && PAGE.test(m.slice(0, at)) && PART.test(m.slice(at + 1)) && LOCKED[m.slice(0, at)] !== 2;
+});
+}
+function clean(state) {
+return { version: Number(state && state.version) || 0, pages: pagesOf(state), modules: modulesOf(state) };
+}
+function pageOf(url) {
+var p = String(url == null ? '' : url).split('#')[0].split('?')[0];
+p = p.slice(p.lastIndexOf('/') + 1).replace(/\.html$/, '');
+try { p = decodeURIComponent(p); } catch (e) {}
+return p || 'index';
+}
+function linksTo(page) {
+var f = page + '.html';
+return ['a[href="' + f + '"]', 'a[href^="' + f + '#"]', 'a[href^="' + f + '?"]',
+'a[href$="/' + f + '"]', 'a[href*="/' + f + '#"]', 'a[href*="/' + f + '?"]'];
+}
+function plan(state, page) {
+var s = clean(state);
+var here = String(page || 'index');
+var gone = s.pages.indexOf(here) > -1;
+var links = [];
+var own = [];
+var css = '';
+s.pages.forEach(function (p) { links = links.concat(linksTo(p)); });
+s.modules.forEach(function (m) {
+var at = m.indexOf('#');
+var p = m.slice(0, at);
+var id = m.slice(at + 1);
+links.push('a[href$="' + p + '.html#' + id + '"]');
+if (p === here) {
+own.push('[id="' + id + '"]', '[data-module="' + id + '"]');
+links.push('a[href="#' + id + '"]:not([aria-current])');
+}
+});
+if (gone) links.push('a[aria-current="page"]');
+if (own.length) css += own.join(',') + '{display:none!important}';
+if (links.length) {
+var list = links.join(',');
+css += list + '{display:none!important}';
+css += links.map(function (l) { return '.navitem>' + l; }).join(',') + '{display:revert!important;pointer-events:none;cursor:default}';
+css += 'li:has(>:is(' + list + '):only-child){display:none!important}';
+css += '.navitem:not(:has(.menu>a:not(' + list + '))){display:none!important}';
+css += '.mnav__group:not(:has(>a:not(' + list + '))){display:none!important}';
+css += '.pfa-footer__col:not(:has(li>a:not(' + list + '))){display:none!important}';
+css += '.menu-label:has(+a:is(' + list + ')),.menu-label:has(+a:is(' + list + '))~.menu-sep,.mnav__sub:has(+a:is(' + list + ')){display:none!important}';
+}
+if (gone) {
+css += 'body>:not(.announce):not(header):not(.pfa-footer):not(.mnav):not(.cursor-layer):not(.pfa-search):not(#pfa-gone){display:none!important}'
++ '#pfa-gone{display:block!important;box-sizing:border-box;min-height:62vh;padding:calc(var(--ann,34px) + var(--nav,81px) + 72px) var(--gutter,20px) 96px;text-align:center;color:var(--ink,#111);background:#fff}'
++ '#pfa-gone h1{font-family:var(--display,Georgia,serif);font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.15;margin:0 0 20px}'
++ '#pfa-gone p{margin:0;font-size:16px}'
++ '#pfa-gone a{color:inherit;text-decoration:underline;text-underline-offset:4px}';
+}
+return { css: css, gone: gone };
+}
+function blocked(url, state, anchors) {
+var s = clean(state || applied);
+var u = String(url == null ? '' : url);
+var page = pageOf(u);
+if (s.pages.indexOf(page) > -1) return true;
+var at = u.indexOf('#');
+if (at < 0 || !s.modules.length) return false;
+var hash = u.slice(at + 1);
+var part = (anchors && anchors[page] && anchors[page][hash]) || hash;
+return s.modules.indexOf(page + '#' + part) > -1;
+}
+function read() {
+try {
+var raw = root.localStorage.getItem(KEY);
+return raw ? clean(JSON.parse(raw)) : null;
+} catch (e) { return null; }
+}
+function save(state) {
+try { root.localStorage.setItem(KEY, JSON.stringify(clean(state))); } catch (e) {}
+}
+function drop(node) { if (node && node.parentNode) node.parentNode.removeChild(node); }
+function apply(state) {
+var d = root.document;
+if (!d || !d.head) return null;
+applied = clean(state);
+var p = plan(applied, pageOf(root.location && root.location.pathname));
+var tag = d.getElementById(CSS_ID);
+if (!tag && p.css) {
+tag = d.createElement('style');
+tag.setAttribute('id', CSS_ID);
+d.head.appendChild(tag);
+}
+if (tag) tag.textContent = p.css;
+var robots = d.getElementById(ROBOTS_ID);
+var box = d.getElementById(GONE_ID);
+if (p.gone) {
+if (!robots) {
+robots = d.createElement('meta');
+robots.setAttribute('id', ROBOTS_ID);
+robots.setAttribute('name', 'robots');
+robots.setAttribute('content', 'noindex');
+d.head.appendChild(robots);
+}
+if (!box && d.body) {
+box = d.createElement('div');
+box.setAttribute('id', GONE_ID);
+var h = d.createElement('h1');
+h.textContent = NOTICE;
+var line = d.createElement('p');
+var home = d.createElement('a');
+home.setAttribute('href', '/');
+home.textContent = HOME;
+line.appendChild(home);
+box.appendChild(h);
+box.appendChild(line);
+d.body.insertBefore(box, d.body.firstChild);
+}
+if (title === null) title = d.title;
+d.title = 'Not available right now · People for Animals';
+} else {
+drop(robots);
+drop(box);
+if (title !== null) { d.title = title; title = null; }
+}
+return p;
+}
+root.PFA_VISIBILITY = {
+KEY: KEY, LOCKED: LOCKED, NOTICE: NOTICE,
+clean: clean, pageOf: pageOf, plan: plan, blocked: blocked,
+read: read, save: save, apply: apply,
+state: function () { return applied; }
+};
+try {
+if (root.document && root.document.head) apply(read());
+} catch (e) {}
+}(this));
+</script>
+<div class="announce" id="announce" data-cursor="light">
+  <p>Every drive, camp and open day is free to attend</p>
+  <button type="button" aria-label="Close" id="annClose">✕</button>
+</div>
+<header class="site" id="header" data-cursor="dark">
+  <nav aria-label="Main navigation">
+    <a class="wordmark" href="index.html" aria-label="People for Animals"><img src="img/logo.png" alt="People for Animals" width="231" height="79"></a>
+    <div class="navlinks">
+      <div class="navitem">
+        <a href="units.html" data-nav="units.html">Our Work</a>
+        <div class="menu">
+          <a href="units.html" data-nav="units.html">Units: find help near you</a>
+          <a href="report.html" data-nav="report.html">Report cruelty</a>
+          <a href="newsroom.html" data-nav="newsroom.html">Newsroom and cases</a>
+          <a href="achievements.html" data-nav="achievements.html">Policies and achievements</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="laws.html" data-nav="laws.html">Learn</a>
+        <div class="menu">
+          <a href="laws.html" data-nav="laws.html">What the law says</a>
+          <a href="library.html" data-nav="library.html">Resources library</a>
+          <a href="academy.html" data-nav="academy.html">Academy</a>
+          <a href="someone.html" data-nav="someone.html">Someone, not something</a>
+          <a href="quiz.html" data-nav="quiz.html">Test yourself</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
+        <div class="menu">
+          <span class="menu-label">Join the tribe</span>
+          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
+          <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
+          <a href="campus.html" data-nav="campus.html">PFA Campus</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <span class="menu-label">Give and partner</span>
+          <a href="campaign.html" data-nav="campaign.html">Plan a campaign</a>
+          <a href="legacy.html" data-nav="legacy.html">Leave a legacy</a>
+          <a href="csr.html" data-nav="csr.html">CSR partnerships</a>
+          <span class="menu-sep" aria-hidden="true"></span>
+          <a href="wall.html" data-nav="wall.html">The Wall</a>
+          <a href="events.html" data-nav="events.html">Events</a>
+          <a href="cinekind.html" data-nav="cinekind.html">CineKind</a>
+        </div>
+      </div>
+      <div class="navitem">
+        <a href="founder.html" data-nav="founder.html">About</a>
+        <div class="menu right">
+          <a href="founder.html" data-nav="founder.html">The founder</a>
+          <a href="sgacc.html" data-nav="sgacc.html">Sanjay Gandhi Animal Care Centre</a>
+          <a href="careers.html" data-nav="careers.html">Careers</a>
+          <a href="ask.html" data-nav="ask.html">Contact</a>
+        </div>
+      </div>
+      <a href="donate.html" data-nav="donate.html" class="donate">Donate</a>
+      <a href="shop.html" data-nav="shop.html" class="shop">Shop</a>
+    </div>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
+  </nav>
+</header>
+<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/field-rules.js"></script>
+<script src="assets/field-validate.js"></script>
+
+<main>
+  <section class="hero m-hero" id="top">
+    <div class="m-hero__in">
+      <div>
+        <p class="eyebrow">Privacy policy</p>
+        <h1 class="display">Privacy, in plain words.</h1>
+        <p class="lede">What this website collects, why, who else handles it, how long it is kept, and how to ask for any of it back. No legal fog: if something here is unclear, ask, and PFA will answer.</p>
+        <div class="m-hero__acts">
+          <a class="btn" href="#policy">Read the policy</a>
+          <a class="btn btn--light" href="#request">Make a request</a>
+        </div>
+      </div>
+      <aside class="pledge" aria-label="The short version">
+        <p class="pledge__top"><span>The short version</span><img src="img/mail/logo-mark.png" alt="" width="34" height="30"></p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><div><b>No tracking</b><span>No advertising cookies, no analytics that follow you, no third-party trackers.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3h6v3H9z"/><path d="M7 4.5H5V21h14V4.5h-2"/><path d="M8.5 11h7M8.5 15h4.5"/></svg><div><b>Only what you send</b><span>The site keeps what you type into a form, and the few things needed to act on it.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><path d="M12 14.5v2.5"/></svg><div><b>Never sold</b><span>Your details are not sold, rented or traded, to anyone, ever.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><div><b>Yours to ask for</b><span>A copy, a correction or erasure, under the Digital Personal Data Protection Act, 2023.</span></div></li>
+        </ul>
+        <p class="pledge__date">Last updated 9 October 2026</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band" id="glance">
+    <div class="band__head">
+      <p class="eyebrow">At a glance</p>
+      <h2 class="display">Four things to know.</h2>
+    </div>
+    <ul class="m-grid m-grid--4">
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span><h3>What a form asks</h3><p>Your name and a way to reach you, and what you chose to tell PFA. Every submission gets a reference number, so you can follow it.</p><p class="m-card__foot"><a href="#collect">What is collected</a></p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M12 9v6M9 12h6"/></svg></span><h3>Used to help</h3><p>To act on a report, answer a question, issue a card or a receipt, and keep a true record of the work. Not for marketing you did not ask for.</p><p class="m-card__foot"><a href="#why">Why it is used</a></p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="4" width="17" height="7"/><rect x="3.5" y="13" width="17" height="7"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span><h3>Kept with care</h3><p>Stored on Google Cloud, read only by PFA staff signed in to the admin panel, with every action logged.</p><p class="m-card__foot"><a href="#kept">How it is protected</a></p></li>
+      <li class="m-card"><span class="m-card__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5V4a1.5 1.5 0 0 1 3 0v6m0-4.5a1.5 1.5 0 0 1 3 0V12m0-3a1.5 1.5 0 0 1 3 0v5.5a6.5 6.5 0 0 1-6.5 6.5h-.8a6 6 0 0 1-4.6-2.2L4.4 14.5a1.6 1.6 0 0 1 2.4-2.1L7 12.6"/></svg></span><h3>Yours to control</h3><p>Ask for a copy, a correction or erasure, or withdraw your consent, from this page, at any time.</p><p class="m-card__foot"><a href="#request">Make a request</a></p></li>
+    </ul>
+  </section>
+
+  <section class="band" id="policy">
+    <div class="band__head">
+      <p class="eyebrow">The policy</p>
+      <h2 class="display">The full policy.</h2>
+      <p>This covers the People for Animals website and the forms, payments and emails it runs. PFA's units across India keep their own records of their own work.</p>
+    </div>
+    <div class="policy">
+      <nav class="toc" aria-label="On this page">
+        <p class="eyebrow">On this page</p>
+        <ol>
+          <li><a href="#who">Who we are</a></li>
+          <li><a href="#collect">What we collect</a></li>
+          <li><a href="#not">What we do not collect</a></li>
+          <li><a href="#why">Why we use it</a></li>
+          <li><a href="#others">Who else handles it</a></li>
+          <li><a href="#kept">Where it is kept</a></li>
+          <li><a href="#long">How long</a></li>
+          <li><a href="#browser">Your browser</a></li>
+          <li><a href="#children">Children</a></li>
+          <li><a href="#rights">Your rights</a></li>
+          <li><a href="#changes">Changes</a></li>
+          <li><a href="#reach">Contact</a></li>
+        </ol>
+      </nav>
+      <div class="policy__body">
+        <article class="pol" id="who">
+          <h3>Who we are</h3>
+          <p>People for Animals (PFA) is a registered charitable trust, founded by Smt. Maneka Sanjay Gandhi, with its registered office at 4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001. For this website, PFA decides what is collected and why, so under the Digital Personal Data Protection Act, 2023 it is the Data Fiduciary for what you send here.</p>
+        </article>
+
+        <article class="pol" id="collect">
+          <h3>What we collect</h3>
+          <p>Only what you give, when you choose to give it:</p>
+          <ul>
+            <li><b>Forms.</b> Reporting cruelty, asking a question, volunteering, applying for a job, a membership, a colony caregiver card, an event, a campus society, a campaign, a partnership, a legacy enquiry or a request on this page. Each takes your name, a way to reach you (email, mobile or both) and what you write.</li>
+            <li><b>Photographs.</b> Up to three with a cruelty report, and your own photograph with a caregiver card application, for the card. Please leave out faces and number plates unless they matter to the report.</li>
+            <li><b>Payments.</b> For a donation, membership, card fee or shop order: the amount, what it is for, your name, contact details and, where needed, a postal address. A PAN, only if you give one for an 80G receipt. Card and bank details go to the payment provider, never to PFA.</li>
+            <li><b>A gift.</b> If you give in someone's name: their name and where to send the certificate.</li>
+            <li><b>Replies.</b> If you answer an email from PFA, your reply is filed with your submission, so the whole conversation is in one place.</li>
+            <li><b>A location, if you ask.</b> Pressing "use my location" sends your position once, to fill in the address. It is not tracked.</li>
+          </ul>
+        </article>
+
+        <article class="pol" id="not">
+          <h3>What we do not collect</h3>
+          <ul>
+            <li>No advertising or analytics cookies, and no tracking pixels. The website sets no cookies of its own.</li>
+            <li>No record of what you type into search. The site counts which pages people open from search, as a number against the page, and nothing about who opened them.</li>
+            <li>No profile of you built from your visits. The visit counter in the footer is a single number.</li>
+            <li>Your network address is used for up to an hour to stop floods of automated submissions, and is stored only as a one-way scramble that cannot be turned back into the address.</li>
+          </ul>
+        </article>
+
+        <article class="pol" id="why">
+          <h3>Why we use it</h3>
+          <ul>
+            <li>To act on what you sent: pass a report to the right people, answer a question, consider an application, issue a card, a certificate or a receipt.</li>
+            <li>To reply to you, and to send the confirmation with your reference number.</li>
+            <li>To keep a true record of PFA's work, and of the money it receives, as the law asks of a charity.</li>
+            <li>To keep the site safe from abuse.</li>
+          </ul>
+          <p>PFA relies on your consent, given when you send a form, and on the uses the law allows without it, such as keeping financial records or helping in an emergency. PFA does not send newsletters or appeals you did not ask for.</p>
+        </article>
+
+        <article class="pol" id="others">
+          <h3>Who else handles it</h3>
+          <p>Every submission is copied by email to PFA's office inbox, so it is never missed, and is read there by the people who act on it. Beyond PFA, a few providers handle data on PFA's behalf, each only for its own part:</p>
+          <ul class="proc">
+            <li><b>Google Cloud (Firebase)</b><span>Stores the submissions, photographs and the admin panel's records.</span></li>
+            <li><b>Vercel and Google Firebase</b><span>Host the website and run the server that receives forms.</span></li>
+            <li><b>CCAvenue</b><span>Takes payments in India. Your card or bank details stay with them.</span></li>
+            <li><b>PayPal</b><span>Takes gifts from outside India, and issues its own receipt.</span></li>
+            <li><b>PFA's mailbox, with a backup sender</b><span>Sends confirmations, replies and the office copy of each submission.</span></li>
+            <li><b>OpenStreetMap, BigDataCloud, India Post</b><span>Turn a location or a pincode into an address, only when you ask.</span></li>
+            <li><b>YouTube and Vimeo</b><span>Play the films on the site. YouTube plays in its privacy-enhanced mode.</span></li>
+            <li><b>Authorities</b><span>When the law requires it, or to act on a cruelty report: the police, a court or an animal welfare authority.</span></li>
+          </ul>
+          <p>Films sent to The Wall, and nominations to CineKind, may be shown publicly, as the form says before you send. Nothing else you send is published.</p>
+        </article>
+
+        <article class="pol" id="kept">
+          <h3>Where it is kept, and how it is protected</h3>
+          <ul>
+            <li>Submissions are read only by PFA staff signed in to the admin panel. Every change a staff member makes is written to an audit log.</li>
+            <li>Photographs and documents are kept in private storage that no browser can open; staff see them only through the signed-in admin panel.</li>
+            <li>Following a submission on the site needs both its reference number and the email or mobile it was sent with.</li>
+            <li>Connections to the site are encrypted. Some providers above may process data on servers outside India; PFA uses only providers bound to keep it secure.</li>
+          </ul>
+        </article>
+
+        <article class="pol" id="long">
+          <h3>How long it is kept</h3>
+          <ul>
+            <li>A submission is kept as PFA's record of the work, until you ask for it to be erased.</li>
+            <li>Payment and donation records are kept for as long as tax and charity law require, even if you ask otherwise.</li>
+            <li>A photograph uploaded for a caregiver card that is never paid for is deleted after a day.</li>
+            <li>The scrambles used against floods expire after an hour at most.</li>
+          </ul>
+        </article>
+
+        <article class="pol" id="browser">
+          <h3>What your browser keeps</h3>
+          <p>A few conveniences are saved in your own browser's storage, not on PFA's servers, and never sent anywhere: your shopping bag, your recent searches, the reference numbers you have followed, your reading place and settings in the library, your choices on The Wall and in the cinema player, and a half-filled caregiver application so it is not lost. Clearing your browser's site data removes them all.</p>
+        </article>
+
+        <article class="pol" id="children">
+          <h3>Children</h3>
+          <p>The forms are meant for adults. Anyone under 18 should ask a parent or guardian to send a form with them, or for them. If PFA learns it holds a child's details without that, it will erase them, except where they are needed to help an animal in danger.</p>
+        </article>
+
+        <article class="pol" id="rights">
+          <h3>Your rights</h3>
+          <p>Under the Digital Personal Data Protection Act, 2023 you may ask PFA:</p>
+          <ul class="rights">
+            <li><b>For a summary</b><span>Of what PFA holds about you, and who it was shared with.</span></li>
+            <li><b>To correct it</b><span>Or complete it, or bring it up to date.</span></li>
+            <li><b>To erase it</b><span>Unless the law requires PFA to keep it.</span></li>
+            <li><b>To stop</b><span>Withdraw your consent. What was done before stays lawful.</span></li>
+            <li><b>To hear a grievance</b><span>And to escalate it to the Data Protection Board of India if it is not resolved.</span></li>
+            <li><b>To nominate</b><span>Someone to act for you if you die or cannot act yourself.</span></li>
+          </ul>
+          <p>Use the form below, or write to PFA. PFA may need to confirm it is you before it acts, and replies within the time the law sets.</p>
+        </article>
+
+        <article class="pol" id="changes">
+          <h3>Changes to this policy</h3>
+          <p>When the site changes what it collects or why, this page changes first, with a new date at the top. A change that needs your consent again will ask for it.</p>
+        </article>
+
+        <article class="pol" id="reach">
+          <h3>Contact and grievances</h3>
+          <p>People for Animals, 4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001. Email <a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a>, or use the form below, which gives you a reference number to follow.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="request">
+    <div class="band__head">
+      <p class="eyebrow">Make a request</p>
+      <h2 class="display">Ask for your data.</h2>
+      <p>A copy, a correction, erasure, or a question. Your request is filed with a reference number and goes straight to PFA's office.</p>
+    </div>
+    <div class="req">
+      <div>
+        <form class="m-form" id="privacyForm" novalidate>
+          <div class="m-step is-current" data-step="Request">
+            <div class="field">
+              <label>What would you like?</label>
+              <ul class="m-picks m-picks--2" data-need="request" data-say="Choose what you would like.">
+                <li class="m-pick"><input type="radio" name="request" id="r1" value="A copy of what PFA holds about me"><label for="r1"><b>A copy</b><small>of what PFA holds about me</small></label></li>
+                <li class="m-pick"><input type="radio" name="request" id="r2" value="A correction"><label for="r2"><b>A correction</b><small>something is wrong or out of date</small></label></li>
+                <li class="m-pick"><input type="radio" name="request" id="r3" value="Erase what I sent"><label for="r3"><b>Erasure</b><small>erase what I sent</small></label></li>
+                <li class="m-pick"><input type="radio" name="request" id="r4" value="Withdraw my consent"><label for="r4"><b>Stop</b><small>withdraw my consent</small></label></li>
+                <li class="m-pick"><input type="radio" name="request" id="r5" value="A question about this policy"><label for="r5"><b>A question</b><small>about this policy</small></label></li>
+              </ul>
+              <p class="err" data-err-for="request" hidden></p>
+            </div>
+            <div class="row">
+              <div class="field"><label for="name">Your name</label><input id="name" name="name" required data-say="Add your name." autocomplete="name"><p class="err" hidden></p></div>
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required data-say="Add the email PFA should answer." autocomplete="email"><p class="err" hidden></p></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="mobile">Mobile <small>(optional)</small></label><input id="mobile" name="mobile" data-mobile inputmode="tel" autocomplete="tel" placeholder="10 digits"><p class="err" hidden></p></div>
+              <div class="field"><label for="references">Reference numbers <small>(optional)</small></label><input id="references" name="references" placeholder="PFA-Q-2026-00012"><p class="err" hidden></p></div>
+            </div>
+            <div class="field"><label for="details">Details <small>(optional)</small></label><textarea id="details" name="details" maxlength="2000" placeholder="What to correct, which submission, or your question."></textarea></div>
+            <label class="check"><input type="checkbox" id="consent" data-confirm data-say="Please confirm before sending."> <span>This request is about my own details, or I am allowed to make it for the person it is about.</span></label>
+            <p class="err" data-err-for="consent" hidden></p>
+            <p class="status" data-form-status hidden></p>
+            <div class="m-nav"><button class="btn" type="submit" data-send>Send the request</button></div>
+          </div>
+        </form>
+        <div class="m-done" id="done" hidden>
+          <p class="eyebrow">Received</p>
+          <p class="ref" id="doneRef"></p>
+          <p>Your request is on record and with PFA's office. PFA may write to confirm it is you, then replies at the email you gave.</p>
+          <div class="acts">
+            <button class="btn btn--ghost" type="button" data-copy>Copy the number</button>
+            <a class="btn btn--ghost" href="track.html" data-track>Follow it</a>
+          </div>
+        </div>
+      </div>
+      <ol class="m-path">
+        <li><b>Filed</b><span>You get a reference number at once, and an email with it.</span></li>
+        <li><b>Checked</b><span>PFA may ask you to confirm it is you, so no one else can ask for your details.</span></li>
+        <li><b>Answered</b><span>PFA replies at your email, and the reference shows where it stands.</span></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
+       table: a hairline under every label, six equal columns that squeezed
+       the office into three lines, and its own gutter, a few pixels inside
+       the page's. Now it sits on the page's gutter, with the header. A bar
+       opens it: the name, and the two things most people come down here
+       for, reporting cruelty and giving. Under a single rule, the office
+       column (a little wider, so the address reads as an address) and five
+       link groups, each opened by a short pop tick and its label, no rules
+       between them. The legal line closes it, with the privacy policy.
+
+       The groups follow the header: Our Work, Learn, Get Involved, then its
+       "Give and partner" list as a group of its own, and About.
+
+       Every block is block-level in the markup: assets/ is cached for an hour
+       and the HTML is not, so for up to an hour after a deploy this markup
+       meets the previous chrome.css, and it still reads top to bottom. -->
+  <div class="pfa-footer__bar">
+    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
+    <div class="pfa-footer__acts">
+      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
+      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
+    </div>
+  </div>
+  <div class="pfa-footer__grid">
+    <div class="pfa-footer__office">
+      <p class="pfa-footer__label">Registered office</p>
+      <!-- As published on peopleforanimalsindia.org. tel: and mailto: so a
+           phone dials and a mail client opens; the numbers hold together with
+           non-breaking spaces, because a number split across two lines cannot
+           be dialled. -->
+      <address class="pfa-footer__where" id="contact">
+        <div>4-T, DCM Building, 16 Barakhamba Road, New Delhi 110001, India</div>
+        <div class="pfa-footer__tel"><a href="tel:+911120818191">+91&nbsp;11&nbsp;2081&nbsp;8191</a><span class="pfa-footer__dot"> · </span><a href="tel:+911120818194">+91&nbsp;11&nbsp;2081&nbsp;8194</a></div>
+        <div><a href="mailto:gandhim@exmpls.sansad.in">gandhim@exmpls.sansad.in</a></div>
+      </address>
+      <nav class="pfa-footer__social" aria-label="Social media">
+        <a href="https://www.instagram.com/pfa.official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.facebook.com/people4animals/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/pfaindia" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.youtube.com/@peopleforanimals9047" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
+      <!-- Real count, from /api/visits. Hidden until a number actually
+           arrives, so a counter that cannot reach the server shows nothing
+           rather than a zero or an invented figure. No caption; the
+           aria-label names it for a screen reader. -->
+      <div class="pfa-tally" id="pfaTally" hidden>
+        <div class="pfa-tally__odo" id="pfaTallyOdo" role="status" aria-live="polite" aria-label="Visit counter"></div>
+      </div>
+    </div>
+    <nav class="pfa-footer__col" aria-label="Our Work">
+      <p class="pfa-footer__label">Our Work</p>
+      <ul>
+        <li><a href="units.html">Units near you</a></li>
+        <li><a href="report.html">Report cruelty</a></li>
+        <li><a href="newsroom.html">Newsroom and cases</a></li>
+        <li><a href="achievements.html">Policies and achievements</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Learn">
+      <p class="pfa-footer__label">Learn</p>
+      <ul>
+        <li><a href="laws.html">What the law says</a></li>
+        <li><a href="library.html">Resources library</a></li>
+        <li><a href="academy.html">Academy</a></li>
+        <li><a href="quiz.html">Test yourself</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Get Involved">
+      <p class="pfa-footer__label">Get Involved</p>
+      <ul>
+        <li><a href="get-involved.html#volunteer">Volunteer</a></li>
+        <li><a href="get-involved.html#membership">Become a member</a></li>
+        <li><a href="caregiver-card.html">Colony caregiver card</a></li>
+        <li><a href="campus.html">PFA Campus</a></li>
+        <li><a href="wall.html">The Wall</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cinekind.html">CineKind</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="Give and partner">
+      <p class="pfa-footer__label">Give and partner</p>
+      <ul>
+        <li><a href="donate.html">Donate</a></li>
+        <li><a href="donate.html?gift=1">Make a gift</a></li>
+        <li><a href="campaign.html">Plan a campaign</a></li>
+        <li><a href="legacy.html">Leave a legacy</a></li>
+        <li><a href="csr.html">CSR partnerships</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+    <nav class="pfa-footer__col" aria-label="About">
+      <p class="pfa-footer__label">About</p>
+      <ul>
+        <li><a href="founder.html">Founder</a></li>
+        <li><a href="sgacc.html">Animal Care Centre</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="ask.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="pfa-footer__base">
+    <p>People for Animals © 2026</p>
+    <p>Registered charity · All donations tax-deductible</p>
+    <p><a href="privacy.html">Privacy policy</a></p>
+  </div>
+</footer>
+
+<script src="assets/form-preview.js"></script>
+<script src="pfa-forms.js"></script>
+<script src="assets/micro.js"></script>
+<script>
+(function () {
+  'use strict';
+  var M = window.PFAMicro;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  if (!M) return;
+
+  /* ---- the contents follow the reader: the section whose head has passed
+     a third of the way down the window is the one being read ---- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var parts = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var queued = false;
+  function mark() {
+    queued = false;
+    var line = window.innerHeight * 0.35;
+    var at = -1;
+    parts.forEach(function (el, i) { if (el && el.getBoundingClientRect().top <= line) at = i; });
+    var body = document.querySelector('.policy__body');
+    if (body && body.getBoundingClientRect().bottom < line) at = -1;
+    links.forEach(function (a, i) { if (i === at) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  }
+  window.addEventListener('scroll', function () { if (!queued) { queued = true; window.requestAnimationFrame(mark); } }, { passive: true });
+  mark();
+
+  /* ---- a request ---- */
+  var form = $('#privacyForm');
+  form.addEventListener('input', function (e) { if (e.target.closest('.field')) M.flag(e.target, ''); });
+  form.addEventListener('change', function (e) {
+    if (e.target.name) M.say(form.querySelector('[data-err-for="' + e.target.name + '"]'), '');
+    if (e.target.id) M.say(form.querySelector('[data-err-for="' + e.target.id + '"]'), '');
+  });
+
+  M.send({
+    form: form,
+    ready: function () { var bad = M.checkStep(form); if (bad && bad.focus) bad.focus(); return !bad; },
+    kind: 'PFA-PRV',
+    page: 'privacy.html',
+    button: form.querySelector('[data-send]'),
+    status: form.querySelector('[data-form-status]'),
+    done: $('#done'),
+    doneRef: $('#doneRef'),
+    preview: { title: 'Check your request', send: 'Send the request', labels: { request: 'Asking for', references: 'Reference numbers' } },
+    data: function () {
+      return {
+        request: M.picked(form, 'request'),
+        name: $('#name').value.trim(),
+        email: $('#email').value.trim(),
+        mobile: M.digits($('#mobile').value),
+        references: $('#references').value.trim(),
+        details: $('#details').value.trim()
+      };
+    }
+  });
+}());
+</script>
+</body>
+</html>
