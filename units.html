@@ -65,7 +65,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>Units | People for Animals</title>
 <meta name="description" content="People for Animals shelters, hospitals and rescue units across India.">
-<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<link rel="stylesheet" href="assets/chrome.css?v=cafe4128cd">
 <style>
 :root{
   --paper:#fff;
@@ -540,7 +540,7 @@ if (root.document && root.document.head) apply(read());
         <a href="get-involved.html" data-nav="get-involved.html">Get Involved</a>
         <div class="menu">
           <span class="menu-label">Join the tribe</span>
-          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#volunteer" data-nav="get-involved.html#volunteer">Volunteer</a>
           <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
           <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
           <a href="campus.html" data-nav="campus.html">PFA Campus</a>
@@ -570,7 +570,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/chrome.js?v=71950552a5"></script>
 
 <main>
 
@@ -1070,9 +1070,9 @@ if (root.document && root.document.head) apply(read());
         /* Every number is dialable. Where a unit publishes two, the second is
            a link as well: a shelter that gives an alternate number expects it
            to be rung. */
-        reach = '<span class="u-unit__tel">' + k.t.map(function(n){
+        reach = '<span class="u-unit__tel dots">' + k.t.map(function(n){
           return '<a href="tel:' + esc(tel(n)) + '">' + esc(n) + '</a>';
-        }).join(' \u00b7 ') + '</span>';
+        }).join('') + '</span>';
         if (k.e) reach += '<a class="u-unit__mail" href="mailto:' + esc(k.e) + '">' + esc(k.e) + '</a>';
         /* Forty-three of the eighty publish no shelter address. The row simply
            does not carry one rather than carrying an empty label. */

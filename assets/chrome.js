@@ -17,6 +17,22 @@
 (function () {
   'use strict';
 
+  /* A line of items with dots between them that never wraps onto a dot:
+     the items as spans in .dots (assets/chrome.css), which draws the dots.
+     Empty items are left out. Pages call it where they used to join text
+     with " · " (owner, 9 Oct 2026: "ensure no such lapses exist"). */
+  window.PFADots = function (el, items) {
+    if (!el) return;
+    el.classList.add('dots');
+    el.textContent = '';
+    (items || []).forEach(function (t) {
+      if (t == null || !String(t).trim()) return;
+      var span = document.createElement('span');
+      span.textContent = String(t);
+      el.appendChild(span);
+    });
+  };
+
   /* Right-click is switched off site-wide. This only removes the context
      menu; it does not stop anyone saving an image or reading the source. */
   document.addEventListener('contextmenu', function (event) { event.preventDefault(); }, true);

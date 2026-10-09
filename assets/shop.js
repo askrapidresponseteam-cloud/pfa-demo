@@ -155,7 +155,10 @@
       if (src) { var im = el('img'); im.src = src; im.alt = ''; pic.appendChild(im); }
       var mid = el('div');
       mid.appendChild(el('p', 'line__name', p.name));
-      mid.appendChild(el('p', 'line__meta', 'Size ' + l.size + ' · ' + rupees(p.price) + ' each'));
+      var meta = el('p', 'line__meta dots');
+      meta.appendChild(el('span', '', 'Size ' + l.size));
+      meta.appendChild(el('span', '', rupees(p.price) + ' each'));
+      mid.appendChild(meta);
       if (p.atDispatch) mid.appendChild(el('p', 'line__note', AT_DISPATCH));
       var q = el('div', 'qty');
       var minus = el('button', null, '-'); minus.type = 'button'; minus.setAttribute('aria-label', 'One fewer');

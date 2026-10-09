@@ -303,27 +303,6 @@
    ]
   },
   {
-   "id": "get-involved",
-   "file": "get-involved.html",
-   "title": "Get Involved",
-   "group": "Get Involved",
-   "menu": "Volunteer",
-   "modules": [
-    {
-     "id": "volunteer",
-     "label": "Volunteer"
-    },
-    {
-     "id": "membership",
-     "label": "Become a member"
-    },
-    {
-     "id": "caregiver",
-     "label": "Colony caregiver"
-    }
-   ]
-  },
-  {
    "id": "campus",
    "file": "campus.html",
    "title": "PFA Campus",
@@ -576,6 +555,27 @@
    ]
   },
   {
+   "id": "get-involved",
+   "file": "get-involved.html",
+   "title": "Get Involved",
+   "group": "Get Involved",
+   "menu": "",
+   "modules": [
+    {
+     "id": "volunteer",
+     "label": "Volunteer"
+    },
+    {
+     "id": "membership",
+     "label": "Become a member"
+    },
+    {
+     "id": "caregiver",
+     "label": "Colony caregiver"
+    }
+   ]
+  },
+  {
    "id": "founder",
    "file": "founder.html",
    "title": "Founder",
@@ -637,7 +637,7 @@
     },
     {
      "id": "help",
-     "label": "Three ways to help, one form for all of them."
+     "label": "Bring supplies, or bring a group."
     },
     {
      "id": "visit",

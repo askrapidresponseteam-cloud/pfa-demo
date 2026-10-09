@@ -64,7 +64,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>Plan a campaign | People for Animals</title>
 <meta name="description" content="Raise money, supplies or voices for animals: pick a cause and a format, set a goal, watch your campaign take shape, and send the plan to PFA.">
-<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<link rel="stylesheet" href="assets/chrome.css?v=cafe4128cd">
 <style>
 /* Plan a campaign (owner, 9 Oct 2026: a microsite for it). The old Campaigns page listed two fundraisers; this keeps the cow care cause they raised for and lets anyone plan one of their own, with PFA's reply before anything is collected in its name. */
 :root{
@@ -368,7 +368,7 @@ if (root.document && root.document.head) apply(read());
         <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
         <div class="menu">
           <span class="menu-label">Join the tribe</span>
-          <a href="get-involved.html" data-nav="get-involved.html">Volunteer</a>
+          <a href="get-involved.html#volunteer" data-nav="get-involved.html#volunteer">Volunteer</a>
           <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
           <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
           <a href="campus.html" data-nav="campus.html">PFA Campus</a>
@@ -398,7 +398,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/chrome.js?v=71950552a5"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
 
@@ -569,10 +569,10 @@ if (root.document && root.document.head) apply(read());
           <div class="camp__body">
             <span class="m-tag" id="campCause">Choose a cause</span>
             <h4 class="display" id="campTitle" style="font-size:clamp(22px,2vw,30px)">Your campaign</h4>
-            <p class="camp__by" id="campBy">by you &middot; a way to raise</p>
+            <p class="camp__by dots" id="campBy"><span>by you</span><span>a way to raise</span></p>
             <div class="camp__goal"><span>raised so far</span><b id="campGoal">₹25,000</b></div>
             <div class="camp__track"><span></span></div>
-            <p class="camp__by" id="campWhen">When and where</p>
+            <p class="camp__by dots" id="campWhen"><span>When and where</span></p>
           </div>
         </article>
         <p class="m-note">A preview. Nothing is published until PFA has read your plan and replied.</p>
@@ -726,6 +726,11 @@ if (root.document && root.document.head) apply(read());
   var form = $('#campForm');
   if (!M || !form) return;
   function rupees(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+  /* a dotted run of items that never wraps onto a dot (.dots, assets/chrome.css) */
+  function run(el, items) {
+    el.textContent = '';
+    items.forEach(function (t) { var b = document.createElement('span'); b.textContent = t; el.appendChild(b); });
+  }
 
   /* the campaign card beside the form */
   function paint() {
@@ -744,11 +749,11 @@ if (root.document && root.document.head) apply(read());
     var title = $('#title').value.trim();
     $('#campTitle').textContent = title || 'Your campaign';
     var name = $('#name').value.trim();
-    $('#campBy').textContent = 'by ' + (name || 'you') + ' · ' + (format ? format.charAt(0).toLowerCase() + format.slice(1) : 'a way to raise');
+    run($('#campBy'), ['by ' + (name || 'you'), format ? format.charAt(0).toLowerCase() + format.slice(1) : 'a way to raise']);
     $('#campGoal').textContent = type === 'Money' ? rupees(money) : ($('#goalText').value.trim() || (type === 'Supplies' ? 'Supplies' : 'Awareness'));
     form.closest('.m-builder').querySelector('.camp__goal span').textContent = type === 'Money' ? 'goal' : (type === 'Supplies' ? 'collecting' : 'raising');
-    var where = [$('#when').value.trim(), $('#city').value.trim()].filter(Boolean).join(' · ');
-    $('#campWhen').textContent = where || 'When and where';
+    var where = [$('#when').value.trim(), $('#city').value.trim()].filter(Boolean);
+    run($('#campWhen'), where.length ? where : ['When and where']);
     /* the cows have their own photographs; every other cause shows its name on a plate */
     var img = $('#campImg');
     var ph = $('#campPh');

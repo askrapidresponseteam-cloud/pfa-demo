@@ -53,7 +53,7 @@ const NAV = [
   'someone.html|Someone, not something',
   'quiz.html|Test yourself',
   'get-involved.html|Get Involved',
-  'get-involved.html|Volunteer',
+  'get-involved.html#volunteer|Volunteer',          /* the one volunteer application, as in the footer (9 Oct 2026) */
   'get-involved.html#membership|Become a member',
   'get-involved.html#caregiver|Colony caregiver', /* leads to applying; the card page itself left the nav, 15 Sep 2026 */
   'campus.html|PFA Campus',                          /* the microsites, 9 Oct 2026 */

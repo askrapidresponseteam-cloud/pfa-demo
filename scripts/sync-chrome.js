@@ -66,7 +66,7 @@ const PAGES = {
   'report.html':       { current: 'report.html',               group: 'units.html',       announce: 'An animal being hurt? Call 112 first, then tell us here' },
   'newsroom.html':     { current: 'newsroom.html',    group: 'units.html',       announce: DEFAULT_ANNOUNCE },
   'wall.html':         { current: 'wall.html',        group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
-  'get-involved.html': { current: 'get-involved.html', group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },
+  'get-involved.html': { current: 'get-involved.html#volunteer', group: 'get-involved.html', announce: DEFAULT_ANNOUNCE }, /* the menu's Volunteer opens the one volunteer application, as the footer's does (9 Oct 2026) */
   'cinekind.html':     { current: 'cinekind.html',    group: 'get-involved.html', announce: 'CineKind 2026 · Mumbai · 4 October' }, /* the credit went back over the photograph and above the trophy, where it reads; putting it here cost the hero 115px of black and left the bar saying the same sentence twice. The bar keeps the where and the when */
   'donate.html':       { current: 'donate.html',      group: null,               announce: DEFAULT_ANNOUNCE },
   'events.html':       { current: 'events.html',      group: 'get-involved.html', announce: DEFAULT_ANNOUNCE },

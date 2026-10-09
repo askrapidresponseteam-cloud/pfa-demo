@@ -227,7 +227,8 @@
       var b = all[at];
       img.src = b.getAttribute('data-full');
       img.alt = b.getAttribute('data-alt') || '';
-      if (cap) cap.textContent = (at + 1) + ' of ' + all.length + (b.getAttribute('data-alt') ? ' · ' + b.getAttribute('data-alt') : '');
+      var capLine = [(at + 1) + ' of ' + all.length, b.getAttribute('data-alt') || ''];
+      if (cap) { if (root.PFADots) root.PFADots(cap, capLine); else cap.textContent = capLine.filter(Boolean).join(' \u00b7 '); }
       if (!dialog.open) {
         if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
       }

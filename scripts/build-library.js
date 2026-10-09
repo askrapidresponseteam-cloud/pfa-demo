@@ -205,7 +205,8 @@ function card(item, shelf, meta) {
     '<div class="book__body">',
     `<h3 class="book__title"><a href="${read}">${esc(item.title)}</a></h3>`,
     `<p class="book__blurb">${esc(item.blurb)}</p>`,
-    facts.length ? `<p class="book__facts">${facts.map((f) => esc(f).replace(/ /g, '\u00A0')).join('<span aria-hidden="true"> \u00B7 </span>')}</p>` : '',
+    /* each fact whole, the dots drawn between them (.dots in assets/chrome.css) */
+    facts.length ? `<p class="book__facts dots">${facts.map((f) => `<span>${esc(f).replace(/ /g, '\u00A0')}</span>`).join('')}</p>` : '',
     '<p class="book__progress" hidden><span class="book__bar"><span></span></span><span class="book__pct"></span></p>',
     '<p class="book__actions">',
     `<a class="book__read" href="${read}">Read now</a>`,

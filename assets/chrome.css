@@ -308,6 +308,24 @@ header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));paddin
 }
 
 /* ======================================================================
+   a run of items with a dot between them (.dots)
+   ======================================================================
+   Owner, 9 Oct 2026, the footer's two numbers: "phone numbers are not
+   perfectly aligned 1 below the other. do a site wide scan and ensure no
+   such lapses exist". Written as text ("a · b"), a run that wraps leaves the
+   dot at the end of one line or the start of the next, and the next line
+   starts a space in from the first. Here each item is its own box, the dot
+   belongs to the item after it and sits in the gap between them, and the
+   run is clipped at its own left edge: an item that starts a line, the first
+   or a wrapped one, has its dot outside the clip. Every line starts exactly
+   on the edge, under the one above, and no line starts or ends with a dot.
+   The dots are drawn, not text, so a screen reader reads the items alone.
+   test/no-stray-separators.test.js. */
+.dots{--dots-gap:1.1em;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:var(--dots-gap);row-gap:.1em;clip-path:inset(-.5em -.5em -.5em 0)}
+.dots>*{position:relative;min-width:0}
+.dots>*::before{content:"\00b7";content:"\00b7" / "";position:absolute;right:100%;width:var(--dots-gap);text-align:center;pointer-events:none}
+
+/* ======================================================================
    site footer: identical on every page
    ====================================================================== */
 
@@ -369,8 +387,14 @@ header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));paddin
 .pfa-footer__where div:first-child{margin-bottom:4px}
 .pfa-footer__where a{color:#3a3a3a;white-space:nowrap}
 .pfa-footer__where a:hover{color:var(--ff-fg);opacity:1;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
-.pfa-footer__tel a{display:inline-block}
-.pfa-footer__dot{color:var(--ff-line)}
+/* The two numbers, one to a line at every width, each starting on the
+   column's edge (owner, 9 Oct 2026: "phone numbers are not perfectly aligned
+   1 below the other"): side by side they wrapped where the column was
+   narrow, and the second began with the separator, a space in from the
+   first. The separator is for a stylesheet that does not know this one. */
+.pfa-footer__tel a{display:block;width:fit-content}
+.pfa-footer__tel a + .pfa-footer__dot + a{margin-top:6px}
+.pfa-footer__dot{display:none}
 /* PFA on social media, under the office */
 .pfa-footer__social{display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;margin:16px 0 0;
   font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em}

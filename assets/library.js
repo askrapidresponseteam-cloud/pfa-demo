@@ -106,7 +106,15 @@
     $('libContinueTitle').href = href;
     $('libContinueGo').href = href;
     $('libContinueGo').textContent = first.entry.done ? 'Read it again' : 'Resume reading';
-    $('libContinueWhere').textContent = whereLabel(first.entry, item);
+    /* the page and when, as a dotted run that never wraps onto a dot */
+    var where = $('libContinueWhere');
+    where.classList.add('dots');
+    where.textContent = '';
+    whereLabel(first.entry, item).split(' \u00B7 ').forEach(function (bit) {
+      var span = document.createElement('span');
+      span.textContent = bit;
+      where.appendChild(span);
+    });
     $('libContinuePct').textContent = progressLabel(first.entry);
     var p = pct(first.entry);
     document.querySelector('.lib-continue__bar').hidden = first.entry.pct === undefined || first.entry.pct === null;

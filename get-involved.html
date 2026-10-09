@@ -64,7 +64,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Get Involved &#183; People for Animals</title>
 <meta name="description" content="Volunteer with People for Animals, become a member, or apply for a colony caregiver card. Every application is read by a named person and you are told where yours has got to.">
-<link rel="stylesheet" href="assets/chrome.css?v=1f2cee447e">
+<link rel="stylesheet" href="assets/chrome.css?v=cafe4128cd">
 <style>
 :root{
   --paper:#fff;
@@ -300,6 +300,8 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 .gi__area b{font-size:14px}
 .gi__area span{font-size:13px;line-height:1.5;color:var(--muted)}
 .gi__areahint{margin:18px 0 0;font-size:12px;color:var(--muted)}
+.gi__areanote{margin:14px 0 0;font-size:13px;line-height:1.55;color:var(--muted)}
+.gi__areanote a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 .gi__stages{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .gi__stage{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
   border:1px solid var(--line);padding:7px 12px}
@@ -669,7 +671,7 @@ if (root.document && root.document.head) apply(read());
         <a href="get-involved.html" data-nav="get-involved.html" class="in-section">Get Involved</a>
         <div class="menu">
           <span class="menu-label">Join the tribe</span>
-          <a href="#top" data-nav="get-involved.html" class="current" aria-current="page">Volunteer</a>
+          <a href="get-involved.html#volunteer" data-nav="get-involved.html#volunteer" class="current" aria-current="page">Volunteer</a>
           <a href="get-involved.html#membership" data-nav="get-involved.html#membership">Become a member</a>
           <a href="get-involved.html#caregiver" data-nav="get-involved.html#caregiver">Colony caregiver</a>
           <a href="campus.html" data-nav="campus.html">PFA Campus</a>
@@ -699,7 +701,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=2741962c1a"></script>
+<script src="assets/chrome.js?v=71950552a5"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
 
@@ -754,7 +756,9 @@ if (root.document && root.document.head) apply(read());
               <li><button type="button" class="gi__area" data-area="Hospitals" aria-pressed="false"><b>Hospitals</b><span>Assisting veterinary staff, handling animals calmly, aftercare and records.</span></button></li>
               <li><button type="button" class="gi__area" data-area="Rescue Operations" aria-pressed="false"><b>Rescue Operations</b><span>Responding to calls, safe handling and transport. Training first, always.</span></button></li>
               <li><button type="button" class="gi__area" data-area="Laws" aria-pressed="false"><b>Laws</b><span>Complaints, FIRs, following cases through and helping people use the law.</span></button></li>
+              <li><button type="button" class="gi__area" data-area="Sanjay Gandhi Animal Care Centre" data-area-key="sgacc" aria-pressed="false"><b>Sanjay Gandhi Animal Care Centre</b><span>In Delhi: feeding, grooming and cleaning, adoption and donation drives, social media and visitors.</span></button></li>
             </ul>
+            <p class="gi__areanote">A qualified vet, para vet or veterinary student? Apply as a visiting vet under <a href="careers.html#veterinary-team">Careers</a>.</p>
           </div>
         </div>
 
@@ -1242,6 +1246,15 @@ if (root.document && root.document.head) apply(read());
     });
   });
   paintAreas();
+  /* One volunteer application for all of PFA (owner, 9 Oct 2026: "is there
+     conflicting volunteer option ... ensure no conflict whatsoever"). A page
+     that sends people here can choose the area first: the Animal Care
+     Centre's page links to get-involved.html?area=sgacc#volunteer. */
+  (function(){
+    var want = (/[?&]area=([a-z-]+)/.exec(location.search) || [])[1];
+    var b = want && document.querySelector('[data-area-key="' + want + '"]');
+    if (b && b.getAttribute('aria-pressed') !== 'true') b.click();
+  })();
 
   function offline(form){
     var note = form.querySelector('[data-form-status]');

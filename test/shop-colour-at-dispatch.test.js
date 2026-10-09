@@ -35,7 +35,8 @@ function boot(savedBag) {
 
 const lines = (d) => [...d.querySelectorAll('#bagList .line')].map((row) => ({
   name: row.querySelector('.line__name').textContent,
-  meta: row.querySelector('.line__meta').textContent,
+  /* the items of the dotted run, as a reader sees them (.dots draws the dot) */
+  meta: [...row.querySelectorAll('.line__meta > span')].map((x) => x.textContent).join(' · '),
   note: row.querySelector('.line__note') ? row.querySelector('.line__note').textContent : '',
   qty: Number(row.querySelector('.qty span').textContent)
 }));
