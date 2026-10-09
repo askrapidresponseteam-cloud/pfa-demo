@@ -64,7 +64,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Get Involved &#183; People for Animals</title>
 <meta name="description" content="Volunteer with People for Animals, become a member, or apply for a colony caregiver card. Every application is read by a named person and you are told where yours has got to.">
-<link rel="stylesheet" href="assets/chrome.css?v=cafe4128cd">
+<link rel="stylesheet" href="assets/chrome.css?v=355cc1b9d7">
 <style>
 :root{
   --paper:#fff;
@@ -342,14 +342,21 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
 .gi__prev:hover{color:var(--ink)}
 .gi__prev[hidden]{visibility:hidden;display:block}
 
-/* With the script: one step at a time. The step is as tall as what it
-   says, and Continue sits right under it (owner, 9 Oct 2026, a short step
-   with Continue a screen below it: "too much blank space. some people might
-   think it is incomplete or under work"). It used to be sized to the window,
-   which left a short step a screen of empty page above its button. */
-.gi.is-guided.has-open{box-sizing:border-box;display:flex;flex-direction:column;
-  padding-bottom:clamp(40px,4vw,64px)}
-.gi.is-guided .gi__section.is-open .gi__form{display:flex;flex-direction:column}
+/* With the script, a journey is one focused screen, the way an app runs a
+   flow (owner, 9 Oct 2026: "pfa on top and again below.. looks confusing
+   right.. not the best ux"; earlier the same day, of Continue a screen below
+   a short step: "too much blank space ... incomplete or under work").
+   The screen is the window below the header: Back and the steps across the
+   top, then the step and its Continue as one block, held in the middle of
+   what is left, Continue always right under what it continues. The site's
+   footer steps aside while a journey is open (body.in-flow), so the page
+   ends with the flow and PFA's name appears once, in the header; so does
+   the announcement strip, a line about events above a form about a card. */
+.gi.is-guided.has-open{box-sizing:border-box;display:flex;flex-direction:column;min-height:100svh;
+  padding-bottom:clamp(32px,4vw,56px)}
+.gi.is-guided .gi__section.is-open .gi__form{display:flex;flex-direction:column;flex:1;justify-content:center;
+  padding:clamp(24px,4vh,56px) 0}
+body.in-flow .pfa-footer,body.in-flow .announce{display:none}
 .is-stepped .gi__step{display:none}
 /* align-content was center, and centring a grid row whose height is the
    taller of its two columns means the heading sits wherever the column
@@ -362,6 +369,8 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
    same line, and the space a short step does not need falls below it where
    nobody is reading. */
 .is-stepped .gi__step.is-current{display:grid;align-content:start}
+/* Continue belongs to the step: one block, never a screen apart */
+.gi.is-guided .gi__section.is-open .gi__form > .gi__nav{flex:none}
 .is-stepped .gi__step + .gi__step{margin-top:0}
 .is-stepped .gi__nav{display:flex;align-items:center;justify-content:space-between;gap:16px;
   margin-top:clamp(20px,3vw,36px);padding-top:18px;border-top:1px solid var(--line)}
@@ -380,7 +389,9 @@ a.card__tile:hover{opacity:1;border-color:var(--ink)}
   .gi__fields{grid-template-columns:1fr}
   .gi__progress li{font-size:0;gap:0}
   .gi__progress li::before{font-size:10px}
-  .gi.is-guided.has-open{min-height:0}
+  /* on a phone, Continue stays in reach at the foot of the screen */
+  .gi.is-guided.has-open .is-stepped .gi__nav{position:sticky;bottom:0;z-index:5;background:#fff;
+    margin-left:calc(-1 * var(--gutter));margin-right:calc(-1 * var(--gutter));padding:14px var(--gutter) calc(14px + env(safe-area-inset-bottom,0px))}
   .is-stepped .gi__step.is-current{align-content:start}
 }
 
@@ -705,7 +716,7 @@ if (root.document && root.document.head) apply(read());
     <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open the menu"><span class="burger__bars" aria-hidden="true"></span></button>
   </nav>
 </header>
-<script src="assets/chrome.js?v=71950552a5"></script>
+<script src="assets/chrome.js?v=706817d398"></script>
 <script src="assets/field-rules.js"></script>
 <script src="assets/field-validate.js"></script>
 
@@ -965,15 +976,13 @@ if (root.document && root.document.head) apply(read());
 </main>
 
 <footer class="pfa-footer" data-cursor="dark" id="donate" data-screen-label="Footer">
-  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"). It had become a
-       table: a hairline under every label, six equal columns that squeezed
-       the office into three lines, and its own gutter, a few pixels inside
-       the page's. Now it sits on the page's gutter, with the header. A bar
-       opens it: the name, and the two things most people come down here
-       for, reporting cruelty and giving. Under a single rule, the office
-       column (a little wider, so the address reads as an address) and five
-       link groups, each opened by a short pop tick and its label, no rules
-       between them. The legal line closes it, with the privacy policy.
+  <!-- Redrawn on 9 Oct 2026 (owner: "footer looking nasty"), then cut back
+       the same day (owner, the PFA name large in the header and again large
+       in the footer, under a form: "pfa on top and again below.. looks
+       confusing"). The header is where PFA's name and Donate live; the
+       footer is the directory: the office with the social links, five link
+       groups each opened by a pop tick and a label, and the legal line with
+       the privacy policy. It stands on the page's gutter, with the header.
 
        The groups follow the header: Our Work, Learn, Get Involved, then its
        "Give and partner" list as a group of its own, and About.
@@ -981,13 +990,6 @@ if (root.document && root.document.head) apply(read());
        Every block is block-level in the markup: assets/ is cached for an hour
        and the HTML is not, so for up to an hour after a deploy this markup
        meets the previous chrome.css, and it still reads top to bottom. -->
-  <div class="pfa-footer__bar">
-    <p class="pfa-footer__mark"><img class="pfa-footer__bird" src="img/mail/logo-mark.png" alt="" width="36" height="32" loading="lazy" decoding="async"><span>People for Animals</span></p>
-    <div class="pfa-footer__acts">
-      <a class="pfa-footer__btn" href="report.html">Report cruelty</a>
-      <a class="pfa-footer__btn pfa-footer__btn--solid" href="donate.html">Donate</a>
-    </div>
-  </div>
   <div class="pfa-footer__grid">
     <div class="pfa-footer__office">
       <p class="pfa-footer__label">Registered office</p>
@@ -1107,6 +1109,8 @@ if (root.document && root.document.head) apply(read());
         if (on) found = true;
       });
       wrap.classList.toggle('has-open', found);
+      document.body.classList.toggle('in-flow', found);
+      remeasure();
       if (found && focus){
         var el = document.getElementById(id);
         el.setAttribute('tabindex', '-1');
@@ -1116,10 +1120,18 @@ if (root.document && root.document.head) apply(read());
       return found;
     }
 
+    /* the strip comes and goes with the journey: the chrome re-measures on
+       resize, so the header closes or reopens the strip's gap */
+    function remeasure(){
+      try { window.dispatchEvent(new Event('resize')); } catch (_) {}
+    }
+
     function fromHash(focus){
       var id = String(location.hash || '').replace(/^#/, '');
       if (!open(id, focus)) {
         wrap.classList.remove('has-open');
+        document.body.classList.remove('in-flow');
+        remeasure();
         sections.forEach(function(s){ s.classList.remove('is-open'); });
       }
     }

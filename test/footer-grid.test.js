@@ -8,11 +8,12 @@
    address into three lines, and a gutter of its own (clamp(20px,5vw,84px))
    that sat 14px inside the page's and the header's at 1440.
 
-   Now it stands on the page's gutter; a bar carries the name and the two
-   calls most people scroll down for (report cruelty, donate) above one rule;
-   under it the office (a little wider) and five link groups, each opened by
-   the pop tick the page titles carry and a label, with no rules between
-   them; the legal line closes it with the privacy policy. These hold the
+   Now it stands on the page's gutter: the office (a little wider) and five
+   link groups, each opened by the pop tick the page titles carry and a
+   label, with no rules between them; the legal line closes it with the
+   privacy policy. The same day it lost the bar that carried the name large
+   with Report cruelty and Donate (owner, under a form: "pfa on top and again
+   below.. looks confusing"): the header is where the name and the calls live. These hold the
    structure; the widths were measured in a browser from 1920 to 320: one
    gutter with the header at every width, no sideways scroll, no link
    wrapped above 375 wide, the social links on one line wherever the office
@@ -33,15 +34,13 @@ const rule = (sel) => {
   return m ? m[1] : '';
 };
 
-test('the bar carries the name with the mark, and the two calls', () => {
-  const bar = doc.querySelector('.pfa-footer > .pfa-footer__bar');
-  assert.ok(bar, 'the bar opens the footer');
-  assert.ok(bar.querySelector('.pfa-footer__mark img.pfa-footer__bird[src="img/mail/logo-mark.png"][alt=""]'), 'the mark beside the name');
-  assert.equal(bar.querySelector('.pfa-footer__mark').textContent.trim(), 'People for Animals');
-  assert.deepEqual([...bar.querySelectorAll('.pfa-footer__acts a')].map((a) => [a.getAttribute('href'), a.textContent]),
-    [['report.html', 'Report cruelty'], ['donate.html', 'Donate']]);
-  /* ink on ink, otherwise: .pfa-footer a{color:inherit} outranks a lone class */
-  assert.match(rule('.pfa-footer a.pfa-footer__btn--solid'), /background:var\(--ff-fg\);color:#fff/);
+test('the name and the calls live in the header, not again at the foot', () => {
+  assert.equal(doc.querySelector('.pfa-footer__bar, .pfa-footer__mark, .pfa-footer__acts, .pfa-footer__btn, img'), null, 'no second brand block');
+  assert.equal(doc.querySelector('.pfa-footer').firstElementChild.className, 'pfa-footer__grid', 'the directory opens the footer');
+  assert.doesNotMatch(CSS, /\.pfa-footer__(bar|mark|acts|btn|bird)\b/, 'no styles left for it');
+  /* every link is a plain line in a list: no button to compete with the page above it */
+  for (const a of doc.querySelectorAll('.pfa-footer a')) assert.ok(a.closest('ul, address, .pfa-footer__social, .pfa-footer__base'), `${a.textContent} stands outside the directory`);
+  assert.equal(doc.querySelector('.pfa-footer [class*="btn"]'), null);
 });
 
 test('the office and five groups, in the header\'s order, each opened by a tick and a label', () => {
@@ -86,7 +85,6 @@ test('three columns below 1440, two on phones', () => {
   const phone = at(719);
   assert.match(phone, /\.pfa-footer__grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(phone, /\.pfa-footer__office\{grid-column:1 \/ -1\}/);
-  assert.match(phone, /\.pfa-footer__acts\{display:grid;grid-template-columns:1fr 1fr\}/, 'the two calls side by side');
   assert.match(phone, /\.pfa-footer ul a,\.pfa-footer__where div\{padding:6px 0\}/, 'finger-sized rows');
 });
 

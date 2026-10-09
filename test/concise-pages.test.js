@@ -7,6 +7,8 @@
    show more only when one shows interest. have things under plus if need be").
    And, the same day, of a step with Continue a screen below it: "too much
    blank space. some people might think it is incomplete or under work".
+   And of the footer's PFA name under a form: "pfa on top and again below..
+   looks confusing".
 
    A microsite is three things: a hero (a headline, one line, a button or
    two), the stage (one question at a time), and "Good to know", closed until
@@ -89,11 +91,20 @@ test('careers: short cards, and each role\'s detail under plus signs', () => {
   }
 });
 
-test('a step is as tall as what it says: Continue sits right under it', () => {
+test('a journey on Get Involved is the whole screen: step and Continue as one block, nothing else', () => {
+  /* owner, 9 Oct 2026, the PFA name large under Continue: "pfa on top and
+     again below.. looks confusing right.. not the bext ux". While a journey
+     is open the footer steps aside, the step and its Continue sit together in
+     the middle of the screen, and on a phone Continue stays at the thumb. */
   const gi = read('get-involved.html');
-  assert.doesNotMatch(gi, /\.gi\.is-guided\.has-open\{[^}]*min-height:100svh/, 'the journey is no longer sized to the window');
-  assert.doesNotMatch(gi, /\.is-stepped \.gi__step\.is-current\{[^}]*flex:1/);
-  assert.doesNotMatch(gi, /\.gi\.is-guided \.gi__section\.is-open \.gi__form\{[^}]*flex:1/);
+  assert.match(gi, /body\.in-flow \.pfa-footer,body\.in-flow \.announce\{display:none\}/, 'no footer under a form, no promo strip over it');
+  assert.match(read('assets/chrome.js'), /getComputedStyle\(ann\)\.display !== 'none'/, 'the header closes the strip\'s gap');
+  assert.match(gi, /document\.body\.classList\.toggle\('in-flow', found\)/);
+  assert.match(gi, /document\.body\.classList\.remove\('in-flow'\)/, 'and back on the landing');
+  assert.match(gi, /\.gi\.is-guided \.gi__section\.is-open \.gi__form\{[^}]*flex:1;justify-content:center/, 'centred, so no empty screen under Continue');
+  assert.match(gi, /\.gi\.is-guided \.gi__section\.is-open \.gi__form > \.gi__nav\{flex:none\}/, 'Continue belongs to the step');
+  assert.doesNotMatch(gi, /\.is-stepped \.gi__step\.is-current\{[^}]*flex:1/, 'the step is as tall as what it says');
+  assert.match(gi, /\.gi\.is-guided\.has-open \.is-stepped \.gi__nav\{position:sticky;bottom:0/, 'on a phone, Continue at the thumb');
 });
 
 test('no photograph frame ever asks for a photo', () => {

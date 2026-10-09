@@ -60,7 +60,10 @@
   function measure() {
     var ann = bar();
     var head = header();
-    var open = ann && !ann.hidden && ann.style.display !== 'none';
+    /* a page may also stand the bar down with a stylesheet rule (Get
+       Involved does while a form journey is open), so the computed display
+       counts as closed too */
+    var open = ann && !ann.hidden && ann.style.display !== 'none' && getComputedStyle(ann).display !== 'none';
     if (!ann || !open) root.style.setProperty('--ann', '0px');
     else if (ann.offsetHeight) root.style.setProperty('--ann', ann.offsetHeight + 'px');
     if (head && head.offsetHeight) root.style.setProperty('--nav', head.offsetHeight + 'px');

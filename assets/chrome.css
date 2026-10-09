@@ -336,11 +336,12 @@ header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));paddin
    Redrawn 9 Oct 2026 (owner: "footer looking nasty"). It had read as a
    spreadsheet: a hairline under every label, six equal columns that folded
    the address into three lines, and a gutter of its own a few pixels inside
-   the page's. Now it stands on the page's own gutter (the header's), a bar
-   with the name and the two calls most people scroll down for, one rule,
-   then the office (a little wider) and five link groups, each opened by the
-   pop tick the page titles carry and a label, with air between them instead
-   of rules. Below 1240 it is three columns; on phones, two. */
+   the page's. Now it stands on the page's own gutter (the header's): the
+   office (a little wider) and five link groups, each opened by the pop tick
+   the page titles carry and a label, with air between them instead of
+   rules. No second brand block: PFA's name and Donate are the header's
+   (owner, same day: "pfa on top and again below.. looks confusing"). Below
+   1440 it is three columns; on phones, two. */
 .pfa-footer{
   --ff-bg:#fff;--ff-fg:#111;--ff-muted:#6a6a6a;--ff-line:rgba(17,17,17,.12);--ff-pop:var(--pop,#ff3b18);
   --ff-body:'Helvetica Neue',Helvetica,Arial,sans-serif;
@@ -355,21 +356,6 @@ header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));paddin
 .pfa-footer p{margin:0}
 .pfa-footer a{color:inherit;text-decoration:none}
 .pfa-footer a:hover{opacity:.6}
-
-/* the bar: the name, and the two calls */
-.pfa-footer__bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
-  gap:18px 32px;margin:0 0 clamp(32px,3.4vw,48px);padding:0 0 clamp(28px,3vw,40px);border-bottom:1px solid var(--ff-line)}
-.pfa-footer__mark{display:flex;align-items:center;gap:16px;font-family:var(--ff-display);font-weight:400;
-  text-transform:uppercase;font-size:clamp(22px,2vw,30px);line-height:1;letter-spacing:.03em}
-.pfa-footer__bird{display:block;flex:none;width:auto;height:1.5em}
-.pfa-footer__acts{display:flex;flex-wrap:wrap;gap:10px}
-.pfa-footer__btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 24px;
-  border:1px solid var(--ff-fg);background:var(--ff-bg);color:var(--ff-fg);
-  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;transition:background .2s,color .2s}
-.pfa-footer__btn:hover{background:var(--ff-fg);color:#fff;opacity:1}
-/* a.class: .pfa-footer a{color:inherit} would otherwise win and leave ink on ink */
-.pfa-footer a.pfa-footer__btn--solid{background:var(--ff-fg);color:#fff}
-.pfa-footer a.pfa-footer__btn--solid:hover{background:var(--ff-bg);color:var(--ff-fg)}
 
 /* the grid: the office a little wider, five groups of one width, one gap */
 .pfa-footer__grid{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(5,minmax(0,1fr));gap:36px var(--ff-gap);align-items:start}
@@ -458,10 +444,8 @@ header.site{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));paddin
   .pfa-footer__grid{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:40px}
 }
 /* Phones: two columns. The office across the width, the groups in pairs,
-   About as one line, the calls side by side across the width. */
+   About as one line. */
 @media (max-width:719px){
-  .pfa-footer__bar{flex-direction:column;align-items:stretch;gap:20px}
-  .pfa-footer__acts{display:grid;grid-template-columns:1fr 1fr}
   .pfa-footer__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 20px}
   .pfa-footer__office{grid-column:1 / -1}
   .pfa-footer__col:last-child{grid-column:1 / -1}
