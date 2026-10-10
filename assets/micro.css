@@ -47,6 +47,15 @@
 .m-ph.is-gone::before{content:"";position:absolute;left:50%;top:50%;width:64px;height:58px;transform:translate(-50%,-60%);background:url("../img/mail/logo-mark.png") center/contain no-repeat;opacity:.16;filter:grayscale(1)}
 .m-ph.is-gone figcaption{color:var(--ink);background:none}
 a:hover .m-ph img,.m-ph--zoom:hover img{transform:scale(1.03)}
+/* Shown whole, at its own shape (owner, 10 Oct 2026, of the PFA Campus poster
+   cut at the top and bottom by its frame: "this looks clipped"). A picture
+   with words in it is marked m-ph--whole; and assets/micro.js gives a hero
+   frame this too whenever filling it would cut away more than a quarter of
+   the picture, so a graphic from the old site is never read half-cut. */
+.m-ph.m-ph--whole{aspect-ratio:auto!important;background:none;overflow:visible}
+.m-ph--whole img{position:static;display:block;width:100%;height:auto;max-height:min(78vh,760px);object-fit:contain;object-position:right top}
+.m-ph--whole figcaption{position:static;padding:10px 0 0;background:none;color:var(--muted)}
+.m-ph.m-ph--whole.is-gone{aspect-ratio:4/3!important}
 
 /* ---------- section heads inside a band ---------- */
 .m-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,72px);align-items:end;margin-bottom:clamp(32px,4vw,56px)}

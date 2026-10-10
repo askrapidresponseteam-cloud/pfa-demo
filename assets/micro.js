@@ -250,5 +250,22 @@
     dialog.addEventListener('click', function (e) { if (e.target === dialog && typeof dialog.close === 'function') dialog.close(); });
   }
 
+  /* A hero picture is never cut by more than a quarter (10 Oct 2026, the PFA
+     Campus poster read clipped): past that, its frame takes the picture's own
+     shape and shows it whole. Measured once the picture has its size. */
+  function keepWhole(fig) {
+    var img = fig.querySelector('img');
+    if (!img) return;
+    function check() {
+      if (!img.naturalWidth || !img.naturalHeight) return;
+      var r = fig.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var rn = img.naturalWidth / img.naturalHeight, rb = r.width / r.height;
+      if (Math.min(rn / rb, rb / rn) < 0.75) fig.classList.add('m-ph--whole');
+    }
+    if (img.complete) check(); else img.addEventListener('load', check, { once: true });
+  }
+  $$('.m-hero__media .m-ph:not(.m-ph--whole)').forEach(keepWhole);
+
   root.PFAMicro = { steps: steps, send: send, filter: filter, gallery: gallery, picked: picked, digits: digits, flag: flag, say: say, checkStep: checkStep };
 }(this));

@@ -172,11 +172,14 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .frame{position:relative;background:var(--stone);overflow:hidden}
 .frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
 .leg__figs{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:0}
-.leg__figs .frame--wide{grid-column:1/-1;aspect-ratio:8/3}
 .leg__figs .frame{aspect-ratio:3/2}
+/* The wide frame is the panorama's own shape, so the banner and the placards
+   at its edges are whole (10 Oct 2026). It was 8:3 in name only: the 3:2
+   rule above came after it with the same weight and won, cutting a third of
+   the picture away at the sides, the banner's last word among it. */
+.leg__figs .frame.frame--wide{grid-column:1/-1;aspect-ratio:1800/679}
 @media (max-width:720px){
   .leg__figs{grid-template-columns:1fr}
-  .leg__figs .frame--wide{aspect-ratio:2/1}
 }
 
 .leg__figs figcaption{grid-column:1/-1;padding:10px 2px 0;font-size:12px;color:var(--muted);letter-spacing:.02em}
