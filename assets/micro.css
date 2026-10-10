@@ -17,7 +17,7 @@
    ====================================================================== */
 
 /* ---------- the hero, split: words on the left, a photograph on the right */
-.m-hero__in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,88px);align-items:end;width:100%}
+.m-hero__in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,88px);align-items:start;width:100%}
 .m-hero h1{font-size:clamp(38px,5.2vw,82px);max-width:13ch}
 .m-hero .lede{margin:26px 0 0;max-width:46ch;font-size:clamp(15px,1.15vw,17px);line-height:1.65;color:rgba(17,17,17,.78)}
 .m-hero__acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
@@ -52,10 +52,14 @@ a:hover .m-ph img,.m-ph--zoom:hover img{transform:scale(1.03)}
    with words in it is marked m-ph--whole; and assets/micro.js gives a hero
    frame this too whenever filling it would cut away more than a quarter of
    the picture, so a graphic from the old site is never read half-cut. */
-.m-ph.m-ph--whole{aspect-ratio:auto!important;background:none;overflow:visible}
-.m-ph--whole img{position:static;display:block;width:100%;height:auto;max-height:min(78vh,760px);object-fit:contain;object-position:right top}
+/* The frame is the picture's own size, on the right of its column, so the
+   caption under it starts exactly at the picture's left edge (owner, 10 Oct
+   2026, of a caption standing out at the frame's edge with the photograph
+   drawn narrower inside it: "it is not properly aligned with the photo"). */
+.m-ph.m-ph--whole{aspect-ratio:auto!important;width:fit-content;max-width:100%;margin-left:auto;background:none;overflow:visible}
+.m-ph--whole img{position:static;display:block;width:auto;height:auto;max-width:100%;max-height:min(78vh,760px)}
 .m-ph--whole figcaption{position:static;padding:10px 0 0;background:none;color:var(--muted)}
-.m-ph.m-ph--whole.is-gone{aspect-ratio:4/3!important}
+.m-ph.m-ph--whole.is-gone{aspect-ratio:4/3!important;width:auto;margin-left:0}
 
 /* ---------- section heads inside a band ---------- */
 .m-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,72px);align-items:end;margin-bottom:clamp(32px,4vw,56px)}

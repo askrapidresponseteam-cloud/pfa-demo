@@ -230,7 +230,9 @@ function render(page, data) {
     '<section class="ev" id="events" aria-labelledby="evTitle">',
     '<div class="ev-head" id="top">',
     '<div class="ev-head__text">',
-    '<h1 class="ev-title" id="evTitle">Events</h1>',
+    /* the title block every page opens with (10 Oct 2026): eyebrow, tick, title */
+    '<p class="eyebrow pfa-kicker">Get involved</p>',
+    '<h1 class="pfa-title ev-title" id="evTitle">Events</h1>',
     '<p class="ev-lede">Every awards evening, drive, camp and open day PFA has held or announced, newest first.</p>',
     '</div>',
     '<div class="ev-tally">',

@@ -24,8 +24,8 @@ test('the PFA Campus poster is shown whole, and described', () => {
   assert.match(html, /<figure class="m-ph m-ph--whole" data-ph><img src="media\/site\/campus\/campus\.jpg" alt="The main focus of a PFA Campus society, in twelve parts: [^"]{60,}"/);
   const css = read('assets/micro.css');
   assert.match(css, /\.m-ph\.m-ph--whole\{aspect-ratio:auto!important;/, 'its own shape, over any hero ratio');
-  assert.match(css, /\.m-ph--whole img\{position:static;display:block;width:100%;height:auto;[^}]*object-fit:contain/);
-  assert.match(css, /\.m-ph\.m-ph--whole\.is-gone\{aspect-ratio:4\/3!important\}/, 'a picture that did not arrive still leaves its plate');
+  assert.match(css, /\.m-ph--whole img\{position:static;display:block;width:auto;height:auto;max-width:100%;max-height:/, 'drawn at its own proportions, never cut');
+  assert.match(css, /\.m-ph\.m-ph--whole\.is-gone\{aspect-ratio:4\/3!important;/, 'a picture that did not arrive still leaves its plate');
 });
 
 test('no hero picture is cut by more than a quarter', () => {

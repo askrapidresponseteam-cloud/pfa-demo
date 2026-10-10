@@ -60,7 +60,7 @@
 }
 </style>
 <meta charset="utf-8">
-<meta name="pfa-build" content="v1.418">
+<meta name="pfa-build" content="v1.419">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Shop | People for Animals</title>
@@ -111,7 +111,7 @@ input,button{font-family:inherit;font-size:inherit;color:inherit}
 .btn--light:hover{background:var(--ink);color:#fff}
 
 /* ---------- the opening ---------- */
-.hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(32px,5vw,88px);align-items:center;
+.hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(32px,5vw,88px);align-items:start;
   padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) clamp(48px,5vw,80px);border-bottom:1px solid var(--line)}
 .hero__in{min-width:0}
 .hero .eyebrow{margin:0 0 18px}
@@ -609,8 +609,8 @@ if (root.document && root.document.head) apply(read());
 <main>
   <section class="hero" id="opening" data-screen-label="Shop opening">
     <div class="hero__in">
-      <p class="eyebrow">The PFA shop</p>
-      <h1 class="display">Wear the cause.</h1>
+      <p class="eyebrow pfa-kicker">The PFA shop</p>
+      <h1 class="pfa-title display">Wear the cause.</h1>
       <p class="lede">Fourteen designers each made a T-shirt with People for Animals. Every one is a limited edition in 100% cotton, cut as a unisex drop shoulder tee, and every purchase supports PFA&rsquo;s work for animals.</p>
       <div class="hero__cta">
         <a class="btn" href="#collection">Shop the designer edit</a>

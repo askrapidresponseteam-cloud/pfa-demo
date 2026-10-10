@@ -595,8 +595,8 @@ a.modnav__a:hover{background:var(--stone);opacity:1}
 /* ---------- the deck (see the note on the section) ----------
    Sharp corners throughout, as everywhere else on this site: no card,
    pill, panel or button here carries a radius. */
-.deck{position:relative;background:var(--stone);color:var(--ink);padding:calc(var(--ann) + var(--nav) + 26px) var(--gutter) 30px;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;--cw:300px;--ch:400px;--gw:196px;--gap:18px}
-.deck__head{text-align:center;position:relative;z-index:2}
+.deck{position:relative;background:var(--stone);color:var(--ink);padding:calc(var(--ann) + var(--nav) + 72px) var(--gutter) 30px;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;--cw:300px;--ch:400px;--gw:196px;--gap:18px}
+.deck__head{text-align:left;position:relative;z-index:2}
 .deck__head .eyebrow{color:rgba(17,17,17,.55);margin:0 0 10px}
 .deck__head h1{font-size:clamp(30px,3.6vw,50px);margin:0}
 .deck__stage{position:relative;flex:1;min-height:calc(var(--ch) + 80px);margin-top:14px;transition:height .55s cubic-bezier(.2,.7,.2,1)}
@@ -652,6 +652,8 @@ a.modnav__a:hover{background:var(--stone);opacity:1}
 .hero,.u-hero{border-bottom:1px solid var(--line)}
 .leg__panel{border-top:3px solid var(--pop,#ff3b18)}
 ::selection{background:var(--pop,#ff3b18);color:#fff}
+/* the title block starts where every page's does: 72px under the header, 36px on a phone (10 Oct 2026) */
+@media (max-width:720px){.deck{padding-top:calc(var(--ann) + var(--nav) + 36px)}}
 /* ---- phone pass (scripts/mobile-pass.js): generated, do not edit ---- */
 @media (max-width:700px),(pointer:coarse){
   .aims::before,
@@ -922,8 +924,8 @@ if (root.document && root.document.head) apply(read());
        that stood in the old triage grid. -->
   <section class="deck" id="top" aria-label="The Academy, as a deck of cards">
     <div class="deck__head">
-      <p class="eyebrow">Academy</p>
-      <h1 class="display">Animal first&nbsp;aid.</h1>
+      <p class="eyebrow pfa-kicker">Academy</p>
+      <h1 class="pfa-title display">Animal first&nbsp;aid.</h1>
     </div>
     <div class="deck__stage" id="deckStage">
       <div class="deck__cards" id="deckCards">

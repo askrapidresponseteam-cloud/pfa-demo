@@ -67,3 +67,25 @@ body:has(.band ~ .band) .band--deep > .band__head > .eyebrow::before{color:rgba(
 input:not([type="radio"]):not([type="checkbox"]),select,textarea{border-radius:0}
 hr{border:0;border-top:1px solid var(--line,#e4e2df);margin:0}
 ::selection{background:var(--accent,#111);color:#fff}
+
+/* ---------- the page title block ----------
+   Owner, 10 Oct 2026, of the eyebrow, the red tick and the title sitting
+   in a different order and at different distances on every page: "these
+   items.. in 1 page, it is in 1-1 place.. no consistency at present. fix
+   this issue- site wide". Every page now opens the same way, on the page's
+   gutter: the eyebrow; 18px under it the red tick; 18px under that the
+   title, one size and one face everywhere; the line 26px under the title,
+   the buttons 32px under the line. The page's own markup carries the two
+   classes (.pfa-kicker, .pfa-title); test/title-block.test.js holds every
+   page to them, and a browser measure of every page, desktop and phone,
+   checks the distances. */
+main .pfa-kicker.pfa-kicker{display:block;margin:0 0 18px;padding:0;font-family:var(--body,'Helvetica Neue',Helvetica,Arial,sans-serif);
+  font-size:11px;font-weight:400;line-height:1.4;letter-spacing:.16em;text-transform:uppercase;color:rgba(17,17,17,.55);text-align:left}
+main h1.pfa-title.pfa-title{margin:0;padding:0;font-family:var(--display,Marcellus,Georgia,serif);font-weight:400;font-style:normal;
+  font-size:clamp(38px,5.2vw,74px);line-height:1.02;letter-spacing:.01em;text-transform:uppercase;text-align:left;color:var(--ink,#111);max-width:none}
+main h1.pfa-title.pfa-title::before{content:"";display:block;width:34px;height:3px;margin:0 0 18px;background:var(--pop,#ff3b18)}
+main h1.pfa-title.pfa-title + p,main h1.pfa-title.pfa-title + .nr-strap{margin-top:26px}
+main h1.pfa-title.pfa-title + p + [class*="acts"],main h1.pfa-title.pfa-title + p + [class*="cta"],main h1.pfa-title.pfa-title + p + .actions,
+main h1.pfa-title.pfa-title + [class*="acts"],main h1.pfa-title.pfa-title + [class*="cta"],main h1.pfa-title.pfa-title + .actions{margin-top:32px}
+/* the search page's title is what was typed, so it is set smaller; its eyebrow and tick are the same */
+main h1.pfa-title.pfa-title.pfa-sr__q{font-size:clamp(30px,3.4vw,44px)}

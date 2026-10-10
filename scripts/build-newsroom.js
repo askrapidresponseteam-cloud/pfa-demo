@@ -172,7 +172,9 @@ function render(page, data) {
   const block = [
     '<section class="nr" id="top" aria-labelledby="nrTitle">',
     '<div class="nr-mast">',
-    '<h1 class="nr-title" id="nrTitle">Newsroom</h1>',
+    /* the title block every page opens with (10 Oct 2026): eyebrow, tick, title */
+    '<p class="eyebrow pfa-kicker">Our work</p>',
+    '<h1 class="pfa-title nr-title" id="nrTitle">Newsroom</h1>',
     `<div class="nr-strap"><nav class="nr-desks" aria-label="Newsroom sections">${links}</nav><p class="nr-count">${stories.length} ${stories.length === 1 ? 'story' : 'stories'} on the record</p></div>`,
     '</div>',
     front.length ? `<div class="nr-front" id="front" data-count="${front.length}">\n${tile(front[0], 'lead')}${front.length > 1 ? `\n<div class="nr-front__side">\n${side}\n</div>` : ''}\n</div>` : '',
