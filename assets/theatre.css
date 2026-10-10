@@ -78,8 +78,8 @@
 /* A bare embed has no object-fit, so the box itself does the fitting:
    native = the largest 16:9 box the stage holds (letterboxed past 16:9),
    fill = past the stage on the short axis, spill clipped, as before. */
-.theatre.is-long .th-stage iframe.bare{left:50%;top:50%;width:min(100vw,177.78vh);height:min(100vh,56.25vw);transform:translate(-50%,-50%)}
-.theatre.is-long.is-fill .th-stage iframe.bare{width:max(100vw,177.78vh);height:max(100vh,56.25vw)}
+.theatre.is-long .th-stage iframe.bare{left:50%;top:50%;width:calc(min(100vw,177.78vh) * var(--th-k,1));height:calc(min(100vh,56.25vw) * var(--th-k,1));transform:translate(-50%,-50%) scale(var(--th-s,1))}
+.theatre.is-long.is-fill .th-stage iframe.bare{width:calc(max(100vw,177.78vh) * var(--th-k,1));height:calc(max(100vh,56.25vw) * var(--th-k,1))}
 /* Those two measure the viewport, but the box they size sits in the stage,
    which is the viewport less the top bar, the controls and the film strip.
    On a desktop the difference is a few per cent and went unnoticed. On a
@@ -89,9 +89,15 @@
    the stage itself, which is what the arithmetic meant all along. */
 @supports (width:1cqw){
   .th-stage{container-type:size}
-  .theatre.is-long .th-stage iframe.bare{width:min(100cqw,177.78cqh);height:min(100cqh,56.25cqw)}
-  .theatre.is-long.is-fill .th-stage iframe.bare{width:max(100cqw,177.78cqh);height:max(100cqh,56.25cqw)}
+  .theatre.is-long .th-stage iframe.bare{width:calc(min(100cqw,177.78cqh) * var(--th-k,1));height:calc(min(100cqh,56.25cqw) * var(--th-k,1))}
+  .theatre.is-long.is-fill .th-stage iframe.bare{width:calc(max(100cqw,177.78cqh) * var(--th-k,1));height:calc(max(100cqh,56.25cqw) * var(--th-k,1))}
 }
+/* Picture quality (theatre.js, sharpen): a frame this page drives is drawn
+   --th-k times its place and shrunk back by --th-s, so YouTube, which picks
+   the quality from the size it is drawn at, picks the highest the film has
+   for this screen. Both are 1 until the script sets them. A short film's
+   frame is the stage, shrunk from its corner. */
+.theatre.is-short .th-stage iframe.bare{right:auto;bottom:auto;width:calc(100% * var(--th-k,1));height:calc(100% * var(--th-k,1));transform:scale(var(--th-s,1));transform-origin:0 0}
 .theatre.is-short .fit{display:none}
 .theatre.is-short .th-strip button{aspect-ratio:9/16}
 .theatre.is-short .th-top .mark::after{content:" · Short"}

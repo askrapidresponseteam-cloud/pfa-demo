@@ -246,8 +246,9 @@ test('the module brings its own markup rather than the page keeping a copy', () 
 /* --------------------------------------------------------------- quality ---
    YouTube picks a quality tier when the player initialises and will not be
    told otherwise: setPlaybackQuality became a no-op in 2019 and the vq
-   parameter went with it. Neither of these forces anything. They remove the
-   two reasons the player has to choose low. */
+   parameter went with it. Neither of these forces anything. They remove two
+   reasons the player has to choose low; the third, a frame drawn smaller than
+   the screen, is theatre-quality.test.js. */
 
 test('the stage is measured before the frame is built', () => {
   /* The theatre goes from display:none to visible one line earlier. An embed

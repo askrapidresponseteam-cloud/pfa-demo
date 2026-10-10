@@ -30,7 +30,7 @@
 (function () {
   'use strict';
 
-  var MARKUP = '<div class="theatre" id="theatre" data-cursor="light" role="dialog" aria-modal="true" aria-label="Theatre" hidden>\n  <div class="th-top">\n    <div class="l">\n      <span class="num" id="thClock">00:00:00</span>\n      <button type="button" class="sound" id="thSound" aria-label="Sound" aria-pressed="false">Sound:<b id="thOff" class="on">Off</b><b id="thOn">On</b></button>\n      <button type="button" class="sound fit" id="thFit" aria-label="Frame" aria-pressed="false">Frame:<b id="thFitNative" class="on">Native</b><b id="thFitFill">Fill</b></button>\n    </div>\n    <div class="mark" id="thMark"></div>\n    <div class="r">\n      <button type="button" class="close pfa-close" id="thClose">Close</button>\n    </div>\n  </div>\n  <div class="th-stage" id="thStage">\n    <video id="thVideo" playsinline muted preload="auto"></video>\n    <div class="th-shield" id="thShield" aria-hidden="true" hidden></div>\n    <div class="th-spin" id="thSpin" role="status" aria-label="Loading" hidden></div>\n    <div class="th-flash num" id="thFlash" hidden></div>\n    <div class="th-card" id="thCard" hidden>\n      <div>\n        <p class="eyebrow" id="thCardEyebrow"></p>\n        <h3 id="thCardTitle"></h3>\n        <p id="thCardText"></p>\n        <div class="acts" id="thCardActs"></div>\n      </div>\n    </div>\n    <div class="th-help" id="thHelp" hidden>\n      <div>\n        <p class="eyebrow">Keyboard</p>\n        <dl>\n          <dt><kbd>Space</kbd> <kbd>K</kbd></dt><dd>Play or pause</dd>\n          <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>J</kbd> <kbd>L</kbd></dt><dd>Back or forward ten seconds</dd>\n          <dt><kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> <kbd>P</kbd> <kbd>N</kbd></dt><dd>Previous or next film</dd>\n          <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Volume</dd>\n          <dt><kbd>M</kbd></dt><dd>Mute</dd>\n          <dt><kbd>0</kbd>-<kbd>9</kbd></dt><dd>Jump to that tenth of the film</dd>\n          <dt><kbd>&lt;</kbd> <kbd>&gt;</kbd></dt><dd>Slower or faster</dd>\n          <dt><kbd>F</kbd></dt><dd>Full screen</dd>\n          <dt><kbd>A</kbd></dt><dd>Autoplay on or off</dd>\n          <dt><kbd>Z</kbd></dt><dd>Native or filled frame</dd>\n          <dt><kbd>Q</kbd></dt><dd>Quality, in YouTube\u2019s own settings</dd>\n          <dt><kbd>?</kbd></dt><dd>This list</dd>\n          <dt><kbd>Esc</kbd></dt><dd>Close</dd>\n        </dl>\n        <button type="button" class="pfa-close" id="thHelpClose">Close</button>\n      </div>\n    </div>\n    <div class="th-caption"><span class="t"><em class="num" id="thIdx">01</em><span id="thTitle"></span></span></div>\n  </div>\n  <div class="th-bottom" id="thBottom">\n  <div class="th-controls" id="thControls" role="group" aria-label="Player controls">\n    <div class="th-seek" id="thSeekWrap">\n      <i class="th-seek__buf" id="thBuf"></i><i class="th-seek__fill" id="thFill"></i><i class="th-seek__knob" id="thKnob"></i>\n      <input type="range" id="thSeek" min="0" max="1000" value="0" step="1" aria-label="Seek" aria-valuetext="00:00:00">\n      <span class="th-seek__tip num" id="thTip" hidden></span>\n    </div>\n    <div class="th-row">\n      <div class="l">\n        <button type="button" id="thPrev" title="Previous film (Shift+←)" aria-label="Previous film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>\n        <button type="button" id="thPlay" title="Play (K)" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg></button>\n        <button type="button" id="thNext" title="Next film (Shift+→)" aria-label="Next film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z"/></svg></button>\n        <button type="button" id="thBack" title="Back 10 seconds (J)" aria-label="Back ten seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/><text x="8.6" y="15.2" font-size="6.5" font-weight="700" font-family="sans-serif">10</text></svg></button>\n        <button type="button" id="thFwd" title="Forward 10 seconds (L)" aria-label="Forward ten seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2l5 4-5 4V7a5 5 0 1 0 5 5h2a7 7 0 1 1-7-7z"/><text x="8.6" y="15.2" font-size="6.5" font-weight="700" font-family="sans-serif">10</text></svg></button>\n        <span class="th-time num"><span id="thT">00:00:00</span><span class="sep">/</span><span id="thD">00:00:00</span></span>\n      </div>\n      <div class="r">\n        <button type="button" id="thQuality" title="Picture quality (Q)" aria-pressed="false" hidden>Quality</button>\n        <button type="button" id="thAuto" title="Autoplay the next film (A)" aria-pressed="true">Autoplay</button>\n        <div class="th-menu" id="thRate">\n          <button type="button" id="thRateBtn" title="Playback speed" aria-haspopup="menu" aria-expanded="false"><span class="num" id="thRateNow">1×</span></button>\n          <div class="th-menu__list" id="thRateMenu" role="menu" hidden></div>\n        </div>\n        <button type="button" id="thShare" title="Copy a link to this moment">Copy link</button>\n        <button type="button" id="thHelpBtn" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts">?</button>\n        <button type="button" id="thFull" title="Full screen (F)" aria-label="Full screen" aria-pressed="false"><svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z"/></svg><svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4v6H4V8h4V4zm4 0h2v4h4v2h-6zM4 14h6v6H8v-4H4zm10 0h6v2h-4v4h-2z"/></svg></button>\n      </div>\n    </div>\n  </div>\n  <div class="th-strip" id="thStrip" aria-label="All films"></div>\n  <div class="th-rule" id="thRule"><svg id="thRuleSvg" aria-hidden="true"></svg></div>\n  <div class="th-foot">\n    <div class="l" id="thFootLinks"></div>\n    <div class="r" id="thFootCredit"></div>\n  </div>\n  </div>\n  <div class="th-toast" id="thToast" hidden></div>\n  <div class="sr" id="thLive" aria-live="polite"></div>\n</div>';
+  var MARKUP = '<div class="theatre" id="theatre" data-cursor="light" role="dialog" aria-modal="true" aria-label="Theatre" hidden>\n  <div class="th-top">\n    <div class="l">\n      <span class="num" id="thClock">00:00:00</span>\n      <button type="button" class="sound" id="thSound" aria-label="Sound" aria-pressed="false">Sound:<b id="thOff" class="on">Off</b><b id="thOn">On</b></button>\n      <button type="button" class="sound fit" id="thFit" aria-label="Frame" aria-pressed="false">Frame:<b id="thFitNative" class="on">Native</b><b id="thFitFill">Fill</b></button>\n    </div>\n    <div class="mark" id="thMark"></div>\n    <div class="r">\n      <button type="button" class="close pfa-close" id="thClose">Close</button>\n    </div>\n  </div>\n  <div class="th-stage" id="thStage">\n    <video id="thVideo" playsinline muted preload="auto"></video>\n    <div class="th-shield" id="thShield" aria-hidden="true" hidden></div>\n    <div class="th-spin" id="thSpin" role="status" aria-label="Loading" hidden></div>\n    <div class="th-flash num" id="thFlash" hidden></div>\n    <div class="th-card" id="thCard" hidden>\n      <div>\n        <p class="eyebrow" id="thCardEyebrow"></p>\n        <h3 id="thCardTitle"></h3>\n        <p id="thCardText"></p>\n        <div class="acts" id="thCardActs"></div>\n      </div>\n    </div>\n    <div class="th-help" id="thHelp" hidden>\n      <div>\n        <p class="eyebrow">Keyboard</p>\n        <dl>\n          <dt><kbd>Space</kbd> <kbd>K</kbd></dt><dd>Play or pause</dd>\n          <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>J</kbd> <kbd>L</kbd></dt><dd>Back or forward ten seconds</dd>\n          <dt><kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> <kbd>P</kbd> <kbd>N</kbd></dt><dd>Previous or next film</dd>\n          <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Volume</dd>\n          <dt><kbd>M</kbd></dt><dd>Mute</dd>\n          <dt><kbd>0</kbd>-<kbd>9</kbd></dt><dd>Jump to that tenth of the film</dd>\n          <dt><kbd>&lt;</kbd> <kbd>&gt;</kbd></dt><dd>Slower or faster</dd>\n          <dt><kbd>F</kbd></dt><dd>Full screen</dd>\n          <dt><kbd>A</kbd></dt><dd>Autoplay on or off</dd>\n          <dt><kbd>Z</kbd></dt><dd>Native or filled frame</dd>\n          <dt><kbd>?</kbd></dt><dd>This list</dd>\n          <dt><kbd>Esc</kbd></dt><dd>Close</dd>\n        </dl>\n        <button type="button" class="pfa-close" id="thHelpClose">Close</button>\n      </div>\n    </div>\n    <div class="th-caption"><span class="t"><em class="num" id="thIdx">01</em><span id="thTitle"></span></span></div>\n  </div>\n  <div class="th-bottom" id="thBottom">\n  <div class="th-controls" id="thControls" role="group" aria-label="Player controls">\n    <div class="th-seek" id="thSeekWrap">\n      <i class="th-seek__buf" id="thBuf"></i><i class="th-seek__fill" id="thFill"></i><i class="th-seek__knob" id="thKnob"></i>\n      <input type="range" id="thSeek" min="0" max="1000" value="0" step="1" aria-label="Seek" aria-valuetext="00:00:00">\n      <span class="th-seek__tip num" id="thTip" hidden></span>\n    </div>\n    <div class="th-row">\n      <div class="l">\n        <button type="button" id="thPrev" title="Previous film (Shift+←)" aria-label="Previous film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>\n        <button type="button" id="thPlay" title="Play (K)" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg></button>\n        <button type="button" id="thNext" title="Next film (Shift+→)" aria-label="Next film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z"/></svg></button>\n        <button type="button" id="thBack" title="Back 10 seconds (J)" aria-label="Back ten seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/><text x="8.6" y="15.2" font-size="6.5" font-weight="700" font-family="sans-serif">10</text></svg></button>\n        <button type="button" id="thFwd" title="Forward 10 seconds (L)" aria-label="Forward ten seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2l5 4-5 4V7a5 5 0 1 0 5 5h2a7 7 0 1 1-7-7z"/><text x="8.6" y="15.2" font-size="6.5" font-weight="700" font-family="sans-serif">10</text></svg></button>\n        <span class="th-time num"><span id="thT">00:00:00</span><span class="sep">/</span><span id="thD">00:00:00</span></span>\n      </div>\n      <div class="r">\n        <button type="button" id="thAuto" title="Autoplay the next film (A)" aria-pressed="true">Autoplay</button>\n        <div class="th-menu" id="thRate">\n          <button type="button" id="thRateBtn" title="Playback speed" aria-haspopup="menu" aria-expanded="false"><span class="num" id="thRateNow">1×</span></button>\n          <div class="th-menu__list" id="thRateMenu" role="menu" hidden></div>\n        </div>\n        <button type="button" id="thShare" title="Copy a link to this moment">Copy link</button>\n        <button type="button" id="thHelpBtn" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts">?</button>\n        <button type="button" id="thFull" title="Full screen (F)" aria-label="Full screen" aria-pressed="false"><svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z"/></svg><svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4v6H4V8h4V4zm4 0h2v4h4v2h-6zM4 14h6v6H8v-4H4zm10 0h6v2h-4v4h-2z"/></svg></button>\n      </div>\n    </div>\n  </div>\n  <div class="th-strip" id="thStrip" aria-label="All films"></div>\n  <div class="th-rule" id="thRule"><svg id="thRuleSvg" aria-hidden="true"></svg></div>\n  <div class="th-foot">\n    <div class="l" id="thFootLinks"></div>\n    <div class="r" id="thFootCredit"></div>\n  </div>\n  </div>\n  <div class="th-toast" id="thToast" hidden></div>\n  <div class="sr" id="thLive" aria-live="polite"></div>\n</div>';
 
   function mount(opts) {
     opts = opts || {};
@@ -317,10 +317,10 @@
     var ytApi = null, vimeoApi = null;
     /* YouTube chooses a quality tier when the player initialises, from the
        frame's measured size and its first read of the connection. Neither can
-       be overridden: setPlaybackQuality became a no-op in 2019 and the vq
-       parameter went with it. What can be done is stop giving it reasons to
-       choose low, and a cold TCP and TLS handshake in front of the very first
-       bytes is one of them.
+       be set: setPlaybackQuality became a no-op in 2019 and the vq parameter
+       went with it. What can be done is give it no reason to choose low. The
+       size is seen to by sharpen(), below; a cold TCP and TLS handshake in
+       front of the very first bytes is the other reason, seen to here.
 
        Done here rather than in the page head on purpose. This section promises
        that nothing third-party is contacted until a visitor shows interest,
@@ -630,10 +630,7 @@
            the race", a standing guess made every rebuild fire another. This
            flag says the frame is non-bare deliberately, and is set once, by a
            press. */
-        /* or the visitor asked for YouTube's own controls to pick a quality
-           (the Quality button): kept for every YouTube film after it, until
-           they press Quality again */
-        var keepNative = opts.nativeControls === undefined ? (ytOwn && !!it.yt) : !!opts.nativeControls;
+        var keepNative = !!opts.nativeControls;
         var driven = !keepNative && !!(window.YT && window.YT.Player);
         iframe._keepNative = keepNative;
         iframe._bare = it.yt ? driven : false;
@@ -646,42 +643,59 @@
         if (it.yt) attachYt(iframe, i); else if (it.vimeo) attachVimeo(iframe, i);
       }
       paintPlay();
-      paintQuality();
+      sharpen();
       tick();
       live('Now playing: ' + it.title);
     }
 
-    /* ---- quality (owner, 8 Oct 2026: "can the video player also have
-       option to select quality") ----
-       YouTube decides the quality of an embedded film, and since 2019 its
-       player API cannot be told otherwise (setPlaybackQuality does nothing,
-       getAvailableQualityLevels answers nothing), so a menu of qualities here
-       would be a menu that changes nothing. What works is YouTube's own
-       settings: Quality reopens the film, at the same second, with YouTube's
-       controls on, whose gear lists every quality that film has. It stays
-       that way for the films after it, until Quality is pressed again, which
-       brings this page's controls back at the same second. A film served
-       from this site is one file, one quality, so the button is not shown
-       for it. */
-    var ytOwn = false;
-    function paintQuality(){
-      var b = $('#thQuality'); if (!b) return;
-      var it = LIST[cur];
-      b.hidden = !(it && it.yt);
-      var own = !!(iframe && iframe._keepNative);
-      b.setAttribute('aria-pressed', String(own));
-      b.textContent = 'Quality';
-      b.title = own ? 'Back to this page\u2019s controls (Q)' : 'Choose the picture quality, in YouTube\u2019s own settings (Q)';
-    }
-    function toggleQuality(){
-      var it = LIST[cur];
-      if (!it || !it.yt) return;
-      var t = 0; try { t = Math.floor(Number(clock().t) || 0); } catch (e) {}
-      ytOwn = !(iframe && iframe._keepNative);
-      load(cur, { startAt: t, nativeControls: ytOwn });
-      say(ytOwn
-        ? 'Quality is in YouTube\u2019s own settings: the gear in the corner of the film. Press Quality again for this page\u2019s controls.'
-        : 'This page\u2019s controls are back.', ytOwn ? 6000 : 2200);
+    /* ---- picture quality ----
+       Owner, 10 Oct 2026, of a Quality control that sent people to YouTube's
+       own settings: "Don't tell users to use YouTube's quality settings,
+       since the player isn't presented as YouTube. Add a quality selector
+       here if supported; otherwise, omit it and automatically use the
+       highest available YouTube quality."
+
+       A selector is not supported. Since 24 Oct 2019 YouTube's player API
+       has no quality to set (setPlaybackQuality does nothing, a suggested
+       quality is ignored, getAvailableQualityLevels answers nothing), so a
+       menu here would change nothing, and there is none. YouTube picks the
+       quality itself, from the size its player is drawn at and from the
+       connection. So a film this page drives is drawn at the size it would
+       have full screen on this screen, at least 1080 lines and at most 4K,
+       and a transform shrinks it to the stage: the size YouTube measures is
+       the drawn one, and it picks the highest tier for it that the film has.
+       YouTube still steps down when the connection cannot keep up, so the
+       film never stalls for its pixels, and a browser set to save data is
+       left to YouTube's own choice. Only a bare frame is drawn large: one
+       showing YouTube's controls would have them shrunk with it. A film
+       served from this site is one file, at the one quality it has. */
+    var SHARP_MIN = 1080, SHARP_MAX = 2160;
+    function sharpen(){
+      var f = iframe;
+      if (!f) return;
+      var k = 1;
+      try {
+        var save = navigator.connection && navigator.connection.saveData;
+        var sw = stage.clientWidth, sh = stage.clientHeight;
+        if (f._bare && !save && sw > 0 && sh > 0){
+          var dpr = window.devicePixelRatio || 1;
+          /* the film's short side now, in the stage: a long film is 16:9,
+             native or filled; a short one is 9:16 inside a frame the size
+             of the stage */
+          var now;
+          if (th.classList.contains('is-short')) now = Math.min(sw, sh * 9 / 16);
+          else now = (filled ? Math.max(sw, sh * 16 / 9) : Math.min(sw, sh * 16 / 9)) * 9 / 16;
+          /* and full screen, turned the way the film is: the same sum for
+             both, the screen's short side or 9/16 of its long one */
+          var sc = window.screen || {}, a = Math.max(sc.width || 0, sc.height || 0), b = Math.min(sc.width || 0, sc.height || 0);
+          var full = Math.min(b, a * 9 / 16) * dpr;
+          var want = Math.min(SHARP_MAX, Math.max(SHARP_MIN, full || 0));
+          k = Math.min(4, Math.max(1, want / (now * dpr)));
+        }
+      } catch (e) { k = 1; }
+      k = Math.round(k * 1000) / 1000;
+      f.style.setProperty('--th-k', String(k));
+      f.style.setProperty('--th-s', String(Math.round(100000 / k) / 100000));
     }
 
     /* ---- the chrome: top bar, and the bottom block of strip, ruler and
@@ -965,7 +979,7 @@
       var on = isFull();
       $('#thFull').setAttribute('aria-pressed', String(on)); $('#thFull').setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
       if (!on) orient(false);
-      drawRule(); tick();
+      sharpen(); drawRule(); tick();
     }
     document.addEventListener('fullscreenchange', onFsChange);
     document.addEventListener('webkitfullscreenchange', onFsChange);
@@ -1006,6 +1020,7 @@
       $('#thFitFill').classList.toggle('on', filled);
       $('#thFit').setAttribute('aria-pressed', String(filled));
       try { localStorage.setItem(FRAME_KEY, filled ? 'fill' : 'native'); } catch (e) {}
+      sharpen();
     }
     setFrame(filled);
     $('#thFit').addEventListener('click', function(){ setFrame(!filled); flash(filled ? 'Filled frame' : 'Native frame'); });
@@ -1015,7 +1030,6 @@
     $('#thBack').addEventListener('click', function(){ skip(-SKIP); });
     $('#thFwd').addEventListener('click', function(){ skip(SKIP); });
     $('#thAuto').addEventListener('click', function(){ setAuto(!autoplay); });
-    $('#thQuality').addEventListener('click', toggleQuality);
     $('#thFull').addEventListener('click', fullscreen);
     $('#thHelpBtn').addEventListener('click', function(){ $('#thHelp').hidden = false; $('#thHelpClose').focus(); });
     $('#thHelpClose').addEventListener('click', function(){ $('#thHelp').hidden = true; $('#thHelpBtn').focus(); });
@@ -1097,7 +1111,7 @@
     video.addEventListener('ratechange', function(){ if (!iframe && video.playbackRate !== rate && video.playbackRate > 0){ rate = video.playbackRate; $('#thRateNow').textContent = String(rate) + '\u00d7'; } });
     video.addEventListener('ended', onEnded);
     video.addEventListener('error', function(){ if (!iframe && video.getAttribute('src')) showError(); });
-    window.addEventListener('resize', function(){ if (wasOpen){ drawRule(); tick(); sync(); } });
+    window.addEventListener('resize', function(){ if (wasOpen){ sharpen(); drawRule(); tick(); sync(); } });
     window.addEventListener('pagehide', function(){ if (wasOpen){ var c = clock(); if (c.known && LIST[cur]) saveProg(LIST[cur], c.t, c.d); } });
 
     /* Tab stays inside the theatre while it is open: it is a dialog, and the
@@ -1137,7 +1151,6 @@
       else if (lower === 'f'){ fullscreen(); }
       else if (lower === 'a'){ setAuto(!autoplay); flash(autoplay ? 'Autoplay on' : 'Autoplay off'); }
       else if (lower === 'z'){ setFrame(!filled); flash(filled ? 'Filled frame' : 'Native frame'); }
-      else if (lower === 'q'){ toggleQuality(); }
       else if (k === '?'){ $('#thHelp').hidden = !$('#thHelp').hidden; if (!$('#thHelp').hidden) $('#thHelpClose').focus(); }
       else if (k === '>' || k === '.'){ stepRate(1); }
       else if (k === '<' || k === ','){ stepRate(-1); }

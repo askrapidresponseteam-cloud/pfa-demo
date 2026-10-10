@@ -694,7 +694,9 @@ test('the frame is native by default, Fill is a remembered choice, shorts are al
   const p = page();
   /* Native by default: contain for files, min()-fitted 16:9 for bare embeds. */
   assert.match(THEATRE_CSS, /\.th-stage video\{object-fit:contain\}/, 'a file film is never clipped by default');
-  assert.match(THEATRE_CSS, /iframe\.bare\{left:50%;top:50%;width:min\(100vw,177\.78vh\);height:min\(100vh,56\.25vw\)/, 'a bare embed fits inside the stage by default');
+  /* the same box, drawn --th-k times larger and shrunk back for YouTube's
+     choice of quality (theatre-quality.test.js) */
+  assert.match(THEATRE_CSS, /iframe\.bare\{left:50%;top:50%;width:calc\(min\(100vw,177\.78vh\) \* var\(--th-k,1\)\);height:calc\(min\(100vh,56\.25vw\) \* var\(--th-k,1\)\)/, 'a bare embed fits inside the stage by default');
   assert.match(THEATRE_CSS, /\.theatre\.is-fill:not\(\.is-short\) \.th-stage video\{object-fit:cover\}/, 'Fill is opt-in');
   assert.match(THEATRE_CSS, /\.theatre\.is-short \.fit\{display:none\}/, 'a vertical film offers no Fill');
   openOnFile(p);
